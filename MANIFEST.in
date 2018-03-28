@@ -1,0 +1,6 @@
+# recursive-include doc *
+recursive-include examples *
+recursive-include skoot/__check_build *.c *.pyx *.pyd *.so *.dylib *.dll
+recursive-include skoot/decomposition *.c *.pyx *.pyd *.so *.dylib *.dll *.f *.pyf
+include README.md
+include requirements.txt
