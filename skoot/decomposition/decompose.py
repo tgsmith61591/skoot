@@ -228,7 +228,7 @@ class SelectivePCA(_BaseSelectiveDecomposer):
 
         # concat if needed
         x = pd.concat([X[other_nms], right], axis=1) if other_nms else right
-        return x if self.as_df else x.as_matrix()
+        return x if self.as_df else x.values
 
     @overrides(_BaseSelectiveDecomposer)
     def _decomposition_name(self):
@@ -406,7 +406,7 @@ class SelectiveTruncatedSVD(_BaseSelectiveDecomposer):
 
         # concat if needed
         x = pd.concat([X[other_nms], right], axis=1) if other_nms else right
-        return x if self.as_df else x.as_matrix()
+        return x if self.as_df else x.values
 
     @overrides(_BaseSelectiveDecomposer)
     def _decomposition_name(self):

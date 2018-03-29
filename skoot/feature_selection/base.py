@@ -100,7 +100,7 @@ class BaseFeatureSelector(six.with_metaclass(ABCMeta, BasePDTransformer)):
         # if there's nothing to drop
         drop_columns = self.drop_  # type: list
         if not drop_columns:
-            return X if self.as_df else X.as_matrix()
+            return X if self.as_df else X.values
 
         # otherwise, there's something to drop
         else:
@@ -117,4 +117,4 @@ class BaseFeatureSelector(six.with_metaclass(ABCMeta, BasePDTransformer)):
                               % drop_columns, UserWarning)
 
             dropped = X.drop(drops, axis=1)
-            return dropped if self.as_df else dropped.as_matrix()
+            return dropped if self.as_df else dropped.values

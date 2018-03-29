@@ -2,6 +2,7 @@
 #
 # Author: Taylor Smith <taylor.smith@alkaline-ml.com>
 
+from .dataframe import *
 from .iterables import *
 from .validation import *
 
