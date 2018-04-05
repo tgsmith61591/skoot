@@ -7,7 +7,9 @@ if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
   echo "Updating apt-get for Linux build"
   sudo apt-get -qq update
 
-  echo "Downloading gfortran"
+  echo "Downloading gcc, g++ & gfortran"
+  sudo apt-get gcc
+  sudo apt-get g++
   sudo apt-get gfortran
 
 # Workaround for https://github.com/travis-ci/travis-ci/issues/6307, which
