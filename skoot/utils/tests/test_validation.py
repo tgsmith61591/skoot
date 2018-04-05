@@ -2,10 +2,13 @@
 
 from __future__ import absolute_import
 
-from skoot.utils.validation import check_dataframe
+from skoot.utils.validation import (check_dataframe, validate_test_set_columns,
+                                    validate_multiple_rows)
 from sklearn.utils.validation import check_random_state
 
 import pandas as pd
+import numpy as np
+
 from nose.tools import assert_raises
 
 # single random state used throughout the tests here
@@ -131,3 +134,27 @@ def test_check_dataframe_infinite():
     # this will raise, since assert_all_finite is True
     assert_raises(ValueError, check_dataframe, X_nan,
                   assert_all_finite=True)
+
+
+def test_validate_test_cols():
+    fit = ['a', 'b', 'c']
+    test = ['a', 'b', 'c']
+
+    # this will pass; all fit are in test
+    validate_test_set_columns(fit, test)
+
+    # this will also pass; all fit are in test
+    test.append('d')
+    validate_test_set_columns(fit, test)
+
+    # this will NOT pass; one is now missing from test
+    test = test[1:]
+    assert_raises(ValueError, validate_test_set_columns, fit, test)
+
+
+def test_validate_multiple_rows():
+    X = np.random.rand(2, 2)
+    assert_raises(ValueError, validate_multiple_rows, "cls", X[:1, :])
+
+    # this works
+    validate_multiple_rows("cls", X)

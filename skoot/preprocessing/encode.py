@@ -1,251 +1,180 @@
-from __future__ import print_function, division, absolute_import
+# -*- coding: utf-8 -*-
+#
+# Author: Taylor Smith <taylor.smith@alkaline-ml.com>
+
+from __future__ import division, print_function, absolute_import
+
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
-from sklearn.base import TransformerMixin, BaseEstimator
 from sklearn.utils.validation import check_is_fitted
-from sklearn.utils import column_or_1d
-from sklearn.preprocessing.label import _check_numpy_unicode_bug
-import numpy as np
+
 import pandas as pd
-from skutil.base import BaseSkutil
-from skutil.utils import validate_is_pd
+
+from ..base import BasePDTransformer
+from ..utils.validation import check_dataframe, validate_test_set_columns
 
 __all__ = [
-    'SafeLabelEncoder',
-    'OneHotCategoricalEncoder'
+    'DummyEncoder'
 ]
 
 
-def _get_unseen():
-    """Basically just a static method
-    instead of a class attribute to avoid
-    someone accidentally changing it."""
-    return 99999
-
-
-class SafeLabelEncoder(LabelEncoder):
-    """An extension of LabelEncoder that will
-    not throw an exception for unseen data, but will
-    instead return a default value of 99999
-
-    Attributes
-    ----------
-
-    classes_ : the classes that are encoded
+class DummyEncoder(BasePDTransformer):
     """
 
-    def transform(self, y):
-        """Perform encoding if already fit.
+    A custom one-hot encoding class that handles previously unseen
+    levels and automatically drops one level from each categorical
+    feature to avoid the dummy variable trap.
 
-        Parameters
-        ----------
-
-        y : array_like, shape=(n_samples,)
-            The array to encode
-
-        Returns
-        -------
-
-        e : array_like, shape=(n_samples,)
-            The encoded array
-        """
-        check_is_fitted(self, 'classes_')
-        y = column_or_1d(y, warn=True)
-
-        classes = np.unique(y)
-        _check_numpy_unicode_bug(classes)
-
-        # Check not too many:
-        unseen = _get_unseen()
-        if len(classes) >= unseen:
-            raise ValueError('Too many factor levels in feature. Max is %i' % unseen)
-
-        e = np.array([
-                         np.searchsorted(self.classes_, x) if x in self.classes_ else unseen
-                         for x in y
-                         ])
-
-        return e
-
-
-class OneHotCategoricalEncoder(BaseSkutil, TransformerMixin):
-    """This class achieves three things: first, it will fill in 
-    any NaN values with a provided surrogate (if desired). Second,
-    it will dummy out any categorical features using OneHotEncoding
-    with a safety feature that can handle previously unseen values,
-    and in the transform method will re-append the dummified features
-    to the dataframe. Finally, it will return a numpy ndarray.
-    
     Parameters
     ----------
-
-    fill : str, optional (default = 'Missing')
-        The value that will fill the missing values in the column
+    cols : array-like, shape=(n_features,), optional (default=None)
+        The names of the columns on which to apply the transformation.
+        If no column names are provided, the transformer will be ``fit``
+        on the entire frame. Note that the transformation will also only
+        apply to the specified columns, and any other non-specified
+        columns will still be present after transformation. Specified
+        columns will be dropped after they are expanded.
 
     as_df : bool, optional (default=True)
         Whether to return a Pandas ``DataFrame`` in the ``transform``
-        method. If False, will return a Numpy ``ndarray`` instead. 
-        Since most skutil transformers depend on explicitly-named
+        method. If False, will return a Numpy ``ndarray`` instead.
+        Since most skoot transformers depend on explicitly-named
         ``DataFrame`` features, the ``as_df`` parameter is True by default.
 
+    sep : str or unicode, optional (default='_')
+        The string separator between the categorical feature name
+        and the level name.
 
-    Examples
-    --------
+    drop_one_level : bool, optional (default=True)
+        Whether to drop one level for each categorical variable.
+        This helps avoid the dummy variable trap.
 
-        >>> import pandas as pd
-        >>> import numpy as np
-        >>> from skutil.preprocessing import OneHotCategoricalEncoder
-        >>>
-        >>> X = pd.DataFrame.from_records(data=np.array([
-        ...                                  ['USA','RED','a'],
-        ...                                  ['MEX','GRN','b'],
-        ...                                  ['FRA','RED','b']]), 
-        ...                               columns=['A','B','C'])
-        >>>
-        >>> o = OneHotCategoricalEncoder(as_df=True)
-        >>> o.fit_transform(X)
-           A.FRA  A.MEX  A.USA  A.NA  B.GRN  B.RED  B.NA  C.a  C.b  C.NA
-        0    0.0    0.0    1.0   0.0    0.0    1.0   0.0  1.0  0.0   0.0
-        1    0.0    1.0    0.0   0.0    1.0    0.0   0.0  0.0  1.0   0.0
-        2    1.0    0.0    0.0   0.0    0.0    1.0   0.0  0.0  1.0   0.0
-
-        
     Attributes
     ----------
-    
-    obj_cols_ : array_like
-        The list of object-type (categorical) features
+    ohe_ : OneHotEncoder
+        The one hot encoder
 
-    lab_encoders_ : array_like
-        The label encoders
+    le_ : dict[str: LabelEncoder]
+        A dictionary mapping column names to their respective LabelEncoder
+        instances.
 
-    one_hot_ : an instance of a OneHotEncoder
-
-    trans_nms_ : the dummified names
+    fit_cols_ : list
+        The list of column names on which the transformer was fit. This
+        is used to validate the presence of the features in the test set
+        during the ``transform`` stage.
     """
+    def __init__(self, cols, as_df=True, sep='_', drop_one_level=True):
 
-    def __init__(self, fill='Missing', as_df=True):
-        super(OneHotCategoricalEncoder, self).__init__(cols=None, as_df=as_df)
-        self.fill = fill
+        super(DummyEncoder, self).__init__(
+            cols=cols, as_df=as_df)
+
+        self.sep = sep
+        self.drop_one_level = drop_one_level
 
     def fit(self, X, y=None):
-        """Fit the encoder.
+        """Fit the dummy encoder.
 
         Parameters
         ----------
-
-        X : Pandas ``DataFrame``, shape=(n_samples, n_features)
+        X : pd.DataFrame, shape=(n_samples, n_features)
             The Pandas frame to fit. The frame will only
-            be fit on the object columns of the dataframe.
+            be fit on the prescribed ``cols`` (see ``__init__``) or
+            all of them if ``cols`` is None.
 
-        y : None
-            Passthrough for ``sklearn.pipeline.Pipeline``. Even
-            if explicitly set, will not change behavior of ``fit``.
-
-        Returns
-        -------
-
-        self
+        y : array-like or None, shape=(n_samples,), optional (default=None)
+            Pass-through for ``sklearn.pipeline.Pipeline``.
         """
-        # check on state of X, don't care about cols or the warning
-        X, _ = validate_is_pd(X, None)
+        # validate the input, and get a copy of it
+        X, cols = check_dataframe(X, cols=self.cols,
+                                  assert_all_finite=True)
 
-        # Extract the object columns
-        obj_cols_ = X.select_dtypes(include=['object']).columns.values
+        # begin fit
+        # for each column, fit a label encoder
+        lab_encoders = {}
+        for col in cols:
+            # get the vec, fit the label encoder
+            vec = X[col].values
+            le = LabelEncoder()
+            lab_encoders[col] = le.fit(vec)
 
-        # If we need to fill in the NAs, take care of it
-        if self.fill is not None:
-            X[obj_cols_] = X[obj_cols_].fillna(self.fill)
+            # transform the column, re-assign
+            X[col] = le.transform(vec)
 
-        # Set an array of uninitialized label encoders
-        # Then use fit_transform for effiency purposes
-        # We can also set the dummy-level feature names in the same pass
-        lab_encoders_ = []
-        trans_array = []
-        tnms = []
+        # fit a single OHE on the transformed columns
+        ohe = OneHotEncoder(sparse=False).fit(X[cols])
 
-        unseen = _get_unseen()
-        for nm in obj_cols_:
-            encoder = SafeLabelEncoder()
-            lab_encoders_.append(encoder)
-
-            # This fits the reference to the encoder, and gets
-            # the transformation. We then append a single unseen
-            # value to the end as a safety for the transform method.
-            # After the transpose, this is tantamount to appending a row
-            # of unseen values so each feature can handle the 99999
-            # This will expand the matrix by N columns, but if there's
-            # no new values, they will be entirely zero and can be dropped later.
-            encoded_array = np.append(encoder.fit_transform(X[nm]), unseen)
-
-            # Add the transformed row
-            trans_array.append(encoded_array)  # Updates in array
-
-            # Update the names
-            n_classes = len(encoder.classes_)
-            sequential_nms = ['%s.%s' % (nm, str(encoder.classes_[i])) for i in range(n_classes)]
-
-            # Remember to append the NA col
-            sequential_nms.append('%s.NA' % nm)
-            tnms.append(sequential_nms)
-
-        # Get the transpose
-        trans = np.array(trans_array).transpose()
-
-        # flatten the name array, append numeric names prior
-        num_nms = [n for n in X.columns.values if n not in obj_cols_]
-        trans_nms_ = [item for sublist in tnms for item in sublist]
-        self.trans_nms_ = num_nms + trans_nms_
-
-        # we might get an empty set of object cols
-        shape_tup = trans.shape
-        is_empty = len(shape_tup) < 2 or shape_tup[1] == 0  # zero cols
-
-        # Now we can do the actual one hot encoding, set internal state
-        self.one_hot_ = None if is_empty else OneHotEncoder().fit(trans)
-        self.obj_cols_ = obj_cols_
-        self.lab_encoders_ = lab_encoders_
+        # assign fit params
+        self.ohe_ = ohe
+        self.le_ = lab_encoders
+        self.fit_cols_ = cols
 
         return self
 
     def transform(self, X):
-        """Transform X, a DataFrame, by stripping
-        out the object columns, dummifying them, and
-        re-appending them to the end.
-        
+        """Apply the imputation to a dataframe.
+
+        This method will fill in the missing values within a test
+        dataframe with the statistics computed in ``fit``.
+
         Parameters
         ----------
-
-        X : Pandas ``DataFrame``, shape=(n_samples, n_features)
-            The Pandas frame to transform.
+        X : pd.DataFrame, shape=(n_samples, n_features)
+            The Pandas frame to transform. The operation will
+            be applied to a copy of the input data, and the result
+            will be returned.
 
         Returns
         -------
-
-        x : Pandas ``DataFrame`` or np.ndarray, shape=(n_samples, n_features)
-            The encoded dataframe or array
+        X : pd.DataFrame or np.ndarray, shape=(n_samples, n_features)
+            The operation is applied to a copy of ``X``,
+            and the result set is returned.
         """
-        check_is_fitted(self, 'obj_cols_')
-        # check on state of X, don't care about cols or warning
-        X, _ = validate_is_pd(X, None)
+        check_is_fitted(self, 'ohe_')
+        X, _ = check_dataframe(X, cols=self.cols)
 
-        # if there is no encoder to speak of, just bail early
-        if not self.one_hot_:
-            return X if self.as_df else X.as_matrix()
+        # validate that fit cols in test set
+        cols = self.fit_cols_
+        validate_test_set_columns(cols, X.columns)
 
-        # Retain just the numers
-        numers = X[[nm for nm in X.columns.values if nm not in self.obj_cols_]]
-        objs = X[self.obj_cols_]
+        # fit params that we need
+        ohe = self.ohe_
+        lenc = self.le_
+        sep = self.sep
+        drop = self.drop_one_level
+        col_order = []
+        drops = []
 
-        # If we need to fill in the NAs, take care of it
-        if self.fill is not None:
-            objs = objs.fillna(self.fill)
+        for col in cols:
+            # get the vec, transform via the label encoder
+            vec = X[col].values
 
-        # Do label encoding using the safe label encoders
-        trans = np.array([v.transform(objs[self.obj_cols_[i]]) for
-                          i, v in enumerate(self.lab_encoders_)]).transpose()
+            le = lenc[col]
+            vec_trans = le.transform(vec)  # Union[str, int] -> int
+            X[col] = vec_trans
 
-        # Finally, get the one-hot encoding...
-        oh = self.one_hot_.transform(trans).todense()
-        x = np.array(np.hstack((numers, oh)))
+            # get the column names (levels) so we can predict the
+            # order of the output cols
+            le_clz = le.classes_.tolist()
+            classes = ["%s%s%s" % (col, sep, clz) for clz in le_clz]
+            col_order.extend(classes)
 
-        return x if not self.as_df else pd.DataFrame.from_records(data=x, columns=self.trans_nms_)
+            # if we want to drop one, just drop the last
+            if drop and len(le_clz) > 1:
+                drops.append(classes[-1])
+
+        # now we can get the transformed OHE
+        ohe_trans = pd.DataFrame.from_records(data=ohe.transform(X[cols]),
+                                              columns=col_order)
+
+        # set the index to be equal to X's for a smooth concat
+        ohe_trans.index = X.index
+
+        # if we're dropping one level, do so now
+        if drops:
+            ohe_trans = ohe_trans.drop(drops, axis=1)
+
+        # drop the original columns from X
+        X = X.drop(cols, axis=1)
+
+        # concat the new columns
+        X = pd.concat([X, ohe_trans], axis=1)  # type: pd.DataFrame
+        return X if self.as_df else X.values

@@ -11,7 +11,10 @@ import copy
 from .iterables import is_iterable
 
 __all__ = [
-    'check_dataframe'
+    'check_dataframe',
+    'validate_multiple_cols',
+    'validate_multiple_rows',
+    'validate_test_set_columns'
 ]
 
 
@@ -110,3 +113,70 @@ def check_dataframe(X, cols=None, assert_all_finite=False, column_diff=False):
         return X_copy, cols, diff
 
     return X_copy, cols
+
+
+def validate_multiple_cols(clsname, cols):
+    """Validate that there are at least two columns to evaluate.
+
+    This is used for various feature selection techniques, as well as
+    in several feature extraction techniques.
+
+    Parameters
+    ----------
+    clsname : str or unicode
+        The name of the class that is calling the function.
+        Used for more clear error messages.
+
+    cols : array-like, shape=(n_features,)
+        The columns to evaluate. If ``cols`` is not None
+        and the length is less than 2, will raise a
+        ``ValueError``.
+    """
+    if len(cols) < 2:
+        raise ValueError('%s requires at least two features. Your data '
+                         '(or the passed ``cols`` parameter) includes too '
+                         'few features (%i)' % (clsname, len(cols)))
+
+
+def validate_multiple_rows(clsname, frame):
+    """Validate that there are at least two samples to evaluate.
+
+    This is used for various feature transformation techniques, such as
+    box-cox and yeo-johnson transformations.
+
+    Parameters
+    ----------
+    clsname : str or unicode
+        The name of the class that is calling the function.
+        Used for more clear error messages.
+
+    frame : array-like or pd.DataFrame, shape=(n_features, n_features)
+        The samples to evaluate. If contains less than two samples,
+        will raise a ValueError.
+    """
+    n_samples = frame.shape[0]
+    if n_samples < 2:
+        raise ValueError('%s requires at least two samples. Your data '
+                         'includes too few samples (%i)'
+                         % (clsname, n_samples))
+
+
+def validate_test_set_columns(fit_columns, test_columns):
+    """Validate that the test set columns will work.
+
+    This function checks that the ``fit_columns`` are present in the
+    ``test_columns`` set and raises a ValueError if not.
+
+    Parameters
+    ----------
+    fit_columns : list
+        The column names the estimator was fit on.
+
+    test_columns : list
+        The column names the test set contains.
+    """
+    present_cols = set(test_columns)  # O(1) lookup
+    if not all(t in present_cols for t in fit_columns):
+        raise ValueError("Not all fit columns present in test data! "
+                         "(expected=%r, present=%r)"
+                         % (fit_columns, test_columns))

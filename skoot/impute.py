@@ -5,7 +5,6 @@
 from __future__ import division, print_function, absolute_import
 
 import pandas as pd
-import numpy as np
 
 from sklearn.ensemble import BaggingRegressor, BaggingClassifier
 from sklearn.externals import six
@@ -81,7 +80,7 @@ class SelectiveImputer(BasePDTransformer):
 
     Parameters
     ----------
-    cols : array_like, shape=(n_features,), optional (default=None)
+    cols : array-like, shape=(n_features,), optional (default=None)
         The names of the columns on which to apply the transformation.
         If no column names are provided, the transformer will be ``fit``
         on the entire frame. Note that the transformation will also only
@@ -140,7 +139,7 @@ class SelectiveImputer(BasePDTransformer):
     0  1.00 -999.0  3.1
     1  1.55    2.3  3.1
     2  2.10    2.1  3.1
-    >>> imputer.statistics_
+    >>> imputer.statistics_ # doctest: +SKIP
     {'a': 1.55, 'b': -999., 'c': 3.1}
 
     Attributes

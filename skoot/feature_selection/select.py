@@ -7,8 +7,8 @@ from __future__ import print_function, division, absolute_import
 import numpy as np
 import pandas as pd
 
-from .base import BaseFeatureSelector, validate_multiple_cols
-from ..utils.validation import check_dataframe
+from .base import BaseFeatureSelector
+from ..utils.validation import check_dataframe, validate_multiple_cols
 
 __all__ = [
     'FeatureFilter',
@@ -66,10 +66,10 @@ class SparseFeatureFilter(BaseFeatureSelector):
 
     Attributes
     ----------
-    sparsity_ : array_like, shape=(n_features,)
+    sparsity_ : array-like, shape=(n_features,)
         The array of sparsity values
     
-    drop_ : array_like, shape=(n_features,)
+    drop_ : array-like, shape=(n_features,)
         Assigned after calling ``fit``. These are the features that
         are designated as "bad" and will be dropped in the ``transform``
         method.
@@ -226,7 +226,7 @@ class MultiCorrFilter(BaseFeatureSelector):
 
     Attributes
     ----------
-    drop_ : array_like, shape=(n_features,)
+    drop_ : array-like, shape=(n_features,)
         Assigned after calling ``fit``. These are the features that
         are designated as "bad" and will be dropped in the ``transform``
         method.
@@ -502,7 +502,8 @@ class NearZeroVarianceFilter(BaseFeatureSelector):
 
         return self
 
-    def _filter_freq_cut(self, series):
+    @staticmethod
+    def _filter_freq_cut(series):
         """Filter above a frequency cut.
 
         Parameters
@@ -525,5 +526,5 @@ class NearZeroVarianceFilter(BaseFeatureSelector):
             return np.inf
 
         # get the first two levels and counts
-        first_two = vc[:2].values.astype(float)
+        first_two = vc.values[:2].astype(float)
         return first_two[0] / first_two[1]

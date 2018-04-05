@@ -18,30 +18,6 @@ __all__ = [
 ]
 
 
-def validate_multiple_cols(clsname, cols):
-    """Validate that there are at least two columns to evaluate.
-
-    This is used for the MulticollinearityFilterer, the
-    LinearCombinationsFilterer, and potentially more,
-    as they require there be at least two columns.
-
-    Parameters
-    ----------
-    clsname : str or unicode
-        The name of the class that is calling the function.
-        Used for more clear error messages.
-
-    cols : array-like, shape=(n_features,)
-        The columns to evaluate. If ``cols`` is not None
-        and the length is less than 2, will raise a
-        ``ValueError``.
-    """
-    if len(cols) < 2:
-        raise ValueError('%s requires at least two features. Your data '
-                         '(or the passed ``cols`` parameter) includes too '
-                         'few features (%i)' % (clsname, len(cols)))
-
-
 class BaseFeatureSelector(six.with_metaclass(ABCMeta, BasePDTransformer)):
     """Base class for feature selectors.
 

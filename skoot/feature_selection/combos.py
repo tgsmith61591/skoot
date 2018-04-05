@@ -7,9 +7,9 @@ from __future__ import division, print_function
 from sklearn.externals import six
 import numpy as np
 
-from .base import BaseFeatureSelector, validate_multiple_cols
+from .base import BaseFeatureSelector
 from ..decomposition import QRDecomposition
-from ..utils.validation import check_dataframe
+from ..utils.validation import check_dataframe, validate_multiple_cols
 from ..utils.iterables import flatten_all
 
 __all__ = [
@@ -57,7 +57,7 @@ class LinearCombinationFilter(BaseFeatureSelector):
 
     Attributes
     ----------
-    drop_ : array_like, shape=(n_features,)
+    drop_ : array-like, shape=(n_features,)
         Assigned after calling ``fit``. These are the features that
         are designated as "bad" and will be dropped in the ``transform``
         method.

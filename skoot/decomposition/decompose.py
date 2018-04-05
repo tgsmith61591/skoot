@@ -16,7 +16,7 @@ from sklearn.externals import six
 
 from ..base import BasePDTransformer
 from ..decorators import overrides
-from ..utils.validation import check_dataframe
+from ..utils.validation import check_dataframe, validate_test_set_columns
 
 # local submodule funcs that use Fortran subroutines
 from ._dqrutl import (qr_decomposition, _call_dqrcf,
@@ -71,7 +71,7 @@ class SelectivePCA(_BaseSelectiveDecomposer):
 
     Parameters
     ----------
-    cols : array_like, shape=(n_features,), optional (default=None)
+    cols : array-like, shape=(n_features,), optional (default=None)
         The names of the columns on which to apply the transformation.
         If no column names are provided, the transformer will be ``fit``
         on the entire frame. Note that the transformation will also only
@@ -142,6 +142,11 @@ class SelectivePCA(_BaseSelectiveDecomposer):
     ----------
     pca_ : PCA
         The fitted ``sklearn.decomposition.PCA`` instance.
+
+    fit_cols_ : list
+        The list of column names on which the transformer was fit. This
+        is used to validate the presence of the features in the test set
+        during the ``transform`` stage.
     """
     def __init__(self, cols=None, n_components=None, whiten=False,
                  component_prefix='PC', do_weight=False, as_df=True):
@@ -180,6 +185,9 @@ class SelectivePCA(_BaseSelectiveDecomposer):
                         whiten=self.whiten)\
             .fit(X[cols])
 
+        # the columns we fit on
+        self.fit_cols_ = cols
+
         return self
 
     def transform(self, X):
@@ -204,8 +212,12 @@ class SelectivePCA(_BaseSelectiveDecomposer):
         check_is_fitted(self, 'pca_')
 
         # check on state of X and cols
-        X, cols, other_nms = check_dataframe(X, cols=self.cols,
-                                             column_diff=True)
+        X, _, other_nms = check_dataframe(X, cols=self.cols,
+                                          column_diff=True)
+
+        # validate that the test set columns exist in the fit columns
+        cols = self.fit_cols_
+        validate_test_set_columns(cols, X.columns.tolist())
 
         # get the transformation
         pca = self.pca_  # type: PCA
@@ -277,7 +289,7 @@ class SelectiveTruncatedSVD(_BaseSelectiveDecomposer):
 
     Parameters
     ----------
-    cols : array_like, shape=(n_features,), optional (default=None)
+    cols : array-like, shape=(n_features,), optional (default=None)
         The names of the columns on which to apply the transformation.
         If no column names are provided, the transformer will be ``fit``
         on the entire frame. Note that the transformation will also only
@@ -327,6 +339,11 @@ class SelectiveTruncatedSVD(_BaseSelectiveDecomposer):
     ----------
     svd_ : TruncatedSVD
         The fitted ``sklearn.decomposition.TruncatedSVD`` instance.
+
+    fit_cols_ : list
+        The list of column names on which the transformer was fit. This
+        is used to validate the presence of the features in the test set
+        during the ``transform`` stage.
     """
 
     def __init__(self, cols=None, n_components=2, algorithm='randomized',
@@ -368,6 +385,9 @@ class SelectiveTruncatedSVD(_BaseSelectiveDecomposer):
                                  n_iter=self.n_iter)\
             .fit(X[cols])
 
+        # the columns we fit on
+        self.fit_cols_ = cols
+
         return self
 
     def transform(self, X):
@@ -392,8 +412,12 @@ class SelectiveTruncatedSVD(_BaseSelectiveDecomposer):
         check_is_fitted(self, 'svd_')
 
         # check on state of X and cols
-        X, cols, other_nms = check_dataframe(X, cols=self.cols,
-                                             column_diff=True)
+        X, _, other_nms = check_dataframe(X, cols=self.cols,
+                                          column_diff=True)
+
+        # validate that the test set columns exist in the fit columns
+        cols = self.fit_cols_
+        validate_test_set_columns(cols, X.columns.tolist())
 
         svd = self.svd_  # type: TruncatedSVD
         transform = svd.transform(X[cols])
@@ -441,7 +465,7 @@ class QRDecomposition(object):
     >>> from skoot.datasets import load_iris_df
     >>> iris = load_iris_df(include_tgt=False)
     >>> qr = QRDecomposition(iris)
-    >>> iris.qr[:5]
+    >>> qr.qr[:5]
     array([[ -7.22762063e+01,  -3.69551770e+01,  -4.82074278e+01,
              -1.56019534e+01],
            [  6.77954786e-02,  -7.83357455e+00,   1.37362617e+01,

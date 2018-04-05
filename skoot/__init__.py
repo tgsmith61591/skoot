@@ -27,6 +27,7 @@ else:
         'balance',
         'datasets',
         'decomposition',
+        'feature_extraction',
         'feature_selection',
         'preprocessing',
         'utils'
