@@ -1,6 +1,8 @@
 [run]
 source = skoot
+include = */skoot/*
 omit =
-    */__check_build
-    */_build_utils/*
+    */skoot/__check_build
+    */skoot/_build_utils/*
+    */skoot/setup.py
     */setup.py

@@ -2,14 +2,13 @@
 
 from __future__ import absolute_import
 
+from skoot.testing import assert_raises
 from skoot.utils.validation import (check_dataframe, validate_test_set_columns,
                                     validate_multiple_rows)
 from sklearn.utils.validation import check_random_state
 
 import pandas as pd
 import numpy as np
-
-from nose.tools import assert_raises
 
 # single random state used throughout the tests here
 random_state = check_random_state(42)
