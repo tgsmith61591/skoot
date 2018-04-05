@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-set +e
+# remove due to Travis build issue 6307
+# set -e
+set +e  # because Travis can't get its act together
 
 # if it's a linux build, we need to apt-get update
 if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
@@ -21,7 +23,9 @@ if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
 elif [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
   echo "Updating Ruby for Mac OS build"
 
-  # command curl -sSL https://rvm.io/mpapis.asc | gpg --import -;
-  # rvm get stable
+  # stupid travis
+  command curl -sSL https://rvm.io/mpapis.asc | gpg --import -;
+  rvm get stable
+
   brew install gcc
 fi
