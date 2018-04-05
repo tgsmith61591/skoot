@@ -1,11 +1,6 @@
 [run]
-source = skutil
+source = skoot
 omit =
-    */python?.?/*
-    */lib-python/?.?/*.py
-    */lib_pypy/_*.py
-    */site-packages/ordereddict.py
-    */site-packages/nose/*
-    */unittest2/*
-    */setup.py
+    */__check_build
     */_build_utils/*
+    */setup.py
