@@ -7,6 +7,9 @@ if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
   echo "Updating apt-get for Linux build"
   sudo apt-get -qq update
 
+  echo "Downloading gfortran"
+  sudo apt-get gfortran
+
 # Workaround for https://github.com/travis-ci/travis-ci/issues/6307, which
 # caused the following error on MacOS X workers:
 #
