@@ -8,9 +8,9 @@ if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
   sudo apt-get -qq update
 
   echo "Downloading gcc, g++ & gfortran"
-  wget gcc
-  wget g++
-  wget gfortran
+  sudo apt-get install -y gcc
+  sudo apt-get install -y g++
+  sudo apt-get install -y gfortran
 
 # Workaround for https://github.com/travis-ci/travis-ci/issues/6307, which
 # caused the following error on MacOS X workers:
