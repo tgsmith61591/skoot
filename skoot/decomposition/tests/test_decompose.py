@@ -12,8 +12,7 @@ from sklearn.datasets import load_iris
 
 from skoot.decomposition import SelectivePCA, SelectiveTruncatedSVD
 from skoot.datasets import load_iris_df
-
-from nose.tools import assert_raises
+from skoot.testing import assert_raises
 
 # Def data for testing
 iris = load_iris()

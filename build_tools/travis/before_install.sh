@@ -20,6 +20,10 @@ if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
 # /Users/travis/build.sh: line 109: shell_session_update: command not found
 elif [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
   echo "Updating Ruby for Mac OS build"
+
   # command curl -sSL https://rvm.io/mpapis.asc | gpg --import -;
   # rvm get stable
+  brew install gcc
+  brew install g++
+  brew install gfortran
 fi

@@ -5,12 +5,12 @@ from __future__ import absolute_import
 import numpy as np
 import pandas as pd
 
+from skoot.testing import assert_raises
 from skoot.impute import (SelectiveImputer, _get_callable, _get_present_values,
                           _mean, _median, _most_frequent,
                           BaggedClassifierImputer, BaggedRegressorImputer)
 
 from numpy.testing import assert_array_equal, assert_array_almost_equal
-from nose.tools import assert_raises
 
 nan = np.nan
 X = pd.DataFrame.from_records(

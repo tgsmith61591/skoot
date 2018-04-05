@@ -10,11 +10,10 @@ import pandas as pd
 from skoot.decomposition import QRDecomposition
 from skoot.feature_selection import LinearCombinationFilter
 from skoot.feature_selection.combos import _enum_lc
+from skoot.testing import assert_raises
 
 from numpy.testing import assert_array_equal
 from sklearn.datasets import load_iris
-
-from nose.tools import assert_raises
 
 # Def data for testing
 iris = load_iris()

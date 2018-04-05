@@ -8,11 +8,11 @@ import numpy as np
 import pandas as pd
 
 from skoot.datasets import load_iris_df
+from skoot.testing import assert_raises
 from skoot.feature_selection import (FeatureFilter, SparseFeatureFilter,
                                      MultiCorrFilter, NearZeroVarianceFilter)
 
 from numpy.testing import assert_array_equal, assert_array_almost_equal
-from nose.tools import assert_raises
 
 # get some datasets defined for use later
 iris = load_iris_df(include_tgt=False,
