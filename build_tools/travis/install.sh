@@ -44,7 +44,7 @@ if [[ "$DISTRIB" == "conda" ]]; then
     conda update --yes conda
 
     TO_INSTALL="python=$PYTHON_VERSION pip pytest pytest-cov \
-                numpy=$NUMPY_VERSION scipy=$SCIPY_VERSION \
+                numpy scipy=$SCIPY_VERSION \
                 scikit-learn=$SCIKIT_LEARN_VERSION \
                 cython=$CYTHON_VERSION pandas=$PANDAS_VERSION"
 

@@ -33,7 +33,7 @@ matrix:
         - docker
       env: DISTRIB="conda" PYTHON_VERSION="2.7" CYTHON_VERSION="0.23.5"
            COVERAGE=true SCIKIT_LEARN_VERSION="0.18" DEPLOY=true CACHEC=true
-           NUMPY_VERSION="1.12.1" DOCKER_IMAGE="quay.io/pypa/manylinux1_x86_64"
+           DOCKER_IMAGE="quay.io/pypa/manylinux1_x86_64"
            DOCKER_CONTAINER_NAME="skootcontainer" SCIPY_VERSION="0.19.0"
            PANDAS_VERSION="0.18"
 
@@ -45,7 +45,7 @@ matrix:
         - docker
       env: DISTRIB="conda" PYTHON_VERSION="2.7" CYTHON_VERSION="0.23.5"
            COVERAGE=true SCIKIT_LEARN_VERSION="0.18" DEPLOY=true CACHEC=true
-           NUMPY_VERSION="1.13.1" DOCKER_IMAGE="quay.io/pypa/manylinux1_x86_64"
+           DOCKER_IMAGE="quay.io/pypa/manylinux1_x86_64"
            DOCKER_CONTAINER_NAME="skootcontainer" UCS_SETTING="ucs4"
            SCIPY_VERSION="0.19.0" PANDAS_VERSION="0.18"
 
@@ -55,7 +55,7 @@ matrix:
       language: generic
       env: DISTRIB="conda" PYTHON_VERSION="2.7" CYTHON_VERSION="0.23.5"
            COVERAGE=true SCIKIT_LEARN_VERSION="0.18" DEPLOY=true
-           NUMPY_VERSION="1.13.1" CACHEC=false SCIPY_VERSION="0.19.0"
+           CACHEC=false SCIPY_VERSION="0.19.0"
            PANDAS_VERSION="0.18"
 
     # This environment tests Python 3.5 support on linux
@@ -64,7 +64,7 @@ matrix:
       services:
         - docker
       env: DISTRIB="conda" PYTHON_VERSION="3.5" INSTALL_MKL="true"
-           NUMPY_VERSION="1.13.1" SCIPY_VERSION="0.19.0" CYTHON_VERSION="0.25.2"
+           SCIPY_VERSION="0.19.0" CYTHON_VERSION="0.25.2"
            COVERAGE=true SCIKIT_LEARN_VERSION="0.18" DEPLOY=true
            CACHEC=true DOCKER_IMAGE="quay.io/pypa/manylinux1_x86_64"
            DOCKER_CONTAINER_NAME="skootcontainer" PANDAS_VERSION="0.19"
@@ -73,7 +73,7 @@ matrix:
     - os: osx
       language: generic
       env: DISTRIB="conda" PYTHON_VERSION="3.5"
-           NUMPY_VERSION="1.14.1" SCIPY_VERSION="0.19.0" CYTHON_VERSION="0.25.2"
+           SCIPY_VERSION="0.19.0" CYTHON_VERSION="0.25.2"
            COVERAGE=true SCIKIT_LEARN_VERSION="0.18" DEPLOY=true CACHEC=false
            PANDAS_VERSION="0.19"
 
@@ -82,7 +82,7 @@ matrix:
     - os: linux
       dist: trusty
       env: DISTRIB="conda" PYTHON_VERSION="3.6.1" INSTALL_MKL="true"
-           NUMPY_VERSION="1.14.1" SCIPY_VERSION="0.19.0" CYTHON_VERSION="0.25.2"
+           SCIPY_VERSION="0.19.0" CYTHON_VERSION="0.25.2"
            COVERAGE=true SCIKIT_LEARN_VERSION="0.18" DEPLOY=false CACHEC=true
            PANDAS_VERSION="0.19" TEST_DOCSTRINGS="true"
 
