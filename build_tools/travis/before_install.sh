@@ -30,6 +30,13 @@ elif [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
   # See Travis issue (yes another) 8826
   # https://github.com/travis-ci/travis-ci/issues/8826
   brew cask uninstall oclint
+  # This should yield the following:
+  # ==> Uninstalling Cask oclint
+  # ==> Unlinking Binary '/usr/local/bin/oclint'.
+  # ==> Unlinking Binary '/usr/local/bin/oclint-json-compilation-database'.
+  # ==> Unlinking Binary '/usr/local/bin/oclint-xcodebuild'.
+  # ==> Unlinking Binary '/usr/local/lib/oclint'.
+  # ==> Unlinking Binary '/usr/local/include/c++'.
 
   # After oclint is uninstalled, we should be able to install GCC
   brew install gcc
