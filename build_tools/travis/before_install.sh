@@ -24,6 +24,4 @@ elif [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
   # command curl -sSL https://rvm.io/mpapis.asc | gpg --import -;
   # rvm get stable
   brew install gcc
-  brew install g++
-  brew install gfortran
 fi
