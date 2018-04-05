@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set +e
 
 # if it's a linux build, we need to apt-get update
 if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
