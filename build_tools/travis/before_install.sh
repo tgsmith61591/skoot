@@ -27,5 +27,10 @@ elif [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
   command curl -sSL https://rvm.io/mpapis.asc | gpg --import -;
   rvm get stable
 
+  # See Travis issue (yes another) 8826
+  # https://github.com/travis-ci/travis-ci/issues/8826
+  brew cask uninstall oclint
+
+  # After oclint is uninstalled, we should be able to install GCC
   brew install gcc
 fi
