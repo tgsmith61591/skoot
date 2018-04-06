@@ -17,7 +17,7 @@ except NameError:
     __SKOOT_SETUP__ = False
 
 if __SKOOT_SETUP__:
-    sys.stderr.write('Partial import of skoot during the build process.\n')
+    sys.stdout.write('Partial import of skoot during the build process.\n')
 else:
     # check that the build completed properly. This prints an informative
     # message in the case that any of the C code was not properly compiled.
