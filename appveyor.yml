@@ -42,6 +42,13 @@ environment:
       PYTHON_VERSION: "3.5"
       MINICONDA_MICRO_VERSION: "31"
 
+install:
+  - if [%PYTHON_ARCH%]==[32] SET PATH=%MINGW_32%;%PATH% & SET OPENBLAS=%OPENBLAS_32%
+  - if [%PYTHON_ARCH%]==[64] SET PATH=%MINGW_64%;%PATH% & SET OPENBLAS=%OPENBLAS_64%
+
+  # Echo some vars so we can hopefully debug more easily later...
+  - ps: echo $env:OPENBLAS
+
 # Conda is not working well on Windows because they haven't gotten
 # their act together RE: powershell... until they do, we cannot get latest
 build_script:
@@ -49,8 +56,6 @@ build_script:
   # - ps: Start-FileDownload "https://repo.continuum.io/miniconda/Miniconda$env:PY_MAJOR_VER-latest-Windows-$env:PYTHON_ARCH.exe" C:\Miniconda.exe; echo "Finished downloading miniconda"
   - cmd: C:\Miniconda.exe /S /D=C:\Py
   - SET PATH=C:\Py;C:\Py\Scripts;C:\Py\Library\bin;%PATH%
-  - if [%PYTHON_ARCH%]==[32] SET PATH=%MINGW_32%;%PATH% & SET OPENBLAS=%OPENBLAS_32%
-  - if [%PYTHON_ARCH%]==[64] SET PATH=%MINGW_64%;%PATH% & SET OPENBLAS=%OPENBLAS_64%
   - conda config --set always_yes yes
   # - conda update conda
 
