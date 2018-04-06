@@ -168,7 +168,7 @@ build_script:
       $env:NPY_NUM_BUILD_JOBS = "4"
 
       If ($env:USE_PYTEST -eq "true") {
-        pip install -e .
+        python setup.py develop
       } Else {
         mkdir dist
         pip wheel -v -v -v --wheel-dir=dist .
