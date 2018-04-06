@@ -166,6 +166,9 @@ build_script:
       }
       $env:Path += ";$MINGW"
       $env:NPY_NUM_BUILD_JOBS = "4"
+      $env:FC=%MINGW%\gfortran
+      $env:CXX=%MINGW%\g++
+      $env:CC=%MINGR%\gcc
 
       If ($env:USE_PYTEST -eq "true") {
         python setup.py develop
