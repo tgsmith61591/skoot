@@ -47,7 +47,9 @@ install:
   - if [%PYTHON_ARCH%]==[64] SET PATH=%MINGW_64%;%PATH% & SET OPENBLAS=%OPENBLAS_64%
 
   # Echo some vars so we can hopefully debug more easily later...
-  - ps: echo $env:OPENBLAS
+  - ps: |
+      echo $env:Path
+      echo $env:OPENBLAS
 
 # Conda is not working well on Windows because they haven't gotten
 # their act together RE: powershell... until they do, we cannot get latest
