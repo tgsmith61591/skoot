@@ -141,7 +141,7 @@ install:
       ls $destination
 
   # Upgrade to the latest pip.
-  - '%CMD_IN_ENV% python -m pip install -U pip setuptools wheel twine coverage codecov pytest pytest-cov patsy'
+  - '%CMD_IN_ENV% python -m pip install -U pip setuptools six wheel twine coverage codecov pytest pytest-cov patsy'
   # Install the scipy test dependencies.
   - '%CMD_IN_ENV% pip install -U --timeout 5 --retries 2 -r requirements.txt'
 
@@ -170,6 +170,7 @@ build_script:
       If ($env:USE_PYTEST -eq "true") {
         python setup.py bdist_wheel bdist_wininst
         ls dist
+        pip install --pre --no-index --find-links dist/ skoot
       } Else {
         mkdir dist
         pip wheel -v -v -v --wheel-dir=dist .
@@ -189,9 +190,6 @@ build_script:
             pip install $_.FullName
         }
       }
-
-  # from sklearn
-  - "pip install --pre --no-index --find-links dist/ skoot"
 
 test_script:
   # Change to a non-source folder to make sure we run the tests on the
