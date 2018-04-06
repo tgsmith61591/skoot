@@ -168,7 +168,8 @@ build_script:
       $env:NPY_NUM_BUILD_JOBS = "4"
 
       If ($env:USE_PYTEST -eq "true") {
-        python setup.py develop
+        python setup.py bdist_wheel bdist_wininst
+        ls dist
       } Else {
         mkdir dist
         pip wheel -v -v -v --wheel-dir=dist .
@@ -188,6 +189,9 @@ build_script:
             pip install $_.FullName
         }
       }
+
+  # from sklearn
+  - "pip install --pre --no-index --find-links dist/ skoot"
 
 test_script:
   # Change to a non-source folder to make sure we run the tests on the
