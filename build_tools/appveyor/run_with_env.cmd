@@ -22,6 +22,8 @@
 :: Author: Olivier Grisel
 :: License: CC0 1.0 Universal: http://creativecommons.org/publicdomain/zero/1.0/
 ::
+:: 4/6/2018 - Taylor Smith added openBLAS and MinGW paths
+::
 :: Notes about batch files for Python people:
 ::
 :: Quotes in values are literally part of the values:
@@ -82,7 +84,12 @@ IF %PYTHON_ARCH% == 64 (
         ECHO Executing: %COMMAND_TO_RUN%
         call %COMMAND_TO_RUN% || EXIT 1
     )
+
+    ECHO Setting MinGW to 64-bit
+    SET PATH=%MINGW_64%;%PATH% & SET OPENBLAS=%OPENBLAS_64%
 ) ELSE (
+    ECHO Setting MinGW to 32-bit
+    SET PATH=%MINGW_32%;%PATH% & SET OPENBLAS=%OPENBLAS_32%
     ECHO Using default MSVC build environment for 32 bit architecture
     ECHO Executing: %COMMAND_TO_RUN%
     call %COMMAND_TO_RUN% || EXIT 1

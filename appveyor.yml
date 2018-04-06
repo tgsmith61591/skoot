@@ -2,12 +2,21 @@
 # Windows. This .yml file is based on scikit-learn and statsmodels' Appveyor CI
 # setups, adapted for use with Skoot
 
+# This image contains the most pre-installed software (including supposedly
+# MinGW and Miniconda?...)
+image:
+- Visual Studio 2015
+
 environment:
   global:
     # SDK v7.0 MSVC Express 2008's SetEnv.cmd script will fail if the
     # /E:ON and /V:ON options are not enabled in the batch script interpreter
     # See: http://stackoverflow.com/a/13751649/163740
     CMD_IN_ENV: "cmd /E:ON /V:ON /C .\\build_tools\\appveyor\\run_with_env.cmd"
+    MINGW_32: C:\mingw-w64\i686-6.3.0-posix-dwarf-rt_v5-rev1\mingw32\bin
+    MINGW_64: C:\mingw-w64\x86_64-6.3.0-posix-seh-rt_v5-rev1\mingw64\bin
+    OPENBLAS_32: https://3f23b170c54c2533c070-1c8a9b3114517dc5fe17b7c3f8c63a43.ssl.cf2.rackcdn.com/openblas-5f998ef_gcc7_1_0_win32.zip
+    OPENBLAS_64: https://3f23b170c54c2533c070-1c8a9b3114517dc5fe17b7c3f8c63a43.ssl.cf2.rackcdn.com/openblas-5f998ef_gcc7_1_0_win64.zip
   PYPI_USERNAME: tgsmith61591.gh
   PYPI_PASSWORD:
     secure: gbT4E95dOsFHbxOmXk4C3gkIiaqeg0MGgvlE4rmxD4U=
