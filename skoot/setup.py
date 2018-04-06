@@ -31,6 +31,7 @@ def configuration(parent_package='', top_path=None):
     config.add_subpackage('feature_extraction')
     config.add_subpackage('feature_selection')
     config.add_subpackage('preprocessing')
+    config.add_subpackage('testing')
     config.add_subpackage('utils')
 
     # module tests -- must be added after others!
@@ -40,6 +41,7 @@ def configuration(parent_package='', top_path=None):
     config.add_subpackage('feature_extraction/tests')
     config.add_subpackage('feature_selection/tests')
     config.add_subpackage('preprocessing/tests')
+    config.add_subpackage('testing/tests')
     config.add_subpackage('utils/tests')
 
     # do cythonization
