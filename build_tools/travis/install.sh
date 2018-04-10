@@ -75,6 +75,9 @@ if [[ "$TEST_DOCSTRINGS" == "true" ]]; then
     pip install sphinx numpydoc  # numpydoc requires sphinx
 fi
 
+# we need cerberus!
+pip install cerberus
+
 # now run the python setup. This implicitly builds all the C code with build_ext
 python setup.py develop
 

@@ -52,3 +52,20 @@ class BasePDTransformer(six.with_metaclass(ABCMeta, BaseEstimator,
     def __init__(self, cols=None, as_df=True):
         self.cols = copy.deepcopy(cols)  # do not let be mutable!
         self.as_df = as_df
+
+    def fit(self, X, y=None):
+        """Fit the transformer.
+
+        Default behavior is not to fit any parameters and return self.
+        This is useful for transformers which do not require
+        parameterization, but need to fit into a pipeline.
+
+        Parameters
+        ----------
+        X : pd.DataFrame, shape=(n_samples, n_features)
+            The Pandas frame to fit.
+
+        y : array-like or None, shape=(n_samples,), optional (default=None)
+            Pass-through for ``sklearn.pipeline.Pipeline``.
+        """
+        return self
