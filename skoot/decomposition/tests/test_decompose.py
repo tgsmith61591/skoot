@@ -29,7 +29,7 @@ def test_selective_pca():
 
     # now fit PCA on the first column only
     transformer = SelectivePCA(cols=cols, n_components=0.85,
-                               trans_prefix="PC").fit(original)
+                               trans_col_name="PC").fit(original)
     transformed = transformer.transform(original)
 
     # get the untouched columns to compare. These should be equal!!
@@ -59,7 +59,7 @@ def test_selective_tsvd():
     compare_cols = original[comp_column_names].as_matrix()
 
     transformer = SelectiveTruncatedSVD(cols=cols, n_components=1,
-                                        trans_prefix="Concept").fit(original)
+                                        trans_col_name="Concept").fit(original)
     transformed = transformer.transform(original)
 
     untouched_cols = transformed[comp_column_names].as_matrix()
@@ -76,7 +76,7 @@ def test_selective_tsvd():
 
 def test_nmf():
     # just assert it fits/transforms
-    nmf = SelectiveNMF(trans_prefix="Trans")
+    nmf = SelectiveNMF(trans_col_name="Trans")
     trans = nmf.fit_transform(X)
     assert not X.equals(trans)
     assert "Trans1" in trans.columns
@@ -84,7 +84,7 @@ def test_nmf():
 
 def test_kpca():
     # just assert it fits/transforms
-    kpca = SelectiveKernelPCA(trans_prefix="Trans")
+    kpca = SelectiveKernelPCA(trans_col_name="Trans")
     trans = kpca.fit_transform(X)
     assert not X.equals(trans)
     assert "Trans1" in trans.columns
@@ -92,7 +92,7 @@ def test_kpca():
 
 def test_ipca():
     # just assert it fits/transforms
-    ipca = SelectiveIncrementalPCA(trans_prefix="Trans")
+    ipca = SelectiveIncrementalPCA(trans_col_name="Trans")
     trans = ipca.fit_transform(X)
     assert not X.equals(trans)
     assert "Trans1" in trans.columns

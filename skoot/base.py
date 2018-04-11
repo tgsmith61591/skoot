@@ -8,12 +8,12 @@ from sklearn.utils.validation import check_is_fitted
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.externals import six
 
-from collections import defaultdict
 from abc import ABCMeta
 import pandas as pd
 
 from .exceptions import DeveloperError
 from .utils.validation import check_dataframe, validate_test_set_columns
+from .utils.iterables import is_iterable
 
 import copy
 import os
@@ -21,6 +21,13 @@ import os
 __all__ = [
     'BasePDTransformer'
 ]
+
+# compat:
+try:
+    # PY2
+    xrange
+except NameError:
+    xrange = range
 
 
 class BasePDTransformer(six.with_metaclass(ABCMeta, BaseEstimator,
@@ -115,7 +122,7 @@ def _selective_copy_doc_for(skclass):
 
 class _SelectiveTransformerWrapper(six.with_metaclass(_WritableDoc,
                                                       BasePDTransformer)):
-    _p_names = ('cols', 'as_df', 'trans_prefix')
+    _p_names = ('cols', 'as_df', 'trans_col_name')
 
     # Build a selective transformer on the fly.
     #
@@ -124,7 +131,7 @@ class _SelectiveTransformerWrapper(six.with_metaclass(_WritableDoc,
     # since this method is for power-users/package developers. Do not
     # include in __all__ since this class is for power-users/package
     # developers.
-    def __init__(self, cols=None, as_df=True, trans_prefix=None, **kwargs):
+    def __init__(self, cols=None, as_df=True, trans_col_name=None, **kwargs):
 
         super(_SelectiveTransformerWrapper, self).__init__(
             cols=cols, as_df=as_df)
@@ -152,7 +159,7 @@ class _SelectiveTransformerWrapper(six.with_metaclass(_WritableDoc,
                 v = kwargs.get(k, v)  # try get from kwargs, fail w def. value
             setattr(self, k, v)
 
-        self.trans_prefix = trans_prefix
+        self.trans_col_name = trans_col_name
 
     def fit(self, X, y=None, **fit_kwargs):
         """Fit the wrapped transformer.
@@ -213,16 +220,25 @@ class _SelectiveTransformerWrapper(six.with_metaclass(_WritableDoc,
         est = self.estimator_
         transform = est.transform(X[cols])
 
-        # get the trans prefix
-        trans_prefix = self.trans_prefix
-        if trans_prefix is None:  # default to class name
-            trans_prefix = self.estimator_.__class__.__name__
+        # get the transformed column names
+        trans = self.trans_col_name
+        n_trans_cols = transform.shape[1]
+        if is_iterable(trans):
+            if len(trans) != n_trans_cols:
+                raise ValueError("dim mismatch in transformed column names "
+                                 "and transformed column shape! (%i!=%i)"
+                                 % (len(trans), n_trans_cols))
+        # else it's some scalar
+        else:
+            if trans is None:  # default to class name
+                trans = self.estimator_.__class__.__name__
+            # this gets caught if it's None as well:
+            trans = ["%s%i" % (trans, i + 1) for i in xrange(n_trans_cols)]
 
         # stack the transformed variables onto the RIGHT side
         right = pd.DataFrame.from_records(
             data=transform,
-            columns=[('%s%i' % (trans_prefix, i + 1))
-                     for i in range(transform.shape[1])])
+            columns=trans)
 
         # concat if needed
         x = pd.concat([X[other_nms], right], axis=1) if other_nms else right
