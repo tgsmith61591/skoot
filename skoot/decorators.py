@@ -2,7 +2,6 @@
 #
 # Author: Taylor Smith <taylor.smith@alkaline-ml.com>
 
-
 from __future__ import absolute_import
 
 import warnings

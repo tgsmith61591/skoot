@@ -76,10 +76,11 @@ def test_complex_grid_search():
     }
 
     # define the gridsearch
-    search = RandomizedSearchCV(pipe, hp,
-                                n_iter=2,  # just to test it even works
-                                scoring='accuracy',
-                                cv=cv, random_state=42)
+    search = RandomizedSearchCV(
+        pipe, hp, n_iter=2,  # just to test it even works
+        scoring='accuracy', cv=cv, random_state=42,
+        # in parallel so we are testing pickling of the classes
+        n_jobs=2)
 
     # fit the search
     search.fit(X_train, y_train)
