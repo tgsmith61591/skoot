@@ -2,6 +2,7 @@
 #
 # Author: Taylor Smith <taylor.smith@alkaline-ml.com>
 
+from .cerberus import *
 from .encode import *
 from .scale import *
 from .skewness import *
