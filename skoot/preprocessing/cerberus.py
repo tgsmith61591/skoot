@@ -8,19 +8,19 @@ from sklearn.utils.validation import check_is_fitted
 from cerberus import Validator
 
 from skoot.base import BasePDTransformer
-from skoot.utils.validation import check_dataframe, validate_test_set_columns
+from skoot.utils.validation import check_dataframe
 
 import pandas as pd
 
 __all__ = [
-    'Normalizer'
+    'SchemaNormalizer'
 ]
 
 
-class Normalizer(BasePDTransformer):
+class SchemaNormalizer(BasePDTransformer):
     def __init__(self, schema, as_df=True):
 
-        super(Normalizer, self).__init__(
+        super(SchemaNormalizer, self).__init__(
             as_df=as_df, cols=None)
 
         self.schema = schema

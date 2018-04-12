@@ -3,14 +3,14 @@
 from __future__ import absolute_import
 
 from skoot.datasets import load_iris_df
-from skoot.preprocessing.cerberus import Normalizer
+from skoot.preprocessing.cerberus import SchemaNormalizer
 
 X = load_iris_df()
 
 
 def test_normalizer():
     schema = {'petal width (cm)': {'coerce': int}}
-    norm = Normalizer(schema).fit(X)
+    norm = SchemaNormalizer(schema).fit(X)
     trans = norm.transform(X)
     types = trans.dtypes
 

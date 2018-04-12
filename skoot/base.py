@@ -30,27 +30,41 @@ except NameError:
     xrange = range
 
 
+_cols_doc = """cols : array-like, shape=(n_features,), optional (default=None)
+        The names of the columns on which to apply the transformation.
+        If no column names are provided, the transformer will be fit
+        on the entire frame. Note that the transformation will also 
+        only apply to the specified columns, and any other 
+        non-specified columns will still be present after 
+        the transformation."""
+
+_as_df_doc = """as_df : bool, optional (default=True)
+        Whether to return a Pandas ``DataFrame`` in the ``transform``
+        method. If False, will return a Numpy ``ndarray`` instead. 
+        Since most skoot transformers depend on explicitly-named
+        ``DataFrame`` features, the ``as_df`` parameter is True by 
+        default."""
+
+_trans_col_name_doc = """trans_col_name : str, unicode or iterable, optional
+        The name or list of names to apply to the transformed column(s).
+        If a string is provided, it is used as a prefix for new columns.
+        If an iterable is provided, its dimensions must match the number of
+        produced columns. If None (default), will use the estimator class
+        name as the prefix."""
+
+
 class BasePDTransformer(six.with_metaclass(ABCMeta, BaseEstimator,
                                            TransformerMixin)):
-    """The base class for all Pandas frame transformers.
+    __doc__ = """The base class for all Pandas frame transformers.
 
     Provides the base class for all skoot transformers that require
     Pandas dataframes as input.
 
     Parameters
     ----------
-    cols : array_like, shape=(n_features,), optional (default=None)
-        The names of the columns on which to apply the transformation.
-        If no column names are provided, the transformer will be ``fit``
-        on the entire frame. Note that the transformation will also only
-        apply to the specified columns, and any other non-specified
-        columns will still be present after transformation.
-
-    as_df : bool, optional (default=True)
-        Whether to return a Pandas ``DataFrame`` in the ``transform``
-        method. If False, will return a Numpy ``ndarray`` instead. 
-        Since most skoot transformers depend on explicitly-named
-        ``DataFrame`` features, the ``as_df`` parameter is True by default.
+    {_cols_doc}
+    
+    {_as_df_doc}
 
     Examples
     --------
@@ -63,7 +77,8 @@ class BasePDTransformer(six.with_metaclass(ABCMeta, BaseEstimator,
         ...
         >>> A()
         A(as_df=None, cols=None)
-    """
+    """.format(_cols_doc=_cols_doc, _as_df_doc=_as_df_doc)
+
     def __init__(self, cols=None, as_df=True):
         self.cols = copy.deepcopy(cols)  # do not let be mutable!
         self.as_df = as_df
@@ -97,8 +112,28 @@ class _WritableDoc(ABCMeta):
     # TODO: Py2: remove all this
 
 
-def _selective_copy_doc_for(skclass):
-    """Applied to classes to inherit doc from sklearn."""
+def _get_docstr_section_idx(docstr, section):
+    sec_idx = -1
+    for i, field in enumerate(docstr):
+        if section in field:
+            sec_idx = i
+            break
+    return sec_idx
+
+
+def _selective_copy_doc_for(skclass, examples=None):
+    """Applied to classes to inherit doc from sklearn.
+
+    Parameters
+    ----------
+    skclass : BaseEstimator
+        The scikit-learn class from which the new estimator will inherit
+        documentation. This class must have a populated docstring and a
+        "Parameters" section in order to behave properly.
+
+    examples : str or unicode, optional (default=None)
+        Any examples to inject into the documentation.
+    """
     def _copy_wrapper_doc(cls):
         lines = skclass.__doc__.split(os.linesep)
         header, rest = lines[0], lines[1:]
@@ -111,7 +146,21 @@ def _selective_copy_doc_for(skclass):
 
         # Add "selective" to the header
         header += " (applied to selected columns)"
-        # TODO: update parameters
+
+        # search for "Parameters"
+        parm_idx = _get_docstr_section_idx(rest, "Parameters")
+
+        # Only do this if we found "Parameters"
+        if parm_idx > -1:
+            # The separator is the next index
+            sep_idx = parm_idx + 1
+
+            # start one AFTER sep idx and make sure to prepend tabs
+            rest.insert(sep_idx + 1, "    " + _cols_doc + os.linesep)
+            rest.insert(sep_idx + 2, "    " + _as_df_doc + os.linesep)
+            rest.insert(sep_idx + 3, "    " + _trans_col_name_doc + os.linesep)
+
+        # TODO: update examples
 
         doc = '\n'.join([header + insert] + rest)
 
@@ -122,6 +171,7 @@ def _selective_copy_doc_for(skclass):
 
 class _SelectiveTransformerWrapper(six.with_metaclass(_WritableDoc,
                                                       BasePDTransformer)):
+    # non-estimator parameters only used for the wrapper and not in set_params
     _p_names = ('cols', 'as_df', 'trans_col_name')
 
     # Build a selective transformer on the fly.
