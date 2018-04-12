@@ -33,7 +33,7 @@ run_tests() {
     cd $TEST_DIR
 
     if [[ "$COVERAGE" == "true" ]]; then
-        TEST_CMD="$TEST_CMD --cov skoot"
+        TEST_CMD="$TEST_CMD --cov-config .coveragerc --cov skoot"
     fi
     $TEST_CMD skoot
 
