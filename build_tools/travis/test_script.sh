@@ -28,12 +28,13 @@ run_tests() {
     # check if we do not leave artifacts
     mkdir -p $TEST_DIR
 
-    # We need the setup.cfg for the test settings
+    # We need the setup.cfg & .coveragerc for the test settings
     cp setup.cfg $TEST_DIR
+    cp .coveragerc $TEST_DIR
     cd $TEST_DIR
 
     if [[ "$COVERAGE" == "true" ]]; then
-        TEST_CMD="$TEST_CMD --cov skoot"
+        TEST_CMD="$TEST_CMD --cov-config .coveragerc --cov skoot"
     fi
     $TEST_CMD skoot
 

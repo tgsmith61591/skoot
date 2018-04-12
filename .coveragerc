@@ -2,7 +2,7 @@
 source = skoot
 include = */skoot/*
 omit =
-    */skoot/__check_build
+    */skoot/__check_build/*
     */skoot/_build_utils/*
     */skoot/setup.py
     */setup.py

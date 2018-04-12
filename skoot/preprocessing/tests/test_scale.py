@@ -4,10 +4,12 @@
 
 from __future__ import absolute_import
 
-from sklearn.preprocessing import RobustScaler
+from sklearn.preprocessing import StandardScaler, RobustScaler
 
-from skoot.preprocessing import SelectiveScaler
 from skoot.datasets import load_iris_df
+from skoot.preprocessing import (SelectiveStandardScaler,
+                                 SelectiveRobustScaler, SelectiveMinMaxScaler,
+                                 SelectiveMaxAbsScaler)
 
 from numpy.testing import assert_array_almost_equal
 import numpy as np
@@ -25,8 +27,9 @@ def test_selective_scale():
     # original_std = np.std(X, axis=0)
     #  array([ 0.82530129,  0.43214658,  1.75852918,  0.76061262])
 
-    transformer = SelectiveScaler(cols=cols).fit(original)
-    transformed = transformer.transform(original)
+    transformer = SelectiveStandardScaler(
+        cols=cols, trans_col_name=[cols[0]]).fit(original)
+    transformed = transformer.transform(original)[original.columns]
 
     # expected: array([ 0.  ,  3.054     ,  3.75866667,  1.19866667])
     new_means = np.array(
@@ -46,8 +49,8 @@ def test_selective_scale():
 
 def test_selective_scale_robust():
     # test the ref for a provided estimator
-    rb_scale = RobustScaler()
-    trans = SelectiveScaler(scaler=rb_scale)
-    trans.fit(X)
+    rb_scale = RobustScaler().fit(X)
+    trans = SelectiveRobustScaler().fit(X)
 
-    assert rb_scale is not trans.scaler_
+    assert_array_almost_equal(rb_scale.fit_transform(X),
+                              trans.transform(X).values)
