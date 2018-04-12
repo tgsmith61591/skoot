@@ -4,437 +4,48 @@
 
 from __future__ import print_function, division, absolute_import
 
-from abc import ABCMeta, abstractmethod
-
 import numpy as np
 from numpy.linalg import matrix_rank
-import pandas as pd
 
-from sklearn.decomposition import PCA, TruncatedSVD
-from sklearn.utils.validation import check_is_fitted, check_array
-from sklearn.externals import six
+from sklearn.utils.validation import check_array
+from sklearn.decomposition import (PCA, TruncatedSVD, KernelPCA, NMF,
+                                   IncrementalPCA)
 
-from ..base import BasePDTransformer
-from ..decorators import overrides
-from ..utils.validation import check_dataframe, validate_test_set_columns
+from ..base import _selective_copy_doc_for, _SelectiveTransformerWrapper
 
 # local submodule funcs that use Fortran subroutines
 from ._dqrutl import (qr_decomposition, _call_dqrcf,
                       _validate_matrix_size, _qr_R)
 
 __all__ = [
+    'SelectiveIncrementalPCA',
+    'SelectiveKernelPCA',
+    'SelectiveNMF',
     'SelectivePCA',
     'SelectiveTruncatedSVD',
     'QRDecomposition'
 ]
 
-
-class _BaseSelectiveDecomposer(six.with_metaclass(ABCMeta, BasePDTransformer)):
-    def __init__(self, component_prefix, cols=None,
-                 n_components=None, as_df=True):
-
-        super(_BaseSelectiveDecomposer, self).__init__(
-            cols=cols, as_df=as_df)
-
-        self.component_prefix = component_prefix
-        self.n_components = n_components
-
-    def get_decomposition(self):
-        """Get the decomposition from a fitted instance.
-
-        Retrieves the fitted decomposition class from a fitted instance.
-        If the transformer has not yet been fit, returns None.
-        """
-        attrname = self._decomposition_name()  # type: str or unicode
-        return getattr(self, attrname) if hasattr(self, attrname) else None
-
-    @abstractmethod
-    def _decomposition_name(self):
-        """To be overridden by subclasses.
-
-        Get the name of the fitted decomposition attribute. This is an
-        internal method used as a getter to lookup the fitted decomposition
-        if it exists.
-
-        Returns
-        -------
-        attrname : str or unicode
-            The name of the fitted decomposition attribute.
-        """
-
-
-class SelectivePCA(_BaseSelectiveDecomposer):
-    """Apply PCA only to a select group of columns.
-
-    This wraps the ``sklearn.decomposition.PCA`` and is useful for data that
-    may contain a mix of columns that we do and don't want to decompose.
-
-    Parameters
-    ----------
-    cols : array-like, shape=(n_features,), optional (default=None)
-        The names of the columns on which to apply the transformation.
-        If no column names are provided, the transformer will be ``fit``
-        on the entire frame. Note that the transformation will also only
-        apply to the specified columns, and any other non-specified
-        columns will still be present after transformation.
-
-    n_components : int, float, None or string, optional (default=None)
-        The number of components to keep, per sklearn:
-
-        * if n_components is not set, all components are kept:
-
-            n_components == min(n_samples, n_features)
-
-        * if n_components == 'mle' and svd_solver == 'full', Minka's MLE
-          is used to guess the dimension.
-
-        * if ``0 < n_components < 1`` and svd_solver == 'full', select the
-          number of components such that the amount of variance that needs
-          to be explained is greater than the percentage specified by
-          ``n_components``
-
-        * ``n_components`` cannot be equal to ``n_features`` for
-          ``svd_solver`` == 'arpack'.
-
-    as_df : bool, optional (default=True)
-        Whether to return a Pandas ``DataFrame`` in the ``transform``
-        method. If False, will return a Numpy ``ndarray`` instead. 
-        Since most skoot transformers depend on explicitly-named
-        ``DataFrame`` features, the ``as_df`` parameter is True by
-        default.
-
-    whiten : bool, optional (default False)
-        When True (False by default) the `components_` vectors are multiplied
-        by the square root of n_samples and then divided by the singular values
-        to ensure uncorrelated outputs with unit component-wise variances.
-        Whitening will remove some information from the transformed signal
-        (the relative variance scales of the components) but can sometime
-        improve the predictive accuracy of the downstream estimators by
-        making their data respect some hard-wired assumptions.
-
-    component_prefix : str or unicode, optional (default='PC')
-        The prefix for transformed components. This string is appended before
-        the component number when creating columns for the output dataframe.
-
-    do_weight : bool, optional (default False)
-        When True (False by default) the `explained_variance_` vector is used
-        to weight the features post-transformation. This is especially useful
-        in clustering contexts, where features are all implicitly assigned the
-        same importance, even though PCA by nature orders the features by
-        importance (i.e., not all components are created equally). When True,
-        weighting will subtract the median variance from the weighting vector,
-        and add one (so as not to down sample or upsample everything), then
-        multiply the weights across the transformed features.
-
-    Examples
-    --------
-    An example decomposition:
-
-    >>> from skoot.decomposition import SelectivePCA
-    >>> from skoot.datasets import load_iris_df
-    >>>
-    >>> X = load_iris_df(include_tgt=False)
-    >>> pca = SelectivePCA(n_components=2)
-    >>> X_transform = pca.fit_transform(X)
-    >>> assert X_transform.shape[1] == 2
-
-    Attributes
-    ----------
-    pca_ : PCA
-        The fitted ``sklearn.decomposition.PCA`` instance.
-
-    fit_cols_ : list
-        The list of column names on which the transformer was fit. This
-        is used to validate the presence of the features in the test set
-        during the ``transform`` stage.
-    """
-    def __init__(self, cols=None, n_components=None, whiten=False,
-                 component_prefix='PC', do_weight=False, as_df=True):
-
-        super(SelectivePCA, self).__init__(
-            component_prefix=component_prefix,
-            cols=cols, n_components=n_components,
-            as_df=as_df)
-
-        self.whiten = whiten
-        self.do_weight = do_weight
-
-    def fit(self, X, y=None):
-        """Fit the transformer.
-
-        This method will fit a ``sklearn.decomposition.PCA`` instance on the
-        provided dataframe, and for the ``cols`` passed in the constructor.
-
-        Parameters
-        ----------
-        X : pd.DataFrame, shape=(n_samples, n_features)
-            The Pandas frame to fit. The frame will only
-            be fit on the prescribed ``cols`` (see ``__init__``) or
-            all of them if ``cols`` is None. Furthermore, ``X`` will
-            not be altered in the process of the fit.
-
-        y : array-like or None, shape=(n_samples,), optional (default=None)
-            Pass-through for ``sklearn.pipeline.Pipeline``. Even
-            if explicitly set, will not change behavior of ``fit``.
-        """
-        # check on state of X and cols
-        X, cols = check_dataframe(X, self.cols)
-
-        # fails thru if names don't exist:
-        self.pca_ = PCA(n_components=self.n_components,
-                        whiten=self.whiten)\
-            .fit(X[cols])
-
-        # the columns we fit on
-        self.fit_cols_ = cols
-
-        return self
-
-    def transform(self, X):
-        """Transform a test dataframe.
-
-        This method will apply the PCA transformation to the columns
-        provided in the ``cols`` parameter.
-
-        Parameters
-        ----------
-        X : pd.DataFrame, shape=(n_samples, n_features)
-            The Pandas frame to transform. The operation will
-            be applied to a copy of the input data, and the result
-            will be returned.
-
-        Returns
-        -------
-        X : pd.DataFrame, shape=(n_samples, n_features)
-            The operation is applied to a copy of ``X``,
-            and the result set is returned.
-        """
-        check_is_fitted(self, 'pca_')
-
-        # check on state of X and cols
-        X, _, other_nms = check_dataframe(X, cols=self.cols,
-                                          column_diff=True)
-
-        # validate that the test set columns exist in the fit columns
-        cols = self.fit_cols_
-        validate_test_set_columns(cols, X.columns.tolist())
-
-        # get the transformation
-        pca = self.pca_  # type: PCA
-        transform = pca.transform(X[cols])
-
-        # do weighting if necessary
-        if self.do_weight:
-            # get the weight vals
-            weights = pca.explained_variance_ratio_
-            weights = 1 + (weights - np.median(weights))
-
-            # now add to the transformed features
-            transform *= weights
-
-        # stack the transformed variables onto the RIGHT side
-        right = pd.DataFrame.from_records(
-            data=transform,
-            columns=[('%s%i' % (self.component_prefix, i + 1))
-                     for i in range(transform.shape[1])])
-
-        # concat if needed
-        x = pd.concat([X[other_nms], right], axis=1) if other_nms else right
-        return x if self.as_df else x.values
-
-    @overrides(_BaseSelectiveDecomposer)
-    def _decomposition_name(self):
-        return "pca_"
-
-    def score(self, X, y=None):
-        """Return the average log-likelihood of all samples.
-
-        This calls ``sklearn.decomposition.PCA``'s score method
-        on the specified columns [1]. Note that if the transformer has not
-        yet been fitted, this will fail.
-
-        Parameters
-        ----------
-        X: pd.DataFrame, shape=(n_samples, n_features)
-            The dataframe to score.
-
-        y : array-like or None, shape=(n_samples,), optional (default=None)
-            Pass-through for pipeline
-
-        Returns
-        -------
-        ll: float
-            Average log-likelihood of the samples under the fit
-            PCA model (``self.pca_``)
-
-        References
-        ----------
-        .. [1] Bishop, C.  "Pattern Recognition and Machine Learning"
-               12.2.1 p. 574 http://www.miketipping.com/papers/met-mppca.pdf
-        """
-        check_is_fitted(self, 'pca_')
-
-        X, cols = check_dataframe(X, self.cols)
-        pca = self.pca_  # type: PCA
-        return pca.score(X[cols], y)
-
-
-class SelectiveTruncatedSVD(_BaseSelectiveDecomposer):
-    """Apply TruncatedSVD only to a select group of columns.
-
-    This wraps the ``sklearn.decomposition.TruncatedSVD`` and is useful
-    for data that may contain a mix of columns that we do and don't want
-    to decompose. TruncatedSVD is the equivalent of Latent Semantic Analysis;
-    it returns the "concept space" of the decomposed features.
-
-    Parameters
-    ----------
-    cols : array-like, shape=(n_features,), optional (default=None)
-        The names of the columns on which to apply the transformation.
-        If no column names are provided, the transformer will be ``fit``
-        on the entire frame. Note that the transformation will also only
-        apply to the specified columns, and any other non-specified
-        columns will still be present after transformation.
-
-    n_components : int, (default=2)
-        Desired dimensionality of output data.
-        Must be strictly less than the number of features.
-        The default value is useful for visualisation. For LSA, a value of
-        100 is recommended.
-
-    algorithm : string, (default="randomized")
-        SVD solver to use. Either "arpack" for the ARPACK wrapper in SciPy
-        (scipy.sparse.linalg.svds), or "randomized" for the randomized
-        algorithm due to Halko (2009).
-
-    n_iter : int, optional (default=5)
-        Number of iterations for randomized SVD solver. Not used by ARPACK.
-        The default is larger than the default in `randomized_svd` to handle
-        sparse matrices that may have large slowly decaying spectrum.
-
-    component_prefix : str or unicode, optional (default='Concept')
-        The prefix for transformed components. This string is appended before
-        the component number when creating columns for the output dataframe.
-
-    as_df : bool, optional (default=True)
-        Whether to return a Pandas ``DataFrame`` in the ``transform``
-        method. If False, will return a Numpy ``ndarray`` instead. 
-        Since most skoot transformers depend on explicitly-named
-        ``DataFrame`` features, the ``as_df`` parameter is True
-        by default.
-
-    Examples
-    --------
-    An example decomposition:
-
-    >>> from skoot.decomposition import SelectiveTruncatedSVD
-    >>> from skoot.datasets import load_iris_df
-    >>>
-    >>> X = load_iris_df(include_tgt=False)
-    >>> svd = SelectiveTruncatedSVD(n_components=2)
-    >>> X_transform = svd.fit_transform(X)
-    >>> assert X_transform.shape[1] == 2
-
-    Attributes
-    ----------
-    svd_ : TruncatedSVD
-        The fitted ``sklearn.decomposition.TruncatedSVD`` instance.
-
-    fit_cols_ : list
-        The list of column names on which the transformer was fit. This
-        is used to validate the presence of the features in the test set
-        during the ``transform`` stage.
-    """
-
-    def __init__(self, cols=None, n_components=2, algorithm='randomized',
-                 n_iter=5, component_prefix='Concept', as_df=True):
-
-        super(SelectiveTruncatedSVD, self).__init__(
-            cols=cols, n_components=n_components,
-            component_prefix=component_prefix,
-            as_df=as_df)
-
-        self.algorithm = algorithm
-        self.n_iter = n_iter
-
-    def fit(self, X, y=None):
-        """Fit the transformer.
-
-        This method will fit a ``sklearn.decomposition.TruncatedSVD``
-        instance on the provided dataframe, and for the ``cols`` passed
-        in the constructor.
-
-        Parameters
-        ----------
-        X : pd.DataFrame, shape=(n_samples, n_features)
-            The Pandas frame to fit. The frame will only
-            be fit on the prescribed ``cols`` (see ``__init__``) or
-            all of them if ``cols`` is None. Furthermore, ``X`` will
-            not be altered in the process of the fit.
-
-        y : array-like or None, shape=(n_samples,), optional (default=None)
-            Pass-through for ``sklearn.pipeline.Pipeline``. Even
-            if explicitly set, will not change behavior of ``fit``.
-        """
-        # check on state of X and cols
-        X, cols = check_dataframe(X, cols=self.cols)
-
-        # fails thru if names don't exist:
-        self.svd_ = TruncatedSVD(n_components=self.n_components,
-                                 algorithm=self.algorithm,
-                                 n_iter=self.n_iter)\
-            .fit(X[cols])
-
-        # the columns we fit on
-        self.fit_cols_ = cols
-
-        return self
-
-    def transform(self, X):
-        """Transform a test dataframe.
-
-        This method will apply the TruncatedSVD transformation to the columns
-        provided in the ``cols`` parameter.
-
-        Parameters
-        ----------
-        X : pd.DataFrame, shape=(n_samples, n_features)
-            The Pandas frame to transform. The operation will
-            be applied to a copy of the input data, and the result
-            will be returned.
-
-        Returns
-        -------
-        X : pd.DataFrame, shape=(n_samples, n_features)
-            The operation is applied to a copy of ``X``,
-            and the result set is returned.
-        """
-        check_is_fitted(self, 'svd_')
-
-        # check on state of X and cols
-        X, _, other_nms = check_dataframe(X, cols=self.cols,
-                                          column_diff=True)
-
-        # validate that the test set columns exist in the fit columns
-        cols = self.fit_cols_
-        validate_test_set_columns(cols, X.columns.tolist())
-
-        svd = self.svd_  # type: TruncatedSVD
-        transform = svd.transform(X[cols])
-
-        # make into a dataframe we'll append to the RIGHT side
-        right = pd.DataFrame.from_records(
-            data=transform,
-            columns=[('%s%i' % (self.component_prefix, i + 1))
-                     for i in range(transform.shape[1])])
-
-        # concat if needed
-        x = pd.concat([X[other_nms], right], axis=1) if other_nms else right
-        return x if self.as_df else x.values
-
-    @overrides(_BaseSelectiveDecomposer)
-    def _decomposition_name(self):
-        return "svd_"
+# Selective decomposition classes
+@_selective_copy_doc_for(IncrementalPCA)
+class SelectiveIncrementalPCA(_SelectiveTransformerWrapper):
+    _cls = IncrementalPCA
+
+@_selective_copy_doc_for(KernelPCA)
+class SelectiveKernelPCA(_SelectiveTransformerWrapper):
+    _cls = KernelPCA
+
+@_selective_copy_doc_for(NMF)
+class SelectiveNMF(_SelectiveTransformerWrapper):
+    _cls = NMF
+
+@_selective_copy_doc_for(PCA)
+class SelectivePCA(_SelectiveTransformerWrapper):
+    _cls = PCA
+
+@_selective_copy_doc_for(TruncatedSVD)
+class SelectiveTruncatedSVD(_SelectiveTransformerWrapper):
+    _cls = TruncatedSVD
 
 
 class QRDecomposition(object):

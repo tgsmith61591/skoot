@@ -7,15 +7,16 @@
 from __future__ import print_function
 
 from scipy.stats import randint, uniform
+
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import RobustScaler
 from sklearn.model_selection import train_test_split, KFold, RandomizedSearchCV
 
 from skoot.impute import SelectiveImputer
 from skoot.datasets import load_iris_df
 from skoot.decomposition import SelectiveTruncatedSVD, SelectivePCA
-from skoot.preprocessing import BoxCoxTransformer, SelectiveScaler
+from skoot.preprocessing import (BoxCoxTransformer, SelectiveStandardScaler,
+                                 SelectiveMaxAbsScaler)
 from skoot.feature_selection import (MultiCorrFilter, NearZeroVarianceFilter,
                                      FeatureFilter)
 
@@ -29,7 +30,7 @@ cv = KFold(n_splits=3, shuffle=True, random_state=42)
 
 def test_pipeline_basic():
     pipe = Pipeline([
-        ('scaler', SelectiveScaler()),
+        ('scaler', SelectiveStandardScaler()),
         ('model', RandomForestClassifier())
     ])
 
@@ -38,7 +39,7 @@ def test_pipeline_basic():
 
 def test_pipeline_complex():
     pipe = Pipeline([
-        ('scaler', SelectiveScaler()),
+        ('scaler', SelectiveStandardScaler()),
         ('boxcox', BoxCoxTransformer()),
         ('pca', SelectivePCA()),
         ('svd', SelectiveTruncatedSVD()),
@@ -54,7 +55,7 @@ def test_complex_grid_search():
         ('dropper',        FeatureFilter()),  # won't drop any
         ('collinearity',   MultiCorrFilter(threshold=0.85)),
         ('imputer',        SelectiveImputer()),  # pass through since all full
-        ('scaler',         SelectiveScaler()),
+        ('scaler',         SelectiveMaxAbsScaler()),
         ('boxcox',         BoxCoxTransformer()),
         ('nzv',            NearZeroVarianceFilter()),
         ('pca',            SelectivePCA(n_components=0.9)),
@@ -65,7 +66,6 @@ def test_complex_grid_search():
     hp = {
         'collinearity__threshold':    uniform(loc=.8, scale=.15),
         'collinearity__method':       ['pearson', 'kendall', 'spearman'],
-        'scaler__scaler':             [None, RobustScaler()],
         'pca__n_components':          uniform(loc=.75, scale=.2),
         'pca__whiten':                [True, False],
         'model__n_estimators':        randint(5, 10),
@@ -76,10 +76,11 @@ def test_complex_grid_search():
     }
 
     # define the gridsearch
-    search = RandomizedSearchCV(pipe, hp,
-                                n_iter=2,  # just to test it even works
-                                scoring='accuracy',
-                                cv=cv, random_state=42)
+    search = RandomizedSearchCV(
+        pipe, hp, n_iter=2,  # just to test it even works
+        scoring='accuracy', cv=cv, random_state=42,
+        # in parallel so we are testing pickling of the classes
+        n_jobs=2)
 
     # fit the search
     search.fit(X_train, y_train)
