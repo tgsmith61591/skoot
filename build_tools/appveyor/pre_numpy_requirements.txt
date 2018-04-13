@@ -1,0 +1,8 @@
+setuptools
+six
+wheel
+twine
+pytest
+cython
+patsy
+cerberus
