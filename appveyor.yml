@@ -163,7 +163,8 @@ build_script:
       If ($env:USE_PYTEST -eq "true") {
         python setup.py bdist_wheel bdist_wininst
         ls dist
-        pip install --pre --no-index --find-links dist/ skoot
+        # pip install --pre --no-index --find-links dist/ skoot
+        pip install dist/*.whl
       } Else {
         mkdir dist
         pip wheel -v -v -v --wheel-dir=dist .
