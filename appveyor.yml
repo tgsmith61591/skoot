@@ -156,7 +156,7 @@ build_script:
       If ($env:USE_PYTEST -eq "true") {
         python setup.py bdist_wheel bdist_wininst
         ls dist
-        python setup.py install
+        pip install --pre --no-index --find-links dist/ skoot
       } Else {
         mkdir dist
         pip wheel -v -v -v --wheel-dir=dist .
@@ -176,6 +176,24 @@ build_script:
             pip install $_.FullName
         }
       }
+
+after_build:
+  # Remove old or huge cache files to hopefully not exceed the 1GB cache limit.
+  #
+  # If the cache limit is reached, the cache will not be updated (of not even
+  # created in the first run). So this is a trade of between keeping the cache
+  # current and having a cache at all.
+  # NB: This is done only `on_success` since the cache in uploaded only on
+  # success anyway.
+  - C:\cygwin\bin\find "%LOCALAPPDATA%\pip" -type f -mtime +360 -delete
+  - C:\cygwin\bin\find "%LOCALAPPDATA%\pip" -type f -size +10M -delete
+  - C:\cygwin\bin\find "%LOCALAPPDATA%\pip" -empty -delete
+  # Show size of cache
+  - C:\cygwin\bin\du -hs "%LOCALAPPDATA%\pip\Cache"
+
+  - >-
+     %CMD_IN_ENV%
+     python -c "from skoot import decomposition as d; print(dir(d))"
 
 test_script:
   # - ECHO %TEST_MODE%
@@ -198,20 +216,6 @@ test_script:
   # Move back to the project folder
   - "cd .."
   - "cd skoot"
-
-after_build:
-  # Remove old or huge cache files to hopefully not exceed the 1GB cache limit.
-  #
-  # If the cache limit is reached, the cache will not be updated (of not even
-  # created in the first run). So this is a trade of between keeping the cache
-  # current and having a cache at all.
-  # NB: This is done only `on_success` since the cache in uploaded only on
-  # success anyway.
-  - C:\cygwin\bin\find "%LOCALAPPDATA%\pip" -type f -mtime +360 -delete
-  - C:\cygwin\bin\find "%LOCALAPPDATA%\pip" -type f -size +10M -delete
-  - C:\cygwin\bin\find "%LOCALAPPDATA%\pip" -empty -delete
-  # Show size of cache
-  - C:\cygwin\bin\du -hs "%LOCALAPPDATA%\pip\Cache"
 
 after_test:
   # After the test, build the wheels (let travis handle the source build).
