@@ -147,7 +147,7 @@ install:
 
   # NOW that we've updated our numpy dist we can install scikit, etc.
   - "ECHO Installing POST-requirements"
-  - '%CMD_IN_ENV%' pip install -U --timeout 5 --retries 2 -r build_tools/appveyor/post_numpy_requirements.txt'
+  - '%CMD_IN_ENV% pip install -U --timeout 5 --retries 2 -r build_tools/appveyor/post_numpy_requirements.txt'
 
 build_script:
   - ps: |
