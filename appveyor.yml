@@ -161,7 +161,7 @@ build_script:
       $env:NPY_NUM_BUILD_JOBS = "4"
 
       mkdir dist
-      pip wheel -v -v -v --wheel-dir=dist .
+      python -m pip wheel -v -v -v --wheel-dir=dist .
 
       # For each wheel that pip has placed in the "dist" directory
       # First, upload the wheel to the "artifacts" tab and then
@@ -174,8 +174,12 @@ build_script:
       # they can be inspected.
 
       ls dist -r | Foreach-Object {
-          appveyor PushArtifact $_.FullName
-          pip install $_.FullName
+          if ($_.Contains("skoot")) {
+            echo $_.FullName
+            appveyor PushArtifact $_.FullName
+          }
+
+          python -m pip install $_.FullName
       }
 
 after_build:
@@ -194,6 +198,7 @@ after_build:
   - C:\cygwin\bin\du -hs "%LOCALAPPDATA%\pip\Cache"
 
   # - ls %PYTHON%\lib\site-packages\
+  - cat skoot.egg-info\SOURCES.txt
   - ls %PYTHON%\lib\site-packages\skoot
   - ls %PYTHON%\lib\site-packages\skoot\__check_build
   - ls %PYTHON%\lib\site-packages\skoot\decomposition
@@ -250,11 +255,8 @@ after_test:
   - ECHO "Tests complete!"
   - set PATH=%BK_PATH%
 
-artifacts:
-  - path: dist\*
-
 deploy_script:
   - echo "Starting artifact deployment"
   - set PATH=%BK_PATH%
-  - ps: If ($env:APPVEYOR_REPO_TAG -eq "true") { Invoke-Expression "twine upload -u tgsmith61591.gh -p $env:PYPI_PASSWORD --skip-existing dist/*.whl" } Else { write-output "Not on a tagged commit, won't deploy to pypi"}
+  - ps: If ($env:APPVEYOR_REPO_TAG -eq "true") { Invoke-Expression "twine upload -u tgsmith61591.gh -p $env:PYPI_PASSWORD --skip-existing dist/skoot*.whl" } Else { write-output "Not on a tagged commit, won't deploy to pypi"}
   #- ps: If ($env:APPVEYOR_REPO_BRANCH -eq "develop") { Invoke-Expression "twine upload -u tgsmith61591.gh -p $env:PYPI_PASSWORD --repository-url https://test.pypi.org/legacy/ --skip-existing dist/*" } Else { write-output "Not on a development commit, won't deploy to pypitest"}

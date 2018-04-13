@@ -93,7 +93,8 @@ if SETUPTOOLS_COMMANDS.intersection(sys.argv):
             return True
 
     # only import numpy (later) if we're developing
-    if any(cmd in sys.argv for cmd in {'develop', 'bdist_wheel'}):
+    if any(cmd in sys.argv for cmd in {'develop', 'bdist_wheel',
+                                       'bdist_wininst'}):
         we_be_buildin = True
 
     print('Adding extra setuptools args')
