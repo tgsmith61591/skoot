@@ -188,14 +188,10 @@ after_build:
   - C:\cygwin\bin\find "%LOCALAPPDATA%\pip" -type f -mtime +360 -delete
   - C:\cygwin\bin\find "%LOCALAPPDATA%\pip" -type f -size +10M -delete
   - C:\cygwin\bin\find "%LOCALAPPDATA%\pip" -empty -delete
+
   # Show size of cache
   - C:\cygwin\bin\du -hs "%LOCALAPPDATA%\pip\Cache"
 
-  - >-
-     %CMD_IN_ENV%
-     python -c "from skoot import decomposition as d; print(dir(d))"
-
-test_script:
   # - ECHO %TEST_MODE%
   # Scipy's args are giving us errors:
   # - python appveyor_runtests.py -n -m %TEST_MODE% -- -n6 --timeout=%TEST_TIMEOUT% --junitxml=%cd%\junit-results.xml -rfEX
@@ -205,8 +201,13 @@ test_script:
   # installed library.
   # - ls %PYTHON%\lib\site-packages\
   # - ls %PYTHON%\lib\site-packages\skoot
+  - ls %PYTHON%\lib\site-packages\skoot\__check_build
   - ls %PYTHON%\lib\site-packages\skoot\decomposition
+  - >-
+     %CMD_IN_ENV%
+     python -c "from skoot import decomposition as d; print(dir(d))"
 
+test_script:
   # Move back, make a folder, CD in and test (so we test from site-packages)
   - "cd .."
   - "mkdir empty_folder"
