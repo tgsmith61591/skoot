@@ -22,7 +22,6 @@ environment:
     NUMPY_HEAD: https://github.com/numpy/numpy.git
     NUMPY_BRANCH: master
     APPVEYOR_SAVE_CACHE_ON_ERROR: false
-    APPVEYOR_SKIP_FINALIZE_ON_EXIT: true
     TEST_TIMEOUT: 1000
     # SDK v7.0 MSVC Express 2008's SetEnv.cmd script will fail if the
     # /E:ON and /V:ON options are not enabled in the batch script interpreter
@@ -199,6 +198,17 @@ after_build:
   # Show size of cache
   - C:\cygwin\bin\du -hs "%LOCALAPPDATA%\pip\Cache"
 
+  # - ls %PYTHON%\lib\site-packages\
+  # - ls %PYTHON%\lib\site-packages\skoot
+  - ls %PYTHON%\lib\site-packages\skoot\__check_build
+  - ls %PYTHON%\lib\site-packages\skoot\decomposition
+
+  # Site-packages should already be on the path, but just to be safe...
+  - "ECHO Old path: %PATH%"
+  - SET PATH=%PYTHON%\lib\site-packages;%PATH%
+  - "ECHO New path: %PATH%"
+
+test_script:
   # - ECHO %TEST_MODE%
   # Scipy's args are giving us errors:
   # - python appveyor_runtests.py -n -m %TEST_MODE% -- -n6 --timeout=%TEST_TIMEOUT% --junitxml=%cd%\junit-results.xml -rfEX
@@ -206,13 +216,6 @@ after_build:
   #
   # Change to a non-source folder to make sure we run the tests on the
   # installed library.
-  # - ls %PYTHON%\lib\site-packages\
-  # - ls %PYTHON%\lib\site-packages\skoot
-  - ls %PYTHON%\lib\site-packages\skoot\__check_build
-  - ls %PYTHON%\lib\site-packages\skoot\decomposition
-
-test_script:
-  # Move back, make a folder, CD in and test (so we test from site-packages)
   - mkdir "../empty_folder"
   - "cd ../empty_folder"
   - pytest --showlocals --durations=20 --pyargs skoot
