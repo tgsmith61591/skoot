@@ -200,7 +200,7 @@ after_build:
   - C:\cygwin\bin\du -hs "%LOCALAPPDATA%\pip\Cache"
 
   # - ls %PYTHON%\lib\site-packages\
-  # - ls %PYTHON%\lib\site-packages\skoot
+  - ls %PYTHON%\lib\site-packages\skoot
   - ls %PYTHON%\lib\site-packages\skoot\__check_build
   - ls %PYTHON%\lib\site-packages\skoot\decomposition
 
