@@ -174,7 +174,7 @@ build_script:
       # they can be inspected.
 
       ls dist -r | Foreach-Object {
-          if ($_.Contains("skoot")) {
+          if ($_.FullName.Contains("skoot")) {
             echo $_.FullName
             appveyor PushArtifact $_.FullName
           }
