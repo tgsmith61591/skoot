@@ -126,7 +126,7 @@ install:
       ls $destination
 
   # Upgrade to the latest pip.
-  - '%CMD_IN_ENV% python -m pip install -U pip setuptools six wheel twine patsy'
+  - '%CMD_IN_ENV% python -m pip install -U pip setuptools six wheel twine coverage codecov pytest pytest-cov patsy'
 
   # Install the scipy test dependencies.
   - '%CMD_IN_ENV% pip install -U --timeout 5 --retries 2 -r requirements.txt'
