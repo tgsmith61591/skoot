@@ -2,6 +2,7 @@ setuptools
 six
 wheel
 twine
-pytest
+numpy
 cython
+pytest
 patsy
