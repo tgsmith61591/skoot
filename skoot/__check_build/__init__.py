@@ -41,6 +41,7 @@ to build the package before using it: run `python setup.py install` or
 %s""" % (e, local_dir, ''.join(dir_content).strip(), msg))
 
 try:
-    from ._check_build import check_build
+    # needs to be an absolute import
+    from skoot.__check_build._check_build import check_build
 except ImportError as ie:
     raise_build_error(ie)
