@@ -188,12 +188,16 @@ test_script:
   - ls %PYTHON%\lib\site-packages\
   - ls %PYTHON%\lib\site-packages\skoot
   - ls %PYTHON%\lib\site-packages\skoot\decomposition
+
+  # Move back, make a folder, CD in and test (so we test from site-packages)
+  - "cd .."
   - "mkdir empty_folder"
   - "cd empty_folder"
   - pytest --showlocals --durations=20 --pyargs skoot
 
   # Move back to the project folder
   - "cd .."
+  - "cd skoot"
 
 after_build:
   # Remove old or huge cache files to hopefully not exceed the 1GB cache limit.
