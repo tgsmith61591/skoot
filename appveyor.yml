@@ -15,8 +15,7 @@ cache:
 
 environment:
   global:
-    #MINGW_32: C:\mingw-w64\i686-6.3.0-posix-dwarf-rt_v5-rev1\mingw32\bin
-    MINGW_32: C\MinGw\bin
+    MINGW_32: C:\mingw-w64\i686-6.3.0-posix-dwarf-rt_v5-rev1\mingw32\bin
     MINGW_64: C:\mingw-w64\x86_64-6.3.0-posix-seh-rt_v5-rev1\mingw64\bin
     OPENBLAS_32: https://3f23b170c54c2533c070-1c8a9b3114517dc5fe17b7c3f8c63a43.ssl.cf2.rackcdn.com/openblas-5f998ef_gcc7_1_0_win32.zip
     OPENBLAS_64: https://3f23b170c54c2533c070-1c8a9b3114517dc5fe17b7c3f8c63a43.ssl.cf2.rackcdn.com/openblas-5f998ef_gcc7_1_0_win64.zip
@@ -131,7 +130,7 @@ install:
 
   # Install the scipy test dependencies.
   - "ECHO Installing PRE-requirements"
-  - '%CMD_IN_ENV% pip install -U --timeout 5 --retries 2 -r build_tools/appveyor/pre_numpy_requirements.txt'
+  - '%CMD_IN_ENV% python -m pip install -U --timeout 5 --retries 2 -r build_tools/appveyor/pre_numpy_requirements.txt'
 
   # Replace numpy distutils with a version that can build with msvc + mingw-gfortran
   # - "ECHO Getting Numpy HEAD"
@@ -148,7 +147,7 @@ install:
 
   # NOW that we've updated our numpy dist we can install scikit, etc.
   - "ECHO Installing POST-requirements"
-  - '%CMD_IN_ENV% pip install -U --timeout 5 --retries 2 -r build_tools/appveyor/post_numpy_requirements.txt'
+  - '%CMD_IN_ENV% python -m pip install -U --timeout 5 --retries 2 -r build_tools/appveyor/post_numpy_requirements.txt'
 
 build_script:
   - ps: |
