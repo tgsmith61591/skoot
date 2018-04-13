@@ -160,33 +160,22 @@ build_script:
       $env:Path += ";$MINGW"
       $env:NPY_NUM_BUILD_JOBS = "4"
 
-      If ($env:USE_PYTEST -eq "true") {
-        python setup.py bdist_wheel bdist_wininst
-        ls dist
+      mkdir dist
+      pip wheel -v -v -v --wheel-dir=dist .
 
-        # pip install --pre --no-index --find-links dist/ skoot
-        ls dist -r | Select-String -Pattern "*.whl" | Foreach-Object {
-            pip install $_.FullName
-        }
+      # For each wheel that pip has placed in the "dist" directory
+      # First, upload the wheel to the "artifacts" tab and then
+      # install the wheel. If we have only built numpy (as was at one point
+      # the case here), then there will be one wheel to install.
 
-      } Else {
-        mkdir dist
-        pip wheel -v -v -v --wheel-dir=dist .
+      # This method is more representative of what will be distributed,
+      # because it actually tests what the built wheels will be rather than
+      # what 'setup.py install' will do and at it uploads the wheels so that
+      # they can be inspected.
 
-        # For each wheel that pip has placed in the "dist" directory
-        # First, upload the wheel to the "artifacts" tab and then
-        # install the wheel. If we have only built numpy (as is the case here),
-        # then there will be one wheel to install.
-
-        # This method is more representative of what will be distributed,
-        # because it actually tests what the built wheels will be rather than
-        # what 'setup.py install' will do and at it uploads the wheels so that
-        # they can be inspected.
-
-        ls dist -r | Foreach-Object {
-            appveyor PushArtifact $_.FullName
-            pip install $_.FullName
-        }
+      ls dist -r | Foreach-Object {
+          appveyor PushArtifact $_.FullName
+          pip install $_.FullName
       }
 
 after_build:
