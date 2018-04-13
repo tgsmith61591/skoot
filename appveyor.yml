@@ -156,7 +156,7 @@ build_script:
       If ($env:USE_PYTEST -eq "true") {
         python setup.py bdist_wheel bdist_wininst
         ls dist
-        pip install --pre --no-index --find-links dist/ skoot
+        python setup.py install
       } Else {
         mkdir dist
         pip wheel -v -v -v --wheel-dir=dist .
@@ -185,8 +185,8 @@ test_script:
   #
   # Change to a non-source folder to make sure we run the tests on the
   # installed library.
-  - ls %PYTHON%\lib\site-packages\
-  - ls %PYTHON%\lib\site-packages\skoot
+  # - ls %PYTHON%\lib\site-packages\
+  # - ls %PYTHON%\lib\site-packages\skoot
   - ls %PYTHON%\lib\site-packages\skoot\decomposition
 
   # Move back, make a folder, CD in and test (so we test from site-packages)
