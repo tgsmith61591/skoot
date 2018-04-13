@@ -236,10 +236,9 @@ test_script:
      from pip.pep425tags import get_config_var, get_flag, get_abbr_impl, get_impl_ver;
      soabi = get_config_var('SOABI'); print("SOABI = %s" % soabi);
      impl = get_abbr_impl(); print("Impl=%s" % impl);
-     d, m, u = ('', '', '');
-     if get_flag('Py_DEBUG', lambda: hasattr(sys, 'gettotalrefcount'), warn=(impl == 'cp')): d = 'd';
-     if get_flag('WITH_PYMALLOC', lambda: impl == 'cp', warn=(impl == 'cp')): m = 'm';
-     if get_flag('Py_UNICODE_SIZE', lambda: sys.maxunicode == 0x10ffff, expected=4, warn=(impl == 'cp' and sys.version_info < (3, 3))) and sys.version_info < (3, 3): u = 'u';
+     d = 'd' if get_flag('Py_DEBUG', lambda: hasattr(sys, 'gettotalrefcount'), warn=(impl == 'cp')) else '';
+     m = 'm' if get_flag('WITH_PYMALLOC', lambda: impl == 'cp', warn=(impl == 'cp')) else '';
+     u = 'u' if get_flag('Py_UNICODE_SIZE', lambda: sys.maxunicode == 0x10ffff, expected=4, warn=(impl == 'cp' and sys.version_info < (3, 3))) and sys.version_info < (3, 3) else '';
      print("Py_DEBUG (d) = %r" % d);
      print("WITH_PYMALLOC (m) = %r" % m);
      print("Py_UNICODE_SIZE (u) = %r" % u);
