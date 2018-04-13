@@ -21,7 +21,7 @@ environment:
     OPENBLAS_64: https://3f23b170c54c2533c070-1c8a9b3114517dc5fe17b7c3f8c63a43.ssl.cf2.rackcdn.com/openblas-5f998ef_gcc7_1_0_win64.zip
     NUMPY_HEAD: https://github.com/numpy/numpy.git
     NUMPY_BRANCH: master
-    APPVEYOR_SAVE_CACHE_ON_ERROR: true
+    APPVEYOR_SAVE_CACHE_ON_ERROR: false
     APPVEYOR_SKIP_FINALIZE_ON_EXIT: true
     TEST_TIMEOUT: 1000
     # SDK v7.0 MSVC Express 2008's SetEnv.cmd script will fail if the
@@ -210,20 +210,15 @@ after_build:
   # - ls %PYTHON%\lib\site-packages\skoot
   - ls %PYTHON%\lib\site-packages\skoot\__check_build
   - ls %PYTHON%\lib\site-packages\skoot\decomposition
-  - >-
-     %CMD_IN_ENV%
-     python -c "from skoot import decomposition as d; print(dir(d))"
 
 test_script:
   # Move back, make a folder, CD in and test (so we test from site-packages)
-  - "cd .."
-  - "mkdir empty_folder"
-  - "cd empty_folder"
+  - mkdir "../empty_folder"
+  - "cd ../empty_folder"
   - pytest --showlocals --durations=20 --pyargs skoot
 
   # Move back to the project folder
-  - "cd .."
-  - "cd skoot"
+  - "cd ../skoot"
 
 after_test:
   # After the test, build the wheels (let travis handle the source build).
