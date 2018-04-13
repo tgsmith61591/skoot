@@ -68,23 +68,19 @@ ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__)))
 
 def main(argv):
     parser = ArgumentParser(usage=__doc__.lstrip())
-    parser.add_argument("--no-build", "-n", action="store_true", default=False,
-                        help="do not build the project (use system "
-                             "installed version)")
-    parser.add_argument("--mode", "-m", default="full",
-                        help="'fast', 'full', or something that could be "
-                             "passed to nosetests -A [default: fast]")
     parser.add_argument("--verbose", "-v", action="count", default=1,
                         help="more verbosity")
-    parser.add_argument("--build-only", "-b", action="store_true",
-                        default=False, help="just build, do not run any tests")
+    parser.add_argument("--no-build", "-n", action="store_true", default=False,
+                        help="do not build the project (use system installed version)")
+    parser.add_argument("--build-only", "-b", action="store_true", default=False,
+                        help="just build, do not run any tests")
     parser.add_argument("--doctests", action="store_true", default=False,
                         help="Run doctests in module")
     parser.add_argument("--refguide-check", action="store_true", default=False,
                         help="Run refguide check (do not run regular tests.)")
     parser.add_argument("--coverage", action="store_true", default=False,
-                        help=("report coverage of project code. HTML "
-                              "output goes under build/coverage"))
+                        help=("report coverage of project code. HTML output goes "
+                              "under build/coverage"))
     parser.add_argument("--gcov", action="store_true", default=False,
                         help=("enable C code coverage via gcov (requires GCC). "
                               "gcov output goes to build/**/*.gc*"))
@@ -92,9 +88,11 @@ def main(argv):
                         help=("produce HTML for C code coverage information "
                               "from a previous run with --gcov. "
                               "HTML output goes to build/lcov/"))
+    parser.add_argument("--mode", "-m", default="fast",
+                        help="'fast', 'full', or something that could be "
+                             "passed to nosetests -A [default: fast]")
     parser.add_argument("--submodule", "-s", default=None,
-                        help="Submodule whose tests to run (cluster, "
-                             "constants, ...)")
+                        help="Submodule whose tests to run (cluster, constants, ...)")
     parser.add_argument("--pythonpath", "-p", default=None,
                         help="Paths to prepend to PYTHONPATH")
     parser.add_argument("--tests", "-t", action='append',
@@ -115,11 +113,10 @@ def main(argv):
     parser.add_argument("--bench", action="store_true",
                         help="Run benchmark suite instead of test suite")
     parser.add_argument("--bench-compare", action="append", metavar="BEFORE",
-                        help=("Compare benchmark results of current HEAD to "
-                              "BEFORE. Use an additional "
-                              "--bench-compare=COMMIT to override HEAD "
-                              "with COMMIT. Note that you need to commit "
-                              "your changes first!"))
+                        help=("Compare benchmark results of current HEAD to BEFORE. "
+                              "Use an additional --bench-compare=COMMIT to override HEAD with COMMIT. "
+                              "Note that you need to commit your changes first!"
+                             ))
     parser.add_argument("args", metavar="ARGS", default=[], nargs=REMAINDER,
                         help="Arguments to pass to Nose, Python or shell")
     args = parser.parse_args(argv)

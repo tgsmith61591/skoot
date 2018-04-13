@@ -171,6 +171,7 @@ build_script:
       }
 
 test_script:
+  - ECHO %TEST_MODE%
   - python appveyor_runtests.py -n -m %TEST_MODE% -- -n6 --timeout=%TEST_TIMEOUT% --junitxml=%cd%\junit-results.xml -rfEX
 
 after_build:
