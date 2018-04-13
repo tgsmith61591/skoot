@@ -23,6 +23,7 @@ def configuration(parent_package='', top_path=None):
     config.add_subpackage('__check_build')
     config.add_subpackage('__check_build/tests')
     config.add_subpackage('_build_utils')
+    config.add_subpackage('_lib')
 
     # modules
     config.add_subpackage('balance')

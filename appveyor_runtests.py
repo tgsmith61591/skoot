@@ -125,6 +125,7 @@ def main(argv):
         args.bench = True
         args.no_build = True  # ASV does the building
 
+    # DEFAULT FALSE:
     if args.lcov_html:
         # generate C code coverage output
         lcov_generate()
@@ -134,6 +135,7 @@ def main(argv):
         for p in reversed(args.pythonpath.split(os.pathsep)):
             sys.path.insert(0, p)
 
+    # DEFAULT FALSE:
     if args.gcov:
         gcov_reset_counters()
 
@@ -141,6 +143,7 @@ def main(argv):
         print("*** Benchmarks should not be run against debug version; "
               "remove -g flag ***")
 
+    # DEFAULT FALSE:
     if not args.no_build:
         site_dir = build_project(args)
         sys.path.insert(0, site_dir)
@@ -251,11 +254,8 @@ def main(argv):
         sys.exit(0)
     else:
         # This differs from scipy:
-        # __import__(PROJECT_MODULE)
-        # test = sys.modules[PROJECT_MODULE].test
-        SCIPY = "scipy"
-        __import__(SCIPY)
-        test = sys.modules[SCIPY].test
+        __import__(PROJECT_MODULE)
+        test = sys.modules[PROJECT_MODULE].test
 
     if args.submodule:
         tests = [PROJECT_MODULE + "." + args.submodule]

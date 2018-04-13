@@ -4,8 +4,6 @@
 #
 # Sklearn-esque transformers and extension modules
 
-import sys
-
 __version__ = '1.0.0'
 
 try:
@@ -17,7 +15,9 @@ except NameError:
     __SKOOT_SETUP__ = False
 
 if __SKOOT_SETUP__:
-    sys.stdout.write('Partial import of skoot during the build process.\n')
+    import sys as _sys
+    _sys.stdout.write('Partial import of skoot during the build process.\n')
+    del _sys
 else:
     # check that the build completed properly. This prints an informative
     # message in the case that any of the C code was not properly compiled.
@@ -30,8 +30,14 @@ else:
         'feature_extraction',
         'feature_selection',
         'preprocessing',
+        'test',  # used for testing in appveyor
         'utils'
     ]
+
+    # Run pytests over the unit tests
+    from skoot._lib._testutils import PytestTester
+    test = PytestTester(__name__)
+    del PytestTester
 
 
 def setup_module(module):
