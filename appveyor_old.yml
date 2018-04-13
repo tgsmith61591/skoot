@@ -21,9 +21,6 @@ environment:
     OPENBLAS_64: https://3f23b170c54c2533c070-1c8a9b3114517dc5fe17b7c3f8c63a43.ssl.cf2.rackcdn.com/openblas-5f998ef_gcc7_1_0_win64.zip
     NUMPY_HEAD: https://github.com/numpy/numpy.git
     NUMPY_BRANCH: master
-    APPVEYOR_SAVE_CACHE_ON_ERROR: true
-    APPVEYOR_SKIP_FINALIZE_ON_EXIT: true
-    TEST_TIMEOUT: 1000
     # SDK v7.0 MSVC Express 2008's SetEnv.cmd script will fail if the
     # /E:ON and /V:ON options are not enabled in the batch script interpreter
     # See: http://stackoverflow.com/a/13751649/163740
@@ -37,30 +34,49 @@ environment:
       PYTHON_VERSION: 2.7
       PYTHON_ARCH: 32
       USE_PYTEST: true
-      TEST_MODE: full
 
     - PYTHON: C:\Python27-x64
       PYTHON_VERSION: 2.7
       PYTHON_ARCH: 64
       USE_PYTEST: true
-      TEST_MODE: full
 
     - PYTHON: C:\Python35
       PYTHON_VERSION: 3.5
       PYTHON_ARCH: 32
       USE_PYTEST: true
-      TEST_MODE: full
 
     - PYTHON: C:\Python35-x64
       PYTHON_VERSION: 3.5
       PYTHON_ARCH: 64
       USE_PYTEST: true
-      TEST_MODE: full
+
+    # - PY_MAJOR_VER: 2
+    #   PYTHON_ARCH: "x86"
+    #   PYTHON_VERSION: "2.7"
+    #   MINICONDA_MICRO_VERSION: "30"
+    #   PROCESSOR_BITS: 32
+    #
+    # - PY_MAJOR_VER: 2
+    #   PYTHON_ARCH: "x86_64"
+    #   PYTHON_VERSION: "2.7"
+    #   MINICONDA_MICRO_VERSION: "30"
+    #   PROCESSOR_BITS: 64
+    #
+    # - PY_MAJOR_VER: 3
+    #   PYTHON_ARCH: "x86"
+    #   PYTHON_VERSION: "3.5"
+    #   MINICONDA_MICRO_VERSION: "31"
+    #   PROCESSOR_BITS: 32
+    #
+    # - PY_MAJOR_VER: 3
+    #   PYTHON_ARCH: "x86_64"
+    #   PYTHON_VERSION: "3.5"
+    #   MINICONDA_MICRO_VERSION: "31"
+    #   PROCESSOR_BITS: 64
 
 init:
   - "ECHO %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%"
   - "ECHO \"%APPVEYOR_SCHEDULED_BUILD%\""
-
   # If there is a newer build queued for the same PR, cancel this one.
   # The AppVeyor 'rollout builds' option is supposed to serve the same
   # purpose but it is problematic because it tends to cancel builds pushed
@@ -80,7 +96,6 @@ init:
 
 install:
   - C:\cygwin\bin\du -hs "%LOCALAPPDATA%\pip\Cache"
-
   # Prepend newly installed Python to the PATH of this build (this cannot be
   # done from inside the powershell script as it would require to restart
   # the parent CMD process).
@@ -126,8 +141,7 @@ install:
       ls $destination
 
   # Upgrade to the latest pip.
-  - '%CMD_IN_ENV% python -m pip install -U pip setuptools six wheel twine patsy'
-
+  - '%CMD_IN_ENV% python -m pip install -U pip setuptools six wheel twine coverage codecov pytest pytest-cov patsy'
   # Install the scipy test dependencies.
   - '%CMD_IN_ENV% pip install -U --timeout 5 --retries 2 -r requirements.txt'
 
@@ -152,26 +166,40 @@ build_script:
       }
       $env:Path += ";$MINGW"
       $env:NPY_NUM_BUILD_JOBS = "4"
-      mkdir dist
-      pip wheel -v -v -v --wheel-dir=dist .
 
-      # For each wheel that pip has placed in the "dist" directory
-      # First, upload the wheel to the "artifacts" tab and then
-      # install the wheel. If we have only built numpy (as is the case here),
-      # then there will be one wheel to install.
+      If ($env:USE_PYTEST -eq "true") {
+        python setup.py bdist_wheel bdist_wininst
+        ls dist
+        pip install --pre --no-index --find-links dist/ skoot
+      } Else {
+        mkdir dist
+        pip wheel -v -v -v --wheel-dir=dist .
 
-      # This method is more representative of what will be distributed,
-      # because it actually tests what the built wheels will be rather than
-      # what 'setup.py install' will do and at it uploads the wheels so that
-      # they can be inspected.
+        # For each wheel that pip has placed in the "dist" directory
+        # First, upload the wheel to the "artifacts" tab and then
+        # install the wheel. If we have only built numpy (as is the case here),
+        # then there will be one wheel to install.
 
-      ls dist -r | Foreach-Object {
-          appveyor PushArtifact $_.FullName
-          pip install $_.FullName
+        # This method is more representative of what will be distributed,
+        # because it actually tests what the built wheels will be rather than
+        # what 'setup.py install' will do and at it uploads the wheels so that
+        # they can be inspected.
+
+        ls dist -r | Foreach-Object {
+            appveyor PushArtifact $_.FullName
+            pip install $_.FullName
+        }
       }
 
 test_script:
-  - python appveyor_runtests.py -n -m %TEST_MODE% -- -n6 --timeout=%TEST_TIMEOUT% --junitxml=%cd%\junit-results.xml -rfEX
+  # Change to a non-source folder to make sure we run the tests on the
+  # installed library.
+  - "mkdir empty_folder"
+  - "cd empty_folder"
+  - pytest --showlocals --durations=20 --pyargs skoot
+
+  # Move back to the project folder
+  - "cd .."
 
 after_build:
   # Remove old or huge cache files to hopefully not exceed the 1GB cache limit.
@@ -189,7 +217,8 @@ after_build:
 
 after_test:
   # After the test, build the wheels (let travis handle the source build).
-  - ECHO "Tests complete!"
+  - ECHO "Test complete, building wheels"
+  - python setup.py sdist bdist_wheel
   - set PATH=%BK_PATH%
 
 artifacts:
