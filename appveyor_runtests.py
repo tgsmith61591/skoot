@@ -253,8 +253,12 @@ def main(argv):
     if args.build_only:
         sys.exit(0)
     else:
-        __import__(PROJECT_MODULE)
-        test = sys.modules[PROJECT_MODULE].test
+        # This differs from scipy:
+        # __import__(PROJECT_MODULE)
+        # test = sys.modules[PROJECT_MODULE].test
+        SCIPY = "scipy"
+        __import__(SCIPY)
+        test = sys.modules[SCIPY].test
 
     if args.submodule:
         tests = [PROJECT_MODULE + "." + args.submodule]
