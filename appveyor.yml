@@ -173,8 +173,8 @@ build_script:
 test_script:
   - ECHO %TEST_MODE%
   # Scipy's args are giving us errors:
-  - python appveyor_runtests.py -n -m %TEST_MODE% -- -n6 --timeout=%TEST_TIMEOUT% --junitxml=%cd%\junit-results.xml -rfEX
-  # - python appveyor_runtests.py -n -m %TEST_MODE%
+  # - python appveyor_runtests.py -n -m %TEST_MODE% -- -n6 --timeout=%TEST_TIMEOUT% --junitxml=%cd%\junit-results.xml -rfEX
+  - python appveyor_runtests.py -n -m %TEST_MODE%
 
 after_build:
   # Remove old or huge cache files to hopefully not exceed the 1GB cache limit.
