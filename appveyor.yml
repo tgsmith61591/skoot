@@ -245,7 +245,7 @@ test_script:
      print('ABI = ' + abi);"
 
   # And nowwww we test
-  - pytest --showlocals --durations=20 --pyargs skoot
+  - python -m pytest --showlocals --durations=20 --pyargs skoot
 
   # Move back to the project folder
   - "cd ../skoot"
