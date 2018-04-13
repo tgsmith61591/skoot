@@ -161,8 +161,7 @@ build_script:
       $env:NPY_NUM_BUILD_JOBS = "4"
 
       If ($env:USE_PYTEST -eq "true") {
-        # python setup.py bdist_wheel bdist_wininst
-        python setup.py bdist_wheel
+        python setup.py bdist_wheel bdist_wininst
         ls dist
         pip install --pre --no-index --find-links dist/ skoot
       } Else {
