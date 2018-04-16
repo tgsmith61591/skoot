@@ -7,5 +7,6 @@ recursive-include skoot *
 # recursive-include skoot/decomposition *.c *.pyx *.pyd *.pyo *.so *.dylib *.dll *.f *.pyf *.pxd
 recursive-include skoot/__check_build *
 recursive-include skoot/decomposition *
+recursive-include skoot/decomposition/src *
 include README.md
 include requirements.txt

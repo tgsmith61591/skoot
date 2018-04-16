@@ -10,7 +10,7 @@ from sklearn.utils import check_array
 from numpy.linalg import matrix_rank
 
 # Fortran module import: make this absolute
-from skoot.decomposition import dqrsl
+from skoot.decomposition import _dqrsl as dqrsl
 
 # WARNING: there is little-to-no validation of input in these functions,
 # and crashes may be caused by inappropriate usage. Use with care...

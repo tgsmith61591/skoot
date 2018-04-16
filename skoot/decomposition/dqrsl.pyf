@@ -1,28 +1,32 @@
-!    -*- f90 -*-
-! Note: the context of this file is case sensitive.
+!%f90 -*- f90 -*-
+! Author: Taylor Smith, April 2018
 
-python module dqrsl ! in 
-    interface  ! in :dqrsl
-        subroutine dswap(n,dx,incx,dy,incy) ! in :dqrsl:skoot/decomposition/dqrsl.f
+python module _dqrsl
+    interface
+
+        subroutine dswap(n,dx,incx,dy,incy)
             integer :: n
             double precision dimension(*) :: dx
             integer :: incx
             double precision dimension(*) :: dy
             integer :: incy
         end subroutine dswap
-        subroutine dscal(n,da,dx,incx) ! in :dqrsl:skoot/decomposition/dqrsl.f
+
+        subroutine dscal(n,da,dx,incx)
             integer :: n
             double precision :: da
             double precision dimension(*) :: dx
             integer :: incx
         end subroutine dscal
-        function dnrm2(n,x,incx) ! in :dqrsl:skoot/decomposition/dqrsl.f
+
+        function dnrm2(n,x,incx)
             integer :: n
             double precision dimension(*) :: x
             integer :: incx
             double precision :: dnrm2
         end function dnrm2
-        function ddot(n,dx,incx,dy,incy) ! in :dqrsl:skoot/decomposition/dqrsl.f
+
+        function ddot(n,dx,incx,dy,incy)
             integer :: n
             double precision dimension(*) :: dx
             integer :: incx
@@ -30,14 +34,16 @@ python module dqrsl ! in
             integer :: incy
             double precision :: ddot
         end function ddot
-        subroutine dcopy(n,dx,incx,dy,incy) ! in :dqrsl:skoot/decomposition/dqrsl.f
+
+        subroutine dcopy(n,dx,incx,dy,incy)
             integer :: n
             double precision dimension(*) :: dx
             integer :: incx
             double precision dimension(*) :: dy
             integer :: incy
         end subroutine dcopy
-        subroutine daxpy(n,da,dx,incx,dy,incy) ! in :dqrsl:skoot/decomposition/dqrsl.f
+
+        subroutine daxpy(n,da,dx,incx,dy,incy)
             integer :: n
             double precision :: da
             double precision dimension(*) :: dx
@@ -45,7 +51,8 @@ python module dqrsl ! in
             double precision dimension(*) :: dy
             integer :: incy
         end subroutine daxpy
-        subroutine dqrcf(x,n,k,qraux,y,ny,b,info) ! in :dqrsl:skoot/decomposition/dqrsl.f
+
+        subroutine dqrcf(x,n,k,qraux,y,ny,b,info)
             double precision dimension(n,*),depend(n) :: x
             integer intent(in) :: n
             integer intent(in) :: k
@@ -55,7 +62,8 @@ python module dqrsl ! in
             double precision dimension(k,*),intent(inplace),depend(k) :: b
             integer intent(inplace) :: info
         end subroutine dqrcf
-        subroutine dqrsl(x,ldx,n,k,qraux,y,qy,qty,b,rsd,xb,job,info) ! in :dqrsl:skoot/decomposition/dqrsl.f
+
+        subroutine dqrsl(x,ldx,n,k,qraux,y,qy,qty,b,rsd,xb,job,info)
             double precision dimension(ldx,*),depend(ldx) :: x
             integer intent(in) :: ldx
             integer intent(in) :: n
@@ -70,7 +78,8 @@ python module dqrsl ! in
             integer intent(in) :: job
             integer :: info
         end subroutine dqrsl
-        subroutine dqrdc(x,ldx,n,p,qraux,jpvt,work,job) ! in :dqrsl:skoot/decomposition/dqrsl.f
+
+        subroutine dqrdc(x,ldx,n,p,qraux,jpvt,work,job)
             double precision dimension(ldx,*),intent(inplace),depend(ldx) :: x
             integer intent(in) :: ldx
             integer :: n
@@ -80,8 +89,8 @@ python module dqrsl ! in
             double precision dimension(*) :: work
             integer :: job
         end subroutine dqrdc
-    end interface 
-end python module dqrsl
 
-! This file was auto-generated with f2py (version:2).
+    end interface 
+end python module _dqrsl
+
 ! See http://cens.ioc.ee/projects/f2py2e/
