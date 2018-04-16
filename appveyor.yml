@@ -228,19 +228,19 @@ test_script:
   # 2. https://github.com/pypa/pip/pull/3075/commits
   # So let's try to get the variables to debug in the console. This is basically the
   # code that's running on the pip side.
-  - >-
-     %CMD_IN_ENV%
-     python -c "import sys; from pip.pep425tags import get_config_var, get_flag, get_abbr_impl, get_impl_ver;
-     soabi = str(get_config_var('SOABI')); print('SOABI = ' + soabi);
-     impl = get_abbr_impl(); print('Impl = ' + impl);
-     d = 'd' if get_flag('Py_DEBUG', lambda: hasattr(sys, 'gettotalrefcount'), warn=(impl == 'cp')) else '';
-     m = 'm' if get_flag('WITH_PYMALLOC', lambda: impl == 'cp', warn=(impl == 'cp')) else '';
-     u = 'u' if get_flag('Py_UNICODE_SIZE', lambda: sys.maxunicode == 0x10ffff, expected=4, warn=(impl == 'cp' and sys.version_info < (3, 3))) and sys.version_info < (3, 3) else '';
-     print('Py_DEBUG (d) = ' + d);
-     print('WITH_PYMALLOC (m) = ' + m);
-     print('Py_UNICODE_SIZE (u) = ' + u);
-     abi = impl + get_impl_ver() + d + m + u;
-     print('ABI = ' + abi);"
+  # - >-
+  #    %CMD_IN_ENV%
+  #    python -c "import sys; from pip.pep425tags import get_config_var, get_flag, get_abbr_impl, get_impl_ver;
+  #    soabi = str(get_config_var('SOABI')); print('SOABI = ' + soabi);
+  #    impl = get_abbr_impl(); print('Impl = ' + impl);
+  #    d = 'd' if get_flag('Py_DEBUG', lambda: hasattr(sys, 'gettotalrefcount'), warn=(impl == 'cp')) else '';
+  #    m = 'm' if get_flag('WITH_PYMALLOC', lambda: impl == 'cp', warn=(impl == 'cp')) else '';
+  #    u = 'u' if get_flag('Py_UNICODE_SIZE', lambda: sys.maxunicode == 0x10ffff, expected=4, warn=(impl == 'cp' and sys.version_info < (3, 3))) and sys.version_info < (3, 3) else '';
+  #    print('Py_DEBUG (d) = ' + d);
+  #    print('WITH_PYMALLOC (m) = ' + m);
+  #    print('Py_UNICODE_SIZE (u) = ' + u);
+  #    abi = impl + get_impl_ver() + d + m + u;
+  #    print('ABI = ' + abi);"
 
   # And nowwww we test
   - python -m pytest --showlocals --durations=20 --pyargs skoot
