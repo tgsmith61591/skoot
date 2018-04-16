@@ -40,7 +40,7 @@ def test_pipeline_basic():
 def test_pipeline_complex():
     pipe = Pipeline([
         ('scaler', SelectiveStandardScaler()),
-        ('boxcox', BoxCoxTransformer()),
+        ('boxcox', BoxCoxTransformer(suppress_warnings=True)),
         ('pca', SelectivePCA()),
         ('svd', SelectiveTruncatedSVD()),
         ('model', RandomForestClassifier())
@@ -56,7 +56,7 @@ def test_complex_grid_search():
         ('collinearity',   MultiCorrFilter(threshold=0.85)),
         ('imputer',        SelectiveImputer()),  # pass through since all full
         ('scaler',         SelectiveMaxAbsScaler()),
-        ('boxcox',         BoxCoxTransformer()),
+        ('boxcox',         BoxCoxTransformer(suppress_warnings=True)),
         ('nzv',            NearZeroVarianceFilter()),
         ('pca',            SelectivePCA(n_components=0.9)),
         ('model',          RandomForestClassifier(n_jobs=1))

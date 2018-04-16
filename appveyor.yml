@@ -164,9 +164,8 @@ build_script:
       python -m pip wheel -v -v -v --wheel-dir=dist .
 
       # For each wheel that pip has placed in the "dist" directory
-      # First, upload the wheel to the "artifacts" tab and then
-      # install the wheel. If we have only built numpy (as was at one point
-      # the case here), then there will be one wheel to install.
+      # check if it's the skoot wheel and upload to the "artifacts" tab
+      # if so.
 
       # This method is more representative of what will be distributed,
       # because it actually tests what the built wheels will be rather than
