@@ -68,10 +68,10 @@ def maybe_cythonize_extensions(top_path, config):
     is_release = os.path.exists(os.path.join(top_path, 'PKG-INFO'))
 
     if is_release:
-        print("Release detected--building from source files")
+        print("Release detected--building from source files (.c, .cpp, .f)")
         build_from_c_f_and_cpp_files(config.ext_modules)
     else:
-        print("Development build detected--building from .pyx & .pyf")
+        print("Development build detected--building from .pyx & .f")
         message = ('Please install cython with a version >= {0} in order '
                    'to build a {1} development version.').format(
                        CYTHON_MIN_VERSION, DEFAULT_ROOT)

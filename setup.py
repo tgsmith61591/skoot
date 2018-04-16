@@ -15,7 +15,6 @@ as possible, doing so with a familiar scikit-learn API feel.
 from __future__ import print_function, absolute_import, division
 
 from distutils.command.clean import clean
-import sysconfig
 import shutil
 import os
 import sys
@@ -51,8 +50,8 @@ VERSION = skoot.__version__
 
 # get the installation requirements:
 with open('requirements.txt') as req:
-    REQUIREMENTS = [l for l in req.read().split(os.linesep) if l]
-    print("Requirements: %r" % REQUIREMENTS)
+    REQUIREMENTS = [l for l in req.read().split("\n") if l]
+    print("Requirements: %s" % str(REQUIREMENTS))
 
 SETUPTOOLS_COMMANDS = {  # this is a set literal, not a dict
     'develop', 'release', 'bdist_egg', 'bdist_rpm',
