@@ -33,6 +33,13 @@ else:
         'utils'
     ]
 
+    from skoot._lib._testutils import PytestTester
+    test = PytestTester(__name__)
+    del PytestTester
+
+    # in case anyone tries a nose runner...
+    test.__test__ = False
+
 
 def setup_module(module):
     import numpy as np

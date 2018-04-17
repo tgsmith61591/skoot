@@ -44,6 +44,9 @@ def configuration(parent_package='', top_path=None):
     config.add_subpackage('testing/tests')
     config.add_subpackage('utils/tests')
 
+    # for testing utils
+    config.add_subpackage('_lib')
+
     # do cythonization
     maybe_cythonize_extensions(top_path, config)
 
