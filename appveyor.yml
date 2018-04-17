@@ -245,7 +245,8 @@ test_script:
   #    print('ABI = ' + abi);"
 
   # And nowwww we test
-  - python -m pytest %PYTHON%\lib\site-packages\skoot
+  # - python -m pytest %PYTHON%\lib\site-packages\skoot
+  - pytest --pyargs skoot
 
   # Move back to the project folder
   - "cd ../skoot"
