@@ -76,9 +76,10 @@ init:
 install:
   - C:\cygwin\bin\du -hs "%LOCALAPPDATA%\pip\Cache"
 
-  # Prepend newly installed Python to the PATH of this build (this cannot be
+  # Prepend Miniconda to the PATH of this build (this cannot be
   # done from inside the powershell script as it would require to restart
-  # the parent CMD process).
+  # the parent CMD process). Miniconda should contain the fortran compiler
+  # we need... *should*...
   - SET PATH=%CONDA%;%CONDA%\Scripts;%PATH%
 
   # Create/activate the conda env
@@ -87,7 +88,7 @@ install:
 
   # Install requirements
   - pip install cerberus
-  - conda install --file build_tools/appveyor/requirements.txt
+  - conda install --yes --file build_tools/appveyor/requirements.txt
 
 build_script:
   - python setup.py develop
