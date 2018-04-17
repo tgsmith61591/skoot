@@ -93,6 +93,16 @@ install:
   - pip install cerberus
   - conda install --yes --file build_tools/appveyor/requirements.txt
 
+  # Get the proper mingw pointed-to...
+  - ps: |
+      $PYTHON_ARCH = $env:PYTHON_ARCH
+      If ($PYTHON_ARCH -eq 32) {
+          $MINGW = $env:MINGW_32
+      } Else {
+          $MINGW = $env:MINGW_64
+      }
+      $env:Path += ";$MINGW"
+
 build_script:
   - python setup.py develop
   - ls skoot/decomposition
