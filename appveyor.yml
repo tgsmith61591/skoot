@@ -86,7 +86,8 @@ install:
   - activate testenv
 
   # Install requirements
-  - conda install --file requirements.txt
+  - pip install cerberus
+  - conda install --file build_tools/appveyor/requirements.txt
 
 build_script:
   - python setup.py develop
