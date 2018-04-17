@@ -96,7 +96,7 @@ install:
       $env:Path += ";$MINGW"
 
 build_script:
-  - python setup.py develop
+  - python setup.py install
 
 after_build:
   # Remove old or huge cache files to hopefully not exceed the 1GB cache limit.
@@ -106,9 +106,9 @@ after_build:
   # current and having a cache at all.
   # NB: This is done only `on_success` since the cache in uploaded only on
   # success anyway.
-  - C:\cygwin\bin\find "%LOCALAPPDATA%\pip" -type f -mtime +360 -delete
-  - C:\cygwin\bin\find "%LOCALAPPDATA%\pip" -type f -size +10M -delete
-  - C:\cygwin\bin\find "%LOCALAPPDATA%\pip" -empty -delete
+  # - C:\cygwin\bin\find "%LOCALAPPDATA%\pip" -type f -mtime +360 -delete
+  # - C:\cygwin\bin\find "%LOCALAPPDATA%\pip" -type f -size +10M -delete
+  # - C:\cygwin\bin\find "%LOCALAPPDATA%\pip" -empty -delete
 
   # Show size of cache
   - C:\cygwin\bin\du -hs "%LOCALAPPDATA%\pip\Cache"
@@ -116,13 +116,12 @@ after_build:
 test_script:
   # Change to a non-source folder to make sure we run the tests on the
   # installed library.
-  # - mkdir "../empty_folder"
-  # - "cp pytest.ini ../empty_folder/pytest.ini"
-  # - "cd ../empty_folder"
-  # # And nowwww we test
-  # - pytest --pyargs skoot
-  # - "cd ../skoot"
-  - nosetests
+  - mkdir "../empty_folder"
+  - "cd ../empty_folder"
+
+  # And nowwww we test
+  - pytest --pyargs skoot
+  - "cd ../skoot"
 
 after_test:
   # After the test, build the wheels (let travis handle the source build).
