@@ -79,10 +79,9 @@ install:
   # Prepend newly installed Python to the PATH of this build (this cannot be
   # done from inside the powershell script as it would require to restart
   # the parent CMD process).
-  - SET PATH=%CONDA%;%PATH%
+  - SET PATH=%CONDA%;%CONDA\Scripts%;%PATH%
 
   # Create/activate the conda env
-  - ls %CONDA%\Scripts
   - conda create -n testenv --yes python=%PYTHON_VERSION% pip pytest setuptools six wheel twine patsy cython
   - activate testenv
 
