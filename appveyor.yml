@@ -75,11 +75,11 @@ install:
   - SET PATH=%CONDA%;%CONDA%\Scripts;%PATH%
 
   # Create/activate the conda env
-  - conda create -n testenv --yes python=%PYTHON_VERSION% pip pytest nose setuptools six wheel twine patsy cython
+  - conda create -n testenv --yes python=%PYTHON_VERSION% pip pytest nose setuptools six wheel cython
   - activate testenv
 
   # Install requirements
-  - pip install cerberus
+  - pip install cerberus twine patsy
   - conda install --yes --file build_tools/appveyor/requirements.txt
 
   # Get the proper mingw pointed-to...
