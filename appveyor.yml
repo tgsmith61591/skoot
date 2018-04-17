@@ -28,32 +28,32 @@ environment:
     secure: gbT4E95dOsFHbxOmXk4C3gkIiaqeg0MGgvlE4rmxD4U=
 
   matrix:
-    - PYTHON: C:\Miniconda
+    - CONDA: C:\Miniconda
       PYTHON_VERSION: 2.7
       PYTHON_ARCH: 32
       USE_PYTEST: true
       TEST_MODE: full
 
-    - PYTHON: C:\Miniconda-x64
+    - CONDA: C:\Miniconda-x64
       PYTHON_VERSION: 2.7
       PYTHON_ARCH: 64
       USE_PYTEST: true
       TEST_MODE: full
 
-    - PYTHON: C:\Miniconda35
+    - CONDA: C:\Miniconda35
       PYTHON_VERSION: 3.5
       PYTHON_ARCH: 32
       USE_PYTEST: true
       TEST_MODE: full
 
-    - PYTHON: C:\Miniconda35-x64
+    - CONDA: C:\Miniconda35-x64
       PYTHON_VERSION: 3.5
       PYTHON_ARCH: 64
       USE_PYTEST: true
       TEST_MODE: full
 
 init:
-  - "ECHO %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%"
+  - "ECHO %CONDA% %PYTHON_VERSION% %PYTHON_ARCH%"
   - "ECHO \"%APPVEYOR_SCHEDULED_BUILD%\""
 
   # If there is a newer build queued for the same PR, cancel this one.
@@ -79,75 +79,19 @@ install:
   # Prepend newly installed Python to the PATH of this build (this cannot be
   # done from inside the powershell script as it would require to restart
   # the parent CMD process).
-  - SET PATH=%PYTHON%;%PYTHON%\Scripts;%PATH%
+  - SET PATH=%CONDA%;%PATH%
 
-  # Create the conda env
-  - ls %PYTHON%
-  - aksdfhlkj
+  # Create/activate the conda env
+  - ls %CONDA%
+  - conda create -n testenv --yes python=%PYTHON_VERSION% pip pytest setuptools six wheel twine patsy cython
+  - activate testenv
 
-  # Check that we have the expected version and architecture for Python
-  - python --version
-  - >-
-     %CMD_IN_ENV%
-     python -c "import sys,platform,struct;
-     print(sys.platform, platform.machine(), struct.calcsize('P') * 8, )"
-
-  # Upgrade to the latest pip.
-  - "ECHO Upgrading PIP"
-  - '%CMD_IN_ENV% python -m pip install -U pip'
-
-  # Install the test dependencies.
-  - "ECHO Installing requirements"
-  - '%CMD_IN_ENV% python -m pip install -U --timeout 5 --retries 2 -r build_tools/appveyor/pre_numpy_requirements.txt'
-
-  # Replace numpy distutils with a version that can build with msvc + mingw-gfortran
-  # - "ECHO Getting Numpy HEAD"
-  # - ps: |
-  #     $NumpyDir = $((python -c 'import os; import numpy; print(os.path.dirname(numpy.__file__))') | Out-String).Trim()
-  #     rm -r -Force "$NumpyDir\distutils"
-  #     $tmpdir = New-TemporaryFile | %{ rm $_; mkdir $_ }
-  #
-  #     echo $NumpyDir
-  #     echo $env:NUMPY_HEAD
-  #     echo $env:NUMPY_BRANCH
-  #     git clone -q --depth=1 -b $env:NUMPY_BRANCH $env:NUMPY_HEAD $tmpdir
-  #     mv $tmpdir\numpy\distutils $NumpyDir
-
-  # NOW that we've updated our numpy dist we can install scikit, etc.
-  - "ECHO Installing POST-requirements"
-  - '%CMD_IN_ENV% python -m pip install -U --timeout 5 --retries 2 -r build_tools/appveyor/post_numpy_requirements.txt'
+  # Install requirements
+  - conda install --file requirements.txt
 
 build_script:
-  - ps: |
-      $PYTHON_ARCH = $env:PYTHON_ARCH
-      If ($PYTHON_ARCH -eq 32) {
-          $MINGW = $env:MINGW_32
-      } Else {
-          $MINGW = $env:MINGW_64
-      }
-      $env:Path += ";$MINGW"
-      $env:NPY_NUM_BUILD_JOBS = "4"
-
-      mkdir dist
-      python -m pip wheel -v -v -v --wheel-dir=dist .
-
-      # For each wheel that pip has placed in the "dist" directory
-      # check if it's the skoot wheel and upload to the "artifacts" tab
-      # if so.
-
-      # This method is more representative of what will be distributed,
-      # because it actually tests what the built wheels will be rather than
-      # what 'setup.py install' will do and at it uploads the wheels so that
-      # they can be inspected.
-
-      ls dist -r | Foreach-Object {
-          if ($_.FullName.Contains("dist\skoot")) {
-            echo $_.FullName
-            appveyor PushArtifact $_.FullName
-          }
-
-          python -m pip install $_.FullName
-      }
+  - python setup.py develop
+  - ls skoot/decomposition
 
 after_build:
   # Remove old or huge cache files to hopefully not exceed the 1GB cache limit.
@@ -164,68 +108,27 @@ after_build:
   # Show size of cache
   - C:\cygwin\bin\du -hs "%LOCALAPPDATA%\pip\Cache"
 
-  # - ls %PYTHON%\lib\site-packages\
-  - ls %PYTHON%\lib\site-packages\skoot
-  - ls %PYTHON%\lib\site-packages\skoot\__check_build
-  - ls %PYTHON%\lib\site-packages\skoot\decomposition
-
-  # Site-packages should already be on the path, but just to be safe...
-  - "ECHO Old path: %PATH%"
-  - SET PATH=%PYTHON%\lib\site-packages;%PATH%
-  - "ECHO New path: %PATH%"
-
 test_script:
   # Change to a non-source folder to make sure we run the tests on the
   # installed library.
-  - mkdir "../empty_folder"
-  - "cp pytest.ini ../empty_folder/pytest.ini"
-  - "cd ../empty_folder"
-
-  # Now maybe debug what's going on with inability to find DLLs...
-  - >-
-     %CMD_IN_ENV%
-     python -c "import imp; print(imp.find_module('skoot'))"
-
-  # Still having problems? See if we can figure out where skoot is loading from...
-  - >-
-     %CMD_IN_ENV%
-     python -c "from os.path import abspath as ap, dirname as dn, exists as e;
-     import skoot as s; dqrpath = dn(ap(s.__file__)) + '/decomposition/_dqrsl.pyd';
-     print('dqrpath exists?', e(dqrpath))"
-
-  # Lots of bugs around Py_DEBUG flags, etc. See:
-  # 1. https://bugzilla.mozilla.org/show_bug.cgi?id=1240993
-  # 2. https://github.com/pypa/pip/pull/3075/commits
-  # So let's try to get the variables to debug in the console. This is basically the
-  # code that's running on the pip side.
-  # - >-
-  #    %CMD_IN_ENV%
-  #    python -c "import sys; from pip.pep425tags import get_config_var, get_flag, get_abbr_impl, get_impl_ver;
-  #    soabi = str(get_config_var('SOABI')); print('SOABI = ' + soabi);
-  #    impl = get_abbr_impl(); print('Impl = ' + impl);
-  #    d = 'd' if get_flag('Py_DEBUG', lambda: hasattr(sys, 'gettotalrefcount'), warn=(impl == 'cp')) else '';
-  #    m = 'm' if get_flag('WITH_PYMALLOC', lambda: impl == 'cp', warn=(impl == 'cp')) else '';
-  #    u = 'u' if get_flag('Py_UNICODE_SIZE', lambda: sys.maxunicode == 0x10ffff, expected=4, warn=(impl == 'cp' and sys.version_info < (3, 3))) and sys.version_info < (3, 3) else '';
-  #    print('Py_DEBUG (d) = ' + d);
-  #    print('WITH_PYMALLOC (m) = ' + m);
-  #    print('Py_UNICODE_SIZE (u) = ' + u);
-  #    abi = impl + get_impl_ver() + d + m + u;
-  #    print('ABI = ' + abi);"
+  # - mkdir "../empty_folder"
+  # - "cp pytest.ini ../empty_folder/pytest.ini"
+  # - "cd ../empty_folder"
 
   # And nowwww we test
-  # - python -m pytest %PYTHON%\lib\site-packages\skoot
   - pytest --pyargs skoot
-
-  # Move back to the project folder
-  - "cd ../skoot"
 
 after_test:
   # After the test, build the wheels (let travis handle the source build).
   - ECHO "Tests complete!"
+  - python setup.py sdist bdist_wheel
   - set PATH=%BK_PATH%
+
+artifacts:
+  - path: dist\*
 
 deploy_script:
   - echo "Starting artifact deployment"
   - set PATH=%BK_PATH%
-  - ps: If ($env:APPVEYOR_REPO_TAG -eq "true") { Invoke-Expression "twine upload -u tgsmith61591.gh -p $env:PYPI_PASSWORD --skip-existing dist/skoot*.whl" } Else { write-output "Not on a tagged commit, won't deploy to pypi"}
+  - ps: If ($env:APPVEYOR_REPO_TAG -eq "true") { Invoke-Expression "twine upload -u tgsmith61591.gh -p $env:PYPI_PASSWORD --skip-existing dist/*.whl" } Else { write-output "Not on a tagged commit, won't deploy to pypi"}
   #- ps: If ($env:APPVEYOR_REPO_BRANCH -eq "develop") { Invoke-Expression "twine upload -u tgsmith61591.gh -p $env:PYPI_PASSWORD --repository-url https://test.pypi.org/legacy/ --skip-existing dist/*" } Else { write-output "Not on a development commit, won't deploy to pypitest"}
