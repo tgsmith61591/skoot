@@ -82,7 +82,7 @@ install:
   - SET PATH=%CONDA%;%PATH%
 
   # Create/activate the conda env
-  - ls %CONDA%
+  - ls %CONDA%\Scripts
   - conda create -n testenv --yes python=%PYTHON_VERSION% pip pytest setuptools six wheel twine patsy cython
   - activate testenv
 
