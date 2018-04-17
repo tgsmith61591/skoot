@@ -3,6 +3,14 @@
 # Author: Taylor Smith <taylor.smith@alkaline-ml.com>
 #
 # Setup the skoot module
+"""Skoot: Accelerate your data science pipelines
+
+Skoot is an open-source python package for data scientists and
+other machine learning practitioners who would like to spend less time
+developing bespoke solutions for data pre-processing. The library aims to
+tie together as many common techniques and transformers in one location
+as possible, doing so with a familiar scikit-learn API feel.
+"""
 
 from __future__ import print_function, absolute_import, division
 
@@ -16,7 +24,10 @@ if sys.version_info[0] < 3:
 else:
     import builtins
 
-# Hacky (!!), adopted from sklearn. This sets a global variable
+# get the description out of the first line further down
+DOCLINES = __doc__.split(os.linesep)
+
+# Hacky (!!), adopted from sklearn & scipy. This sets a global variable
 # so skoot __init__ can detect if it's being loaded in the setup
 # routine, so it won't load submodules that haven't yet been built.
 # This is because of the numpy distutils extensions that are used by
@@ -26,8 +37,7 @@ builtins.__SKOOT_SETUP__ = True
 # metadata
 DISTNAME = 'skoot'
 PYPIDIST = DISTNAME
-DESCRIPTION = "A set of scikit-learn transformers and extension modules"
-# todo: long description from README rst
+DESCRIPTION = DOCLINES[0]
 
 MAINTAINER = 'Taylor G. Smith'
 MAINTAINER_GIT = 'tgsmith61591'
@@ -40,8 +50,8 @@ VERSION = skoot.__version__
 
 # get the installation requirements:
 with open('requirements.txt') as req:
-    REQUIREMENTS = [l for l in req.read().split(os.linesep) if l]
-    print("Requirements: %r" % REQUIREMENTS)
+    REQUIREMENTS = [l for l in req.read().split("\n") if l]
+    print("Setup requirements: %s" % str(REQUIREMENTS))
 
 SETUPTOOLS_COMMANDS = {  # this is a set literal, not a dict
     'develop', 'release', 'bdist_egg', 'bdist_rpm',
@@ -50,8 +60,10 @@ SETUPTOOLS_COMMANDS = {  # this is a set literal, not a dict
     '--single-version-externally-managed'
 }
 
-# are we building from install or develop?
+# are we building from install or develop? Since "install" is not in the
+# SETUPTOOLS_COMMANDS, we have to check that here...
 we_be_buildin = 'install' in sys.argv
+
 if SETUPTOOLS_COMMANDS.intersection(sys.argv):
     # we don't use setuptools, but if we don't import it, the "develop"
     # option for setup.py is invalid.
@@ -59,8 +71,11 @@ if SETUPTOOLS_COMMANDS.intersection(sys.argv):
     from setuptools.dist import Distribution
 
     class BinaryDistribution(Distribution):
-        """The goal is to avoid having to later build the C code
-        on the system itself.
+        """Command class to indicate binary distribution.
+
+        The goal is to avoid having to later build the C or Fortran code
+        on the system itself, but to build the binary dist wheels on the
+        CI platforms. This class helps us achieve just that.
 
         References
         ----------
@@ -70,30 +85,27 @@ if SETUPTOOLS_COMMANDS.intersection(sys.argv):
         .. [2] https://github.com/spotify/dh-virtualenv/issues/113
         """
         def is_pure(self):
-            """Since we are distributing binary (.so, .dll, .dylib) files for
+            """Return False (not pure).
+
+            Since we are distributing binary (.so, .dll, .dylib) files for
             different platforms we need to make sure the wheel does not build
             without them! See 'Building Wheels':
             http://lucumr.pocoo.org/2014/1/27/python-on-wheels/
-
-            Returns
-            -------
-            False
             """
             return False
 
         def has_ext_modules(self):
-            """The package has external modules. Therefore, unsurprisingly,
+            """Return True (there are external modules).
+
+            The package has external modules. Therefore, unsurprisingly,
             this returns True to indicate that there are, in fact, external
             modules.
-
-            Returns
-            -------
-            True
             """
             return True
 
     # only import numpy (later) if we're developing
-    if any(cmd in sys.argv for cmd in {'develop', 'bdist_wheel'}):
+    if any(cmd in sys.argv for cmd in {'develop', 'bdist_wheel',
+                                       'bdist_wininst'}):
         we_be_buildin = True
 
     print('Adding extra setuptools args')
@@ -101,9 +113,11 @@ if SETUPTOOLS_COMMANDS.intersection(sys.argv):
         zip_safe=False,  # the package can run out of an .egg file
         include_package_data=True,
         package_data={DISTNAME: ['*']},
-        distclass=BinaryDistribution,
-        install_requires=REQUIREMENTS,
+        distclass=BinaryDistribution
     )
+
+    # if we have to build, we need to add cython to the requirements
+    REQUIREMENTS.append("cython>=0.23")
 else:
     extra_setuptools_args = dict()
 
@@ -134,10 +148,9 @@ class CleanCommand(clean):
                     pyx_file = str.replace(filename, extension, '.pyx')
                     if os.path.exists(os.path.join(dirpath, pyx_file)):
                         os.unlink(os.path.join(dirpath, filename))
-            # this is for FORTRAN modules, which some of my other packages
-            # have used in the past...
             for dirname in dirnames:
-                if dirname == '__pycache__' or dirname.endswith('.so.dSYM'):
+                # latter is for FORTRAN modules...
+                if dirname == '__pycache__' or dirname.endswith('.dSYM'):
                     print('Removing directory: %s' % dirname)
                     shutil.rmtree(os.path.join(dirpath, dirname))
 
@@ -149,9 +162,6 @@ def configuration(parent_package='', top_path=None):
     # we know numpy is a valid import now
     from numpy.distutils.misc_util import Configuration
     config = Configuration(None, parent_package, top_path)
-
-    # Avoid non-useful msg
-    # "Ignoring attempt to set 'name' (from ... "
     config.set_options(ignore_setup_xxx_py=True,
                        assume_default_configuration=True,
                        delegate_options_to_subpackages=True,
@@ -178,23 +188,28 @@ def do_setup():
                         'Programming Language :: C',
                         'Programming Language :: Fortran',
                         'Programming Language :: Python',
+                        'Programming Language :: Python 2.7',
+                        'Programming Language :: Python 3',
+                        'Programming Language :: Python 3.5',
+                        'Programming Language :: Python 3.6',
                         'Topic :: Software Development',
                         'Topic :: Scientific/Engineering',
                         'Operating System :: Microsoft :: Windows',
                         'Operating System :: POSIX',
                         'Operating System :: Unix',
-                        'Operating System :: MacOS',
-                        'Programming Language :: Python :: 2.7',
-                        'Programming Language :: Python :: 3.5',
-                        'Programming Language :: Python :: 3.6',
+                        'Operating System :: MacOS'
                     ],
-                    keywords='scikit-learn machine-learning data-science',
+                    keywords='scikit-learn pandas machine-learning '
+                             'data-science',
                     # this will only work for releases that have the right tag
                     download_url='https://github.com/%s/%s/archive/v%s.tar.gz'
                                  % (MAINTAINER_GIT, DISTNAME, VERSION),
                     python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, '
                                     '!=3.3.*, !=3.4.*, <4',
+                    platforms=["Windows", "Linux", "Unix", "Mac OS-X"],
                     cmdclass=cmdclass,
+                    setup_requires=REQUIREMENTS,
+                    install_requires=REQUIREMENTS,
                     **extra_setuptools_args)
 
     if len(sys.argv) == 1 or (
@@ -228,9 +243,12 @@ def do_setup():
             except ImportError:
                 raise RuntimeError('Need numpy to build %s' % DISTNAME)
 
-        # if we are building to or from a wheel, we do not need numpy,
-        # because it will be handled in the requirements.txt
+            # Cythonize and Fortranize should theoretically be delegated to
+            # submodules' setup.py scripts... *theoretically*...
+
+        # otherwise we're building from a wheel
         else:
+            # Non-build actions don't require numpy
             from setuptools import setup
 
         # add the config to the metadata

@@ -1,0 +1,130 @@
+# AppVeyor.com is a Continuous Integration service to build and run tests under
+# Windows. This .yml file is based on scikit-learn and statsmodels' Appveyor CI
+# setups, adapted for use with Skoot
+
+# This image contains the most pre-installed software (including supposedly
+# MinGW and Miniconda?...)
+image:
+- Visual Studio 2015
+
+# No reason for us to restrict the number concurrent jobs
+max_jobs: 100
+
+cache:
+  - '%LOCALAPPDATA%\pip\Cache'
+
+environment:
+  global:
+    MINGW_32: C:\mingw-w64\i686-6.3.0-posix-dwarf-rt_v5-rev1\mingw32\bin
+    MINGW_64: C:\mingw-w64\x86_64-6.3.0-posix-seh-rt_v5-rev1\mingw64\bin
+    APPVEYOR_SAVE_CACHE_ON_ERROR: false
+    TEST_TIMEOUT: 1000
+    # SDK v7.0 MSVC Express 2008's SetEnv.cmd script will fail if the
+    # /E:ON and /V:ON options are not enabled in the batch script interpreter
+    # See: http://stackoverflow.com/a/13751649/163740
+    # CMD_IN_ENV: "cmd /E:ON /V:ON /C .\\build_tools\\appveyor\\run_with_env.cmd"
+  PYPI_USERNAME: tgsmith61591.gh
+  PYPI_PASSWORD:
+    secure: gbT4E95dOsFHbxOmXk4C3gkIiaqeg0MGgvlE4rmxD4U=
+
+  matrix:
+    - CONDA: C:\Miniconda
+      PYTHON_VERSION: 2.7
+      PYTHON_ARCH: 32
+
+    - CONDA: C:\Miniconda-x64
+      PYTHON_VERSION: 2.7
+      PYTHON_ARCH: 64
+
+    - CONDA: C:\Miniconda35
+      PYTHON_VERSION: 3.5
+      PYTHON_ARCH: 32
+
+    - CONDA: C:\Miniconda35-x64
+      PYTHON_VERSION: 3.5
+      PYTHON_ARCH: 64
+
+init:
+  - "ECHO %CONDA% %PYTHON_VERSION% %PYTHON_ARCH%"
+  - "ECHO \"%APPVEYOR_SCHEDULED_BUILD%\""
+
+  # If there is a newer build queued for the same PR, cancel this one.
+  # The AppVeyor 'rollout builds' option is supposed to serve the same
+  # purpose but it is problematic because it tends to cancel builds pushed
+  # directly to master instead of just PR builds (or the converse).
+  # credits: JuliaLang developers.
+  - ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER -and $env:APPVEYOR_BUILD_NUMBER -ne ((Invoke-RestMethod `
+        https://ci.appveyor.com/api/projects/$env:APPVEYOR_ACCOUNT_NAME/$env:APPVEYOR_PROJECT_SLUG/history?recordsNumber=50).builds | `
+        Where-Object pullRequestId -eq $env:APPVEYOR_PULL_REQUEST_NUMBER)[0].buildNumber) { `
+          Write-Host "There are newer queued builds for this pull request, skipping build."
+          Exit-AppveyorBuild
+        }
+  - ps: |
+      If (($env:SKIP_NOTAG -eq "true") -and ($env:APPVEYOR_REPO_TAG -ne "true")) {
+          Write-Host "Skipping build, not at a tag."
+          Exit-AppveyorBuild
+      }
+
+install:
+  - C:\cygwin\bin\du -hs "%LOCALAPPDATA%\pip\Cache"
+
+  # Prepend Miniconda to the PATH of this build (this cannot be
+  # done from inside the powershell script as it would require to restart
+  # the parent CMD process). Miniconda should contain the fortran compiler
+  # we need... *should*...
+  - SET PATH=%CONDA%;%CONDA%\Scripts;%PATH%
+
+  # Create/activate the conda env
+  - conda create -n testenv --yes python=%PYTHON_VERSION% pip pytest nose setuptools six wheel twine patsy cython
+  - activate testenv
+
+  # Install requirements
+  - pip install cerberus
+  - conda install --yes --file build_tools/appveyor/requirements.txt
+
+  # Get the proper mingw pointed-to...
+  - ps: |
+      $PYTHON_ARCH = $env:PYTHON_ARCH
+      If ($PYTHON_ARCH -eq 32) {
+          $MINGW = $env:MINGW_32
+      } Else {
+          $MINGW = $env:MINGW_64
+      }
+      $env:Path += ";$MINGW"
+
+build_script:
+  - python setup.py install
+
+after_build:
+  # Remove old or huge cache files to hopefully not exceed the 1GB cache limit.
+  #
+  # If the cache limit is reached, the cache will not be updated (of not even
+  # created in the first run). So this is a trade of between keeping the cache
+  # current and having a cache at all.
+  # NB: This is done only `on_success` since the cache in uploaded only on
+  # success anyway.
+  - C:\cygwin\bin\find "%LOCALAPPDATA%\pip" -type f -mtime +360 -delete
+  - C:\cygwin\bin\find "%LOCALAPPDATA%\pip" -type f -size +10M -delete
+  - C:\cygwin\bin\find "%LOCALAPPDATA%\pip" -empty -delete
+
+  # Show size of cache
+  - C:\cygwin\bin\du -hs "%LOCALAPPDATA%\pip\Cache"
+
+test_script:
+  # TODO: Help wanted to get this to work...
+  # - python appveyor_runtests.py -n -m full
+  - "ECHO SKIPPING TESTS UNTIL APPVEYOR STOPS SUCKING"
+
+after_test:
+  # After the test, build the wheels (let travis handle the source build).
+  - python setup.py bdist_wheel
+  - set PATH=%BK_PATH%
+
+artifacts:
+  - path: dist\*
+
+deploy_script:
+  - echo "Starting artifact deployment"
+  - set PATH=%BK_PATH%
+  - ps: If ($env:APPVEYOR_REPO_TAG -eq "true") { Invoke-Expression "twine upload -u tgsmith61591.gh -p $env:PYPI_PASSWORD --skip-existing dist/*.whl" } Else { write-output "Not on a tagged commit, won't deploy to pypi"}
+  #- ps: If ($env:APPVEYOR_REPO_BRANCH -eq "develop") { Invoke-Expression "twine upload -u tgsmith61591.gh -p $env:PYPI_PASSWORD --repository-url https://test.pypi.org/legacy/ --skip-existing dist/*" } Else { write-output "Not on a development commit, won't deploy to pypitest"}

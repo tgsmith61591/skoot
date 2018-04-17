@@ -17,6 +17,7 @@ from sklearn.externals.joblib import Parallel, delayed
 from sklearn.utils.validation import check_is_fitted
 
 from ..base import BasePDTransformer
+from ..decorators import suppress_warnings as suppress
 from ..utils.validation import (check_dataframe, validate_multiple_rows,
                                 validate_test_set_columns)
 
@@ -28,7 +29,7 @@ __all__ = [
 ZERO = 1E-16
 
 
-def _bc_est_lam(y, min_value):
+def _bc_est_lam(y, min_value, dtype, suppress_warnings):
     """Estimate the lambda param for box-cox transformations.
 
     Estimate lambda for a single y, given a range of lambdas
@@ -40,17 +41,24 @@ def _bc_est_lam(y, min_value):
        The vector from which lambda is being estimated
     """
     # ensure is array, floor at min_value
-    y = np.maximum(np.asarray(y), min_value)
+    y = np.maximum(np.asarray(y).astype(dtype), min_value)
 
-    # Use scipy's log-likelihood estimator
-    b = boxcox(y, lmbda=None)
+    # Use scipy's log-likelihood estimator (we might get warnings here...
+    # should we suppress???)
+    def _boxcox_inner():
+        return boxcox(y, lmbda=None)
+
+    # if we want to suppress, decorate now
+    if suppress_warnings:
+        _boxcox_inner = suppress(_boxcox_inner)
+    b = _boxcox_inner()
 
     # Return lambda corresponding to maximum P
     return b[1]
 
 
-def _yj_est_lam(y, brack):
-    y = np.asarray(y)
+def _yj_est_lam(y, brack, dtype=np.float32):
+    y = np.asarray(y).astype(dtype)
 
     # Use MLE to compute the optimal YJ parameter
     def _mle_opt(i, brck):
@@ -114,9 +122,9 @@ def _yj_llf(data, lmb):
     return llf
 
 
-def _yj_transform_y(y, lam):
+def _yj_transform_y(y, lam, dtype=np.float32):
     # should already be a vec, but just gotta be sure
-    y = np.asarray(y)
+    y = np.asarray(y).astype(dtype)
 
     # need some different masks...
     gte_zero_mask = y >= 0
@@ -170,12 +178,13 @@ def _yj_transform_y(y, lam):
 
 
 class _BaseSkewnessTransformer(six.with_metaclass(ABCMeta, BasePDTransformer)):
-    def __init__(self, cols=None, n_jobs=1, as_df=True):
+    def __init__(self, cols, n_jobs, as_df, dtype):
 
         super(_BaseSkewnessTransformer, self).__init__(
             cols=cols, as_df=as_df)
 
         self.n_jobs = n_jobs
+        self.dtype = dtype
 
     def _fit(self, X, estimation_function):
         # check on state of X and cols (all cols need to be finite!)
@@ -186,9 +195,12 @@ class _BaseSkewnessTransformer(six.with_metaclass(ABCMeta, BasePDTransformer)):
 
         # Now estimate the lambdas in parallel
         n_jobs = self.n_jobs
+        dtype = self.dtype
+        kwargs = self._estimator_kwargs()
+
         self.lambda_ = list(
             Parallel(n_jobs=n_jobs)(
-                delayed(estimation_function)(X[i])
+                delayed(estimation_function)(X[i], dtype, **kwargs)
                 for i in cols))
 
         # set the fit cols
@@ -202,6 +214,16 @@ class _BaseSkewnessTransformer(six.with_metaclass(ABCMeta, BasePDTransformer)):
         This function should transform a vector given the pre-estimated
         lambda value.
         """
+
+    def _estimator_kwargs(self):
+        """Get the **kwargs for the estimator functions.
+
+        BoxCox and YeoJohnson estimators take different args for their
+        estimating functions, so this allows us to pass the kwargs to the
+        ``estimate`` func. Default is an empty dict but can be overridden
+        by subclasses that need it.
+        """
+        return dict()
 
     def transform(self, X):
         """Apply the transformation to a dataframe.
@@ -247,16 +269,17 @@ class _BCEstimator(object):
     def __init__(self, min_val):
         self.min_val = min_val
 
-    def __call__(self, y):
-        return _bc_est_lam(y, self.min_val)
+    def __call__(self, y, dtype, suppress_warnings, **kwargs):
+        return _bc_est_lam(y, self.min_val, dtype,
+                           suppress_warnings)
 
 
 class _YJEstimator(object):
     def __init__(self, brack):
         self.brack = brack
 
-    def __call__(self, y):
-        return _yj_est_lam(y, self.brack)
+    def __call__(self, y, dtype, **kwargs):
+        return _yj_est_lam(y, self.brack, dtype)
 
 
 class BoxCoxTransformer(_BaseSkewnessTransformer):
@@ -307,6 +330,14 @@ class BoxCoxTransformer(_BaseSkewnessTransformer):
         The minimum value as a ceiling function for values in prescribed
         features. Values below this amount will be set to ``min_value``.
 
+    dtype : type, optional (default=np.float32)
+        The type of float to which to cast the vector. Default is float32
+        to avoid overflows.
+
+    suppress_warnings : bool, optional (default=False)
+        Whether to suppress warnings in the scipy.stats.boxcox function.
+        Default is False.
+
     Attributes
     ----------
     lambda_ : list
@@ -318,12 +349,14 @@ class BoxCoxTransformer(_BaseSkewnessTransformer):
         during the ``transform`` stage.
     """
 
-    def __init__(self, cols=None, n_jobs=1, as_df=True, min_value=1e-12):
+    def __init__(self, cols=None, n_jobs=1, as_df=True, min_value=1e-12,
+                 dtype=np.float32, suppress_warnings=False):
 
         super(BoxCoxTransformer, self).__init__(
-            cols=cols, as_df=as_df, n_jobs=n_jobs)
+            cols=cols, as_df=as_df, n_jobs=n_jobs, dtype=dtype)
 
         self.min_value = min_value
+        self.suppress_warnings = suppress_warnings
 
     def fit(self, X, y=None):
         """Fit the transformer.
@@ -343,7 +376,7 @@ class BoxCoxTransformer(_BaseSkewnessTransformer):
 
     def _transform_vector(self, vec, lam):
         # make a np array, make sure we've floored
-        y = np.maximum(np.asarray(vec), self.min_value)
+        y = np.maximum(np.asarray(vec).astype(self.dtype), self.min_value)
 
         # if lam is not "zero", y gets the power treatment:
         if lam > ZERO:
@@ -351,6 +384,9 @@ class BoxCoxTransformer(_BaseSkewnessTransformer):
 
         # otherwise, it gets logged
         return np.log(y)
+
+    def _estimator_kwargs(self):
+        return dict(suppress_warnings=self.suppress_warnings)
 
 
 class YeoJohnsonTransformer(_BaseSkewnessTransformer):
@@ -406,6 +442,10 @@ class YeoJohnsonTransformer(_BaseSkewnessTransformer):
         pair (xa, xb) does not always mean the obtained solution will
         satisfy xa <= x <= xb.
 
+    dtype : type, optional (default=np.float32)
+        The type of float to which to cast the vector. Default is float32
+        to avoid overflows.
+
     Attributes
     ----------
     lambda_ : list
@@ -416,10 +456,12 @@ class YeoJohnsonTransformer(_BaseSkewnessTransformer):
         is used to validate the presence of the features in the test set
         during the ``transform`` stage.
     """
-    def __init__(self, cols=None, n_jobs=1, as_df=True, brack=(-2, 2)):
+    def __init__(self, cols=None, n_jobs=1, as_df=True, brack=(-2, 2),
+                 dtype=np.float32):
 
         super(YeoJohnsonTransformer, self).__init__(
-            cols=cols, as_df=as_df, n_jobs=n_jobs)
+            cols=cols, as_df=as_df, n_jobs=n_jobs,
+            dtype=dtype)
 
         self.brack = brack
 
@@ -440,4 +482,4 @@ class YeoJohnsonTransformer(_BaseSkewnessTransformer):
         return self._fit(X, estimation_function=_YJEstimator(brack))
 
     def _transform_vector(self, y, lam):
-        return _yj_transform_y(y, lam)
+        return _yj_transform_y(y, lam, self.dtype)

@@ -339,39 +339,6 @@ class MultiCorrFilter(BaseFeatureSelector):
         return drop_names, average_corr
 
 
-def _near_zero_variance_ratio(series, ratio):
-    """Perform NZV filtering based on a ratio of the
-    most common value to the second-most-common value.
-
-    Parameters
-    ----------
-    
-    series : pandas ``Series``, shape=(n_samples,)
-        The series on which to compute ``value_counts``.
-
-    Returns
-    -------
-
-    ratio_ : float
-        The ratio of the most-prevalent value
-        to the second-most-prevalent value.
-
-    drop_ : int
-        Whether to keep the feature or drop it.
-        1 if drop, 0 if keep.
-    """
-    counts = series.value_counts().sort_values(ascending=False)
-
-    # if there's only one value...
-    if counts.shape[0] < 2:
-        return np.nan, 1
-
-    ratio_ = counts.iloc[0] / counts.iloc[1]
-    drop_ = int(ratio_ >= ratio)
-
-    return ratio_, drop_
-
-
 class NearZeroVarianceFilter(BaseFeatureSelector):
     r"""Identify near zero variance predictors.
 
