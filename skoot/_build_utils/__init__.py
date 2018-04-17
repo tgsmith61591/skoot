@@ -68,7 +68,7 @@ def maybe_cythonize_extensions(top_path, config):
         print("Release detected--building from source files")
         build_from_c_f_and_cpp_files(config.ext_modules)
     else:
-        print("Development build detected--building from .pyx & .pyd")
+        print("Development build detected--building from .pyx & .pyf")
         message = ('Please install cython with a version >= {0} in order '
                    'to build a {1} development version.').format(
                        CYTHON_MIN_VERSION, DEFAULT_ROOT)

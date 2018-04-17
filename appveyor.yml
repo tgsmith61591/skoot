@@ -218,6 +218,13 @@ test_script:
      %CMD_IN_ENV%
      python -c "import imp; print(imp.find_module('skoot'))"
 
+  # Still having problems? See if we can figure out where skoot is loading from...
+  - >-
+     %CMD_IN_ENV%
+     python -c "from os.path import abspath as ap, dirname as dn, exists as e;
+     import skoot as s; dqrpath = dn(ap(s.__file__)) + '/decomposition/_dqrsl.pyd';
+     print('dqrpath exists?', e(dqrpath))"
+
   # Lots of bugs around Py_DEBUG flags, etc. See:
   # 1. https://bugzilla.mozilla.org/show_bug.cgi?id=1240993
   # 2. https://github.com/pypa/pip/pull/3075/commits
@@ -238,7 +245,7 @@ test_script:
   #    print('ABI = ' + abi);"
 
   # And nowwww we test
-  - python -m pytest --showlocals --durations=20 --pyargs skoot
+  - python -m pytest %PYTHON%\lib\site-packages\skoot
 
   # Move back to the project folder
   - "cd ../skoot"
