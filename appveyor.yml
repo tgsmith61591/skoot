@@ -31,26 +31,18 @@ environment:
     - CONDA: C:\Miniconda
       PYTHON_VERSION: 2.7
       PYTHON_ARCH: 32
-      USE_PYTEST: true
-      TEST_MODE: full
 
     - CONDA: C:\Miniconda-x64
       PYTHON_VERSION: 2.7
       PYTHON_ARCH: 64
-      USE_PYTEST: true
-      TEST_MODE: full
 
     - CONDA: C:\Miniconda35
       PYTHON_VERSION: 3.5
       PYTHON_ARCH: 32
-      USE_PYTEST: true
-      TEST_MODE: full
 
     - CONDA: C:\Miniconda35-x64
       PYTHON_VERSION: 3.5
       PYTHON_ARCH: 64
-      USE_PYTEST: true
-      TEST_MODE: full
 
 init:
   - "ECHO %CONDA% %PYTHON_VERSION% %PYTHON_ARCH%"
@@ -86,7 +78,7 @@ install:
   - ls %CONDA%\DLLs
 
   # Create/activate the conda env
-  - conda create -n testenv --yes python=%PYTHON_VERSION% pip pytest setuptools six wheel twine patsy cython
+  - conda create -n testenv --yes python=%PYTHON_VERSION% pip pytest nose setuptools six wheel twine patsy cython
   - activate testenv
 
   # Install requirements
@@ -104,7 +96,7 @@ install:
       $env:Path += ";$MINGW"
 
 build_script:
-  - python setup.py install
+  - python setup.py develop
 
 after_build:
   # Remove old or huge cache files to hopefully not exceed the 1GB cache limit.
@@ -124,13 +116,13 @@ after_build:
 test_script:
   # Change to a non-source folder to make sure we run the tests on the
   # installed library.
-  - mkdir "../empty_folder"
-  - "cp pytest.ini ../empty_folder/pytest.ini"
-  - "cd ../empty_folder"
-
-  # And nowwww we test
-  - pytest --pyargs skoot
-  - "cd ../skoot"
+  # - mkdir "../empty_folder"
+  # - "cp pytest.ini ../empty_folder/pytest.ini"
+  # - "cd ../empty_folder"
+  # # And nowwww we test
+  # - pytest --pyargs skoot
+  # - "cd ../skoot"
+  - nosetests
 
 after_test:
   # After the test, build the wheels (let travis handle the source build).

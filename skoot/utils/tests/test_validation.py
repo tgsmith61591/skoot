@@ -3,7 +3,8 @@
 from __future__ import absolute_import
 
 from skoot.testing import assert_raises
-from skoot.utils.validation import (check_dataframe, validate_test_set_columns,
+from skoot.utils.validation import (check_dataframe,
+                                    validate_test_set_columns,
                                     validate_multiple_rows)
 from sklearn.utils.validation import check_random_state
 
@@ -35,20 +36,6 @@ def test_check_dataframe_all_cols():
     assert X_copy.columns.tolist() == cols
 
 
-def test_check_dataframe_with_diff():
-    # a check with all columns present
-    X_copy, cols_copy, diff = check_dataframe(X, cols=cols, column_diff=True)
-
-    # neither copy should not share the same reference (still)
-    assert X_copy is not X
-    assert cols_copy is not cols
-
-    # assert equalities
-    assert X.equals(X_copy)
-    assert cols == cols_copy, (cols, cols_copy)
-    assert not diff
-
-
 # test valid assert_all_finite
 def test_check_dataframe_assert_all_finite():
     # a check with all columns present
@@ -58,6 +45,18 @@ def test_check_dataframe_assert_all_finite():
 
     # X_copy should equal X
     assert cols == cols_copy, (cols, cols_copy)
+
+
+# test bad columns
+def test_check_dataframe_bad_cols():
+    # a check with all columns present
+    assert_raises(ValueError, check_dataframe,
+                  X, cols=['bad', 'cols'])
+
+
+# test bad dataframe
+def test_check_dataframe_bad_X():
+    assert_raises(TypeError, check_dataframe, 'string')
 
 
 # test valid check dataframe with no cols provided
@@ -73,17 +72,6 @@ def test_check_dataframe_no_cols():
     assert X_copy.columns.tolist() == cols
 
 
-# test valid check dataframe with subset of cols provided
-def test_check_dataframe_some_cols():
-    # a check with all columns present
-    X_copy, cols_copy = check_dataframe(X, cols=cols[:3])
-    assert X.equals(X_copy)
-
-    # cols_copy should NOT equal cols
-    assert cols_copy != cols
-    assert isinstance(cols_copy, list)
-
-
 # test valid check dataframe scalar col
 def test_check_dataframe_scalar_col():
     # a check with all columns present
@@ -97,16 +85,29 @@ def test_check_dataframe_scalar_col():
     assert cols_copy[0] == 'col_0'
 
 
-# test bad columns
-def test_check_dataframe_bad_cols():
+# test valid check dataframe with subset of cols provided
+def test_check_dataframe_some_cols():
     # a check with all columns present
-    assert_raises(ValueError, check_dataframe,
-                  X, cols=['bad', 'cols'])
+    X_copy, cols_copy = check_dataframe(X, cols=cols[:3])
+    assert X.equals(X_copy)
+
+    # cols_copy should NOT equal cols
+    assert cols_copy != cols
+    assert isinstance(cols_copy, list)
 
 
-# test bad dataframe
-def test_check_dataframe_bad_X():
-    assert_raises(TypeError, check_dataframe, 'string')
+def test_check_dataframe_with_diff():
+    # a check with all columns present
+    X_copy, cols_copy, diff = check_dataframe(X, cols=cols, column_diff=True)
+
+    # neither copy should not share the same reference (still)
+    assert X_copy is not X
+    assert cols_copy is not cols
+
+    # assert equalities
+    assert X.equals(X_copy)
+    assert cols == cols_copy, (cols, cols_copy)
+    assert not diff
 
 
 # test works on array
@@ -152,8 +153,8 @@ def test_validate_test_cols():
 
 
 def test_validate_multiple_rows():
-    X = np.random.rand(2, 2)
-    assert_raises(ValueError, validate_multiple_rows, "cls", X[:1, :])
+    X_copy = np.random.rand(2, 2)
+    assert_raises(ValueError, validate_multiple_rows, "cls", X_copy[:1, :])
 
     # this works
-    validate_multiple_rows("cls", X)
+    validate_multiple_rows("cls", X_copy)
