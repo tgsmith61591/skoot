@@ -180,3 +180,7 @@ def validate_test_set_columns(fit_columns, test_columns):
         raise ValueError("Not all fit columns present in test data! "
                          "(expected=%r, present=%r)"
                          % (fit_columns, test_columns))
+
+
+# nosetest pb:
+validate_test_set_columns.__test__ = False

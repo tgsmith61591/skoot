@@ -2,7 +2,9 @@
 """
 appveyor_runtests.py [OPTIONS] [-- ARGS]
 
-Run tests, building the project first.
+Run tests, building the project first. This is necessary for testing on
+Appveyor, since the compiled DLL (.pyd) submodule for Fortran code is not
+statically linked with MinGW.
 
 Examples::
 
@@ -71,19 +73,22 @@ def main(argv):
     parser.add_argument("--verbose", "-v", action="count", default=1,
                         help="more verbosity")
     parser.add_argument("--no-build", "-n", action="store_true", default=False,
-                        help="do not build the project (use system installed version)")
-    parser.add_argument("--build-only", "-b", action="store_true", default=False,
+                        help="do not build the project (use system "
+                             "installed version)")
+    parser.add_argument("--build-only", "-b", action="store_true",
+                        default=False,
                         help="just build, do not run any tests")
     parser.add_argument("--doctests", action="store_true", default=False,
                         help="Run doctests in module")
     parser.add_argument("--refguide-check", action="store_true", default=False,
                         help="Run refguide check (do not run regular tests.)")
     parser.add_argument("--coverage", action="store_true", default=False,
-                        help=("report coverage of project code. HTML output goes "
-                              "under build/coverage"))
+                        help=(
+                            "report coverage of project code. HTML output "
+                            "goes under build/coverage"))
     parser.add_argument("--gcov", action="store_true", default=False,
-                        help=("enable C code coverage via gcov (requires GCC). "
-                              "gcov output goes to build/**/*.gc*"))
+                        help=("enable C code coverage via gcov (requires "
+                              "GCC). gcov output goes to build/**/*.gc*"))
     parser.add_argument("--lcov-html", action="store_true", default=False,
                         help=("produce HTML for C code coverage information "
                               "from a previous run with --gcov. "
@@ -92,7 +97,8 @@ def main(argv):
                         help="'fast', 'full', or something that could be "
                              "passed to nosetests -A [default: fast]")
     parser.add_argument("--submodule", "-s", default=None,
-                        help="Submodule whose tests to run (cluster, constants, ...)")
+                        help="Submodule whose tests to run (cluster, "
+                             "constants, ...)")
     parser.add_argument("--pythonpath", "-p", default=None,
                         help="Paths to prepend to PYTHONPATH")
     parser.add_argument("--tests", "-t", action='append',
@@ -113,13 +119,16 @@ def main(argv):
     parser.add_argument("--bench", action="store_true",
                         help="Run benchmark suite instead of test suite")
     parser.add_argument("--bench-compare", action="append", metavar="BEFORE",
-                        help=("Compare benchmark results of current HEAD to BEFORE. "
-                              "Use an additional --bench-compare=COMMIT to override HEAD with COMMIT. "
-                              "Note that you need to commit your changes first!"
-                             ))
+                        help=(
+                            "Compare benchmark results of current HEAD to "
+                            "BEFORE. Use an additional --bench-compare=COMMIT "
+                            "to override HEAD with COMMIT. Note that you need "
+                            "to commit your changes first!"
+                            ))
     parser.add_argument("args", metavar="ARGS", default=[], nargs=REMAINDER,
                         help="Arguments to pass to Nose, Python or shell")
     args = parser.parse_args(argv)
+    print("Parsed test args")
 
     if args.bench_compare:
         args.bench = True
@@ -152,6 +161,7 @@ def main(argv):
     extra_argv = args.args[:]
     if extra_argv and extra_argv[0] == '--':
         extra_argv = extra_argv[1:]
+        print("Found extra args (%r)" % extra_argv)
 
     if args.python:
         if extra_argv:
@@ -253,25 +263,29 @@ def main(argv):
     if args.build_only:
         sys.exit(0)
     else:
+        print("Importing skoot")
         # This differs from scipy:
         __import__(PROJECT_MODULE)
         test = sys.modules[PROJECT_MODULE].test
 
     if args.submodule:
         tests = [PROJECT_MODULE + "." + args.submodule]
+        print("Will run tests for submodule: %s" % tests)
     elif args.tests:
         tests = args.tests
+        print("Will run specific test: %s" % tests)
     else:
+        print("Will run all tests")
         tests = None
 
     # Run the tests
-
     if not args.no_build:
         test_dir = site_dir
     else:
         test_dir = os.path.join(ROOT_DIR, 'build', 'test')
         if not os.path.isdir(test_dir):
             os.makedirs(test_dir)
+        print("Test dir: %s" % test_dir)
 
     shutil.copyfile(os.path.join(ROOT_DIR, '.coveragerc'),
                     os.path.join(test_dir, '.coveragerc'))
@@ -279,7 +293,8 @@ def main(argv):
     cwd = os.getcwd()
     try:
         os.chdir(test_dir)
-        result = test(args.mode,
+        print("Running tests... (test obj=%r)" % test)
+        result = test(label=args.mode,
                       verbose=args.verbose,
                       extra_argv=extra_argv,
                       doctests=args.doctests,

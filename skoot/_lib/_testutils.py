@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
-"""
-Generic test utilities.
 
-These functions are adapted from scipy for use with skoot.
-"""
+from __future__ import absolute_import
 
-from __future__ import division, print_function, absolute_import
 
 import os
 import re
@@ -22,7 +18,6 @@ class FPUModeChangeWarning(RuntimeWarning):
 
 class PytestTester(object):
     """Pytest test runner entry point."""
-
     def __init__(self, module_name):
         self.module_name = module_name
 
@@ -32,7 +27,6 @@ class PytestTester(object):
 
         module = sys.modules[self.module_name]
         module_path = os.path.abspath(module.__path__[0])
-
         pytest_args = ['-l']
 
         if doctests:
@@ -42,7 +36,7 @@ class PytestTester(object):
             pytest_args += list(extra_argv)
 
         if verbose and int(verbose) > 1:
-            pytest_args += ["-" + "v" * (int(verbose)-1)]
+            pytest_args += ["-" + "v"*(int(verbose)-1)]
 
         if coverage:
             pytest_args += ["--cov=" + module_path]
@@ -61,26 +55,26 @@ class PytestTester(object):
             code = pytest.main(pytest_args)
         except SystemExit as exc:
             code = exc.code
-
         return code == 0
 
 
 def check_free_memory(free_mb):
-    """Check *free_mb* of memory is available, otherwise do pytest.skip"""
+    """
+    Check *free_mb* of memory is available, otherwise do pytest.skip
+    """
     import pytest
-    PKG_KEY = "SKOOT_AVAILABLE_MEM"
 
     try:
-        mem_free = _parse_size(os.environ[PKG_KEY])
+        mem_free = _parse_size(os.environ['SKOOT_AVAILABLE_MEM'])
         msg = '{0} MB memory required, but environment ' \
-              '{1}={2}'.format(free_mb, PKG_KEY, os.environ[PKG_KEY])
-
+              'SKOOT_AVAILABLE_MEM={1}'\
+            .format(free_mb, os.environ['SKOOT_AVAILABLE_MEM'])
     except KeyError:
         mem_free = _get_mem_available()
         if mem_free is None:
             pytest.skip("Could not determine available memory; set "
-                        "%s variable to free memory in MB to run the test."
-                        % PKG_KEY)
+                        "SKOOT_AVAILABLE_MEM variable to free memory "
+                        "in MB to run the test.")
         msg = '{0} MB memory required, but {1} MB available'.format(
             free_mb, mem_free/1e6)
 
@@ -89,20 +83,12 @@ def check_free_memory(free_mb):
 
 
 def _parse_size(size_str):
-    suffixes = {'': 1e6,
-                'b': 1.0,
-                'k': 1e3,
-                'M': 1e6,
-                'G': 1e9,
-                'T': 1e12,
-                'kb': 1e3,
-                'Mb': 1e6,
-                'Gb': 1e9,
-                'Tb': 1e12,
-                'kib': 1024.0,
-                'Mib': 1024.0 ** 2,
-                'Gib': 1024.0 ** 3,
-                'Tib': 1024.0 ** 4}
+    suffixes = {'': 1e6, 'b': 1.0,
+                'k': 1e3, 'M': 1e6, 'G': 1e9, 'T': 1e12,
+                'kb': 1e3, 'Mb': 1e6, 'Gb': 1e9, 'Tb': 1e12,
+                'kib': 1024.0, 'Mib': 1024.0 ** 2,
+                'Gib': 1024.0 ** 3, 'Tib': 1024.0 ** 4}
+
     m = re.match(r'^\s*(\d+)\s*({0})\s*$'.format('|'.join(suffixes.keys())),
                  size_str,
                  re.I)

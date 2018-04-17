@@ -1,8 +1,0 @@
-setuptools
-six
-wheel
-twine
-numpy
-cython
-pytest
-patsy

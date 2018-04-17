@@ -30,14 +30,15 @@ else:
         'feature_extraction',
         'feature_selection',
         'preprocessing',
-        'test',  # used for testing in appveyor
         'utils'
     ]
 
-    # Run pytests over the unit tests
     from skoot._lib._testutils import PytestTester
     test = PytestTester(__name__)
     del PytestTester
+
+    # in case anyone tries a nose runner...
+    test.__test__ = False
 
 
 def setup_module(module):

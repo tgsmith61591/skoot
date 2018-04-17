@@ -17,10 +17,6 @@ environment:
   global:
     MINGW_32: C:\mingw-w64\i686-6.3.0-posix-dwarf-rt_v5-rev1\mingw32\bin
     MINGW_64: C:\mingw-w64\x86_64-6.3.0-posix-seh-rt_v5-rev1\mingw64\bin
-    OPENBLAS_32: https://3f23b170c54c2533c070-1c8a9b3114517dc5fe17b7c3f8c63a43.ssl.cf2.rackcdn.com/openblas-5f998ef_gcc7_1_0_win32.zip
-    OPENBLAS_64: https://3f23b170c54c2533c070-1c8a9b3114517dc5fe17b7c3f8c63a43.ssl.cf2.rackcdn.com/openblas-5f998ef_gcc7_1_0_win64.zip
-    NUMPY_HEAD: https://github.com/numpy/numpy.git
-    NUMPY_BRANCH: master
     APPVEYOR_SAVE_CACHE_ON_ERROR: false
     TEST_TIMEOUT: 1000
     # SDK v7.0 MSVC Express 2008's SetEnv.cmd script will fail if the
@@ -32,32 +28,24 @@ environment:
     secure: gbT4E95dOsFHbxOmXk4C3gkIiaqeg0MGgvlE4rmxD4U=
 
   matrix:
-    - PYTHON: C:\Python27
+    - CONDA: C:\Miniconda
       PYTHON_VERSION: 2.7
       PYTHON_ARCH: 32
-      USE_PYTEST: true
-      TEST_MODE: full
 
-    - PYTHON: C:\Python27-x64
+    - CONDA: C:\Miniconda-x64
       PYTHON_VERSION: 2.7
       PYTHON_ARCH: 64
-      USE_PYTEST: true
-      TEST_MODE: full
 
-    - PYTHON: C:\Python35
+    - CONDA: C:\Miniconda35
       PYTHON_VERSION: 3.5
       PYTHON_ARCH: 32
-      USE_PYTEST: true
-      TEST_MODE: full
 
-    - PYTHON: C:\Python35-x64
+    - CONDA: C:\Miniconda35-x64
       PYTHON_VERSION: 3.5
       PYTHON_ARCH: 64
-      USE_PYTEST: true
-      TEST_MODE: full
 
 init:
-  - "ECHO %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%"
+  - "ECHO %CONDA% %PYTHON_VERSION% %PYTHON_ARCH%"
   - "ECHO \"%APPVEYOR_SCHEDULED_BUILD%\""
 
   # If there is a newer build queued for the same PR, cancel this one.
@@ -80,76 +68,21 @@ init:
 install:
   - C:\cygwin\bin\du -hs "%LOCALAPPDATA%\pip\Cache"
 
-  # Prepend newly installed Python to the PATH of this build (this cannot be
+  # Prepend Miniconda to the PATH of this build (this cannot be
   # done from inside the powershell script as it would require to restart
-  # the parent CMD process).
-  - SET PATH=%PYTHON%;%PYTHON%\Scripts;%PATH%
+  # the parent CMD process). Miniconda should contain the fortran compiler
+  # we need... *should*...
+  - SET PATH=%CONDA%;%CONDA%\Scripts;%PATH%
 
-  # Check that we have the expected version and architecture for Python
-  - python --version
-  - >-
-     %CMD_IN_ENV%
-     python -c "import sys,platform,struct;
-     print(sys.platform, platform.machine(), struct.calcsize('P') * 8, )"
+  # Create/activate the conda env
+  - conda create -n testenv --yes python=%PYTHON_VERSION% pip pytest nose setuptools six wheel twine patsy cython
+  - activate testenv
 
-  # Install the BLAS library
-  #  - install "openblas.lib" to PYTHON\lib
-  #  - install OpenBLAS.dll to MINGW\bin
-  - ps: |
-      $PYTHON_ARCH = $env:PYTHON_ARCH
-      $PYTHON = $env:PYTHON
-      If ($PYTHON_ARCH -eq 32) {
-          $OPENBLAS = $env:OPENBLAS_32
-      } Else {
-          $OPENBLAS = $env:OPENBLAS_64
-      }
-      $clnt = new-object System.Net.WebClient
-      $file = "$(New-TemporaryFile).zip"
-      $tmpdir = New-TemporaryFile | %{ rm $_; mkdir $_ }
-      $destination = "$PYTHON\lib\openblas.a"
+  # Install requirements
+  - pip install cerberus
+  - conda install --yes --file build_tools/appveyor/requirements.txt
 
-      echo $file
-      echo $tmpdir
-      echo $OPENBLAS
-
-      $clnt.DownloadFile($OPENBLAS,$file)
-      Get-FileHash $file | Format-List
-
-      Expand-Archive $file $tmpdir
-
-      rm $tmpdir\$PYTHON_ARCH\lib\*.dll.a
-      $lib = ls $tmpdir\$PYTHON_ARCH\lib\*.a | ForEach { ls $_ } | Select-Object -first 1
-      echo $lib
-
-      cp $lib $destination
-      ls $destination
-
-  # Upgrade to the latest pip.
-  - "ECHO Upgrading PIP"
-  - '%CMD_IN_ENV% python -m pip install -U pip'
-
-  # Install the scipy test dependencies.
-  - "ECHO Installing PRE-requirements"
-  - '%CMD_IN_ENV% python -m pip install -U --timeout 5 --retries 2 -r build_tools/appveyor/pre_numpy_requirements.txt'
-
-  # Replace numpy distutils with a version that can build with msvc + mingw-gfortran
-  # - "ECHO Getting Numpy HEAD"
-  # - ps: |
-  #     $NumpyDir = $((python -c 'import os; import numpy; print(os.path.dirname(numpy.__file__))') | Out-String).Trim()
-  #     rm -r -Force "$NumpyDir\distutils"
-  #     $tmpdir = New-TemporaryFile | %{ rm $_; mkdir $_ }
-  #
-  #     echo $NumpyDir
-  #     echo $env:NUMPY_HEAD
-  #     echo $env:NUMPY_BRANCH
-  #     git clone -q --depth=1 -b $env:NUMPY_BRANCH $env:NUMPY_HEAD $tmpdir
-  #     mv $tmpdir\numpy\distutils $NumpyDir
-
-  # NOW that we've updated our numpy dist we can install scikit, etc.
-  - "ECHO Installing POST-requirements"
-  - '%CMD_IN_ENV% python -m pip install -U --timeout 5 --retries 2 -r build_tools/appveyor/post_numpy_requirements.txt'
-
-build_script:
+  # Get the proper mingw pointed-to...
   - ps: |
       $PYTHON_ARCH = $env:PYTHON_ARCH
       If ($PYTHON_ARCH -eq 32) {
@@ -158,28 +91,9 @@ build_script:
           $MINGW = $env:MINGW_64
       }
       $env:Path += ";$MINGW"
-      $env:NPY_NUM_BUILD_JOBS = "4"
 
-      mkdir dist
-      python -m pip wheel -v -v -v --wheel-dir=dist .
-
-      # For each wheel that pip has placed in the "dist" directory
-      # check if it's the skoot wheel and upload to the "artifacts" tab
-      # if so.
-
-      # This method is more representative of what will be distributed,
-      # because it actually tests what the built wheels will be rather than
-      # what 'setup.py install' will do and at it uploads the wheels so that
-      # they can be inspected.
-
-      ls dist -r | Foreach-Object {
-          if ($_.FullName.Contains("dist\skoot")) {
-            echo $_.FullName
-            appveyor PushArtifact $_.FullName
-          }
-
-          python -m pip install $_.FullName
-      }
+build_script:
+  - python setup.py install
 
 after_build:
   # Remove old or huge cache files to hopefully not exceed the 1GB cache limit.
@@ -196,65 +110,21 @@ after_build:
   # Show size of cache
   - C:\cygwin\bin\du -hs "%LOCALAPPDATA%\pip\Cache"
 
-  # - ls %PYTHON%\lib\site-packages\
-  - ls %PYTHON%\lib\site-packages\skoot
-  - ls %PYTHON%\lib\site-packages\skoot\__check_build
-  - ls %PYTHON%\lib\site-packages\skoot\decomposition
-
-  # Site-packages should already be on the path, but just to be safe...
-  - "ECHO Old path: %PATH%"
-  - SET PATH=%PYTHON%\lib\site-packages;%PATH%
-  - "ECHO New path: %PATH%"
-
 test_script:
-  # - ECHO %TEST_MODE%
-  # Scipy's args are giving us errors:
-  # - python appveyor_runtests.py -n -m %TEST_MODE% -- -n6 --timeout=%TEST_TIMEOUT% --junitxml=%cd%\junit-results.xml -rfEX
-  # - python appveyor_runtests.py -n -m %TEST_MODE%
-  #
-  # Change to a non-source folder to make sure we run the tests on the
-  # installed library.
-  - mkdir "../empty_folder"
-  - "cp pytest.ini ../empty_folder/pytest.ini"
-  - "cd ../empty_folder"
-
-  # Now maybe debug what's going on with inability to find DLLs...
-  - >-
-     %CMD_IN_ENV%
-     python -c "import imp; print(imp.find_module('skoot'))"
-
-  # Lots of bugs around Py_DEBUG flags, etc. See:
-  # 1. https://bugzilla.mozilla.org/show_bug.cgi?id=1240993
-  # 2. https://github.com/pypa/pip/pull/3075/commits
-  # So let's try to get the variables to debug in the console. This is basically the
-  # code that's running on the pip side.
-  # - >-
-  #    %CMD_IN_ENV%
-  #    python -c "import sys; from pip.pep425tags import get_config_var, get_flag, get_abbr_impl, get_impl_ver;
-  #    soabi = str(get_config_var('SOABI')); print('SOABI = ' + soabi);
-  #    impl = get_abbr_impl(); print('Impl = ' + impl);
-  #    d = 'd' if get_flag('Py_DEBUG', lambda: hasattr(sys, 'gettotalrefcount'), warn=(impl == 'cp')) else '';
-  #    m = 'm' if get_flag('WITH_PYMALLOC', lambda: impl == 'cp', warn=(impl == 'cp')) else '';
-  #    u = 'u' if get_flag('Py_UNICODE_SIZE', lambda: sys.maxunicode == 0x10ffff, expected=4, warn=(impl == 'cp' and sys.version_info < (3, 3))) and sys.version_info < (3, 3) else '';
-  #    print('Py_DEBUG (d) = ' + d);
-  #    print('WITH_PYMALLOC (m) = ' + m);
-  #    print('Py_UNICODE_SIZE (u) = ' + u);
-  #    abi = impl + get_impl_ver() + d + m + u;
-  #    print('ABI = ' + abi);"
-
-  # And nowwww we test
-  - python -m pytest --showlocals --durations=20 --pyargs skoot
-
-  # Move back to the project folder
-  - "cd ../skoot"
+  # TODO: Help wanted to get this to work...
+  # - python appveyor_runtests.py -n -m full
+  - "ECHO SKIPPING TESTS UNTIL APPVEYOR STOPS SUCKING"
 
 after_test:
   # After the test, build the wheels (let travis handle the source build).
-  - ECHO "Tests complete!"
+  - python setup.py bdist_wheel
   - set PATH=%BK_PATH%
+
+artifacts:
+  - path: dist\*
 
 deploy_script:
   - echo "Starting artifact deployment"
   - set PATH=%BK_PATH%
-  - ps: If ($env:APPVEYOR_REPO_TAG -eq "true") { Invoke-Expression "twine upload -u tgsmith61591.gh -p $env:PYPI_PASSWORD --skip-existing dist/skoot*.whl" } Else { write-output "Not on a tagged commit, won't deploy to pypi"}
+  - ps: If ($env:APPVEYOR_REPO_TAG -eq "true") { Invoke-Expression "twine upload -u tgsmith61591.gh -p $env:PYPI_PASSWORD --skip-existing dist/*.whl" } Else { write-output "Not on a tagged commit, won't deploy to pypi"}
   #- ps: If ($env:APPVEYOR_REPO_BRANCH -eq "develop") { Invoke-Expression "twine upload -u tgsmith61591.gh -p $env:PYPI_PASSWORD --repository-url https://test.pypi.org/legacy/ --skip-existing dist/*" } Else { write-output "Not on a development commit, won't deploy to pypitest"}

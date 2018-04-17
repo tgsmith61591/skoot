@@ -23,7 +23,6 @@ def configuration(parent_package='', top_path=None):
     config.add_subpackage('__check_build')
     config.add_subpackage('__check_build/tests')
     config.add_subpackage('_build_utils')
-    config.add_subpackage('_lib')
 
     # modules
     config.add_subpackage('balance')
@@ -45,13 +44,23 @@ def configuration(parent_package='', top_path=None):
     config.add_subpackage('testing/tests')
     config.add_subpackage('utils/tests')
 
+    # for testing utils
+    config.add_subpackage('_lib')
+
     # do cythonization
     maybe_cythonize_extensions(top_path, config)
+
+    # From Numpy doc:
+    #   Generate package __config__.py file containing system_info
+    #   information used during building the package.
+    #
+    #   This file is installed to the
+    #   package installation directory.
+    config.make_config_py()
 
     return config
 
 
 if __name__ == '__main__':
     from numpy.distutils.core import setup
-
     setup(**configuration(top_path='').todict())

@@ -51,7 +51,7 @@ VERSION = skoot.__version__
 # get the installation requirements:
 with open('requirements.txt') as req:
     REQUIREMENTS = [l for l in req.read().split("\n") if l]
-    print("Requirements: %s" % str(REQUIREMENTS))
+    print("Setup requirements: %s" % str(REQUIREMENTS))
 
 SETUPTOOLS_COMMANDS = {  # this is a set literal, not a dict
     'develop', 'release', 'bdist_egg', 'bdist_rpm',
