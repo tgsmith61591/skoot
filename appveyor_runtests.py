@@ -2,7 +2,9 @@
 """
 appveyor_runtests.py [OPTIONS] [-- ARGS]
 
-Run tests, building the project first.
+Run tests, building the project first. This is necessary for testing on
+Appveyor, since the compiled DLL (.pyd) submodule for Fortran code is not
+statically linked with MinGW.
 
 Examples::
 

@@ -29,7 +29,9 @@ run_tests() {
     mkdir -p $TEST_DIR
 
     # We need the setup.cfg & .coveragerc for the test settings
-    cp setup.cfg $TEST_DIR
+    # (setup.cfg can only be used in Travis since we CANNOT doctest in
+    # Appveyor without it complaining about whitespace unnecessarily)
+    cp build_tools/travis/setup.cfg $TEST_DIR
     cp .coveragerc $TEST_DIR
     cd $TEST_DIR
 
