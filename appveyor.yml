@@ -117,7 +117,7 @@ test_script:
   - "cd ../empty_folder"
 
   # debug?
-  - "ls %CONDA%\envs\testenv\lib\site-packages\skoot\decomposition"
+  - ls %CONDA%\envs\testenv\lib\site-packages\skoot\decomposition
 
   # And nowwww we test
   - pytest --pyargs %CONDA%\envs\testenv\lib\site-packages\skoot
