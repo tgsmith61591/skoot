@@ -6,14 +6,17 @@
 __pycache__
 *.pyc
 
-# Dist
+# Tox testing (eventually)
+.tox
+
+# Build artifacts
 build/
 dist/
 *.egg-info/
 .cache/
-
-# Build artifacts
+skoot/__config__.py
 *.so*
+*.pyd
 cythonize.dat
 
 # fortran build wrappers

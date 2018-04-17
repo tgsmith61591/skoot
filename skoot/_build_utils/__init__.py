@@ -54,13 +54,10 @@ def build_from_c_f_and_cpp_files(extensions):
                 else:
                     ext = '.c'
                 sfile = path + ext
-            # 4/16 - is this necessary?...
-            elif ext in ('.f', '.pyf'):  # or should we look for pyf only?...
-                ext = '.f'
-                sfile = path + ext
             # either way, append the sfile
             sources.append(sfile)
         extension.sources = sources
+    return extensions
 
 
 def maybe_cythonize_extensions(top_path, config):
@@ -68,10 +65,10 @@ def maybe_cythonize_extensions(top_path, config):
     is_release = os.path.exists(os.path.join(top_path, 'PKG-INFO'))
 
     if is_release:
-        print("Release detected--building from source files (.c, .cpp, .f)")
+        print("Release detected--building from source files")
         build_from_c_f_and_cpp_files(config.ext_modules)
     else:
-        print("Development build detected--building from .pyx & .f")
+        print("Development build detected--building from .pyx & .pyd")
         message = ('Please install cython with a version >= {0} in order '
                    'to build a {1} development version.').format(
                        CYTHON_MIN_VERSION, DEFAULT_ROOT)
@@ -87,4 +84,5 @@ def maybe_cythonize_extensions(top_path, config):
             exc.args += (message,)
             raise
 
+        # cythonize or fortranize...
         config.ext_modules = cythonize(config.ext_modules)

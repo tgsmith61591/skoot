@@ -207,11 +207,6 @@ after_build:
   - "ECHO New path: %PATH%"
 
 test_script:
-  # - ECHO %TEST_MODE%
-  # Scipy's args are giving us errors:
-  # - python appveyor_runtests.py -n -m %TEST_MODE% -- -n6 --timeout=%TEST_TIMEOUT% --junitxml=%cd%\junit-results.xml -rfEX
-  # - python appveyor_runtests.py -n -m %TEST_MODE%
-  #
   # Change to a non-source folder to make sure we run the tests on the
   # installed library.
   - mkdir "../empty_folder"
