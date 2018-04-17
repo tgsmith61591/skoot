@@ -17,10 +17,7 @@ class FPUModeChangeWarning(RuntimeWarning):
 
 
 class PytestTester(object):
-    """
-    Pytest test runner entry point.
-    """
-
+    """Pytest test runner entry point."""
     def __init__(self, module_name):
         self.module_name = module_name
 
@@ -58,8 +55,7 @@ class PytestTester(object):
             code = pytest.main(pytest_args)
         except SystemExit as exc:
             code = exc.code
-
-        return (code == 0)
+        return code == 0
 
 
 def check_free_memory(free_mb):
