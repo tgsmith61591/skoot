@@ -120,7 +120,7 @@ test_script:
   - "cd ../empty_folder"
 
   # And nowwww we test
-  - pytest --pyargs skoot
+  - pytest --pyargs %CONDA%\envs\testenv\lib\site-packages\skoot
   - "cd ../skoot"
 
 after_test:
