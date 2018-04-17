@@ -1,3 +1,11 @@
+setuptools
+six
+wheel
+twine
+numpy
+cython
+pytest
+patsy
 scipy>=0.17
 scikit-learn>=0.18
 pandas>=0.18
