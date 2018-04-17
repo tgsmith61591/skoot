@@ -15,6 +15,7 @@ as possible, doing so with a familiar scikit-learn API feel.
 from __future__ import print_function, absolute_import, division
 
 from distutils.command.clean import clean
+import warnings
 import shutil
 import os
 import sys
@@ -229,6 +230,7 @@ def do_setup():
         try:
             from setuptools import setup
         except ImportError:
+            warnings.warn("Should have setuptools installed!", UserWarning)
             from distutils.core import setup
 
         metadata['version'] = VERSION
