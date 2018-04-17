@@ -104,8 +104,7 @@ install:
       $env:Path += ";$MINGW"
 
 build_script:
-  - python setup.py develop
-  - ls skoot/decomposition
+  - python setup.py install
 
 after_build:
   # Remove old or huge cache files to hopefully not exceed the 1GB cache limit.
@@ -125,12 +124,13 @@ after_build:
 test_script:
   # Change to a non-source folder to make sure we run the tests on the
   # installed library.
-  # - mkdir "../empty_folder"
-  # - "cp pytest.ini ../empty_folder/pytest.ini"
-  # - "cd ../empty_folder"
+  - mkdir "../empty_folder"
+  - "cp pytest.ini ../empty_folder/pytest.ini"
+  - "cd ../empty_folder"
 
   # And nowwww we test
   - pytest --pyargs skoot
+  - "cd ../skoot"
 
 after_test:
   # After the test, build the wheels (let travis handle the source build).
