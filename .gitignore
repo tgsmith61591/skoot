@@ -5,6 +5,7 @@
 .ipynb_checkpoints
 __pycache__
 *.pyc
+scratch/
 
 # Tox testing (eventually)
 .tox

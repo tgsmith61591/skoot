@@ -7,12 +7,15 @@
 from __future__ import division, absolute_import, division
 
 import numpy as np
+import pandas as pd
 
 from sklearn.neighbors import NearestNeighbors
 from sklearn.preprocessing import LabelEncoder
 from sklearn.utils.validation import check_random_state
+from sklearn.utils import safe_indexing
 
 from .base import _validate_X_y_ratio_classes
+from ..utils import safe_vstack, safe_mask_samples
 
 __all__ = [
     'smote_balance'
@@ -45,7 +48,11 @@ def _nearest_neighbors_for_class(X, label, label_encoder, y_transform,
 
     # transform the label, get the subset
     transformed_label = label_encoder.transform([label])[0]
-    X_sub = X[y_transform == transformed_label, :]
+    X_sub = safe_mask_samples(X, y_transform == transformed_label)
+
+    # make sure it's a numpy array for all of this...
+    if isinstance(X_sub, pd.DataFrame):
+        X_sub = X_sub.values
 
     # if the count >= the ratio, skip this label
     count = X_sub.shape[0]
@@ -105,7 +112,12 @@ def _nearest_neighbors_for_class(X, label, label_encoder, y_transform,
         # append to X. Since the round up earlier might cause a slight
         # error in count, make sure to truncate the synthetically-drawn
         # examples to amt_required
-        X = np.vstack([X, synthetic[:amt_required]])
+        if isinstance(X, pd.DataFrame):
+            synthetic = pd.DataFrame.from_records(
+                synthetic, columns=X.columns).iloc[:amt_required]
+        else:
+            synthetic = synthetic[:amt_required]
+        X = safe_vstack(X, synthetic)
 
         # determine whether we need to recurse for this class (if
         # there were too few samples)
@@ -237,6 +249,12 @@ def smote_balance(X, y, return_estimators=False, balance_ratio=0.2,
 
     random_state : int or None, optional (default=None)
         The seed to construct the random state to generate random selections.
+
+    References
+    ----------
+    .. [1] N. Chawla, K. Bowyer, L. Hall, W. Kegelmeyer,
+           "SMOTE: Synthetic Minority Over-sampling Technique"
+           https://www.jair.org/media/953/live-953-2037-jair.pdf
     """
     # validate the cheap stuff before copying arrays around...
     X, y, n_classes, present_classes, \
@@ -285,6 +303,8 @@ def smote_balance(X, y, return_estimators=False, balance_ratio=0.2,
     if shuffle:
         output_order = random_state.permutation(output_order)
 
+    # select the output order, then return
+    X, y = safe_indexing(X, output_order), y[output_order]
     if return_estimators:
-        return X[output_order, :], y[output_order], models
-    return X[output_order, :], y[output_order]
+        return X, y, models
+    return X, y

@@ -5,8 +5,12 @@ Oversampling minority samples
 
 Demonstrates how to oversample your imbalanced dataset.
 
+|
+
 This example creates an imbalanced classification dataset, and
-oversamples it to balance the class ratios.
+oversamples the minority class to balance the class ratios.
+
+|
 """
 print(__doc__)
 
@@ -14,6 +18,7 @@ print(__doc__)
 
 from sklearn.datasets import make_classification
 from skoot.balance import over_sample_balance
+import pandas as pd
 
 # #############################################################################
 # Create an imbalanced dataset
@@ -35,3 +40,12 @@ new_mask = y_balance == 0
 print("Num zero class (post-balance): %i" % new_mask.sum())
 print("Num one class (post-balance): %i" % (~new_mask).sum())
 print("Num samples (post-balance): %i" % X_balance.shape[0])
+
+# #############################################################################
+# This also works for pandas DataFrames
+
+X_balance_df, _ = over_sample_balance(pd.DataFrame.from_records(X),
+                                      y, balance_ratio=0.2,
+                                      random_state=42)
+
+print(X_balance_df.head())

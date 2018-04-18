@@ -4,8 +4,9 @@
 
 from __future__ import absolute_import
 
-from skoot.utils.dataframe import get_numeric_columns, safe_vstack
 from skoot.datasets import load_iris_df
+from skoot.utils.dataframe import (get_numeric_columns, safe_vstack,
+                                   safe_drop_samples, safe_mask_samples)
 
 from numpy.testing import assert_array_equal
 
@@ -60,3 +61,30 @@ def test_safe_vstack_array():
     assert isinstance(arr, np.ndarray)
     assert arr.shape[0] == 10
     assert_array_equal(arr, np.vstack([first5, first5]))
+
+
+def test_safe_drop():
+    df = pd.DataFrame.from_records(np.random.rand(5, 5))
+
+    # drop first 3 rows
+    df2 = safe_drop_samples(df, np.arange(3))
+    assert_array_equal(df2.index.values, [3, 4])
+
+    # do the same for an array
+    arr = safe_drop_samples(df.values, np.arange(3))
+    assert arr.shape[0] == 2, arr
+    assert_array_equal(arr, df.values[3:, :])
+
+
+def test_safe_mask():
+    df = pd.DataFrame.from_records(np.random.rand(5, 5))
+
+    # drop first 3 rows
+    mask = [False, False, False, True, True]
+    df2 = safe_mask_samples(df, mask)
+    assert_array_equal(df2.index.values, [3, 4])
+
+    # do the same for an array
+    arr = safe_mask_samples(df.values, mask)
+    assert arr.shape[0] == 2, arr
+    assert_array_equal(arr, df.values[3:, :])
