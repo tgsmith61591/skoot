@@ -6,6 +6,7 @@
 
 from __future__ import division, absolute_import, division
 
+from sklearn.utils import safe_indexing
 from sklearn.utils.validation import check_random_state
 import numpy as np
 

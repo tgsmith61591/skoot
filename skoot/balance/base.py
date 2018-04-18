@@ -28,7 +28,7 @@ def _validate_X_y_ratio_classes(X, y, ratio):
     validate_float(ratio, 'balance_ratio')
 
     # validate arrays
-    X, y = indexable(X, y)
+    X, y = indexable(X, y)  # want to allow pd.DataFrame
     y = column_or_1d(y, warn=False)  # type: np.ndarray
 
     # get n classes in y, ensure they are <= MAX_N_CLASSES, but first

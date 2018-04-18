@@ -200,7 +200,7 @@ def setup(app):
         print("Adding stylesheet: %s" % pth)
         app.add_stylesheet(pth)
 
-    # add('css/style.css')  # template...
+    add('css/style.css')  # template...
 
 
 # -- Extension configuration -------------------------------------------------
