@@ -10,6 +10,9 @@ __pycache__
 .tox
 
 # Build artifacts
+doc/_build
+doc/modules/generated
+doc/auto_examples
 build/
 dist/
 *.egg-info/
