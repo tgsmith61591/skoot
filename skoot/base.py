@@ -161,6 +161,7 @@ def _selective_copy_doc_for(skclass, examples=None):
             rest.insert(sep_idx + 3, "    " + _trans_col_name_doc + os.linesep)
 
         # TODO: update examples
+        # TODO: update See Also
 
         doc = '\n'.join([header + insert] + rest)
 

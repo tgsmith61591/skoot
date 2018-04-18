@@ -1,0 +1,13 @@
+cython
+numpy>=1.11
+scipy>=0.17
+scikit-learn>=0.18
+pandas>=0.18
+cerberus>=1.1
+sphinx
+sphinx_gallery
+Django
+sphinx_rtd_theme
+numpydoc
+matplotlib
+Image

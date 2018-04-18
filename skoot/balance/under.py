@@ -9,19 +9,12 @@ from __future__ import division, absolute_import, division
 from sklearn.utils.validation import check_random_state
 import numpy as np
 
-from .base import _validate_X_y_ratio_classes
+from .base import _validate_X_y_ratio_classes, _reorder
+from ..utils.dataframe import safe_drop_samples
 
 __all__ = [
     'under_sample_balance'
 ]
-
-
-def _reorder(X, y, random_state, shuffle):
-    # reorder if needed
-    order = np.arange(X.shape[0])
-    if shuffle:
-        order = random_state.permutation(order)
-    return X[order, :], y[order]
 
 
 def under_sample_balance(X, y, balance_ratio=0.2, random_state=None,
@@ -77,7 +70,7 @@ def under_sample_balance(X, y, balance_ratio=0.2, random_state=None,
         idcs[mask])[:mask.sum() - target_count]  # sum is > target count
 
     # remove them
-    X = np.delete(X, remove, axis=0)
+    X = safe_drop_samples(X, remove)
     y = np.delete(y, remove)
 
     # reorder if needed

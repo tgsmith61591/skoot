@@ -8,12 +8,20 @@ from __future__ import absolute_import
 
 import numpy as np
 
-from sklearn.utils import column_or_1d, indexable
+from sklearn.utils import column_or_1d, indexable, safe_indexing
 from sklearn.utils.multiclass import type_of_target
 
 MAX_N_CLASSES = 100  # max unique classes in y
 MIN_N_SAMPLES = 2  # min allowed ever.
 NPDTYPE = np.float64
+
+
+def _reorder(X, y, random_state, shuffle):
+    # reorder if needed
+    order = np.arange(X.shape[0])
+    if shuffle:
+        order = random_state.permutation(order)
+    return safe_indexing(X, order), y[order]
 
 
 def validate_float(ratio, name, upper_bound=1., ltet=True):
@@ -28,7 +36,7 @@ def _validate_X_y_ratio_classes(X, y, ratio):
     validate_float(ratio, 'balance_ratio')
 
     # validate arrays
-    X, y = indexable(X, y)
+    X, y = indexable(X, y)  # want to allow pd.DataFrame
     y = column_or_1d(y, warn=False)  # type: np.ndarray
 
     # get n classes in y, ensure they are <= MAX_N_CLASSES, but first

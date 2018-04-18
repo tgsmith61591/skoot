@@ -141,7 +141,7 @@ build_script:
       $env:Path += ";$MINGW"
       $env:NPY_NUM_BUILD_JOBS = "4"
       mkdir dist
-      pip wheel -v -v -v --wheel-dir=dist .
+      python -m pip wheel -v -v -v --wheel-dir=dist .
 
       # For each wheel that pip has placed in the "dist" directory
       # check if it's the skoot wheel and upload to the "artifacts" tab

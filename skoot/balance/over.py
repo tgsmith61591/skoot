@@ -8,8 +8,10 @@ from __future__ import division, absolute_import, division
 
 from sklearn.preprocessing import LabelEncoder
 from sklearn.utils.validation import check_random_state
+from sklearn.utils import safe_indexing
 
-from .base import _validate_X_y_ratio_classes
+from .base import _validate_X_y_ratio_classes, _reorder
+from ..utils import safe_vstack
 import numpy as np
 
 __all__ = [
@@ -17,7 +19,8 @@ __all__ = [
 ]
 
 
-def over_sample_balance(X, y, balance_ratio=0.2, random_state=None):
+def over_sample_balance(X, y, balance_ratio=0.2, random_state=None,
+                        shuffle=True):
     """Over sample a minority class to a specified ratio.
 
     One strategy for balancing data is to over-sample the minority class
@@ -40,6 +43,9 @@ def over_sample_balance(X, y, balance_ratio=0.2, random_state=None):
 
     random_state : int, None or numpy RandomState, optional (default=None)
         The seed to construct the random state to generate random selections.
+
+    shuffle : bool, optional (default=True)
+        Whether to shuffle the output.
     """
     random_state = check_random_state(random_state)
 
@@ -77,14 +83,15 @@ def over_sample_balance(X, y, balance_ratio=0.2, random_state=None):
 
             # draw a sample, take first n_req:
             idcs = np.arange(out_X.shape[0])[mask]  # get the idcs, mask them
-            sample = out_X[random_state.permutation(idcs), :][:n_req]
+            sample = safe_indexing(out_X,
+                                   random_state.permutation(idcs)[:n_req])
 
             # vstack
-            out_X = np.vstack([out_X, sample])
+            out_X = safe_vstack(out_X, sample)
 
             # concatenate. Use sample length, since it might be < n_req
             out_y = np.concatenate([
                 out_y, np.ones(sample.shape[0],
                                dtype=np.int16) * label_transform])
 
-    return out_X, le.inverse_transform(out_y)
+    return _reorder(out_X, le.inverse_transform(out_y), random_state, shuffle)

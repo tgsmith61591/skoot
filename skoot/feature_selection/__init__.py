@@ -2,6 +2,7 @@
 #
 # Author: Taylor Smith <taylor.smith@alkaline-ml.com>
 
+from .base import *
 from .select import *
 from .combos import *
 
