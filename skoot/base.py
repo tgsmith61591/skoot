@@ -52,6 +52,13 @@ _trans_col_name_doc = """trans_col_name : str, unicode or iterable, optional
         produced columns. If None (default), will use the estimator class
         name as the prefix."""
 
+_wrapper_msg = """
+
+    This class wraps scikit-learn's {classname}. When a pd.DataFrame is 
+    passed to the ``fit`` method, the transformation is applied to the 
+    selected columns, which are subsequently dropped from the frame. All 
+    remaining columns are left alone."""
+
 
 class BasePDTransformer(six.with_metaclass(ABCMeta, BaseEstimator,
                                            TransformerMixin)):
@@ -112,16 +119,84 @@ class _WritableDoc(ABCMeta):
     # TODO: Py2: remove all this
 
 
-def _get_docstr_section_idx(docstr, section):
+def _get_docstr_section_idx(docstr, section, case_matters=True):
+    if not case_matters:
+        section = section.lower()
+        contains = (lambda: section in field.lower())
+    else:
+        contains = (lambda: section in field)
+
     sec_idx = -1
     for i, field in enumerate(docstr):
-        if section in field:
+        if contains():
             sec_idx = i
             break
     return sec_idx
 
 
-def _selective_copy_doc_for(skclass, examples=None):
+def _append_parameters(docstr):
+    # search for "Parameters"
+    parm_idx = _get_docstr_section_idx(docstr, "Parameters")
+
+    # Only do this if we found "Parameters"
+    if parm_idx > -1:
+        # The separator is the next index
+        sep_idx = parm_idx + 1
+
+        # start one AFTER sep idx and make sure to prepend tabs
+        docstr.insert(sep_idx + 1, "    " + _cols_doc + os.linesep)
+        docstr.insert(sep_idx + 2, "    " + _as_df_doc + os.linesep)
+        docstr.insert(sep_idx + 3, "    " + _trans_col_name_doc + os.linesep)
+
+    return docstr
+
+
+def _append_see_also(see_also, docstr, overwrite):
+    if not is_iterable(see_also):
+        see_also = [see_also]
+
+    # find the "See Also" section of the docstring (sklearn devs are
+    # inconsistent with the casing of "See also"...)
+    sa_idx = _get_docstr_section_idx(docstr, "See Also", case_matters=False)
+
+    # if it DOES exist, replace it. If it does NOT exist, append it.
+    if sa_idx > -1:
+        # we'll append to the FRONT of the existing see also section
+        sep_idx = sa_idx + 1
+        for see_this in see_also:
+            docstr.insert(sep_idx + 1, "    " + see_this)  # no newline here
+            sep_idx += 1
+
+        # if we're here, we've added everything in and may need to remove the
+        # previously existing records... so let's track where they go to/stop
+        if overwrite:
+            # starting from sep_idx + 1, omit until there is another
+            # empty string
+            omit_idcs = []
+            for i in range(sep_idx + 1, len(docstr)):
+                if not docstr[i]:
+                    break
+                else:
+                    omit_idcs.append(i)
+            # i don't love this... but...
+            docstr = [e for i, e in enumerate(docstr)
+                      if i not in set(omit_idcs)]
+
+    # otherwise we need to create it
+    else:
+        return _create_new_docstr_section("See Also", docstr, see_also)
+    return docstr
+
+
+def _create_new_docstr_section(header, docstr, lines):
+    # docstr is a LIST
+    return docstr + \
+           ['    ' + header, '    ' + '-' * len(header)] + \
+           ['    ' + x for x in lines]
+
+
+def _selective_copy_doc_for(skclass, examples=None, see_also=None,
+                            overwrite_existing_see_also=False):
     """Applied to classes to inherit doc from sklearn.
 
     Parameters
@@ -133,35 +208,30 @@ def _selective_copy_doc_for(skclass, examples=None):
 
     examples : str or unicode, optional (default=None)
         Any examples to inject into the documentation.
+
+    see_also : str, unicode or iterable[str], optional (default=None)
+        Any classes that should also be seen. If these are provided, any
+        that may exist in sklearn will be overwritten!
     """
     def _copy_wrapper_doc(cls):
         lines = skclass.__doc__.split(os.linesep)
         header, rest = lines[0], lines[1:]
 
-        insert = """
-        This class wraps scikit-learn's {classname}. When a pd.DataFrame is 
-        passed to our ``fit`` method, the transformation is applied to the 
-        selected columns, which are subsequently dropped from the frame. All 
-        remaining columns are left alone.""".format(classname=skclass.__name__)
+        # format msg with the classname
+        insert = _wrapper_msg.format(classname=skclass.__name__)
 
         # Add "selective" to the header
-        header += " (applied to selected columns)"
+        header += " (applied to selected columns)."
 
-        # search for "Parameters"
-        parm_idx = _get_docstr_section_idx(rest, "Parameters")
+        # update the parameters
+        rest = _append_parameters(rest)
 
-        # Only do this if we found "Parameters"
-        if parm_idx > -1:
-            # The separator is the next index
-            sep_idx = parm_idx + 1
-
-            # start one AFTER sep idx and make sure to prepend tabs
-            rest.insert(sep_idx + 1, "    " + _cols_doc + os.linesep)
-            rest.insert(sep_idx + 2, "    " + _as_df_doc + os.linesep)
-            rest.insert(sep_idx + 3, "    " + _trans_col_name_doc + os.linesep)
+        # update the See Also section
+        if see_also:
+            rest = _append_see_also(see_also, rest,
+                                    overwrite_existing_see_also)
 
         # TODO: update examples
-        # TODO: update See Also
 
         doc = '\n'.join([header + insert] + rest)
 

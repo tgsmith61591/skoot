@@ -5,12 +5,16 @@ Oversampling minority samples
 
 Demonstrates how to oversample your imbalanced dataset.
 
-|
+.. raw:: html
+
+   <br/>
 
 This example creates an imbalanced classification dataset, and
 oversamples the minority class to balance the class ratios.
 
-|
+.. raw:: html
+
+   <br/>
 """
 print(__doc__)
 
