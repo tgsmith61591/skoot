@@ -28,25 +28,27 @@ fi
 python setup.py install
 
 # cd into docs, make them
-cd docs
+cd doc
 make clean html EXAMPLES_PATTERN=ex_*
 cd ..
 
 # move the docs to the top-level directory, stash for checkout
 mv doc/_build/html ./
+# html/ will stay there actually...
 git stash
 
-# checkout gh-pages, remove everything, pop the stash
+# checkout gh-pages, remove everything but .git, pop the stash
 git checkout gh-pages
-rm -rf .
+find . -not -name ".git/*" -type f -maxdepth 1 -delete
+rm -r .cache/ build/ build_tools/ doc/ examples/ skoot/
 touch .nojekyll
-git checkout stash@{0} -- doc/_build/html
+# git checkout stash@{0} -- ./html
 mv html/* ./
 rm -r html/
 
 # add everything, get ready for commit
 git add --all
-git commit -m "publishing updated documentation..."
+git commit -m "[ci skip] publishing updated documentation..."
 git push origin gh-pages
 
 # switch back to master
