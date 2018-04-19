@@ -390,7 +390,7 @@ class BoxCoxTransformer(_BaseSkewnessTransformer):
 
 
 class YeoJohnsonTransformer(_BaseSkewnessTransformer):
-    """Apply the Yeo-Johnson transformation to a dataset.
+    r"""Apply the Yeo-Johnson transformation to a dataset.
 
     Estimate a lambda parameter for each feature, and transform
     it to a distribution more-closely resembling a Gaussian bell

@@ -5,11 +5,15 @@
 .ipynb_checkpoints
 __pycache__
 *.pyc
+scratch/
 
 # Tox testing (eventually)
 .tox
 
 # Build artifacts
+doc/_build
+doc/modules/generated
+doc/auto_examples
 build/
 dist/
 *.egg-info/

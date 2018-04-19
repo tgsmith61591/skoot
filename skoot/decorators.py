@@ -4,6 +4,7 @@
 
 from __future__ import absolute_import
 
+from functools import wraps
 import warnings
 
 __all__ = [
@@ -90,6 +91,7 @@ def suppress_warnings(func):
         >>> fun_that_warns()
         1
     """
+    @wraps(func)
     def suppressor(*args, **kwargs):
         with warnings.catch_warnings(record=True):
             warnings.simplefilter("ignore")
