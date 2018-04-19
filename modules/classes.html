@@ -1,0 +1,625 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>API Reference &mdash; skoot 0.19.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/style.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="skoot.base.BasePDTransformer" href="generated/skoot.base.BasePDTransformer.html" />
+    <link rel="prev" title="Skoot: Accelerate your data science workflow" href="../index.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> skoot
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.19.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-skoot.base"><code class="docutils literal notranslate"><span class="pre">skoot.base</span></code>: Base metaclasses and utility functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#base-classes">Base classes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.base.BasePDTransformer.html"><code class="docutils literal notranslate"><span class="pre">skoot.base</span></code>.BasePDTransformer</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-skoot"><code class="docutils literal notranslate"><span class="pre">skoot.decorators</span></code>: Decorator utilities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#decorator-methods">Decorator methods</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.decorators.overrides.html"><code class="docutils literal notranslate"><span class="pre">skoot.decorators</span></code>.overrides</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.decorators.suppress_warnings.html"><code class="docutils literal notranslate"><span class="pre">skoot.decorators</span></code>.suppress_warnings</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-skoot.balance"><code class="docutils literal notranslate"><span class="pre">skoot.balance</span></code>: Class imbalance remedies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#balancing-functions">Balancing functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.balance.over_sample_balance.html"><code class="docutils literal notranslate"><span class="pre">skoot.balance</span></code>.over_sample_balance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.balance.smote_balance.html"><code class="docutils literal notranslate"><span class="pre">skoot.balance</span></code>.smote_balance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.balance.under_sample_balance.html"><code class="docutils literal notranslate"><span class="pre">skoot.balance</span></code>.under_sample_balance</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-skoot.datasets"><code class="docutils literal notranslate"><span class="pre">skoot.datasets</span></code>: Dataset loaders</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dataset-loading-functions">Dataset loading functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.datasets.load_boston_df.html"><code class="docutils literal notranslate"><span class="pre">skoot.datasets</span></code>.load_boston_df</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.datasets.load_breast_cancer_df.html"><code class="docutils literal notranslate"><span class="pre">skoot.datasets</span></code>.load_breast_cancer_df</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.datasets.load_iris_df.html"><code class="docutils literal notranslate"><span class="pre">skoot.datasets</span></code>.load_iris_df</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-skoot.decomposition"><code class="docutils literal notranslate"><span class="pre">skoot.decomposition</span></code>: Various matrix decompositions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#decomposition-classes">Decomposition classes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.decomposition.SelectiveIncrementalPCA.html"><code class="docutils literal notranslate"><span class="pre">skoot.decomposition</span></code>.SelectiveIncrementalPCA</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.decomposition.SelectiveKernelPCA.html"><code class="docutils literal notranslate"><span class="pre">skoot.decomposition</span></code>.SelectiveKernelPCA</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.decomposition.SelectiveNMF.html"><code class="docutils literal notranslate"><span class="pre">skoot.decomposition</span></code>.SelectiveNMF</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.decomposition.SelectivePCA.html"><code class="docutils literal notranslate"><span class="pre">skoot.decomposition</span></code>.SelectivePCA</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.decomposition.SelectiveTruncatedSVD.html"><code class="docutils literal notranslate"><span class="pre">skoot.decomposition</span></code>.SelectiveTruncatedSVD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.decomposition.QRDecomposition.html"><code class="docutils literal notranslate"><span class="pre">skoot.decomposition</span></code>.QRDecomposition</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-skoot.feature_extraction"><code class="docutils literal notranslate"><span class="pre">skoot.feature_extraction</span></code>: Feature extraction methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#feature-extraction-estimators">Feature extraction estimators</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.feature_extraction.InteractionTermTransformer.html"><code class="docutils literal notranslate"><span class="pre">skoot.feature_extraction</span></code>.InteractionTermTransformer</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-skoot.feature_selection"><code class="docutils literal notranslate"><span class="pre">skoot.feature_selection</span></code>: Feature selection methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#feature-selection-estimators">Feature selection estimators</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.feature_selection.BaseFeatureSelector.html"><code class="docutils literal notranslate"><span class="pre">skoot.feature_selection</span></code>.BaseFeatureSelector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.feature_selection.FeatureFilter.html"><code class="docutils literal notranslate"><span class="pre">skoot.feature_selection</span></code>.FeatureFilter</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.feature_selection.LinearCombinationFilter.html"><code class="docutils literal notranslate"><span class="pre">skoot.feature_selection</span></code>.LinearCombinationFilter</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.feature_selection.MultiCorrFilter.html"><code class="docutils literal notranslate"><span class="pre">skoot.feature_selection</span></code>.MultiCorrFilter</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.feature_selection.NearZeroVarianceFilter.html"><code class="docutils literal notranslate"><span class="pre">skoot.feature_selection</span></code>.NearZeroVarianceFilter</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.feature_selection.SparseFeatureFilter.html"><code class="docutils literal notranslate"><span class="pre">skoot.feature_selection</span></code>.SparseFeatureFilter</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-skoot.preprocessing"><code class="docutils literal notranslate"><span class="pre">skoot.preprocessing</span></code>: Pre-processing transformers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dataframe-schema-transformers">Dataframe schema transformers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.preprocessing.SchemaNormalizer.html"><code class="docutils literal notranslate"><span class="pre">skoot.preprocessing</span></code>.SchemaNormalizer</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#encoding-transformers">Encoding transformers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.preprocessing.DummyEncoder.html"><code class="docutils literal notranslate"><span class="pre">skoot.preprocessing</span></code>.DummyEncoder</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#scalers-normalizers">Scalers/normalizers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.preprocessing.SelectiveMaxAbsScaler.html"><code class="docutils literal notranslate"><span class="pre">skoot.preprocessing</span></code>.SelectiveMaxAbsScaler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.preprocessing.SelectiveMinMaxScaler.html"><code class="docutils literal notranslate"><span class="pre">skoot.preprocessing</span></code>.SelectiveMinMaxScaler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.preprocessing.SelectiveRobustScaler.html"><code class="docutils literal notranslate"><span class="pre">skoot.preprocessing</span></code>.SelectiveRobustScaler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.preprocessing.SelectiveStandardScaler.html"><code class="docutils literal notranslate"><span class="pre">skoot.preprocessing</span></code>.SelectiveStandardScaler</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#skewness-transformers">Skewness transformers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.preprocessing.BoxCoxTransformer.html"><code class="docutils literal notranslate"><span class="pre">skoot.preprocessing</span></code>.BoxCoxTransformer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.preprocessing.YeoJohnsonTransformer.html"><code class="docutils literal notranslate"><span class="pre">skoot.preprocessing</span></code>.YeoJohnsonTransformer</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-skoot.utils"><code class="docutils literal notranslate"><span class="pre">skoot.utils</span></code>: Common utility functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#iterable-utilities">Iterable utilities</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.utils.get_numeric_columns.html"><code class="docutils literal notranslate"><span class="pre">skoot.utils</span></code>.get_numeric_columns</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.utils.is_iterable.html"><code class="docutils literal notranslate"><span class="pre">skoot.utils</span></code>.is_iterable</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#validation-utilities">Validation utilities</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.utils.check_dataframe.html"><code class="docutils literal notranslate"><span class="pre">skoot.utils</span></code>.check_dataframe</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.utils.validate_multiple_cols.html"><code class="docutils literal notranslate"><span class="pre">skoot.utils</span></code>.validate_multiple_cols</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.utils.validate_multiple_rows.html"><code class="docutils literal notranslate"><span class="pre">skoot.utils</span></code>.validate_multiple_rows</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.utils.validate_test_set_columns.html"><code class="docutils literal notranslate"><span class="pre">skoot.utils</span></code>.validate_test_set_columns</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide.html">User Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">skoot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>API Reference</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/modules/classes.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="api-reference">
+<span id="api-ref"></span><h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h1>
+<p>This is the class and function reference for skoot. Please refer to
+the <a class="reference internal" href="../user_guide.html#user-guide"><span class="std std-ref">full user guide</span></a> for further details, as the class and
+function raw specifications may not be enough to give full guidelines on their
+uses.</p>
+<div class="section" id="module-skoot.base">
+<span id="skoot-base-base-metaclasses-and-utility-functions"></span><span id="base-ref"></span><h2><a class="reference internal" href="#module-skoot.base" title="skoot.base"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skoot.base</span></code></a>: Base metaclasses and utility functions<a class="headerlink" href="#module-skoot.base" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="base-classes">
+<h3>Base classes<a class="headerlink" href="#base-classes" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.base.BasePDTransformer.html#skoot.base.BasePDTransformer" title="skoot.base.BasePDTransformer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">base.BasePDTransformer</span></code></a>([cols,&nbsp;as_df])</td>
+<td>The base class for all Pandas frame transformers.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="module-skoot">
+<span id="skoot-decorators-decorator-utilities"></span><span id="decorator-ref"></span><h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">skoot.decorators</span></code>: Decorator utilities<a class="headerlink" href="#module-skoot" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="decorator-methods">
+<h3>Decorator methods<a class="headerlink" href="#decorator-methods" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.decorators.overrides.html#skoot.decorators.overrides" title="skoot.decorators.overrides"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decorators.overrides</span></code></a>(interface_class)</td>
+<td>Decorator for methods that override super methods.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/skoot.decorators.suppress_warnings.html#skoot.decorators.suppress_warnings" title="skoot.decorators.suppress_warnings"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decorators.suppress_warnings</span></code></a>(func)</td>
+<td>Force a method to suppress all warnings it may raise.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="module-skoot.balance">
+<span id="skoot-balance-class-imbalance-remedies"></span><span id="balance-ref"></span><h2><a class="reference internal" href="#module-skoot.balance" title="skoot.balance"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skoot.balance</span></code></a>: Class imbalance remedies<a class="headerlink" href="#module-skoot.balance" title="Permalink to this headline">¶</a></h2>
+<p>Methods for addressing class imbalance.</p>
+<p><strong>User guide:</strong> See the <a class="reference internal" href="balance.html#balance"><span class="std std-ref">The balance submodule</span></a> section for further details.</p>
+<div class="section" id="balancing-functions">
+<h3>Balancing functions<a class="headerlink" href="#balancing-functions" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.balance.over_sample_balance.html#skoot.balance.over_sample_balance" title="skoot.balance.over_sample_balance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">balance.over_sample_balance</span></code></a>(X,&nbsp;y[,&nbsp;…])</td>
+<td>Over sample a minority class to a specified ratio.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/skoot.balance.smote_balance.html#skoot.balance.smote_balance" title="skoot.balance.smote_balance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">balance.smote_balance</span></code></a>(X,&nbsp;y[,&nbsp;…])</td>
+<td>Balance a dataset using SMOTE to synthetically create new minority class samples.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.balance.under_sample_balance.html#skoot.balance.under_sample_balance" title="skoot.balance.under_sample_balance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">balance.under_sample_balance</span></code></a>(X,&nbsp;y[,&nbsp;…])</td>
+<td>Under sample the majority class to a specified ratio.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="module-skoot.datasets">
+<span id="skoot-datasets-dataset-loaders"></span><span id="datasets-ref"></span><h2><a class="reference internal" href="#module-skoot.datasets" title="skoot.datasets"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skoot.datasets</span></code></a>: Dataset loaders<a class="headerlink" href="#module-skoot.datasets" title="Permalink to this headline">¶</a></h2>
+<p><strong>User guide:</strong> See the <a class="reference internal" href="datasets.html#datasets"><span class="std std-ref">The datasets submodule</span></a> section for further details.</p>
+<div class="section" id="dataset-loading-functions">
+<h3>Dataset loading functions<a class="headerlink" href="#dataset-loading-functions" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.datasets.load_boston_df.html#skoot.datasets.load_boston_df" title="skoot.datasets.load_boston_df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">datasets.load_boston_df</span></code></a>([include_tgt,&nbsp;…])</td>
+<td>Get the Boston housing dataset.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/skoot.datasets.load_breast_cancer_df.html#skoot.datasets.load_breast_cancer_df" title="skoot.datasets.load_breast_cancer_df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">datasets.load_breast_cancer_df</span></code></a>([…])</td>
+<td>Get the breast cancer dataset.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.datasets.load_iris_df.html#skoot.datasets.load_iris_df" title="skoot.datasets.load_iris_df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">datasets.load_iris_df</span></code></a>([include_tgt,&nbsp;…])</td>
+<td>Get the iris dataset.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="module-skoot.decomposition">
+<span id="skoot-decomposition-various-matrix-decompositions"></span><span id="decomposition-ref"></span><h2><a class="reference internal" href="#module-skoot.decomposition" title="skoot.decomposition"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skoot.decomposition</span></code></a>: Various matrix decompositions<a class="headerlink" href="#module-skoot.decomposition" title="Permalink to this headline">¶</a></h2>
+<p><strong>User guide:</strong> See the <a class="reference internal" href="decomposition.html#decomposition"><span class="std std-ref">The decomposition submodule</span></a> section for further details.</p>
+<div class="section" id="decomposition-classes">
+<h3>Decomposition classes<a class="headerlink" href="#decomposition-classes" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.decomposition.SelectiveIncrementalPCA.html#skoot.decomposition.SelectiveIncrementalPCA" title="skoot.decomposition.SelectiveIncrementalPCA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decomposition.SelectiveIncrementalPCA</span></code></a>([…])</td>
+<td>Incremental principal components analysis (IPCA).</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/skoot.decomposition.SelectiveKernelPCA.html#skoot.decomposition.SelectiveKernelPCA" title="skoot.decomposition.SelectiveKernelPCA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decomposition.SelectiveKernelPCA</span></code></a>([cols,&nbsp;…])</td>
+<td>Kernel Principal component analysis (KPCA) (applied to selected columns).</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.decomposition.SelectiveNMF.html#skoot.decomposition.SelectiveNMF" title="skoot.decomposition.SelectiveNMF"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decomposition.SelectiveNMF</span></code></a>([cols,&nbsp;as_df,&nbsp;…])</td>
+<td>Non-Negative Matrix Factorization (NMF) (applied to selected columns).</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/skoot.decomposition.SelectivePCA.html#skoot.decomposition.SelectivePCA" title="skoot.decomposition.SelectivePCA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decomposition.SelectivePCA</span></code></a>([cols,&nbsp;as_df,&nbsp;…])</td>
+<td>Principal component analysis (PCA) (applied to selected columns).</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.decomposition.SelectiveTruncatedSVD.html#skoot.decomposition.SelectiveTruncatedSVD" title="skoot.decomposition.SelectiveTruncatedSVD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decomposition.SelectiveTruncatedSVD</span></code></a>([cols,&nbsp;…])</td>
+<td>Dimensionality reduction using truncated SVD (aka LSA).</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/skoot.decomposition.QRDecomposition.html#skoot.decomposition.QRDecomposition" title="skoot.decomposition.QRDecomposition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decomposition.QRDecomposition</span></code></a>(X[,&nbsp;pivot])</td>
+<td>Perform the QR decomposition on a matrix.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="module-skoot.feature_extraction">
+<span id="skoot-feature-extraction-feature-extraction-methods"></span><span id="feature-extraction-ref"></span><h2><a class="reference internal" href="#module-skoot.feature_extraction" title="skoot.feature_extraction"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skoot.feature_extraction</span></code></a>: Feature extraction methods<a class="headerlink" href="#module-skoot.feature_extraction" title="Permalink to this headline">¶</a></h2>
+<p><strong>User guide:</strong> See the <a class="reference internal" href="feature_extraction.html#feature-extraction"><span class="std std-ref">The feature extraction submodule</span></a> section for further details.</p>
+<div class="section" id="feature-extraction-estimators">
+<h3>Feature extraction estimators<a class="headerlink" href="#feature-extraction-estimators" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.feature_extraction.InteractionTermTransformer.html#skoot.feature_extraction.InteractionTermTransformer" title="skoot.feature_extraction.InteractionTermTransformer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_extraction.InteractionTermTransformer</span></code></a>([…])</td>
+<td>Create interaction terms between predictors.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="module-skoot.feature_selection">
+<span id="skoot-feature-selection-feature-selection-methods"></span><span id="feature-selection-ref"></span><h2><a class="reference internal" href="#module-skoot.feature_selection" title="skoot.feature_selection"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skoot.feature_selection</span></code></a>: Feature selection methods<a class="headerlink" href="#module-skoot.feature_selection" title="Permalink to this headline">¶</a></h2>
+<p><strong>User guide:</strong> See the <a class="reference internal" href="feature_selection.html#feature-selection"><span class="std std-ref">The feature selection submodule</span></a> section for further details.</p>
+<div class="section" id="feature-selection-estimators">
+<h3>Feature selection estimators<a class="headerlink" href="#feature-selection-estimators" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.feature_selection.BaseFeatureSelector.html#skoot.feature_selection.BaseFeatureSelector" title="skoot.feature_selection.BaseFeatureSelector"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_selection.BaseFeatureSelector</span></code></a>([…])</td>
+<td>Base class for feature selectors.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/skoot.feature_selection.FeatureFilter.html#skoot.feature_selection.FeatureFilter" title="skoot.feature_selection.FeatureFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_selection.FeatureFilter</span></code></a>([cols,&nbsp;as_df])</td>
+<td>A simple feature-dropping transformer class.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.feature_selection.LinearCombinationFilter.html#skoot.feature_selection.LinearCombinationFilter" title="skoot.feature_selection.LinearCombinationFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_selection.LinearCombinationFilter</span></code></a>([…])</td>
+<td>Filter any perfect linear combinations in a matrix.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/skoot.feature_selection.MultiCorrFilter.html#skoot.feature_selection.MultiCorrFilter" title="skoot.feature_selection.MultiCorrFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_selection.MultiCorrFilter</span></code></a>([cols,&nbsp;…])</td>
+<td>Remove highly correlated features.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.feature_selection.NearZeroVarianceFilter.html#skoot.feature_selection.NearZeroVarianceFilter" title="skoot.feature_selection.NearZeroVarianceFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_selection.NearZeroVarianceFilter</span></code></a>([…])</td>
+<td>Identify near zero variance predictors.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/skoot.feature_selection.SparseFeatureFilter.html#skoot.feature_selection.SparseFeatureFilter" title="skoot.feature_selection.SparseFeatureFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_selection.SparseFeatureFilter</span></code></a>([…])</td>
+<td>Drop overly sparse features.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="module-skoot.preprocessing">
+<span id="skoot-preprocessing-pre-processing-transformers"></span><span id="preprocessing-ref"></span><h2><a class="reference internal" href="#module-skoot.preprocessing" title="skoot.preprocessing"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skoot.preprocessing</span></code></a>: Pre-processing transformers<a class="headerlink" href="#module-skoot.preprocessing" title="Permalink to this headline">¶</a></h2>
+<p><strong>User guide:</strong> See the <a class="reference internal" href="preprocessing.html#preprocessing"><span class="std std-ref">The preprocessing submodule</span></a> section for further details.</p>
+<div class="section" id="dataframe-schema-transformers">
+<h3>Dataframe schema transformers<a class="headerlink" href="#dataframe-schema-transformers" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.preprocessing.SchemaNormalizer.html#skoot.preprocessing.SchemaNormalizer" title="skoot.preprocessing.SchemaNormalizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">preprocessing.SchemaNormalizer</span></code></a>(schema[,&nbsp;as_df])</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="encoding-transformers">
+<h3>Encoding transformers<a class="headerlink" href="#encoding-transformers" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.preprocessing.DummyEncoder.html#skoot.preprocessing.DummyEncoder" title="skoot.preprocessing.DummyEncoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">preprocessing.DummyEncoder</span></code></a>(cols[,&nbsp;as_df,&nbsp;…])</td>
+<td>A custom one-hot encoding class that handles previously unseen levels and automatically drops one level from each categorical feature to avoid the dummy variable trap.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="scalers-normalizers">
+<h3>Scalers/normalizers<a class="headerlink" href="#scalers-normalizers" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.preprocessing.SelectiveMaxAbsScaler.html#skoot.preprocessing.SelectiveMaxAbsScaler" title="skoot.preprocessing.SelectiveMaxAbsScaler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">preprocessing.SelectiveMaxAbsScaler</span></code></a>([cols,&nbsp;…])</td>
+<td>Scale each feature by its maximum absolute value.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/skoot.preprocessing.SelectiveMinMaxScaler.html#skoot.preprocessing.SelectiveMinMaxScaler" title="skoot.preprocessing.SelectiveMinMaxScaler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">preprocessing.SelectiveMinMaxScaler</span></code></a>([cols,&nbsp;…])</td>
+<td>Transforms features by scaling each feature to a given range.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.preprocessing.SelectiveRobustScaler.html#skoot.preprocessing.SelectiveRobustScaler" title="skoot.preprocessing.SelectiveRobustScaler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">preprocessing.SelectiveRobustScaler</span></code></a>([cols,&nbsp;…])</td>
+<td>Scale features using statistics that are robust to outliers.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/skoot.preprocessing.SelectiveStandardScaler.html#skoot.preprocessing.SelectiveStandardScaler" title="skoot.preprocessing.SelectiveStandardScaler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">preprocessing.SelectiveStandardScaler</span></code></a>([…])</td>
+<td>Standardize features by removing the mean and scaling to unit variance (applied to selected columns).</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="skewness-transformers">
+<h3>Skewness transformers<a class="headerlink" href="#skewness-transformers" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.preprocessing.BoxCoxTransformer.html#skoot.preprocessing.BoxCoxTransformer" title="skoot.preprocessing.BoxCoxTransformer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">preprocessing.BoxCoxTransformer</span></code></a>([cols,&nbsp;…])</td>
+<td>Apply the Box-Cox transformation to select features in a dataframe.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/skoot.preprocessing.YeoJohnsonTransformer.html#skoot.preprocessing.YeoJohnsonTransformer" title="skoot.preprocessing.YeoJohnsonTransformer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">preprocessing.YeoJohnsonTransformer</span></code></a>([cols,&nbsp;…])</td>
+<td>Apply the Yeo-Johnson transformation to a dataset.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="module-skoot.utils">
+<span id="skoot-utils-common-utility-functions"></span><span id="utils-ref"></span><h2><a class="reference internal" href="#module-skoot.utils" title="skoot.utils"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skoot.utils</span></code></a>: Common utility functions<a class="headerlink" href="#module-skoot.utils" title="Permalink to this headline">¶</a></h2>
+<p><strong>User guide:</strong> See the <a class="reference internal" href="utils.html#utils"><span class="std std-ref">The utils submodule</span></a> section for further details.</p>
+<div class="section" id="iterable-utilities">
+<h3>Iterable utilities<a class="headerlink" href="#iterable-utilities" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.utils.get_numeric_columns.html#skoot.utils.get_numeric_columns" title="skoot.utils.get_numeric_columns"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.get_numeric_columns</span></code></a>(X)</td>
+<td>Get all numeric columns from a pandas DataFrame.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/skoot.utils.is_iterable.html#skoot.utils.is_iterable" title="skoot.utils.is_iterable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.is_iterable</span></code></a>(x)</td>
+<td>Determine whether an element is iterable.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="validation-utilities">
+<h3>Validation utilities<a class="headerlink" href="#validation-utilities" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.utils.check_dataframe.html#skoot.utils.check_dataframe" title="skoot.utils.check_dataframe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.check_dataframe</span></code></a>(X[,&nbsp;cols,&nbsp;…])</td>
+<td>Check an input dataframe.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/skoot.utils.validate_multiple_cols.html#skoot.utils.validate_multiple_cols" title="skoot.utils.validate_multiple_cols"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.validate_multiple_cols</span></code></a>(clsname,&nbsp;cols)</td>
+<td>Validate that there are at least two columns to evaluate.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.utils.validate_multiple_rows.html#skoot.utils.validate_multiple_rows" title="skoot.utils.validate_multiple_rows"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.validate_multiple_rows</span></code></a>(clsname,&nbsp;frame)</td>
+<td>Validate that there are at least two samples to evaluate.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/skoot.utils.validate_test_set_columns.html#skoot.utils.validate_test_set_columns" title="skoot.utils.validate_test_set_columns"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.validate_test_set_columns</span></code></a>(fit_columns,&nbsp;…)</td>
+<td>Validate that the test set columns will work.</td>
+</tr>
+</tbody>
+</table>
+<br/></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="generated/skoot.base.BasePDTransformer.html" class="btn btn-neutral float-right" title="skoot.base.BasePDTransformer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../index.html" class="btn btn-neutral" title="Skoot: Accelerate your data science workflow" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Taylor G Smith.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.19.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
+      });
+  </script> 
+
+</body>
+</html>

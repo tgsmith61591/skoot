@@ -1,0 +1,16 @@
+:mod:`skoot.preprocessing`.BoxCoxTransformer
+===================================================
+
+.. currentmodule:: skoot.preprocessing
+
+.. autoclass:: BoxCoxTransformer
+
+   
+   .. automethod:: __init__
+   
+
+.. include:: skoot.preprocessing.BoxCoxTransformer.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

@@ -1,0 +1,12 @@
+:mod:`skoot.datasets`.load_breast_cancer_df
+========================================================
+
+.. currentmodule:: skoot.datasets
+
+.. autofunction:: load_breast_cancer_df
+
+.. include:: skoot.datasets.load_breast_cancer_df.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

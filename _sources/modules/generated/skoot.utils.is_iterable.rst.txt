@@ -1,0 +1,12 @@
+:mod:`skoot.utils`.is_iterable
+===========================================
+
+.. currentmodule:: skoot.utils
+
+.. autofunction:: is_iterable
+
+.. include:: skoot.utils.is_iterable.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

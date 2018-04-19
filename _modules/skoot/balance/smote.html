@@ -1,0 +1,526 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>skoot.balance.smote &mdash; skoot 0.19.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/style.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> skoot
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.19.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto_examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide.html">User Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">skoot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>skoot.balance.smote</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for skoot.balance.smote</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Taylor Smith &lt;taylor.smith@alkaline-ml.com&gt;</span>
+<span class="c1">#</span>
+<span class="c1"># The SMOTE balancer</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span><span class="p">,</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="k">import</span> <span class="n">NearestNeighbors</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="k">import</span> <span class="n">LabelEncoder</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="k">import</span> <span class="n">check_random_state</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="k">import</span> <span class="n">safe_indexing</span>
+
+<span class="kn">from</span> <span class="nn">.base</span> <span class="k">import</span> <span class="n">_validate_X_y_ratio_classes</span>
+<span class="kn">from</span> <span class="nn">..utils</span> <span class="k">import</span> <span class="n">safe_vstack</span><span class="p">,</span> <span class="n">safe_mask_samples</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;smote_balance&#39;</span>
+<span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_perturb</span><span class="p">(</span><span class="n">consider_vector</span><span class="p">,</span> <span class="n">nearest</span><span class="p">,</span> <span class="n">random_state</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">consider_vector</span> <span class="o">-</span> <span class="n">nearest</span><span class="p">)</span> <span class="o">*</span> \
+           <span class="n">random_state</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">nearest</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">consider_vector</span>
+
+
+<span class="k">def</span> <span class="nf">_interpolate</span><span class="p">(</span><span class="n">consider_vector</span><span class="p">,</span> <span class="n">nearest</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
+    <span class="c1"># the danger here is that if there are not enough samples, we&#39;ll</span>
+    <span class="c1"># interpolate with the same value. Hrmm. Maybe add some entropy? # todo</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">((</span><span class="n">consider_vector</span><span class="p">,</span> <span class="n">nearest</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+
+<span class="c1"># Define after the _perturb and _interpolate functions are defined</span>
+<span class="n">STRATEGIES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;perturb&#39;</span><span class="p">:</span> <span class="n">_perturb</span><span class="p">,</span>
+    <span class="s1">&#39;interpolate&#39;</span><span class="p">:</span> <span class="n">_interpolate</span>
+<span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">_nearest_neighbors_for_class</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">label_encoder</span><span class="p">,</span> <span class="n">y_transform</span><span class="p">,</span>
+                                 <span class="n">target_count</span><span class="p">,</span> <span class="n">random_state</span><span class="p">,</span> <span class="n">strategy</span><span class="p">,</span>
+                                 <span class="n">n_neighbors</span><span class="p">,</span> <span class="n">algorithm</span><span class="p">,</span> <span class="n">leaf_size</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span>
+                                 <span class="n">metric</span><span class="p">,</span> <span class="n">metric_params</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">):</span>
+    <span class="n">func</span> <span class="o">=</span> <span class="n">STRATEGIES</span><span class="p">[</span><span class="n">strategy</span><span class="p">]</span>
+
+    <span class="c1"># transform the label, get the subset</span>
+    <span class="n">transformed_label</span> <span class="o">=</span> <span class="n">label_encoder</span><span class="o">.</span><span class="n">transform</span><span class="p">([</span><span class="n">label</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">X_sub</span> <span class="o">=</span> <span class="n">safe_mask_samples</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y_transform</span> <span class="o">==</span> <span class="n">transformed_label</span><span class="p">)</span>
+
+    <span class="c1"># make sure it&#39;s a numpy array for all of this...</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X_sub</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="n">X_sub</span> <span class="o">=</span> <span class="n">X_sub</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="c1"># if the count &gt;= the ratio, skip this label</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="n">X_sub</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;=</span> <span class="n">target_count</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">y_transform</span><span class="p">,</span> <span class="kc">None</span>
+
+    <span class="c1"># define the nearest neighbors model</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">NearestNeighbors</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="n">n_neighbors</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="n">algorithm</span><span class="p">,</span>
+                             <span class="n">leaf_size</span><span class="o">=</span><span class="n">leaf_size</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="n">metric</span><span class="p">,</span>
+                             <span class="n">metric_params</span><span class="o">=</span><span class="n">metric_params</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">)</span>
+
+    <span class="c1"># get the observations that map to the transformed label</span>
+    <span class="n">amt_required</span> <span class="o">=</span> <span class="n">target_count</span> <span class="o">-</span> <span class="n">count</span>
+
+    <span class="c1"># fit the model once, query the tree once. n_neighbors MUST</span>
+    <span class="c1"># be ONE PLUS n_neighbors, since the zero&#39;th index will always</span>
+    <span class="c1"># be the index of the observation itself (i.e., obs 0 is its own</span>
+    <span class="c1"># nearest neighbor).</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_sub</span><span class="p">)</span>
+
+    <span class="c1"># draw the nearest neighbors ONCE. There is an interesting corner</span>
+    <span class="c1"># case here... sklearn&#39;s nearest neighbors will draw the actual</span>
+    <span class="c1"># observation as its own nearest neighbor so we need to query for k + 1,</span>
+    <span class="c1"># and remove the first index (handled in the while loop)</span>
+    <span class="n">k_neighbors</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">X_sub</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">n_neighbors</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">nearest</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">kneighbors</span><span class="p">(</span><span class="n">X_sub</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="n">k_neighbors</span><span class="p">,</span>
+                               <span class="n">return_distance</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># type: np.ndarray</span>
+    <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
+
+    <span class="c1"># append the labels to y_transform - do this once to avoid the</span>
+    <span class="c1"># overhead of repeated concatenations</span>
+    <span class="n">y_transform</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span>
+        <span class="n">y_transform</span><span class="p">,</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">amt_required</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int16</span><span class="p">)</span> <span class="o">*</span> <span class="n">transformed_label</span><span class="p">])</span>
+
+    <span class="c1"># sample while under the requisite ratio</span>
+    <span class="k">while</span> <span class="n">amt_required</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># randomly select some observations. since each selection will produce</span>
+        <span class="c1"># n_neighbors synthetic points, take the first</span>
+        <span class="c1"># amt_required // n_neighbors</span>
+        <span class="n">draw_count</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">amt_required</span> <span class="o">/</span> <span class="n">n_neighbors</span><span class="p">)))</span>
+        <span class="n">random_indices</span> <span class="o">=</span> <span class="n">random_state</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">indices</span><span class="p">)[:</span><span class="n">draw_count</span><span class="p">]</span>
+
+        <span class="c1"># select the random sample, get nearest neighbors for the</span>
+        <span class="c1"># sample indices. SHUFFLE, because of the next draw step.</span>
+        <span class="n">synthetic</span> <span class="o">=</span> <span class="n">random_state</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span>
+            <span class="n">func</span><span class="p">(</span><span class="n">X_sub</span><span class="p">[</span><span class="n">consideration</span><span class="p">,</span> <span class="p">:],</span>
+
+                 <span class="c1"># take 0th out (the observation vector under consideration):</span>
+                 <span class="n">X_sub</span><span class="p">[</span><span class="n">nearest</span><span class="p">[</span><span class="n">consideration</span><span class="p">][</span><span class="mi">1</span><span class="p">:],</span> <span class="p">:],</span>
+                 <span class="n">random_state</span><span class="p">)</span>
+
+            <span class="c1"># using the language of smote... (&quot;vector under consideration&quot;)</span>
+            <span class="k">for</span> <span class="n">consideration</span> <span class="ow">in</span> <span class="n">random_indices</span>
+        <span class="p">]))</span>
+
+        <span class="c1"># append to X. Since the round up earlier might cause a slight</span>
+        <span class="c1"># error in count, make sure to truncate the synthetically-drawn</span>
+        <span class="c1"># examples to amt_required</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="n">synthetic</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">(</span>
+                <span class="n">synthetic</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="n">amt_required</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">synthetic</span> <span class="o">=</span> <span class="n">synthetic</span><span class="p">[:</span><span class="n">amt_required</span><span class="p">]</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">safe_vstack</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">synthetic</span><span class="p">)</span>
+
+        <span class="c1"># determine whether we need to recurse for this class (if</span>
+        <span class="c1"># there were too few samples)</span>
+        <span class="n">amt_required</span> <span class="o">-=</span> <span class="n">synthetic</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">y_transform</span><span class="p">,</span> <span class="n">model</span>
+
+
+<div class="viewcode-block" id="smote_balance"><a class="viewcode-back" href="../../../modules/generated/skoot.balance.smote_balance.html#skoot.balance.smote_balance">[docs]</a><span class="k">def</span> <span class="nf">smote_balance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">return_estimators</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">balance_ratio</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+                  <span class="n">strategy</span><span class="o">=</span><span class="s1">&#39;perturb&#39;</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="s1">&#39;kd_tree&#39;</span><span class="p">,</span>
+                  <span class="n">leaf_size</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;minkowski&#39;</span><span class="p">,</span> <span class="n">metric_params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Balance a dataset using SMOTE to synthetically create new</span>
+<span class="sd">    minority class samples.</span>
+
+<span class="sd">    Synthetic Minority Oversampling TEchnique (SMOTE) is a class balancing</span>
+<span class="sd">    strategy that samples the k-Nearest Neighbors from each minority class,</span>
+<span class="sd">    perturbs them with a random value between 0 and 1, and adds the difference</span>
+<span class="sd">    between the original observation and the perturbation to the original</span>
+<span class="sd">    observation to generate a synthetic observation. This is repeated until</span>
+<span class="sd">    the minority classes are represented at a prescribed ratio to the</span>
+<span class="sd">    majority class.</span>
+
+<span class="sd">    Alternative methods involve interpolating the distance between the</span>
+<span class="sd">    original observation and the nearest neighbors using either the median</span>
+<span class="sd">    or the mean. This strategy can be set using the ``strategy`` arg (one of</span>
+<span class="sd">    &#39;perturb&#39; or &#39;interpolate&#39;).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X : array-like, shape (n_samples, n_features)</span>
+<span class="sd">        Training vectors within the matrix of predictors.</span>
+
+<span class="sd">    y : array-like, shape (n_samples,)</span>
+<span class="sd">        Training labels corresponding to the samples in ``X``.</span>
+
+<span class="sd">    return_estimators : bool, optional (default=False)</span>
+<span class="sd">        Whether or not to return the dictionary of fit</span>
+<span class="sd">        :class:``sklearn.neighbors.NearestNeighbors`` instances. If True,</span>
+<span class="sd">        the return value will be a tuple, with the first index being the</span>
+<span class="sd">        balanced ``X`` matrix, the second index being the ``y`` values, and</span>
+<span class="sd">        the third index being a dictionary of the fit estimators. If False,</span>
+<span class="sd">        the return value is simply a tuple of the balanced ``X`` matrix and</span>
+<span class="sd">        the corresponding labels.</span>
+
+<span class="sd">    balance_ratio : float, optional (default=0.2)</span>
+<span class="sd">        The minimum acceptable ratio of ``$MINORITY_CLASS : $MAJORITY_CLASS``</span>
+<span class="sd">        representation, where 0 &lt; ``ratio`` &lt;= 1</span>
+
+<span class="sd">    strategy : str, optional (default=&#39;perturb&#39;)</span>
+<span class="sd">        The strategy used to construct synthetic examples from existing</span>
+<span class="sd">        examples. The original SMOTE paper suggests a strategy by which a</span>
+<span class="sd">        random value between 0 and 1 scales the difference between the</span>
+<span class="sd">        nearest neighbors, and the difference is then added to the original</span>
+<span class="sd">        vector. This is the default strategy, &#39;perturb&#39;. Valid strategies</span>
+<span class="sd">        include:</span>
+
+<span class="sd">          * &#39;perturb&#39; - a random value between 0 and 1 scales the difference</span>
+<span class="sd">             between the nearest neighbors, and the difference is then added</span>
+<span class="sd">             to the original vector.</span>
+
+<span class="sd">          * &#39;interpolate&#39; - the ``interpolation_method`` (&#39;mean&#39; or &#39;median&#39;)</span>
+<span class="sd">            of the nearest neighbors constitutes the synthetic example.</span>
+
+<span class="sd">    n_neighbors : int, optional (default=5)</span>
+<span class="sd">        Number of neighbors to use by default for ``kneighbors`` queries.</span>
+<span class="sd">        This parameter is passed to each respective ``NearestNeighbors call.``</span>
+
+<span class="sd">    algorithm : str or unicode, optional (default=&#39;kd_tree&#39;)</span>
+<span class="sd">        Algorithm used to compute the nearest neighbors. One of</span>
+<span class="sd">        {&#39;auto&#39;, &#39;ball_tree&#39;, &#39;kd_tree&#39;, &#39;brute&#39;}:</span>
+
+<span class="sd">        - &#39;ball_tree&#39; will use ``sklearn.neighbors.BallTree``</span>
+<span class="sd">        - &#39;kd_tree&#39; will use ``sklearn.neighbors.KDtree``</span>
+<span class="sd">        - &#39;brute&#39; will use a brute-force search.</span>
+<span class="sd">        - &#39;auto&#39; will attempt to decide the most appropriate algorithm</span>
+<span class="sd">          based on the values passed to ``fit`` method.</span>
+
+<span class="sd">        Note: fitting on sparse input will override the setting of</span>
+<span class="sd">        this parameter, using brute force. This parameter</span>
+<span class="sd">        is passed to each respective ``NearestNeighbors`` call.</span>
+
+<span class="sd">    leaf_size : int, optional (default=30)</span>
+<span class="sd">        Leaf size passed to ``BallTree`` or ``KDTree``.  This can affect the</span>
+<span class="sd">        speed of the construction and query, as well as the memory</span>
+<span class="sd">        required to store the tree.  The optimal value depends on the</span>
+<span class="sd">        nature of the problem.</span>
+
+<span class="sd">    p : integer, optional (default=2)</span>
+<span class="sd">        Parameter for the Minkowski metric from</span>
+<span class="sd">        ``sklearn.metrics.pairwise.pairwise_distances``. When p = 1, this is</span>
+<span class="sd">        equivalent to using manhattan_distance (l1), and euclidean_distance</span>
+<span class="sd">        (l2) for p = 2. For arbitrary p, minkowski_distance (l_p) is used.</span>
+
+<span class="sd">    metric : string or callable, optional (default=&#39;minkowski&#39;)</span>
+<span class="sd">        Metric to use for distance computation. Any metric from scikit-learn</span>
+<span class="sd">        or ``scipy.spatial.distance`` can be used.</span>
+
+<span class="sd">        If metric is a callable function, it is called on each</span>
+<span class="sd">        pair of instances (rows) and the resulting value recorded. The callable</span>
+<span class="sd">        should take two arrays as input and return one value indicating the</span>
+<span class="sd">        distance between them. This works for Scipy&#39;s metrics, but is less</span>
+<span class="sd">        efficient than passing the metric name as a string.</span>
+<span class="sd">        Distance matrices are not supported.</span>
+
+<span class="sd">        Valid values for metric are:</span>
+
+<span class="sd">        - from scikit-learn: [&#39;cityblock&#39;, &#39;cosine&#39;, &#39;euclidean&#39;,</span>
+<span class="sd">          &#39;l1&#39;, &#39;l2&#39;, &#39;manhattan&#39;]</span>
+<span class="sd">        - from ``scipy.spatial.distance``: [&#39;braycurtis&#39;,</span>
+<span class="sd">          &#39;canberra&#39;, &#39;chebyshev&#39;, &#39;correlation&#39;, &#39;dice&#39;, &#39;hamming&#39;,</span>
+<span class="sd">          &#39;jaccard&#39;, &#39;kulsinski&#39;, &#39;mahalanobis&#39;, &#39;matching&#39;, &#39;minkowski&#39;,</span>
+<span class="sd">          &#39;rogerstanimoto&#39;, &#39;russellrao&#39;, &#39;seuclidean&#39;, &#39;sokalmichener&#39;,</span>
+<span class="sd">          &#39;sokalsneath&#39;, &#39;sqeuclidean&#39;, &#39;yule&#39;]</span>
+
+<span class="sd">        See the documentation for ``scipy.spatial.distance`` for details</span>
+<span class="sd">        on these metrics.</span>
+
+<span class="sd">    metric_params : dict, optional (default = None)</span>
+<span class="sd">        Additional keyword arguments for the metric function.</span>
+
+<span class="sd">    n_jobs : int, optional (default = 1)</span>
+<span class="sd">        The number of parallel jobs to run for neighbors search.</span>
+<span class="sd">        If ``-1``, then the number of jobs is set to the number of CPU cores.</span>
+<span class="sd">        Affects only ``kneighbors`` and ``kneighbors_graph`` methods.</span>
+
+<span class="sd">    shuffle : bool, optional (default=True)</span>
+<span class="sd">        Whether to shuffle the output.</span>
+
+<span class="sd">    random_state : int or None, optional (default=None)</span>
+<span class="sd">        The seed to construct the random state to generate random selections.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] N. Chawla, K. Bowyer, L. Hall, W. Kegelmeyer,</span>
+<span class="sd">           &quot;SMOTE: Synthetic Minority Over-sampling Technique&quot;</span>
+<span class="sd">           https://www.jair.org/media/953/live-953-2037-jair.pdf</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># validate the cheap stuff before copying arrays around...</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">,</span> <span class="n">present_classes</span><span class="p">,</span> \
+        <span class="n">counts</span><span class="p">,</span> <span class="n">majority_label</span><span class="p">,</span> <span class="n">target_count</span> <span class="o">=</span> \
+        <span class="n">_validate_X_y_ratio_classes</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">balance_ratio</span><span class="p">)</span>
+
+    <span class="c1"># validate n_neighbors is at least one</span>
+    <span class="k">if</span> <span class="n">n_neighbors</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;n_neighbors must be at least 1&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">strategy</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">STRATEGIES</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;strategy must be one of </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">STRATEGIES</span><span class="p">)</span>
+
+    <span class="c1"># get the random state</span>
+    <span class="n">random_state</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
+
+    <span class="c1"># encode y, in case they are not numeric (we need them to be for np.ones)</span>
+    <span class="n">le</span> <span class="o">=</span> <span class="n">LabelEncoder</span><span class="p">()</span>
+    <span class="n">le</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">present_classes</span><span class="p">)</span>
+    <span class="n">y_transform</span> <span class="o">=</span> <span class="n">le</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>  <span class="c1"># make numeric</span>
+
+    <span class="c1"># get the nearest neighbor models</span>
+    <span class="n">models</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">present_classes</span><span class="p">:</span>
+
+        <span class="c1"># skip the pass to the method and continue if label is majority</span>
+        <span class="k">if</span> <span class="n">label</span> <span class="o">==</span> <span class="n">majority_label</span><span class="p">:</span>
+            <span class="n">models</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># X and y_transform will progressively be updated throughout the runs</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">y_transform</span><span class="p">,</span> <span class="n">models</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="n">_nearest_neighbors_for_class</span><span class="p">(</span>
+                <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">label_encoder</span><span class="o">=</span><span class="n">le</span><span class="p">,</span>
+                <span class="n">y_transform</span><span class="o">=</span><span class="n">y_transform</span><span class="p">,</span> <span class="n">target_count</span><span class="o">=</span><span class="n">target_count</span><span class="p">,</span>
+                <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span> <span class="n">strategy</span><span class="o">=</span><span class="n">strategy</span><span class="p">,</span>
+                <span class="n">n_neighbors</span><span class="o">=</span><span class="n">n_neighbors</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="n">algorithm</span><span class="p">,</span>
+                <span class="n">leaf_size</span><span class="o">=</span><span class="n">leaf_size</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="n">metric</span><span class="p">,</span>
+                <span class="n">metric_params</span><span class="o">=</span><span class="n">metric_params</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">)</span>
+
+    <span class="c1"># now that X, y_transform have been assembled, inverse_transform</span>
+    <span class="c1"># the y_t back to its original state:</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">le</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">y_transform</span><span class="p">)</span>
+
+    <span class="c1"># finally, shuffle both and return</span>
+    <span class="n">output_order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">shuffle</span><span class="p">:</span>
+        <span class="n">output_order</span> <span class="o">=</span> <span class="n">random_state</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">output_order</span><span class="p">)</span>
+
+    <span class="c1"># select the output order, then return</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">safe_indexing</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">output_order</span><span class="p">),</span> <span class="n">y</span><span class="p">[</span><span class="n">output_order</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">return_estimators</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">models</span>
+    <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Taylor G Smith.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.19.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
+      });
+  </script> 
+
+</body>
+</html>

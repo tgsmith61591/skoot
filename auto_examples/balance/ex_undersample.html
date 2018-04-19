@@ -1,0 +1,327 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Undersampling minority samples &mdash; skoot 0.19.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/style.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="User Guide" href="../../user_guide.html" />
+    <link rel="prev" title="Oversampling minority samples" href="ex_oversample.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> skoot
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.19.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../modules/classes.html">API Reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../index.html#id1">General examples</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#class-balancing-examples">Class balancing examples</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ex_smote.html">SMOTE class balancer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ex_oversample.html">Oversampling minority samples</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Undersampling minority samples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide.html">User Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">skoot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Examples</a> &raquo;</li>
+        
+      <li>Undersampling minority samples</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/auto_examples/balance/ex_undersample.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="undersampling-minority-samples">
+<span id="sphx-glr-auto-examples-balance-ex-undersample-py"></span><h1>Undersampling minority samples<a class="headerlink" href="#undersampling-minority-samples" title="Permalink to this headline">¶</a></h1>
+<p>Demonstrates how to under-sample your imbalanced dataset.</p>
+<br/><p>This example creates an imbalanced classification dataset, and
+under-samples it to balance the class ratios. Under-sampling is
+typically only possible if your dataset is large enough to
+facilitate losing some samples from the majority class. If not,
+you may later suffer from a high variance problem.</p>
+<br/><p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-default notranslate"><div class="highlight"><pre><span></span>Num zero class (pre-balance): 513
+Num one class (pre-balance): 4487
+
+Num zero class (post-balance): 513
+Num one class (post-balance): 2565
+Num samples (post-balance): 3078
+            0         1         2         3         4         5         6   \
+3475  1.291530  0.174966 -1.317556  0.705740  0.151417 -1.178685  0.737857
+497  -1.520067  0.773936  0.010015 -0.929751  0.286496  0.220245 -0.011273
+2767  2.465927  0.950242 -1.651540 -2.007304 -0.534858 -0.058015  0.608093
+3226 -0.161823  1.492651  0.359519 -0.504663 -0.441535  0.037560 -0.535993
+4905  0.103988  0.342166  0.418301 -0.698522 -0.792994  0.389994 -1.880380
+
+            7         8         9         10        11        12        13  \
+3475  0.422835 -0.616446  0.569074 -0.125408  0.251748  0.830669 -1.228851
+497   1.357600 -0.752130  0.894027 -0.158836  0.848595 -1.774496 -1.497826
+2767 -0.453365 -0.345704  0.000072  0.253242  0.636100 -1.248515 -0.163278
+3226 -0.434825 -0.639246  2.001023 -0.976434 -0.014300 -0.369698  0.253404
+4905  0.726709 -1.637070  1.185176 -0.035210 -0.042339  0.348863  0.280550
+
+            14        15        16        17        18        19
+3475  0.530689  0.775015  0.475988 -0.453977  0.950086  0.193104
+497  -1.717160  3.309362 -0.311329  0.850633 -0.672229 -3.660372
+2767 -1.747885  2.468234  1.927949  1.973733  0.097436 -2.666850
+3226  2.601834  0.005113  0.512275  0.333122 -0.107485 -0.314925
+4905 -1.802712 -0.204775 -0.585145  0.585095 -0.513537  0.427975
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">print</span><span class="p">(</span><span class="vm">__doc__</span><span class="p">)</span>
+
+<span class="c1"># Author: Taylor Smith &lt;taylor.smith@alkaline-ml.com&gt;</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">make_classification</span>
+<span class="kn">from</span> <span class="nn">skoot.balance</span> <span class="kn">import</span> <a href="../../modules/generated/skoot.balance.under_sample_balance.html#skoot.balance.under_sample_balance" title="View documentation for skoot.balance.under_sample_balance"><span class="n">under_sample_balance</span></a>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+
+<span class="c1"># #############################################################################</span>
+<span class="c1"># Create an imbalanced dataset</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_classification</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">n_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">],</span>
+                           <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># get counts:</span>
+<span class="n">zero_mask</span> <span class="o">=</span> <span class="n">y</span> <span class="o">==</span> <span class="mi">0</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Num zero class (pre-balance): </span><span class="si">%i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">zero_mask</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Num one class (pre-balance): </span><span class="si">%i</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="o">~</span><span class="n">zero_mask</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+
+<span class="c1"># #############################################################################</span>
+<span class="c1"># Balance the dataset</span>
+<span class="n">X_balance</span><span class="p">,</span> <span class="n">y_balance</span> <span class="o">=</span> <a href="../../modules/generated/skoot.balance.under_sample_balance.html#skoot.balance.under_sample_balance" title="View documentation for skoot.balance.under_sample_balance"><span class="n">under_sample_balance</span></a><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">balance_ratio</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+                                            <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># get the new counts</span>
+<span class="n">new_mask</span> <span class="o">=</span> <span class="n">y_balance</span> <span class="o">==</span> <span class="mi">0</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Num zero class (post-balance): </span><span class="si">%i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">new_mask</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Num one class (post-balance): </span><span class="si">%i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="o">~</span><span class="n">new_mask</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Num samples (post-balance): </span><span class="si">%i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">X_balance</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="c1"># #############################################################################</span>
+<span class="c1"># This also works for pandas DataFrames</span>
+
+<span class="n">X_balance_df</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <a href="../../modules/generated/skoot.balance.under_sample_balance.html#skoot.balance.under_sample_balance" title="View documentation for skoot.balance.under_sample_balance"><span class="n">under_sample_balance</span></a><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">(</span><span class="n">X</span><span class="p">),</span>
+                                       <span class="n">y</span><span class="p">,</span> <span class="n">balance_ratio</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+                                       <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">X_balance_df</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+</div>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  0.041 seconds)</p>
+<div class="sphx-glr-footer docutils container">
+<div class="sphx-glr-download docutils container">
+<a class="reference download internal" href="../../_downloads/ex_undersample.py" download=""><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">ex_undersample.py</span></code></a></div>
+<div class="sphx-glr-download docutils container">
+<a class="reference download internal" href="../../_downloads/ex_undersample.ipynb" download=""><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">ex_undersample.ipynb</span></code></a></div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.readthedocs.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../../user_guide.html" class="btn btn-neutral float-right" title="User Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ex_oversample.html" class="btn btn-neutral" title="Oversampling minority samples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Taylor G Smith.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.19.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,402 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>skoot.utils.validation &mdash; skoot 0.19.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/style.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> skoot
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.19.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto_examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide.html">User Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">skoot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>skoot.utils.validation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for skoot.utils.validation</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Taylor Smith &lt;taylor.smith@alkaline-ml.com&gt;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+
+<span class="kn">from</span> <span class="nn">.iterables</span> <span class="k">import</span> <span class="n">is_iterable</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;check_dataframe&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;validate_multiple_cols&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;validate_multiple_rows&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;validate_test_set_columns&#39;</span>
+<span class="p">]</span>
+
+
+<div class="viewcode-block" id="check_dataframe"><a class="viewcode-back" href="../../../modules/generated/skoot.utils.check_dataframe.html#skoot.utils.check_dataframe">[docs]</a><span class="k">def</span> <span class="nf">check_dataframe</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">assert_all_finite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">column_diff</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Check an input dataframe.</span>
+
+<span class="sd">    Determine whether an input frame is a Pandas dataframe or whether it can</span>
+<span class="sd">    be coerced as one, and raise a TypeError if not. Also check for finite</span>
+<span class="sd">    values if specified. If columns are provided, checks that all columns</span>
+<span class="sd">    are present within the dataframe and raises an assertion error if not.</span>
+
+<span class="sd">    Note that if the input ``X`` is *not* a dataframe, and columns are</span>
+<span class="sd">    provided via the ``cols`` arg, a ValueError will be raised.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X : array-like, shape=(n_samples, n_features)</span>
+<span class="sd">        The input frame. If not a Pandas DataFrame, will raise a</span>
+<span class="sd">        TypeError.</span>
+
+<span class="sd">    cols : list, iterable or None</span>
+<span class="sd">        Any columns to check for. If this is provided, all columns will</span>
+<span class="sd">        be checked for presence in the ``X.columns`` index. If any are not</span>
+<span class="sd">        present, a ValueError will be raised.</span>
+
+<span class="sd">    assert_all_finite : bool, optional (default=False)</span>
+<span class="sd">        Whether to assert that all values within the ``X`` frame are</span>
+<span class="sd">        finite. Note that if ``cols`` is specified, this will only assert</span>
+<span class="sd">        all values in the specified columns are finite.</span>
+
+<span class="sd">    column_diff : bool, optional (default=False)</span>
+<span class="sd">        Whether to also get the columns present in ``X`` that are not present</span>
+<span class="sd">        in ``cols``. This is returned as the third element in the output if</span>
+<span class="sd">        ``column_diff`` is True.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    X_copy : pd.DataFrame</span>
+<span class="sd">        A copy of the ``X`` dataframe.</span>
+
+<span class="sd">    cols : list</span>
+<span class="sd">        The list of columns on which to apply a function to this dataframe.</span>
+<span class="sd">        if ``cols`` was specified in the function, this is equal to ``cols``</span>
+<span class="sd">        as a list. Else, it&#39;s the ``X.columns`` index.</span>
+
+<span class="sd">    diff : list</span>
+<span class="sd">        If ``column_diff`` is True, will return as the third position in the</span>
+<span class="sd">        tuple the columns that are within ``X`` but NOT present in ``cols``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># determine if it&#39;s currently a DF or if it needs to be cast as one.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_iterable</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;X must be a DataFrame, iterable or np.ndarray, &quot;</span>
+                            <span class="s2">&quot;but got type=</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
+
+        <span class="c1"># if columns was defined, we have to break</span>
+        <span class="k">if</span> <span class="n">cols</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;When X is not a DataFrame, cols cannot be &quot;</span>
+                             <span class="s2">&quot;defined. Either pre-cast your data to Pandas, &quot;</span>
+                             <span class="s2">&quot;or pass cols=None.&quot;</span><span class="p">)</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+    <span class="c1"># if columns are provided, check...</span>
+    <span class="n">present_columns</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">cols</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># ensure iterable, or copy if not</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span> <span class="k">if</span> <span class="n">is_iterable</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span> <span class="k">else</span> <span class="p">[</span><span class="n">cols</span><span class="p">]</span>
+
+        <span class="c1"># better to use &quot;any&quot; since it will short circuit!</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">present_columns</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;All columns in `cols` must be present in X. &quot;</span>
+                             <span class="s2">&quot;X columns=</span><span class="si">%r</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">present_columns</span><span class="p">)</span>
+
+    <span class="c1"># otherwise, if not specified, make sure we define it since we</span>
+    <span class="c1"># end up returning cols (this is converted to a list in the next step)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span>
+
+    <span class="c1"># cols might have been a np.array or might be an Index -- make it a list</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="s1">&#39;tolist&#39;</span><span class="p">):</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="n">cols</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+    <span class="c1"># if specified, check that all values are finite</span>
+    <span class="k">if</span> <span class="n">assert_all_finite</span> <span class="ow">and</span> \
+            <span class="n">X</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Expected all entries in specified columns &#39;</span>
+                         <span class="s1">&#39;to be finite&#39;</span><span class="p">)</span>
+
+    <span class="c1"># get the copy of X to return</span>
+    <span class="n">X_copy</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="c1"># if column diff is defined, we need to get it...</span>
+    <span class="k">if</span> <span class="n">column_diff</span><span class="p">:</span>
+        <span class="n">colset</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">present_columns</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">colset</span><span class="p">]</span>  <span class="c1"># O(1) lookup</span>
+        <span class="k">return</span> <span class="n">X_copy</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">diff</span>
+
+    <span class="k">return</span> <span class="n">X_copy</span><span class="p">,</span> <span class="n">cols</span></div>
+
+
+<div class="viewcode-block" id="validate_multiple_cols"><a class="viewcode-back" href="../../../modules/generated/skoot.utils.validate_multiple_cols.html#skoot.utils.validate_multiple_cols">[docs]</a><span class="k">def</span> <span class="nf">validate_multiple_cols</span><span class="p">(</span><span class="n">clsname</span><span class="p">,</span> <span class="n">cols</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Validate that there are at least two columns to evaluate.</span>
+
+<span class="sd">    This is used for various feature selection techniques, as well as</span>
+<span class="sd">    in several feature extraction techniques.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    clsname : str or unicode</span>
+<span class="sd">        The name of the class that is calling the function.</span>
+<span class="sd">        Used for more clear error messages.</span>
+
+<span class="sd">    cols : array-like, shape=(n_features,)</span>
+<span class="sd">        The columns to evaluate. If ``cols`` is not None</span>
+<span class="sd">        and the length is less than 2, will raise a</span>
+<span class="sd">        ``ValueError``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> requires at least two features. Your data &#39;</span>
+                         <span class="s1">&#39;(or the passed ``cols`` parameter) includes too &#39;</span>
+                         <span class="s1">&#39;few features (</span><span class="si">%i</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">clsname</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">)))</span></div>
+
+
+<div class="viewcode-block" id="validate_multiple_rows"><a class="viewcode-back" href="../../../modules/generated/skoot.utils.validate_multiple_rows.html#skoot.utils.validate_multiple_rows">[docs]</a><span class="k">def</span> <span class="nf">validate_multiple_rows</span><span class="p">(</span><span class="n">clsname</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Validate that there are at least two samples to evaluate.</span>
+
+<span class="sd">    This is used for various feature transformation techniques, such as</span>
+<span class="sd">    box-cox and yeo-johnson transformations.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    clsname : str or unicode</span>
+<span class="sd">        The name of the class that is calling the function.</span>
+<span class="sd">        Used for more clear error messages.</span>
+
+<span class="sd">    frame : array-like or pd.DataFrame, shape=(n_features, n_features)</span>
+<span class="sd">        The samples to evaluate. If contains less than two samples,</span>
+<span class="sd">        will raise a ValueError.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n_samples</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">n_samples</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> requires at least two samples. Your data &#39;</span>
+                         <span class="s1">&#39;includes too few samples (</span><span class="si">%i</span><span class="s1">)&#39;</span>
+                         <span class="o">%</span> <span class="p">(</span><span class="n">clsname</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="validate_test_set_columns"><a class="viewcode-back" href="../../../modules/generated/skoot.utils.validate_test_set_columns.html#skoot.utils.validate_test_set_columns">[docs]</a><span class="k">def</span> <span class="nf">validate_test_set_columns</span><span class="p">(</span><span class="n">fit_columns</span><span class="p">,</span> <span class="n">test_columns</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Validate that the test set columns will work.</span>
+
+<span class="sd">    This function checks that the ``fit_columns`` are present in the</span>
+<span class="sd">    ``test_columns`` set and raises a ValueError if not.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    fit_columns : list</span>
+<span class="sd">        The column names the estimator was fit on.</span>
+
+<span class="sd">    test_columns : list</span>
+<span class="sd">        The column names the test set contains.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">present_cols</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">test_columns</span><span class="p">)</span>  <span class="c1"># O(1) lookup</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">t</span> <span class="ow">in</span> <span class="n">present_cols</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">fit_columns</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Not all fit columns present in test data! &quot;</span>
+                         <span class="s2">&quot;(expected=</span><span class="si">%r</span><span class="s2">, present=</span><span class="si">%r</span><span class="s2">)&quot;</span>
+                         <span class="o">%</span> <span class="p">(</span><span class="n">fit_columns</span><span class="p">,</span> <span class="n">test_columns</span><span class="p">))</span></div>
+
+
+<span class="c1"># nosetest pb:</span>
+<span class="n">validate_test_set_columns</span><span class="o">.</span><span class="n">__test__</span> <span class="o">=</span> <span class="kc">False</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Taylor G Smith.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.19.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
+      });
+  </script> 
+
+</body>
+</html>

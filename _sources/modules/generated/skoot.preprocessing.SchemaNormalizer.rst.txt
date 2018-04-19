@@ -1,0 +1,16 @@
+:mod:`skoot.preprocessing`.SchemaNormalizer
+==================================================
+
+.. currentmodule:: skoot.preprocessing
+
+.. autoclass:: SchemaNormalizer
+
+   
+   .. automethod:: __init__
+   
+
+.. include:: skoot.preprocessing.SchemaNormalizer.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

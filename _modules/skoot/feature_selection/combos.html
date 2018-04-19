@@ -1,0 +1,391 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>skoot.feature_selection.combos &mdash; skoot 0.19.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/style.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> skoot
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.19.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto_examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide.html">User Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">skoot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>skoot.feature_selection.combos</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for skoot.feature_selection.combos</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Taylor Smith &lt;taylor.smith@alkaline-ml.com&gt;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.externals</span> <span class="k">import</span> <span class="n">six</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">.base</span> <span class="k">import</span> <span class="n">BaseFeatureSelector</span>
+<span class="kn">from</span> <span class="nn">..decomposition</span> <span class="k">import</span> <span class="n">QRDecomposition</span>
+<span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="k">import</span> <span class="n">check_dataframe</span><span class="p">,</span> <span class="n">validate_multiple_cols</span>
+<span class="kn">from</span> <span class="nn">..utils.iterables</span> <span class="k">import</span> <span class="n">flatten_all</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;LinearCombinationFilter&#39;</span>
+<span class="p">]</span>
+
+
+<div class="viewcode-block" id="LinearCombinationFilter"><a class="viewcode-back" href="../../../modules/generated/skoot.feature_selection.LinearCombinationFilter.html#skoot.feature_selection.LinearCombinationFilter">[docs]</a><span class="k">class</span> <span class="nc">LinearCombinationFilter</span><span class="p">(</span><span class="n">BaseFeatureSelector</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Filter any perfect linear combinations in a matrix.</span>
+
+<span class="sd">    The LinearCombinationFilter will resolve linear combinations in a</span>
+<span class="sd">    numeric matrix. The QR decomposition is used to determine whether the</span>
+<span class="sd">    matrix is full rank, and then identify the sets of columns that are</span>
+<span class="sd">    involved in the dependencies. This class is adapted from the</span>
+<span class="sd">    implementation in the R package, caret.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cols : array-like, shape=(n_features,), optional (default=None)</span>
+<span class="sd">        The names of the columns on which to apply the transformation.</span>
+<span class="sd">        If no column names are provided, the transformer will be ``fit``</span>
+<span class="sd">        on the entire frame. Note that the transformation will also only</span>
+<span class="sd">        apply to the specified columns, and any other non-specified</span>
+<span class="sd">        columns will still be present after transformation. Note that </span>
+<span class="sd">        since this transformer can only operate on numeric columns, not </span>
+<span class="sd">        explicitly setting the ``cols`` parameter may result in errors </span>
+<span class="sd">        for categorical data.</span>
+
+<span class="sd">    as_df : bool, optional (default=True)</span>
+<span class="sd">        Whether to return a Pandas ``DataFrame`` in the ``transform``</span>
+<span class="sd">        method. If False, will return a Numpy ``ndarray`` instead. </span>
+<span class="sd">        Since most skoot transformers depend on explicitly-named</span>
+<span class="sd">        ``DataFrame`` features, the ``as_df`` parameter is True by default.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    An example linear combination filter:</span>
+
+<span class="sd">    &gt;&gt;&gt; from skoot.datasets import load_iris_df</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; X = load_iris_df(include_tgt=False)</span>
+<span class="sd">    &gt;&gt;&gt; filterer = LinearCombinationFilter()</span>
+<span class="sd">    &gt;&gt;&gt; X_transform = filterer.fit_transform(X)</span>
+<span class="sd">    &gt;&gt;&gt; assert X_transform.shape[1] == 4 # no combos in iris...</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    drop_ : array-like, shape=(n_features,)</span>
+<span class="sd">        Assigned after calling ``fit``. These are the features that</span>
+<span class="sd">        are designated as &quot;bad&quot; and will be dropped in the ``transform``</span>
+<span class="sd">        method.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] Caret&#39;s filterLinearCombos script - https://bit.ly/2uA6vSX</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="LinearCombinationFilter.__init__"><a class="viewcode-back" href="../../../modules/generated/skoot.feature_selection.LinearCombinationFilter.html#skoot.feature_selection.LinearCombinationFilter.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">LinearCombinationFilter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">cols</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="n">as_df</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LinearCombinationFilter.fit"><a class="viewcode-back" href="../../../modules/generated/skoot.feature_selection.LinearCombinationFilter.html#skoot.feature_selection.LinearCombinationFilter.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fit the transformer.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : pd.DataFrame, shape=(n_samples, n_features)</span>
+<span class="sd">            The Pandas frame to fit. The frame will only</span>
+<span class="sd">            be fit on the prescribed ``cols`` (see ``__init__``) or</span>
+<span class="sd">            all of them if ``cols`` is None. Furthermore, ``X`` will</span>
+<span class="sd">            not be altered in the process of the fit.</span>
+
+<span class="sd">        y : array-like or None, shape=(n_samples,), optional (default=None)</span>
+<span class="sd">            Pass-through for ``sklearn.pipeline.Pipeline``. Even</span>
+<span class="sd">            if explicitly set, will not change behavior of ``fit``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># check on state of X and cols (must all be finite for fortran)</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">cols</span> <span class="o">=</span> <span class="n">check_dataframe</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">,</span> <span class="n">assert_all_finite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># there must be at least two columns</span>
+        <span class="n">validate_multiple_cols</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">cols</span><span class="p">)</span>
+
+        <span class="c1"># init drops list</span>
+        <span class="n">drops</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Generate sub matrix for qr decomposition</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span><span class="o">.</span><span class="n">as_matrix</span><span class="p">()</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span>  <span class="c1"># so we can use boolean masking</span>
+
+        <span class="c1"># do subroutines</span>
+        <span class="n">lc_list</span> <span class="o">=</span> <span class="n">_enum_lc</span><span class="p">(</span><span class="n">QRDecomposition</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">lc_list</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">while</span> <span class="n">lc_list</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># we want the first index in each of the keys in the dict</span>
+                <span class="n">bad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span>
+                                <span class="nb">set</span><span class="p">([</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                                     <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">lc_list</span><span class="p">)])</span>
+                                <span class="p">])</span>
+
+                <span class="c1"># get the corresponding bad names</span>
+                <span class="n">bad_nms</span> <span class="o">=</span> <span class="n">cols</span><span class="p">[</span><span class="n">bad</span><span class="p">]</span>
+                <span class="n">drops</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">bad_nms</span><span class="p">)</span>
+
+                <span class="c1"># update our X, and then our cols</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">bad</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">cols</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">bad</span><span class="p">)</span>
+
+                <span class="c1"># keep removing linear dependencies until it resolves</span>
+                <span class="n">lc_list</span> <span class="o">=</span> <span class="n">_enum_lc</span><span class="p">(</span><span class="n">QRDecomposition</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+
+                <span class="c1"># will break when lc_list returns None</span>
+
+        <span class="c1"># Assign attributes, return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drop_</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">drops</span><span class="p">))</span>  <span class="c1"># de-dupe, and make a list</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div></div>
+        
+
+<span class="k">def</span> <span class="nf">_enum_lc</span><span class="p">(</span><span class="n">decomp</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Perform a single iteration of linear combo scoping.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    decomp : QRDecomposition</span>
+<span class="sd">        The QR decomposition of the matrix</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># qr = decomp.qr  # the decomposition matrix</span>
+
+    <span class="c1"># extract the R matrix</span>
+    <span class="n">R</span> <span class="o">=</span> <span class="n">decomp</span><span class="o">.</span><span class="n">get_R</span><span class="p">()</span>         <span class="c1"># the R matrix</span>
+    <span class="n">n_features</span> <span class="o">=</span> <span class="n">R</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>    <span class="c1"># number of columns in R</span>
+    <span class="c1"># is_zero = n_features == 0  # whether there are no features</span>
+
+    <span class="c1"># the rank of the original matrix, or num of independent cols</span>
+    <span class="n">rank</span> <span class="o">=</span> <span class="n">decomp</span><span class="o">.</span><span class="n">get_rank</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">rank</span> <span class="o">!=</span> <span class="n">n_features</span><span class="p">:</span>
+        <span class="n">pivot</span> <span class="o">=</span> <span class="n">decomp</span><span class="o">.</span><span class="n">pivot</span>         <span class="c1"># the pivot vector</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">R</span><span class="p">[:</span><span class="n">rank</span><span class="p">,</span> <span class="p">:</span><span class="n">rank</span><span class="p">]</span>          <span class="c1"># extract the independent cols</span>
+        <span class="n">Y</span> <span class="o">=</span> <span class="n">R</span><span class="p">[:</span><span class="n">rank</span><span class="p">,</span> <span class="n">rank</span><span class="p">:]</span>  <span class="c1"># +1?   # extract the dependent columns</span>
+
+        <span class="n">new_qr</span> <span class="o">=</span> <span class="n">QRDecomposition</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>  <span class="c1"># factor the independent columns</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">new_qr</span><span class="o">.</span><span class="n">get_coef</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span>       <span class="c1"># get regression coefs of dependent cols</span>
+
+        <span class="c1"># if b is None, then there were no dependent columns</span>
+        <span class="k">if</span> <span class="n">b</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">b</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-6</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># zap small values</span>
+            
+            <span class="c1"># will return a dict of {dim : list of bad idcs}</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">row_idcs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>  <span class="c1"># should only ever be 1, right?</span>
+                <span class="n">nested</span> <span class="o">=</span> <span class="p">[</span> 
+                            <span class="n">pivot</span><span class="p">[</span><span class="n">rank</span><span class="o">+</span><span class="n">i</span><span class="p">],</span>
+                            <span class="n">pivot</span><span class="p">[</span><span class="n">row_idcs</span><span class="p">[</span><span class="n">b</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]]</span>
+                         <span class="p">]</span>
+                <span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">flatten_all</span><span class="p">(</span><span class="n">nested</span><span class="p">))</span>
+
+            <span class="k">return</span> <span class="n">d</span>
+
+    <span class="c1"># if we get here, there are no linear combos to discover</span>
+    <span class="k">return</span> <span class="kc">None</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Taylor G Smith.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.19.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
+      });
+  </script> 
+
+</body>
+</html>

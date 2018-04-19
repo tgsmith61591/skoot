@@ -1,9 +1,0 @@
-[run]
-source = skoot
-include = */skoot/*
-omit =
-    */skoot/__check_build/*
-    */skoot/_build_utils/*
-    */skoot/_lib/*
-    */skoot/setup.py
-    */setup.py

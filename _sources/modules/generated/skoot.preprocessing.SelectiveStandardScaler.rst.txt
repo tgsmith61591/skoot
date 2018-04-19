@@ -1,0 +1,16 @@
+:mod:`skoot.preprocessing`.SelectiveStandardScaler
+=========================================================
+
+.. currentmodule:: skoot.preprocessing
+
+.. autoclass:: SelectiveStandardScaler
+
+   
+   .. automethod:: __init__
+   
+
+.. include:: skoot.preprocessing.SelectiveStandardScaler.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>
