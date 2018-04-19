@@ -65,7 +65,8 @@ rules may hinder the speed with which your contribution is merged:
 
 -  Write detailed docstrings for all of public your functions. The preferred
    format for docstrings is the `numpy standard <https://github.com/numpy/numpy/blob/master/doc/HOWTO_DOCUMENT.rst.txt#docstring-standard>`_.
-   Also include usage examples where appropriate.
+   Also include usage examples where appropriate. See also the
+   `Numpy guidelines for documenting your code  <https://numpydoc.readthedocs.io/en/latest/>`_
 
 -  Use, when applicable, the validation tools and scripts in the
    `skoot.utils` submodule.
@@ -96,7 +97,8 @@ rules may hinder the speed with which your contribution is merged:
           $ pytest
 
    You may need to see the :ref:`setup` section for instructions on how
-   to build the package.
+   to build the package. For instructions on how to test (using nose or pytest)
+   see `Numpy's testing instructions <https://github.com/numpy/numpy/blob/master/doc/TESTS.rst.txt>`_.
 
 Filing bugs
 -----------
