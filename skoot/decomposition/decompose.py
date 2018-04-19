@@ -26,24 +26,54 @@ __all__ = [
     'QRDecomposition'
 ]
 
+
 # Selective decomposition classes
-@_selective_copy_doc_for(IncrementalPCA)
+@_selective_copy_doc_for(IncrementalPCA,
+                         see_also=('SelectiveKernelPCA',
+                                   'SelectiveNMF',
+                                   'SelectivePCA',
+                                   'SelectiveTruncatedSVD'),
+                         overwrite_existing_see_also=True)
 class SelectiveIncrementalPCA(_SelectiveTransformerWrapper):
     _cls = IncrementalPCA
 
-@_selective_copy_doc_for(KernelPCA)
+
+@_selective_copy_doc_for(KernelPCA,
+                         see_also=('SelectiveIncrementalPCA',
+                                   'SelectiveNMF',
+                                   'SelectivePCA',
+                                   'SelectiveTruncatedSVD'),
+                         overwrite_existing_see_also=True)
 class SelectiveKernelPCA(_SelectiveTransformerWrapper):
     _cls = KernelPCA
 
-@_selective_copy_doc_for(NMF)
+
+@_selective_copy_doc_for(NMF,
+                         see_also=('SelectiveIncrementalPCA',
+                                   'SelectiveKernelPCA',
+                                   'SelectivePCA',
+                                   'SelectiveTruncatedSVD'),
+                         overwrite_existing_see_also=True)
 class SelectiveNMF(_SelectiveTransformerWrapper):
     _cls = NMF
 
-@_selective_copy_doc_for(PCA)
+
+@_selective_copy_doc_for(PCA,
+                         see_also=('SelectiveIncrementalPCA',
+                                   'SelectiveKernelPCA',
+                                   'SelectiveNMF',
+                                   'SelectiveTruncatedSVD'),
+                         overwrite_existing_see_also=True)
 class SelectivePCA(_SelectiveTransformerWrapper):
     _cls = PCA
 
-@_selective_copy_doc_for(TruncatedSVD)
+
+@_selective_copy_doc_for(TruncatedSVD,
+                         see_also=('SelectiveIncrementalPCA',
+                                   'SelectiveKernelPCA',
+                                   'SelectiveNMF',
+                                   'SelectivePCA'),
+                         overwrite_existing_see_also=True)
 class SelectiveTruncatedSVD(_SelectiveTransformerWrapper):
     _cls = TruncatedSVD
 
