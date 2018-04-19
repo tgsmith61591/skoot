@@ -8,9 +8,13 @@ User Guide
 
 Getting started
 ---------------
-The following guides cover how to get started with a skoot distribution.
+The following guides cover how to get started with a skoot distribution. The
+easiest solution is simply installing from PyPi, but if you'd like to
+contribute you'll need to be able to build from source.
 
-|
+.. raw:: html
+
+   <br/>
 
 .. toctree::
 
@@ -19,11 +23,12 @@ The following guides cover how to get started with a skoot distribution.
 
 API reference
 -------------
+This section covers documentation and examples of each of the python
+package's submodules. See also the :ref:`api_ref`
 
-This section covers documentation of the python package's submodules. See also
-the :ref:`api_ref`
+.. raw:: html
 
-|
+   <br/>
 
 .. toctree::
 

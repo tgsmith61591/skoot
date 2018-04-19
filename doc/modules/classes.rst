@@ -60,6 +60,8 @@ Decorator methods
     :no-members:
     :no-inherited-members:
 
+**User guide:** See the :ref:`balance` section for further details.
+
 Balancing functions
 -------------------
 .. currentmodule:: skoot
@@ -82,6 +84,8 @@ Balancing functions
     :no-members:
     :no-inherited-members:
 
+**User guide:** See the :ref:`datasets` section for further details.
+
 Dataset loading functions
 -------------------------
 .. currentmodule:: skoot
@@ -103,6 +107,8 @@ Dataset loading functions
 .. automodule:: skoot.decomposition
     :no-members:
     :no-inherited-members:
+
+**User guide:** See the :ref:`decomposition` section for further details.
 
 Decomposition classes
 ---------------------
@@ -129,6 +135,8 @@ Decomposition classes
     :no-members:
     :no-inherited-members:
 
+**User guide:** See the :ref:`feature_extraction` section for further details.
+
 Feature extraction estimators
 -----------------------------
 .. currentmodule:: skoot
@@ -148,6 +156,8 @@ Feature extraction estimators
 .. automodule:: skoot.feature_selection
     :no-members:
     :no-inherited-members:
+
+**User guide:** See the :ref:`feature_selection` section for further details.
 
 Feature selection estimators
 ----------------------------
@@ -173,6 +183,8 @@ Feature selection estimators
 .. automodule:: skoot.preprocessing
     :no-members:
     :no-inherited-members:
+
+**User guide:** See the :ref:`preprocessing` section for further details.
 
 Dataframe schema transformers
 -----------------------------
@@ -228,6 +240,8 @@ Skewness transformers
     :no-members:
     :no-inherited-members:
 
+**User guide:** See the :ref:`utils` section for further details.
+
 Iterable utilities
 ------------------
 .. currentmodule:: skoot
@@ -252,3 +266,6 @@ Validation utilities
     utils.validate_multiple_rows
     utils.validate_test_set_columns
 
+.. raw:: html
+
+   <br/>
