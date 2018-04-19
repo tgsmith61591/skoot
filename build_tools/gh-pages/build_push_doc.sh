@@ -36,10 +36,9 @@ cd ..
 mv doc/_build/html ./
 git stash
 
-# checkout gh-pages, remove everything, pop the stash
+# checkout gh-pages, remove everything but .git, pop the stash
 git checkout gh-pages
-cd ..
-rm -rf skoot/* && cd skoot/
+find . -not -name '.git' -maxdepth 1 -delete
 touch .nojekyll
 git checkout stash@{0} -- doc/_build/html
 mv html/* ./
