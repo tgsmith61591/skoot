@@ -46,7 +46,7 @@ rm -r html/
 
 # add everything, get ready for commit
 git add --all
-git commit -m "publishing updated documentation..."
+git commit -m "[ci skip] publishing updated documentation..."
 git push origin gh-pages
 
 # switch back to master
