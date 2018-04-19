@@ -28,7 +28,7 @@ fi
 python setup.py install
 
 # cd into docs, make them
-cd docs
+cd doc
 make clean html EXAMPLES_PATTERN=ex_*
 cd ..
 
