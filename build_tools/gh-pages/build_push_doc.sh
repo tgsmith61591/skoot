@@ -34,13 +34,15 @@ cd ..
 
 # move the docs to the top-level directory, stash for checkout
 mv doc/_build/html ./
+# html/ will stay there actually...
 git stash
 
 # checkout gh-pages, remove everything but .git, pop the stash
 git checkout gh-pages
-find . -not -name '.git' -maxdepth 1 -delete
+find . -not -name ".git/*" -type f -maxdepth 1 -delete
+rm -r .cache/ build/ build_tools/ doc/ examples/ skoot/
 touch .nojekyll
-git checkout stash@{0} -- doc/_build/html
+# git checkout stash@{0} -- ./html
 mv html/* ./
 rm -r html/
 
