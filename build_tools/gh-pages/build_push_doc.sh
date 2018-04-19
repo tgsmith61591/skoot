@@ -38,7 +38,8 @@ git stash
 
 # checkout gh-pages, remove everything, pop the stash
 git checkout gh-pages
-rm -rf .
+cd ..
+rm -rf skoot/* && cd skoot/
 touch .nojekyll
 git checkout stash@{0} -- doc/_build/html
 mv html/* ./
