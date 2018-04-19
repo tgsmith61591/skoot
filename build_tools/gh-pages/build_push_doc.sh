@@ -4,7 +4,7 @@ set -e
 
 # this is a hack, but we have to make sure we're only ever running this from
 # the top level of the package and not in the subdirectory...
-if [[ ! -d skoot ]]; then
+if [[ ! -d skoot/__check_build ]]; then
     echo "This must be run from the skoot project directory"
     exit 3
 fi
@@ -39,10 +39,12 @@ git stash
 
 # checkout gh-pages, remove everything but .git, pop the stash
 git checkout gh-pages
+# remove all files that are not in the .git dir
 find . -not -name ".git/*" -type f -maxdepth 1 -delete
+# remove the remaining directories
 rm -r .cache/ build/ build_tools/ doc/ examples/ skoot/
+# we need this empty file for git not to try to build a jekyll project
 touch .nojekyll
-# git checkout stash@{0} -- ./html
 mv html/* ./
 rm -r html/
 
