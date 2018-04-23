@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 
 from skoot.datasets import load_iris_df
-from skoot.testing import assert_raises
+from skoot.utils.testing import assert_raises
 from skoot.feature_selection import (FeatureFilter, SparseFeatureFilter,
                                      MultiCorrFilter, NearZeroVarianceFilter)
 

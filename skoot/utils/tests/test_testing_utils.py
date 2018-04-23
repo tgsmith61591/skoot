@@ -2,7 +2,7 @@
 
 from __future__ import absolute_import
 
-from skoot.testing import assert_raises
+from skoot.utils.testing import assert_raises
 
 
 def func_that_raises():

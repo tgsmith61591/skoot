@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+#
+# Author: Taylor Smith <taylor.smith@alkaline-ml.com>
 
 from __future__ import absolute_import
 
@@ -41,7 +43,7 @@ def assert_raises(exception_type, func, *args, **kwargs):
     except exception_type:
         pass
     # anything else raises
-    except:
+    except Exception:
         raise
     # otherwise we got nothing
     else:
