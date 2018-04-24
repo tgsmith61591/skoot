@@ -6,8 +6,6 @@ from __future__ import print_function, division, absolute_import
 
 import os
 
-from skoot._build_utils import maybe_cythonize_extensions
-
 
 # DEFINE CONFIG
 def configuration(parent_package='', top_path=None):
@@ -22,7 +20,6 @@ def configuration(parent_package='', top_path=None):
     # build utilities
     config.add_subpackage('__check_build')
     config.add_subpackage('__check_build/tests')
-    config.add_subpackage('_build_utils')
 
     # modules
     config.add_subpackage('balance')
@@ -44,9 +41,6 @@ def configuration(parent_package='', top_path=None):
 
     # for testing utils
     config.add_subpackage('_lib')
-
-    # do cythonization
-    maybe_cythonize_extensions(top_path, config)
 
     # From Numpy doc:
     #   Generate package __config__.py file containing system_info

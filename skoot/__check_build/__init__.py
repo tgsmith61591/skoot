@@ -42,6 +42,6 @@ to build the package before using it: run `python setup.py install` or
 
 try:
     # needs to be an absolute import
-    from skoot.__check_build._check_build import check_build
+    from .__check_build._check_build import check_build
 except ImportError as ie:
     raise_build_error(ie)

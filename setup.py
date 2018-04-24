@@ -15,7 +15,7 @@ as possible, doing so with a familiar scikit-learn API feel.
 from __future__ import print_function, absolute_import, division
 
 from distutils.command.clean import clean
-import warnings
+import subprocess
 import shutil
 import os
 import sys
@@ -172,6 +172,17 @@ def configuration(parent_package='', top_path=None):
     return config
 
 
+def generate_cython():
+    cwd = os.path.abspath(os.path.dirname(__file__))
+    print("Cythonizing sources")
+    p = subprocess.call([sys.executable,
+                         os.path.join(cwd, 'build_tools', 'cythonize.py'),
+                         DISTNAME],
+                        cwd=cwd)
+    if p != 0:
+        raise RuntimeError("Running cythonize failed!")
+
+
 def do_setup():
     # For non-build actions, NumPy is not required, so we can use the
     # setuptools module. However this is not preferable... the moment
@@ -231,8 +242,11 @@ def do_setup():
         except ImportError:
             raise RuntimeError('Need numpy to build %s' % DISTNAME)
 
-        # Cythonize and Fortranize should theoretically be delegated to
-        # submodules' setup.py scripts... *theoretically*...
+        # Cythonize and Fortranize
+        cwd = os.path.abspath(os.path.dirname(__file__))
+        if not os.path.exists(os.path.join(cwd, 'PKG-INFO')):
+            # Generate Cython sources, unless building from source release
+            generate_cython()
 
         # add the config to the metadata
         metadata['configuration'] = configuration
