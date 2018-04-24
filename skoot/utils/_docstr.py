@@ -7,7 +7,7 @@
 
 from __future__ import absolute_import
 
-from .iterables import ensure_iterable
+from .iterables import ensure_iterable, is_iterable
 
 from abc import ABCMeta
 import os
@@ -261,7 +261,16 @@ def wraps_estimator(skclass, add_sections=None, remove_sections=None):
 
         # if we need to remove sections, do it here
         if remove_sections:
-            for section in ensure_iterable(remove_sections):
+            # if it's not an iterable, split it on newlines
+            if not is_iterable(remove_sections):
+                remove_iterable = remove_sections.split(os.linesep)
+            # either way, we need to ensure an iterable, even though this is
+            # technically redundant... python just doesn't like assigning
+            # over the name of remove_sections from inside this closure
+            else:
+                remove_iterable = remove_sections
+
+            for section in remove_iterable:
                 dsmap.remove_section(section, raise_if_missing=False)
 
         # make sure to rstrip since we may have left whitespace trailing...
