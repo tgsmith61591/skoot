@@ -18,6 +18,7 @@ build/
 dist/
 *.egg-info/
 .cache/
+.pytest_cache/
 skoot/__config__.py
 *.so*
 *.pyd

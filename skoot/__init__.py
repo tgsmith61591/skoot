@@ -19,10 +19,6 @@ if __SKOOT_SETUP__:
     _sys.stdout.write('Partial import of skoot during the build process.\n')
     del _sys
 else:
-    # check that the build completed properly. This prints an informative
-    # message in the case that any of the C code was not properly compiled.
-    from . import __check_build
-
     __all__ = [
         'balance',
         'datasets',

@@ -17,10 +17,6 @@ def configuration(parent_package='', top_path=None):
 
     config = Configuration('skoot', parent_package, top_path)
 
-    # build utilities
-    config.add_subpackage('__check_build')
-    config.add_subpackage('__check_build/tests')
-
     # modules
     config.add_subpackage('balance')
     config.add_subpackage('datasets')

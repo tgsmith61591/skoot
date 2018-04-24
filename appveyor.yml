@@ -180,7 +180,7 @@ after_build:
 
 test_script:
   # TODO: Help wanted to get this to work...
-  # - python appveyor_runtests.py -n -m full
+  - python appveyor_runtests.py -n -m full
   - "ECHO SKIPPING TESTS UNTIL APPVEYOR STOPS SUCKING"
 
 after_test:

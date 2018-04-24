@@ -16,6 +16,7 @@ from __future__ import print_function, absolute_import, division
 
 from distutils.command.clean import clean
 import subprocess
+import warnings
 import shutil
 import os
 import sys
@@ -184,14 +185,6 @@ def generate_cython():
 
 
 def do_setup():
-    # For non-build actions, NumPy is not required, so we can use the
-    # setuptools module. However this is not preferable... the moment
-    # setuptools is imported, it monkey-patches distutils' setup and
-    # changes its behavior...
-    # (https://github.com/scikit-learn/scikit-learn/issues/1016)
-    # numpy might not be on the system yet
-    from setuptools import setup
-
     # setup the config
     metadata = dict(name=PYPIDIST,
                     packages=[DISTNAME],
@@ -232,29 +225,58 @@ def do_setup():
                     install_requires=REQUIREMENTS,
                     **extra_setuptools_args)
 
-    # if we are building for install, develop or bdist_wheel, we NEED
-    # numpy and cython, since they are both used in building the .pyx
-    # files into C modules.
-    if we_be_buildin:
+    if len(sys.argv) == 1 or (
+            len(sys.argv) >= 2 and ('--help' in sys.argv[1:] or
+                                    sys.argv[1] in ('--help-commands',
+                                                    'egg-info',
+                                                    '--version',
+                                                    'clean'))):
+        # For these actions, NumPy is not required, so we can import the
+        # setuptools module. However this is not preferable... the moment
+        # setuptools is imported, it monkey-patches distutils' setup and
+        # changes its behavior...
+        # (https://github.com/scikit-learn/scikit-learn/issues/1016)
+        #
+        # This is called when installing from pip and numpy might not
+        # be on the system yet
         try:
-            # overwrites "setup" in the namespace
-            from numpy.distutils.core import setup
+            from setuptools import setup
         except ImportError:
-            raise RuntimeError('Need numpy to build %s' % DISTNAME)
+            warnings.warn("Should have setuptools installed!", UserWarning)
+            from distutils.core import setup
 
-        # Cythonize and Fortranize
-        cwd = os.path.abspath(os.path.dirname(__file__))
-        if not os.path.exists(os.path.join(cwd, 'PKG-INFO')):
-            # Generate Cython sources, unless building from source release
-            generate_cython()
-
-        # add the config to the metadata
-        metadata['configuration'] = configuration
-
-    # otherwise we're building from a wheel and non-build
-    # actions don't require numpy
-    else:
         metadata['version'] = VERSION
+    else:
+        # if we are building for install, develop or bdist_wheel, we NEED
+        # numpy and cython, since they are both used in building the .pyx
+        # files into C modules.
+        if we_be_buildin:
+            try:
+                # overwrites "setup" in the namespace
+                from numpy.distutils.core import setup
+            except ImportError:
+                raise RuntimeError('Need numpy to build %s' % DISTNAME)
+
+            # Cythonize and Fortranize
+            cwd = os.path.abspath(os.path.dirname(__file__))
+            if not os.path.exists(os.path.join(cwd, 'PKG-INFO')):
+                # Generate Cython sources, unless building from source release
+                generate_cython()
+
+            # add the config to the metadata
+            metadata['configuration'] = configuration
+
+        # otherwise we're building from a wheel and non-build
+        # actions don't require numpy
+        else:
+            # For non-build actions, NumPy is not required, so we can use the
+            # setuptools module. However this is not preferable... the moment
+            # setuptools is imported, it monkey-patches distutils' setup and
+            # changes its behavior...
+            # (https://github.com/scikit-learn/scikit-learn/issues/1016)
+            # numpy might not be on the system yet
+            from setuptools import setup
+            metadata['version'] = VERSION
 
     # call setup on the dict
     setup(**metadata)
