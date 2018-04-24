@@ -2,7 +2,7 @@
 
 from __future__ import absolute_import
 
-from skoot.utils.iterables import is_iterable, flatten_all
+from skoot.utils.iterables import is_iterable, flatten_all, ensure_iterable
 from sklearn.externals.six import u
 
 
@@ -23,3 +23,11 @@ def test_flatten():
     a = [[[], 3, 4], ['1', 'a'], [[[1]]], 1, 2]
     b = list(flatten_all(a))
     assert b == [3, 4, '1', 'a', 1, 1, 2], b
+
+
+def test_ensure_iterable():
+    x = 'a'
+    assert ensure_iterable(x) == ['a']
+
+    y = [1, 2, 3]
+    assert ensure_iterable(y) is y
