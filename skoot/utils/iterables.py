@@ -7,9 +7,30 @@ from __future__ import absolute_import
 from sklearn.externals import six
 
 __all__ = [
+    'ensure_iterable',
     'flatten_all',
     'is_iterable'
 ]
+
+
+def ensure_iterable(element):
+    """Make an element an iterable.
+
+    If an element is already iterable, return it as is. If it's not, return
+    it inside of a list. This helper function allows us to avoid clunky if/then
+    checks all over the place::
+
+        if not is_iterable(this):
+            this = [this]
+
+    Parameters
+    ----------
+    element : object
+        An iterable or not
+    """
+    if not is_iterable(element):
+        element = [element]
+    return element
 
 
 def flatten_all(container):

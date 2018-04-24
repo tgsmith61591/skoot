@@ -9,7 +9,10 @@ from __future__ import absolute_import
 from sklearn.preprocessing import (StandardScaler, RobustScaler, MaxAbsScaler,
                                    MinMaxScaler)
 
-from ..base import _selective_copy_doc_for, _SelectiveTransformerWrapper
+from ..base import _SelectiveTransformerWrapper
+
+# namespace import to avoid explicitly protected imports in global namespace
+from ..utils import _docstr as dsutils
 
 __all__ = [
     'SelectiveStandardScaler',
@@ -20,18 +23,18 @@ __all__ = [
 
 
 # Selective decomposition classes
-@_selective_copy_doc_for(StandardScaler)
+@dsutils.wraps_estimator(StandardScaler, remove_sections=['Notes'])
 class SelectiveStandardScaler(_SelectiveTransformerWrapper):
-    _cls = StandardScaler
+    pass
 
-@_selective_copy_doc_for(RobustScaler)
+@dsutils.wraps_estimator(RobustScaler, remove_sections=['Notes'])
 class SelectiveRobustScaler(_SelectiveTransformerWrapper):
-    _cls = RobustScaler
+    pass
 
-@_selective_copy_doc_for(MaxAbsScaler)
+@dsutils.wraps_estimator(MaxAbsScaler, remove_sections=['Notes'])
 class SelectiveMaxAbsScaler(_SelectiveTransformerWrapper):
-    _cls = MaxAbsScaler
+    pass
 
-@_selective_copy_doc_for(MinMaxScaler)
+@dsutils.wraps_estimator(MinMaxScaler, remove_sections=['Notes'])
 class SelectiveMinMaxScaler(_SelectiveTransformerWrapper):
-    _cls = MinMaxScaler
+    pass
