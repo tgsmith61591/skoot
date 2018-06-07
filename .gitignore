@@ -23,6 +23,9 @@ skoot/__config__.py
 *.pyd
 cythonize.dat
 
+# Test artifacts
+.pytest_cache/
+
 # fortran build wrappers
 skoot/decomposition/_dqrsl-f2pywrappers.f
 skoot/decomposition/_dqrslmodule.c
