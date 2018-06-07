@@ -2,8 +2,11 @@
 
 from __future__ import absolute_import
 
-from skoot.utils.iterables import is_iterable, flatten_all, ensure_iterable
 from sklearn.externals.six import u
+from skoot.utils.iterables import (chunk, is_iterable, flatten_all,
+                                   ensure_iterable)
+
+from skoot.utils.testing import assert_raises
 
 
 def test_valid_is_iterable():
@@ -31,3 +34,18 @@ def test_ensure_iterable():
 
     y = [1, 2, 3]
     assert ensure_iterable(y) is y
+
+
+def test_chunking():
+    chunks = list(chunk(range(11), 3))
+    assert chunks == [[0, 1, 2, 3], [4, 5, 6, 7], [8, 9, 10]]
+
+    # test same on known generator
+    assert chunks == list(chunk((i for i in range(11)), 3))
+
+    # test corner where the input is of len 1
+    assert list(chunk([1], 1)) == [[1]]
+
+    # this is the function that will fail
+    failing_func = (lambda: list(chunk([1], 2)))
+    assert_raises(ValueError, failing_func)
