@@ -11,6 +11,9 @@ from ..base import BasePDTransformer
 from ..utils.iterables import is_iterable, chunk
 from ..utils.validation import check_dataframe, validate_test_set_columns
 
+# Cython import
+from ._binning import entropy_bin_bounds
+
 __all__ = [
     'BinningTransformer'
 ]
@@ -24,23 +27,10 @@ def _validate_n_bins(x, n):
     return unique, cts
 
 
-def _entropy_score(x, n):
-    unique, cts = _validate_n_bins(x, n)
-
-    # A typical base case is that there is only one value. But
-    # since we've already validated n_bins > 1 we don't really
-    # have to worry about this scenario. Still will include
-    # the statement just so it's clear...
-    if unique.shape[0] == 1:
-        return 0.
-
-    # get the class probas and compute the entropy
-    pr_C = cts.astype(float) / x.shape[0]  # P(Ci)
-    return np.sum(-pr_C * np.log2(pr_C))
-
-
 def _entropy(x, n):
-    pass
+    x = np.asarray(x, dtype=np.float64)  # needs to be double for C code
+    unique, cts = _validate_n_bins(x, n)
+    return _Bins(entropy_bin_bounds(x, unique, cts.astype(np.float32)))
 
 
 def _uniform(x, n):
@@ -60,6 +50,16 @@ _STRATEGIES = {"entropy": _entropy,
 
 
 class _Bins(object):
+    """Binning class that keeps track of upper and lower bounds of bins.
+    The algorithm for assigning bins to a test vector is as follows:
+
+        1. Initialize all bins as the highest bin
+        2. For each lower bound in bin levels, determine which values in ``x``
+           are >= to the bound. Invert the mask and decrement those bins (in
+           other words, decrement the indices where the value is < the lower
+           bound for the bin in question).
+        3. Continue until there is no mask to invert (lowest bin).
+    """
     def __init__(self, chunks):
         # chunks is a list of bin arrays
         self.n_bins = len(chunks)

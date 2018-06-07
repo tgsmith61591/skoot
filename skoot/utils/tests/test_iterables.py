@@ -37,14 +37,17 @@ def test_ensure_iterable():
 
 
 def test_chunking():
-    chunks = list(chunk(range(11), 3))
+    def listify(chunks):
+        return [list(c) for c in chunks]
+
+    chunks = listify(chunk(range(11), 3))
     assert chunks == [[0, 1, 2, 3], [4, 5, 6, 7], [8, 9, 10]]
 
     # test same on known generator
-    assert chunks == list(chunk((i for i in range(11)), 3))
+    assert chunks == listify(chunk((i for i in range(11)), 3))
 
     # test corner where the input is of len 1
-    assert list(chunk([1], 1)) == [[1]]
+    assert listify(chunk([1], 1)) == [[1]]
 
     # this is the function that will fail
     failing_func = (lambda: list(chunk([1], 2)))

@@ -6,6 +6,9 @@ from skoot.preprocessing import BinningTransformer
 from skoot.datasets import load_iris_df
 from skoot.utils.testing import assert_raises
 
+# for testing the entropy function
+from skoot.preprocessing._binning import C_entropy
+
 import numpy as np
 from numpy.testing import assert_array_equal
 
@@ -81,3 +84,10 @@ def test_binning_corners():
 
     # this one will fail since strategy is illegal
     f(BinningTransformer(cols=["a"], n_bins=3, strategy="illegal"), ValueError)
+
+
+def test_entropy():
+    events = np.asarray(9 * [0] + 5 * [1])  # 9/14, 5/14
+    _, cts = np.unique(events, return_counts=True)
+    ent = C_entropy(events.astype(np.float64), cts.astype(np.float32))
+    assert round(ent, 2) == 0.94, round(ent, 2)
