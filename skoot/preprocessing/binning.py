@@ -351,8 +351,12 @@ class BinningTransformer(BasePDTransformer):
         # the bins
         bins = self.bins_
 
-        # now apply the binning
-        for col, bin_ in six.iteritems(bins):
+        # now apply the binning. Rather that use iteritems, iterate the cols
+        # themselves so we get the order prescribed by the user
+        for col in cols:
+
+            # get the bin
+            bin_ = bins[col]  # O(1) lookup
 
             # get the feature from the frame as an array
             v = X[col].values  # type: np.ndarray
