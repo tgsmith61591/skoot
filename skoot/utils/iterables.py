@@ -7,18 +7,14 @@ from __future__ import absolute_import
 from sklearn.externals import six
 import types
 
+from .compat import xrange
+
 __all__ = [
     'chunk',
     'ensure_iterable',
     'flatten_all',
     'is_iterable'
 ]
-
-# python 3 does not have an xrange
-try:
-    xrange
-except NameError:
-    xrange = range
 
 
 def ensure_iterable(element):
@@ -55,7 +51,7 @@ def flatten_all(container):
     --------
     The example below produces a list of mixed results:
 
-        >>> a = [[[],3,4],['1','a'],[[[1]]],1,2]
+        >>> a = [[[], 3, 4],['1', 'a'],[[[1]]], 1, 2]
         >>> list(flatten_all(a))
         [3, 4, '1', 'a', 1, 1, 2]
 

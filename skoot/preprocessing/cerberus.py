@@ -18,6 +18,34 @@ __all__ = [
 
 
 class SchemaNormalizer(BasePDTransformer):
+    r"""Enforce a schema on an input dataframe.
+
+    The SchemaNormalizer fits a cerberus Validator class on training data,
+    enforcing that schema across incoming test data. This ensures that new
+    test data matches the expected schema.
+
+    Parameters
+    ----------
+    schema : dict
+        The schema. This dictionary maps column names to actions. For
+        instance the following schema will cast the iris dataset
+        "petal widtch (cm)" column to integer::
+
+            >>> schema = {'petal width (cm)': {'coerce': int}}
+
+    as_df : bool, optional (default=True)
+        Whether to return a Pandas ``DataFrame`` in the ``transform``
+        method. If False, will return a Numpy ``ndarray`` instead.
+        Since most skoot transformers depend on explicitly-named
+        ``DataFrame`` features, the ``as_df`` parameter is True by default.
+
+    Attributes
+    ----------
+    validator_ : cerberus.Validator
+        The cerberus validator object. Used to enforce schemas on
+        input test data.
+    """
+
     def __init__(self, schema, as_df=True):
 
         super(SchemaNormalizer, self).__init__(

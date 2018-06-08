@@ -74,7 +74,8 @@ def safe_vstack(a, b):
     """Stack two arrays on top of one another.
 
     Safely handle vertical stacking of arrays. This works for
-    either np.ndarrays or pd.DataFrames.
+    either np.ndarrays or pd.DataFrames. The types of both inputs must
+    match!
 
     Parameters
     ----------

@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+#
+# Author: Taylor G Smith <taylor.smith@alkaline-ml.com>
+#
+# Bin your continuous features.
 
 from __future__ import absolute_import
 
@@ -76,13 +80,13 @@ class _Bins(object):
             upper_bound = next_chunk[0]
             if i == 0:
                 lower_bound = -np.inf
-                rep = "<%.3f" % upper_bound
+                rep = "(-Inf, %.2f]" % upper_bound
 
             # Otherwise we know it's a middle one (not the last since we
             # lagged with the zip function and handle that at the end)
             else:
                 lower_bound = this_chunk[0]
-                rep = "%.3f - %.3f" % (lower_bound, upper_bound)
+                rep = "(%.2f, %.2f]" % (lower_bound, upper_bound)
 
             upper_bounds.append(upper_bound)
             lower_bounds.append(lower_bound)
@@ -91,7 +95,7 @@ class _Bins(object):
         # since we missed the last chunk due to the lag, get the last one
         lower_bounds.append(chunks[-1][0])
         upper_bounds.append(np.inf)
-        reprs.append(">=%.3f" % lower_bounds[-1])
+        reprs.append("(%.2f, Inf]" % lower_bounds[-1])
 
         # set the attributes
         self.upper_bounds = upper_bounds
@@ -170,7 +174,7 @@ class BinningTransformer(BasePDTransformer):
 
     n_bins : int or iterable, optional (default=10)
         The number of bins into which to separate each specified feature.
-        Default is 20, but can also be an iterable or dicy of the same length
+        Default is 20, but can also be an iterable or dict of the same length
         as ``cols``, where positional integers indicate a different bin size
         for that feature.
 
@@ -184,10 +188,38 @@ class BinningTransformer(BasePDTransformer):
         Whether to return the string representation of the bin (i.e., "<25.2")
         rather than the bin level, an integer.
 
+    overwrite : bool, optional (default=True)
+        Whether to overwrite the original feature with the binned feature.
+        Default is True so that the output names match the input names. If
+        False, the output columns will be appended to the right side of
+        the frame with "_binned" appended.
+
     Notes
     -----
     If a feature has fewer than ``n_bins`` unique values, it will raise a
     ValueError in the fit procedure.
+
+    Examples
+    --------
+    Bin two features in iris:
+
+    >>> from skoot.datasets import load_iris_df
+    >>> iris = load_iris_df(include_tgt=False, names=['a', 'b', 'c', 'd'])
+    >>> binner = BinningTransformer(cols=["a", "b"], strategy="uniform")
+    >>> trans = binner.fit_transform(iris)
+    >>> trans.head()
+                  a             b    c    d
+    0  (5.10, 5.50]  (3.40, 3.60]  1.4  0.2
+    1  (4.70, 5.10]  (3.00, 3.20]  1.4  0.2
+    2  (4.70, 5.10]  (3.20, 3.40]  1.3  0.2
+    3  (-Inf, 4.70]  (3.00, 3.20]  1.5  0.2
+    4  (4.70, 5.10]  (3.60, 3.80]  1.4  0.2
+    >>> trans.dtypes
+    a     object
+    b     object
+    c    float64
+    d    float64
+    dtype: object
 
     Attributes
     ----------
@@ -207,7 +239,7 @@ class BinningTransformer(BasePDTransformer):
            http://biostat.mc.vanderbilt.edu/wiki/Main/CatContinuous
     """
     def __init__(self, cols, as_df=True, n_bins=10, strategy="uniform",
-                 return_bin_label=True):
+                 return_bin_label=True, overwrite=True):
 
         super(BinningTransformer, self).__init__(
             cols=cols, as_df=as_df)
@@ -215,9 +247,21 @@ class BinningTransformer(BasePDTransformer):
         self.n_bins = n_bins
         self.strategy = strategy
         self.return_bin_label = return_bin_label
+        self.overwrite = overwrite
 
     def fit(self, X, y=None):
+        """Fit the transformer.
 
+        Parameters
+        ----------
+        X : pd.DataFrame, shape=(n_samples, n_features)
+            The Pandas frame to fit. The frame will only
+            be fit on the prescribed ``cols`` (see ``__init__``) or
+            all of them if ``cols`` is None.
+
+        y : array-like or None, shape=(n_samples,), optional (default=None)
+            Pass-through for ``sklearn.pipeline.Pipeline``.
+        """
         # validate the input, and get a copy of it
         X, cols = check_dataframe(X, cols=self.cols,
                                   assert_all_finite=True)
@@ -279,7 +323,7 @@ class BinningTransformer(BasePDTransformer):
         return self
 
     def transform(self, X):
-        """Apply the imputation to a dataframe.
+        """Apply the transformation to a dataframe.
 
         This method will bin the continuous values in the test frame with the
         bins designated in the ``fit`` stage.
@@ -313,6 +357,12 @@ class BinningTransformer(BasePDTransformer):
             # get the feature from the frame as an array
             v = X[col].values  # type: np.ndarray
             binned = bin_.assign(v, self.return_bin_label)  # via _Bins class
-            X[col] = binned
 
-        return X
+            # if we overwrite, it's easy
+            if self.overwrite:
+                X[col] = binned
+            # otherwise create a new feature
+            else:
+                X["%s_binned" % col] = binned
+
+        return X if self.as_df else X.values

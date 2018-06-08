@@ -17,7 +17,7 @@ iris = load_iris_df(include_tgt=False, names=["a", "b", "c", "d"])
 
 def test_binning_simple():
     binner = BinningTransformer(cols=["a"], n_bins=3, strategy="uniform",
-                                return_bin_label=True)
+                                return_bin_label=True, overwrite=True)
     binner.fit(iris)
     trans = binner.transform(iris)
 
@@ -44,7 +44,8 @@ def test_binning_complex():
     # Test with complex n_bins
     binner = BinningTransformer(cols=["a", "b"], n_bins=[2, 3],
                                 strategy="uniform",
-                                return_bin_label=False)
+                                return_bin_label=False,
+                                overwrite=True)
 
     binner.fit(iris)
     trans = binner.transform(iris)
@@ -59,6 +60,13 @@ def test_binning_complex():
     # show both types are now int
     assert trans.dtypes['a'].name.startswith("int")
     assert trans.dtypes['b'].name.startswith("int")
+
+    # Test with overwrite = False
+    binner.overwrite = False
+    trans2 = binner.transform(iris)
+    assert trans2.shape[1] == 6
+    assert trans2.columns.tolist() == ["a", "b", "c", "d",
+                                       "a_binned", "b_binned"], trans2.columns
 
 
 def test_binning_corners():
