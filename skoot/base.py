@@ -14,6 +14,7 @@ import pandas as pd
 from .exceptions import DeveloperError
 from .utils.validation import check_dataframe, validate_test_set_columns
 from .utils.iterables import is_iterable
+from .utils.compat import xrange
 
 # namespace import to avoid explicitly protected imports in global namespace
 from .utils import _docstr as dsutils
@@ -23,13 +24,6 @@ import copy
 __all__ = [
     'BasePDTransformer'
 ]
-
-# compat:
-try:
-    # PY2
-    xrange
-except NameError:
-    xrange = range
 
 
 class BasePDTransformer(six.with_metaclass(ABCMeta, BaseEstimator,

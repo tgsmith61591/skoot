@@ -4,7 +4,7 @@
 #
 # Sklearn-esque transformers and extension modules
 
-__version__ = '0.19.1-dev1'
+__version__ = '0.19.2-dev1'
 
 try:
     # This variable is injected in the __builtins__ by the build

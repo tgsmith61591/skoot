@@ -110,8 +110,8 @@ class DummyEncoder(BasePDTransformer):
     def transform(self, X):
         """Apply the imputation to a dataframe.
 
-        This method will fill in the missing values within a test
-        dataframe with the statistics computed in ``fit``.
+        This method will encode the features in the test frame with the
+        levels discovered in the ``fit`` computation.
 
         Parameters
         ----------

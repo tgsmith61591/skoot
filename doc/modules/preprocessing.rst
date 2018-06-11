@@ -11,3 +11,9 @@ useful data transformation procedures.
 .. raw:: html
 
    <br/>
+
+See :ref:`preprocessing_examples`
+
+.. raw:: html
+
+   <br/>

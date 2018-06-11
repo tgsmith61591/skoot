@@ -6,4 +6,6 @@ from .dataframe import *
 from .iterables import *
 from .validation import *
 
+# don't import from .compat since it overloads mostly builtins
+
 __all__ = [s for s in dir() if not s.startswith('_')]

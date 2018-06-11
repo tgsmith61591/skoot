@@ -186,6 +186,16 @@ Feature selection estimators
 
 **User guide:** See the :ref:`preprocessing` section for further details.
 
+Continuous feature binning
+--------------------------
+.. currentmodule:: skoot
+
+.. autosummary::
+    :toctree: generated/
+    :template: class.rst
+
+    preprocessing.BinningTransformer
+
 Dataframe schema transformers
 -----------------------------
 .. currentmodule:: skoot

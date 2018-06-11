@@ -42,6 +42,8 @@ def configuration(parent_package='', top_path=None):
     config.add_subpackage('preprocessing/tests')
     config.add_subpackage('utils/tests')
 
+    # cython modules
+
     # for testing utils
     config.add_subpackage('_lib')
 

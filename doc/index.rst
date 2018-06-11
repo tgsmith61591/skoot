@@ -7,7 +7,7 @@
 Skoot: Accelerate your data science workflow
 ============================================
 
-Skoot is designed to expedite and automate away many of the common pain points
+Skoot's aim is to expedite and automate away many of the common pain points
 data scientists experience as they work through their exploratory data analysis
 & data cleansing/preparation stages. It does so by wrapping and augmenting
 useful functions and transformers in scikit-learn, adapting them for use with
