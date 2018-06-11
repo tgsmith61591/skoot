@@ -10,13 +10,11 @@ from sklearn.externals import six
 from sklearn.utils.validation import check_is_fitted
 
 import numpy as np
+import pandas as pd
 
 from ..base import BasePDTransformer
 from ..utils.iterables import is_iterable, chunk
 from ..utils.validation import check_dataframe, validate_test_set_columns
-
-# Cython import
-from ._binning import entropy_bin_bounds
 
 __all__ = [
     'BinningTransformer'
@@ -31,12 +29,6 @@ def _validate_n_bins(x, n):
     return unique, cts
 
 
-def _entropy(x, n):
-    x = np.asarray(x, dtype=np.float64)  # needs to be double for C code
-    unique, cts = _validate_n_bins(x, n)
-    return _Bins(entropy_bin_bounds(x, unique, cts.astype(np.float32)))
-
-
 def _uniform(x, n):
     # get unique and cut it at the uniform points
     unique, _ = _validate_n_bins(x, n)
@@ -49,8 +41,17 @@ def _uniform(x, n):
     return _Bins(chunks)
 
 
-_STRATEGIES = {"entropy": _entropy,
-               "uniform": _uniform}
+def _k_tile(x, n):
+    # bin by quartiles, quantiles, deciles, etc. This is really
+    # easy to delegate to pandas...
+    bins = pd.qcut(x, q=n, retbins=True)[1]
+
+    # we can use the returned bins to create our own intervals
+    return _Bins(list(zip(bins[:-1], bins[1:])))
+
+
+_STRATEGIES = {"uniform": _uniform,
+               "k-tile": _k_tile}
 
 
 class _Bins(object):
@@ -180,9 +181,12 @@ class BinningTransformer(BasePDTransformer):
 
     strategy : str or unicode, optional (default="uniform")
         The strategy for binning. Default is "uniform", which uniformly
-        segments a feature. Alternatives include "entropy" which splits the
-        feature based on the entropy score, much like splitting a decision
-        tree.
+        segments a feature. Alternatives include "k-tile" which uses
+        ``n_bins`` to compute quantiles (for ``n_bins=5``), quartiles
+        (for ``n_bins=4``), etc. Note that for k-tile binning, the
+        outer bin boundaries (low boundary of lowest bin and high
+        boundary of the highest bin) will be set to -inf and inf,
+        respectively, to behave similar to other binning strategies.
 
     return_bin_label : bool, optional (default=True)
         Whether to return the string representation of the bin (i.e., "<25.2")

@@ -30,6 +30,7 @@ def configuration(parent_package='', top_path=None):
     config.add_subpackage('decomposition')
     config.add_subpackage('feature_extraction')
     config.add_subpackage('feature_selection')
+    config.add_subpackage('preprocessing')
     config.add_subpackage('utils')
 
     # module tests -- must be added after others!
@@ -38,10 +39,10 @@ def configuration(parent_package='', top_path=None):
     config.add_subpackage('decomposition/tests')
     config.add_subpackage('feature_extraction/tests')
     config.add_subpackage('feature_selection/tests')
+    config.add_subpackage('preprocessing/tests')
     config.add_subpackage('utils/tests')
 
     # cython modules
-    config.add_subpackage('preprocessing')
 
     # for testing utils
     config.add_subpackage('_lib')
