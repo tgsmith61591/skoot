@@ -16,3 +16,7 @@ class DeveloperError(BaseException):
     enforced until runtime. If you see it, some developer somewhere
     screwed up. :-)
     """
+
+
+class ValidationWarning(UserWarning):
+    """Used to indicate a warning in the validation submodule."""

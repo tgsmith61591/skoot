@@ -66,9 +66,9 @@ def test_binning_complex():
                                        "a_binned", "b_binned"], trans2.columns
 
 
-def test_binning_ktile():
+def test_binning_pctile():
     binner = BinningTransformer(cols=["a"], n_bins=3,
-                                strategy="k-tile",
+                                strategy="percentile",
                                 return_bin_label=True,
                                 overwrite=False)
 

@@ -272,6 +272,7 @@ Validation utilities
     :template: function.rst
 
     utils.check_dataframe
+    utils.type_or_iterable_to_col_mapping
     utils.validate_multiple_cols
     utils.validate_multiple_rows
     utils.validate_test_set_columns

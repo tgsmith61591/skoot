@@ -29,6 +29,7 @@ else:
         'decomposition',
         'feature_extraction',
         'feature_selection',
+        'model_validation',
         'preprocessing',
         'utils'
     ]

@@ -12,6 +12,7 @@ from .iterables import is_iterable
 
 __all__ = [
     'check_dataframe',
+    'type_or_iterable_to_col_mapping',
     'validate_multiple_cols',
     'validate_multiple_rows',
     'validate_test_set_columns'
@@ -113,6 +114,91 @@ def check_dataframe(X, cols=None, assert_all_finite=False, column_diff=False):
         return X_copy, cols, diff
 
     return X_copy, cols
+
+
+def type_or_iterable_to_col_mapping(cols, param, param_name,
+                                    permitted_scalar_types):
+    """Map a parameter to various columns in a dict.
+
+    Many estimators accept either scalar values or iterables as parameters to
+    allow for different values across different features. This function creates
+    a dictionary mapping column names to parameter values and validates scalars
+    within a tuple of permitted scalar types.
+
+    Note: this is primarily intended to be an internal method.
+
+    Parameters
+    ----------
+    cols : list
+        The list of columns against which to map some function or parameters.
+
+    param : int, float, str, iterable or object
+        The parameter value.
+
+    param_name : str or unicode
+        The name of the parameter
+
+    permitted_scalar_types : type or iterable
+        The permitted types.
+
+    Examples
+    --------
+    >>> cols = ["a", "c"]
+    >>> type_or_iterable_to_col_mapping(cols, 0.5, "n_components", (float, int))
+    {"a": 0.5, "c": 0.5}
+    >>> type_or_iterable_to_col_mapping(cols, "uniform", "strategy", str)
+    {"a": "uniform", "c": "uniform"}
+    >>> type_or_iterable_to_col_mapping(cols, [3, 5], "q", int)
+    {"a": 3, "c": 5}
+    >>> type_or_iterable_to_col_mapping(cols, {"a": 3, "c": 5}, "q", int)
+    {"a": 3, "c": 5}
+
+    Returns
+    -------
+    param : dict
+        The param dictionary.
+    """
+    # we need permitted scalar types to be a tuple of allowed values
+    # (an instance, not the class)
+    if not isinstance(permitted_scalar_types, tuple):
+        permitted_scalar_types = (permitted_scalar_types,)
+
+    # validate the parameter
+    if is_iterable(param):
+        # first smoke test is easy -- if the length of the number of
+        # bins does not match the number of columns prescribed, raise
+        if len(param) != len(cols):
+            raise ValueError("Dim mismatch between cols and %s" % param_name)
+
+        # next, we're concerned with whether the param iterable is a dict
+        # and if it is, we have to validate the keys are all there...
+        if isinstance(param, dict):
+
+            # get sets of the columns and keys so we can easily compare
+            scols = set(cols)
+            skeys = set(param.keys())
+
+            # if there are extra keys (skeys - scols) or missing keys
+            # from the prescribed columns (scols - skeys) we have to raise
+            if scols - skeys or skeys - scols:
+                raise ValueError("When %s is provided as a dictionary "
+                                 "its keys must match the provided cols."
+                                 % param_name)
+
+        # otherwise it's a non-dict iterable, and what we ultimately
+        # want IS a dictionary
+        else:
+            param = dict(zip(cols, param))
+
+    else:
+        if not isinstance(param, permitted_scalar_types):
+            raise TypeError("Permitted types for %s if not iterable: %s"
+                            % (param_name, str(permitted_scalar_types)))
+
+        # make it into a dictionary mapping cols to n_bins
+        param = {c: param for c in cols}
+
+    return param
 
 
 def validate_multiple_cols(clsname, cols):
