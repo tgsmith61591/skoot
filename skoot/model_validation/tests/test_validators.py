@@ -60,3 +60,8 @@ def test_chi2_validator():
     t2 = test.copy()
     t2[:, 0] = 2
     assert_raises(ValueError, val.transform, t2)
+
+    # now show that if the strategy for categorical vars were not
+    # ratio, we would pass
+    val.categorical_strategy = None
+    val.transform(t2)

@@ -31,7 +31,7 @@ __all__ = [
 ]
 
 
-def _passthrough(v):
+def _passthrough(_):
     # Default for when user does not set a function in the custom validator
     # (design choice: should we FORCE a value there?)
     return True
@@ -247,6 +247,12 @@ class DistHypothesisValidator(_BaseValidator):
         "warn", "raise" or "ignore". If ``action`` is "raise", will raise a
         ValueError if mismatched.
 
+    categorical_strategy : str, unicode or None, optional (default="ratio")
+        How to validate categorical features. Default is "ratio", which will
+        compare the ratio of each level's frequency to the overall count of
+        samples in the feature within an absolute tolerance of ``alpha``.
+        If None, will not perform validation on categorical features.
+
     Notes
     -----
     This class is NaN-safe, meaning if it is used early in your pipeline
@@ -270,11 +276,13 @@ class DistHypothesisValidator(_BaseValidator):
         is used to validate the presence of the features in the test set
         during the ``transform`` stage.
     """
-    def __init__(self, cols=None, as_df=True, alpha=0.05, action="warn"):
+    def __init__(self, cols=None, as_df=True, alpha=0.05, action="warn",
+                 categorical_strategy="ratio"):
         super(DistHypothesisValidator, self).__init__(
             cols=cols, as_df=as_df, action=action)
 
         self.alpha = alpha
+        self.categorical_strategy = categorical_strategy
 
     def fit(self, X, y=None):
         """Fit the transformer.
@@ -329,25 +337,32 @@ class DistHypothesisValidator(_BaseValidator):
 
             return pval >= self.alpha
 
-        # otherwise, we look at frequencies
+        # otherwise, we are dealing with categorical features
         else:
-            exp_levels, exp_counts, n_obs = self.statistics_[index]
-            prst_levels, prst_counts, n_test = \
-                _compute_stats(feature, continuous=False)
 
-            # Get the expected ratios & present ratios
-            exp_ratios = exp_counts / float(n_obs)
-            prst_ratios = prst_counts / float(n_test)
-            abs_diff = np.abs(exp_ratios - prst_ratios)
+            # if we want to use the ratio strategy, do so here:
+            if self.categorical_strategy == "ratio":
+                exp_levels, exp_counts, n_obs = self.statistics_[index]
+                prst_levels, prst_counts, n_test = \
+                    _compute_stats(feature, continuous=False)
 
-            # if there are any levels in the test set that are NOT in the
-            # training set, we have to handle the action. Don't fail since
-            # this may be before a user has encoded all levels, so we can
-            # just let the transform method handle the action.
-            new_lvls = ~np.in1d(prst_levels, exp_levels)  # type: np.ndarray
-            valid = not new_lvls.any()  # do not want new levels. New = invalid
+                # Get the expected ratios & present ratios
+                exp_ratios = exp_counts / float(n_obs)
+                prst_ratios = prst_counts / float(n_test)
+                abs_diff = np.abs(exp_ratios - prst_ratios)
 
-            return valid and (abs_diff <= self.alpha).all()
+                # if there are any levels in the test set that are NOT in the
+                # training set, we have to handle the action. Don't fail since
+                # this may be before a user has encoded all levels, so we can
+                # just let the transform method handle the action.
+                new_lvls = ~np.in1d(prst_levels,
+                                    exp_levels)  # type: np.ndarray
+                valid = not new_lvls.any()  # dont want new lvls, new = invalid
+
+                return valid and (abs_diff <= self.alpha).all()
+
+            # if we add more strategies, here's where they'll go...
+            return True
 
 
 # in case nose has an issue here (since "test" is used all over)...

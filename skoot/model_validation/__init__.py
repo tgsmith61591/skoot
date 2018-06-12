@@ -51,7 +51,8 @@ def make_validated_pipeline(*steps, **kwargs):
                      StandardScaler(copy=True, with_mean=True, with_std=True)),
                     ('disthypothesisvalidator',
                      DistHypothesisValidator(action='warn', alpha=0.05,
-                                             as_df=True, cols=None)),
+                                             as_df=True, cols=None,
+                                             categorical_strategy='ratio')),
                     ('gaussiannb', GaussianNB(priors=None))])
     """
     alpha = kwargs.pop("alpha", 0.05)
