@@ -52,8 +52,7 @@ def make_validated_pipeline(*steps, **kwargs):
                     ('disthypothesisvalidator',
                      DistHypothesisValidator(action='warn', alpha=0.05,
                                              as_df=True, cols=None)),
-                    ('gaussiannb',
-                     GaussianNB(priors=None, var_smoothing=1e-09))])
+                    ('gaussiannb', GaussianNB(priors=None))])
     """
     alpha = kwargs.pop("alpha", 0.05)
     action = kwargs.pop("action", "warn")
