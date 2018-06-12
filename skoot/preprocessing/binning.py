@@ -14,7 +14,8 @@ import pandas as pd
 
 from ..base import BasePDTransformer
 from ..utils.iterables import is_iterable, chunk
-from ..utils.validation import check_dataframe, validate_test_set_columns
+from ..utils.validation import (check_dataframe, validate_test_set_columns,
+                                type_or_iterable_to_col_mapping)
 
 __all__ = [
     'BinningTransformer'
@@ -41,7 +42,7 @@ def _uniform(x, n):
     return _Bins(chunks)
 
 
-def _k_tile(x, n):
+def _percentile(x, n):
     # bin by quartiles, quantiles, deciles, etc. This is really
     # easy to delegate to pandas...
     bins = pd.qcut(x, q=n, retbins=True)[1]
@@ -51,7 +52,7 @@ def _k_tile(x, n):
 
 
 _STRATEGIES = {"uniform": _uniform,
-               "k-tile": _k_tile}
+               "percentile": _percentile}
 
 
 class _Bins(object):
@@ -181,9 +182,9 @@ class BinningTransformer(BasePDTransformer):
 
     strategy : str or unicode, optional (default="uniform")
         The strategy for binning. Default is "uniform", which uniformly
-        segments a feature. Alternatives include "k-tile" which uses
+        segments a feature. Alternatives include "percentile" which uses
         ``n_bins`` to compute quantiles (for ``n_bins=5``), quartiles
-        (for ``n_bins=4``), etc. Note that for k-tile binning, the
+        (for ``n_bins=4``), etc. Note that for percentile binning, the
         outer bin boundaries (low boundary of lowest bin and high
         boundary of the highest bin) will be set to -inf and inf,
         respectively, to behave similar to other binning strategies.
@@ -207,23 +208,23 @@ class BinningTransformer(BasePDTransformer):
     --------
     Bin two features in iris:
 
-    >>> from skoot.datasets import load_iris_df
-    >>> iris = load_iris_df(include_tgt=False, names=['a', 'b', 'c', 'd'])
-    >>> binner = BinningTransformer(cols=["a", "b"], strategy="uniform")
-    >>> trans = binner.fit_transform(iris)
-    >>> trans.head()
-                  a             b    c    d
-    0  (5.10, 5.50]  (3.40, 3.60]  1.4  0.2
-    1  (4.70, 5.10]  (3.00, 3.20]  1.4  0.2
-    2  (4.70, 5.10]  (3.20, 3.40]  1.3  0.2
-    3  (-Inf, 4.70]  (3.00, 3.20]  1.5  0.2
-    4  (4.70, 5.10]  (3.60, 3.80]  1.4  0.2
-    >>> trans.dtypes
-    a     object
-    b     object
-    c    float64
-    d    float64
-    dtype: object
+        >>> from skoot.datasets import load_iris_df
+        >>> iris = load_iris_df(include_tgt=False, names=['a', 'b', 'c', 'd'])
+        >>> binner = BinningTransformer(cols=["a", "b"], strategy="uniform")
+        >>> trans = binner.fit_transform(iris)
+        >>> trans.head()
+                      a             b    c    d
+        0  (5.10, 5.50]  (3.40, 3.60]  1.4  0.2
+        1  (4.70, 5.10]  (3.00, 3.20]  1.4  0.2
+        2  (4.70, 5.10]  (3.20, 3.40]  1.3  0.2
+        3  (-Inf, 4.70]  (3.00, 3.20]  1.5  0.2
+        4  (4.70, 5.10]  (3.60, 3.80]  1.4  0.2
+        >>> trans.dtypes
+        a     object
+        b     object
+        c    float64
+        d    float64
+        dtype: object
 
     Attributes
     ----------
@@ -271,37 +272,9 @@ class BinningTransformer(BasePDTransformer):
                                   assert_all_finite=True)
 
         # validate n_bins...
-        n_bins = self.n_bins
-        if is_iterable(n_bins):
-            # first smoke test is easy -- if the length of the number of
-            # bins does not match the number of columns prescribed, raise
-            if len(n_bins) != len(cols):
-                raise ValueError("dim mismatch between cols and n_bin")
-
-            # next, we're concerned with whether the n_bins iterable is a dict
-            # and if it is, we have to validate the keys are all there...
-            if isinstance(n_bins, dict):
-
-                # get sets of the columns and keys so we can easily compare
-                scols = set(cols)
-                skeys = set(n_bins.keys())
-
-                # if there are extra keys (skeys - scols) or missing keys
-                # from the prescribed columns (scols - skeys) we have to raise
-                if scols - skeys or skeys - scols:
-                    raise ValueError("When n_bins is provided as a dictionary "
-                                     "its keys must match the provided cols.")
-
-            # otherwise, what we ultimately want IS a dictionary
-            else:
-                n_bins = dict(zip(cols, n_bins))
-
-        else:
-            if not isinstance(n_bins, int):
-                raise TypeError("n_bins must be an iterable or an int")
-
-            # make it into a dictionary mapping cols to n_bins
-            n_bins = {c: n_bins for c in cols}
+        n_bins = type_or_iterable_to_col_mapping(cols=cols, param=self.n_bins,
+                                                 param_name="n_bins",
+                                                 permitted_scalar_types=int)
 
         # now that we have a dictionary, we can assess the actual integer
         for _, v in six.iteritems(n_bins):

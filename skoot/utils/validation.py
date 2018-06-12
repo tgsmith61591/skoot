@@ -12,6 +12,7 @@ from .iterables import is_iterable
 
 __all__ = [
     'check_dataframe',
+    'type_or_iterable_to_col_mapping',
     'validate_multiple_cols',
     'validate_multiple_rows',
     'validate_test_set_columns'
@@ -19,21 +20,25 @@ __all__ = [
 
 
 def check_dataframe(X, cols=None, assert_all_finite=False, column_diff=False):
-    """Check an input dataframe.
+    r"""Check an input dataframe.
 
     Determine whether an input frame is a Pandas dataframe or whether it can
     be coerced as one, and raise a TypeError if not. Also check for finite
     values if specified. If columns are provided, checks that all columns
     are present within the dataframe and raises an assertion error if not.
 
-    Note that if the input ``X`` is *not* a dataframe, and columns are
-    provided via the ``cols`` arg, a ValueError will be raised.
+    **Note**: if ``X`` is not a dataframe (i.e., a list of lists or a numpy
+    array), the columns will not be specified when creating a pandas dataframe
+    and will thus be indices. Any columns provided should account for this
+    behavior.
 
     Parameters
     ----------
     X : array-like, shape=(n_samples, n_features)
-        The input frame. If not a Pandas DataFrame, will raise a
-        TypeError.
+        The input frame. Should be a pandas DataFrame, numpy ``ndarray`` or
+        a similar array-like structure. Any non-pandas structure will be
+        attempted to be cast to pandas; if it cannot be cast, it will fail
+        with a TypeError.
 
     cols : list, iterable or None
         Any columns to check for. If this is provided, all columns will
@@ -49,6 +54,49 @@ def check_dataframe(X, cols=None, assert_all_finite=False, column_diff=False):
         Whether to also get the columns present in ``X`` that are not present
         in ``cols``. This is returned as the third element in the output if
         ``column_diff`` is True.
+
+    Examples
+    --------
+    When providing a dataframe and columns, the columns should be present:
+
+    >>> from skoot.datasets import load_iris_df
+    >>> df = load_iris_df(include_tgt=False, names=['a', 'b', 'c', 'd'])
+    >>> df, cols = check_dataframe(df, cols=('a', 'c'))
+    >>> assert cols == ['a', 'c']
+    >>> df.head()
+         a    b    c    d
+    0  5.1  3.5  1.4  0.2
+    1  4.9  3.0  1.4  0.2
+    2  4.7  3.2  1.3  0.2
+    3  4.6  3.1  1.5  0.2
+    4  5.0  3.6  1.4  0.2
+
+    When passing numpy arrays, account for the fact that the columns cannot
+    be specified when creating the pandas dataframe:
+
+    >>> df2, cols = check_dataframe(df.values, cols=[0, 2])
+    >>> cols
+    [0, 2]
+    >>> df2.columns.tolist()
+    [0, 1, 2, 3]
+    >>> df2.head()
+         0    1    2    3
+    0  5.1  3.5  1.4  0.2
+    1  4.9  3.0  1.4  0.2
+    2  4.7  3.2  1.3  0.2
+    3  4.6  3.1  1.5  0.2
+    4  5.0  3.6  1.4  0.2
+
+    If you want to get the ``column_diff``, or the left-out columns, this will
+    be returned as a third element in the tuple when specifed:
+
+    >>> df2, cols, diff = check_dataframe(df.values, [0, 2], column_diff=True)
+    >>> cols
+    [0, 2]
+    >>> df2.columns.tolist()
+    [0, 1, 2, 3]
+    >>> diff
+    [1, 3]
 
     Returns
     -------
@@ -70,11 +118,22 @@ def check_dataframe(X, cols=None, assert_all_finite=False, column_diff=False):
             raise TypeError("X must be a DataFrame, iterable or np.ndarray, "
                             "but got type=%s" % type(X))
 
-        # if columns was defined, we have to break
-        if cols is not None:
-            raise ValueError("When X is not a DataFrame, cols cannot be "
-                             "defined. Either pre-cast your data to Pandas, "
-                             "or pass cols=None.")
+        # Old behavior:
+        # if cols is not None:
+        #     raise ValueError("When X is not a DataFrame, cols cannot be "
+        #                      "defined. Either pre-cast your data to Pandas, "
+        #                      "or pass cols=None.")
+
+        # Discussion (feel free to add below):
+        #   * Skoot is intended to speed things up and make life easier.
+        #     Unnecessary constraints like this make life more difficult and
+        #     add work for the user. I vote we do away with this constraint.
+        #     This will allow users to pipe a sklearn transformer into a skoot
+        #     transformer and use numeric columns as indices rather than having
+        #     to pipe into a DF transformer FIRST. ALSO the next stage makes
+        #     sure the columns they pass are valid, so as long as they pass
+        #     integers, this should be totally fine.
+
         X = pd.DataFrame.from_records(X)
 
     # if columns are provided, check...
@@ -96,6 +155,8 @@ def check_dataframe(X, cols=None, assert_all_finite=False, column_diff=False):
     # cols might have been a np.array or might be an Index -- make it a list
     if hasattr(cols, 'tolist'):
         cols = cols.tolist()
+    elif not isinstance(cols, list):
+        cols = list(cols)
 
     # if specified, check that all values are finite
     if assert_all_finite and \
@@ -109,10 +170,94 @@ def check_dataframe(X, cols=None, assert_all_finite=False, column_diff=False):
     # if column diff is defined, we need to get it...
     if column_diff:
         colset = set(cols)
-        diff = [c for c in present_columns if c not in colset]  # O(1) lookup
+        # make sure to iter X.columns and not present_columns to preserve order
+        diff = [c for c in X.columns if c not in colset]  # O(1) lookup (set)
         return X_copy, cols, diff
 
     return X_copy, cols
+
+
+def type_or_iterable_to_col_mapping(cols, param, param_name,
+                                    permitted_scalar_types):
+    """Map a parameter to various columns in a dict.
+
+    Many estimators accept either scalar values or iterables as parameters to
+    allow for different values across different features. This function creates
+    a dictionary mapping column names to parameter values and validates scalars
+    within a tuple of permitted scalar types.
+
+    Note: this is primarily intended to be an internal method.
+
+    Parameters
+    ----------
+    cols : list
+        The list of columns against which to map some function or parameters.
+
+    param : int, float, str, iterable or object
+        The parameter value.
+
+    param_name : str or unicode
+        The name of the parameter
+
+    permitted_scalar_types : type or iterable
+        The permitted types.
+
+    Examples
+    --------
+    >>> cols = ["a", "c"]
+    >>> ticm = type_or_iterable_to_col_mapping  # too many characters...
+    >>> assert ticm(cols, 0.5, "n_components", float) == {'a': 0.5, 'c': 0.5}
+    >>> assert ticm(cols, "uniform", "strategy", str) == {'a': 'uniform',
+    ...                                                   'c': 'uniform'}
+    >>> assert ticm(cols, [3, 5], "q", int) == {'a': 3, 'c': 5}
+    >>> assert ticm(cols, {"a": 3, "c": 5}, "q", int) == {'a': 3, 'c': 5}
+
+    Returns
+    -------
+    param : dict
+        The param dictionary.
+    """
+    # we need permitted scalar types to be a tuple of allowed values
+    # (an instance, not the class)
+    if not isinstance(permitted_scalar_types, tuple):
+        permitted_scalar_types = (permitted_scalar_types,)
+
+    # validate the parameter
+    if is_iterable(param):
+        # first smoke test is easy -- if the length of the number of
+        # bins does not match the number of columns prescribed, raise
+        if len(param) != len(cols):
+            raise ValueError("Dim mismatch between cols and %s" % param_name)
+
+        # next, we're concerned with whether the param iterable is a dict
+        # and if it is, we have to validate the keys are all there...
+        if isinstance(param, dict):
+
+            # get sets of the columns and keys so we can easily compare
+            scols = set(cols)
+            skeys = set(param.keys())
+
+            # if there are extra keys (skeys - scols) or missing keys
+            # from the prescribed columns (scols - skeys) we have to raise
+            if scols - skeys or skeys - scols:
+                raise ValueError("When %s is provided as a dictionary "
+                                 "its keys must match the provided cols."
+                                 % param_name)
+
+        # otherwise it's a non-dict iterable, and what we ultimately
+        # want IS a dictionary
+        else:
+            param = dict(zip(cols, param))
+
+    else:
+        if not isinstance(param, permitted_scalar_types):
+            raise TypeError("Permitted types for %s if not iterable: %s"
+                            % (param_name, str(permitted_scalar_types)))
+
+        # make it into a dictionary mapping cols to n_bins
+        param = {c: param for c in cols}
+
+    return param
 
 
 def validate_multiple_cols(clsname, cols):

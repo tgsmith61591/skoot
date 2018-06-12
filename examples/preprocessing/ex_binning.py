@@ -22,7 +22,7 @@ from skoot.preprocessing import BinningTransformer
 iris = load_iris_df(include_tgt=False, names=["a", "b", "c", "d"])
 binner = BinningTransformer(cols=["a", "b"], return_bin_label=True,
                             strategy="uniform", overwrite=False,
-                            bins=4)
+                            n_bins=4)
 
 # print the head of the binned dataset
 print(binner.fit_transform(iris).head())

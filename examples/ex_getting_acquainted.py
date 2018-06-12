@@ -26,7 +26,7 @@ print(__doc__)
 # exist in skoot that are present in scikit. For example:
 from skoot import decomposition
 print(dir(decomposition))  # many are similar to sklearn classes
-print()
+print("")
 
 # #############################################################################
 # Skoot also has a dataset interface, like sklearn. Except it returns
@@ -34,7 +34,7 @@ print()
 from skoot.datasets import load_iris_df
 df = load_iris_df(include_tgt=True, tgt_name='Species')
 print(df.head())
-print()
+print("")
 
 # #############################################################################
 # All skoot transformers are based on the BasePDTransformer:
