@@ -3,12 +3,6 @@
 SMOTE class balancer
 ====================
 
-Demonstrates how to apply SMOTE to your imbalanced dataset.
-
-.. raw:: html
-
-   <br/>
-
 This example creates an imbalanced classification dataset, and applies the
 `Synthetic Minority Observation TEchnique (SMOTE) <https://bit.ly/2qH3dIX>`_
 class balancing technique in order to balance it by supplementing synthetic

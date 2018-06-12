@@ -3,12 +3,6 @@
 Undersampling minority samples
 ==============================
 
-Demonstrates how to under-sample your imbalanced dataset.
-
-.. raw:: html
-
-   <br/>
-
 This example creates an imbalanced classification dataset, and
 under-samples it to balance the class ratios. Under-sampling is
 typically only possible if your dataset is large enough to

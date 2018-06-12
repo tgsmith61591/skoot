@@ -17,7 +17,7 @@ from ..exceptions import ValidationWarning
 from sklearn.externals import six
 from sklearn.utils.validation import check_is_fitted
 
-from scipy.stats import ttest_ind_from_stats, chisquare
+from scipy.stats import ttest_ind_from_stats
 
 import numpy as np
 import warnings
@@ -38,7 +38,7 @@ def _passthrough(v):
 
 
 def _compute_stats(v, continuous):
-    # determine if this needs a T-test or chi-squared test
+    # determine if this needs a T-test or freq test
     if continuous:
         # Compute the t-test stats
         mean = np.nanmean(v)
@@ -46,10 +46,9 @@ def _compute_stats(v, continuous):
         return mean, std, v.shape[0]
 
     # otherwise it's categorical or integer (probably ordinal)
-    # so we will compute a chi-squared test
     else:
         unique_levels, counts = np.unique(v, return_counts=True)
-        return unique_levels, counts
+        return unique_levels, counts, v.shape[0]
 
 
 class _BaseValidator(six.with_metaclass(ABCMeta, BasePDTransformer)):
@@ -121,11 +120,7 @@ class CustomValidator(_BaseValidator):
     ----------
     cols : array-like, shape=(n_features,)
         The names of the columns on which to apply the transformation.
-        Unlike other BasePDTransformer instances, if ``cols`` is None, it will
-        only fit the numerical columns, since statistics such as standard
-        deviation cannot be computed on categorical features. For column
-        types that are integers, a chi-squared test will be performed rather
-        than a T-test.
+        If ``cols`` is None, will apply to the entire dataframe.
 
     as_df : bool, optional (default=True)
         Whether to return a Pandas ``DataFrame`` in the ``transform``
@@ -217,10 +212,12 @@ class DistHypothesisValidator(_BaseValidator):
 
     For continuous (float) features, a two-tailed T-test will be applied to
     the test data to ensure it matches the distribution of the training data.
-    For categorical (int, object) features, a chi-squared test will be applied.
+    For categorical (int, object) features, we compare the frequencies of
+    different categorical levels within a tolerance of ``alpha``.
 
-    Note: this class is NaN-safe, meaning if it is used early in your pipeline
-    when you still have NaN values in your features, it will still function!
+    **Note:** this class is NaN-safe, meaning if it is used early in your
+    pipeline when you still have NaN values in your features, it will still
+    function!
 
     Parameters
     ----------
@@ -229,8 +226,9 @@ class DistHypothesisValidator(_BaseValidator):
         Unlike other BasePDTransformer instances, if ``cols`` is None, it will
         only fit the numerical columns, since statistics such as standard
         deviation cannot be computed on categorical features. For column
-        types that are integers, a chi-squared test will be performed rather
-        than a T-test.
+        types that are integers or objects, the ratio of frequency for each
+        class level will be compared to the expected ratio within a tolerance
+        of ``alpha``.
 
     as_df : bool, optional (default=True)
         Whether to return a Pandas ``DataFrame`` in the ``transform``
@@ -239,7 +237,7 @@ class DistHypothesisValidator(_BaseValidator):
         ``DataFrame`` features, the ``as_df`` parameter is True by default.
 
     alpha : float, optional (default=0.05)
-        The :math:`\alpha` value for the T-test or chi-squared test.
+        The :math:`\alpha` value for the T-test or level ratio comparison.
         If the resulting p-value is LESS than ``alpha``, it means that
         we would reject the null hypothesis, and that the variable likely
         follows a different distribution from the training set.
@@ -259,9 +257,13 @@ class DistHypothesisValidator(_BaseValidator):
     Attributes
     ----------
     statistics_ : list, shape=(n_features,)
-        A list of tuples over the training features::
+        A list of tuples over the training features. For continuous features::
 
             (mean, standard_dev, n_obs)
+
+        For categorical features:
+
+            (present_levels, present_counts, n_obs)
 
     fit_cols_ : list
         The list of column names on which the transformer was fit. This
@@ -308,10 +310,13 @@ class DistHypothesisValidator(_BaseValidator):
     def _is_as_expected(self, index, feature_name, feature):
         """Validate the test feature.
 
-        Compute the two-tailed T-test statistic or chi-squared stat and
+        Compute the test statistic and, for continuous covariates,
         return whether the P-value is GREATER THAN OR EQUAL TO the specified
         alpha value (less than indicates that we would reject the null,
         so >= means it's likely from the same distribution).
+
+        For categorical features, compare the frequencies of each level within
+        ``alpha`` tolerance.
         """
         # if it's a continuous feature, we use the T-test
         if feature_name in self.continuous_:
@@ -324,24 +329,25 @@ class DistHypothesisValidator(_BaseValidator):
 
             return pval >= self.alpha
 
-        # otherwise, we use a chi-squared
+        # otherwise, we look at frequencies
         else:
-            exp_levels, exp_counts = self.statistics_[index]
-            prst_levels, prst_counts = _compute_stats(feature,
-                                                      continuous=False)
+            exp_levels, exp_counts, n_obs = self.statistics_[index]
+            prst_levels, prst_counts, n_test = \
+                _compute_stats(feature, continuous=False)
+
+            # Get the expected ratios & present ratios
+            exp_ratios = exp_counts / float(n_obs)
+            prst_ratios = prst_counts / float(n_test)
+            abs_diff = np.abs(exp_ratios - prst_ratios)
 
             # if there are any levels in the test set that are NOT in the
             # training set, we have to handle the action. Don't fail since
-            # this may be before we encode, etc.
+            # this may be before a user has encoded all levels, so we can
+            # just let the transform method handle the action.
             new_lvls = ~np.in1d(prst_levels, exp_levels)  # type: np.ndarray
             valid = not new_lvls.any()  # do not want new levels. New = invalid
 
-            # now if the levels don't quite match up, we need to sync them
-            level_counts = dict(zip(prst_levels, prst_counts))
-            present_counts = [level_counts.get(level, 0)
-                              for level in exp_levels]
-            _, pval = chisquare(present_counts, exp_counts)
-            return valid and pval >= self.alpha
+            return valid and (abs_diff <= self.alpha).all()
 
 
 # in case nose has an issue here (since "test" is used all over)...

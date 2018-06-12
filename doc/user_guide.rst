@@ -37,5 +37,6 @@ package's submodules. See also the :ref:`api_ref`
    modules/decomposition.rst
    modules/feature_extraction.rst
    modules/feature_selection.rst
+   modules/model_validation.rst
    modules/preprocessing.rst
    modules/utils.rst

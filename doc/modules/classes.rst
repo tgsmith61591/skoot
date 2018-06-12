@@ -175,6 +175,39 @@ Feature selection estimators
     feature_selection.SparseFeatureFilter
 
 
+.. _model_validation_ref:
+
+:mod:`skoot.model_validation`: Model validation & monitoring
+============================================================
+
+.. automodule:: skoot.model_validation
+    :no-members:
+    :no-inherited-members:
+
+**User guide:** See the :ref:`model_validation` section for further details.
+
+Model validators & monitoring classes
+-------------------------------------
+.. currentmodule:: skoot
+
+.. autosummary::
+    :toctree: generated/
+    :template: class.rst
+
+    model_validation.CustomValidator
+    model_validation.DistHypothesisValidator
+
+Pipelines with built-in monitoring at each stage
+------------------------------------------------
+.. currentmodule:: skoot
+
+..autosummary::
+    :toctree: generated/
+    :template: function.rst
+
+    model_validation.make_validated_pipeline
+
+
 .. _preprocessing_ref:
 
 :mod:`skoot.preprocessing`: Pre-processing transformers

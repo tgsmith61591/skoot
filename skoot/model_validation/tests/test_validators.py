@@ -4,7 +4,9 @@ from __future__ import absolute_import
 
 from skoot.model_validation import DistHypothesisValidator, CustomValidator
 from skoot.utils.testing import assert_raises
+
 import numpy as np
+import pandas as pd
 
 
 X = np.random.rand(100, 5)
@@ -35,3 +37,26 @@ def test_custom_validator():
                   CustomValidator(action="raise",
                                   func=sub_2).fit(X).transform,
                   X2)
+
+
+def test_chi2_validator():
+    data = np.random.RandomState(42).rand(10000, 4)
+
+    # these will all become categorical
+    x = (data > 0.4).astype(int)
+    x[data > 0.75] = 2
+
+    # Now split and test
+    train = x[:9000, :]
+    test = x[9000:, :]
+
+    # show the validator will work initially since they're all
+    # roughly the same number of occurrences
+    val = DistHypothesisValidator(action="raise")
+    val.fit(train).transform(test)
+
+    # Make some adjustments to force this to fail
+    # test set col 0 should have nothing but 2s
+    t2 = test.copy()
+    t2[:, 0] = 2
+    assert_raises(ValueError, val.transform, t2)
