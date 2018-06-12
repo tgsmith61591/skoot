@@ -49,7 +49,7 @@ def make_validated_pipeline(*steps, **kwargs):
     ...     # doctest: +NORMALIZE_WHITESPACE
     Pipeline(steps=[('standardscaler',
                      StandardScaler(copy=True, with_mean=True, with_std=True)),
-                    ('distributionvalidator',
+                    ('disthypothesisvalidator',
                      DistHypothesisValidator(action='warn', alpha=0.05,
                                              as_df=True, cols=None)),
                     ('gaussiannb',
