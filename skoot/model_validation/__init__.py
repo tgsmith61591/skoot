@@ -51,7 +51,7 @@ def make_validated_pipeline(*steps, **kwargs):
                      StandardScaler(copy=True, with_mean=True, with_std=True)),
                     ('distributionvalidator',
                      DistHypothesisValidator(action='warn', alpha=0.05,
-                                             as_df=True, cols=None))
+                                             as_df=True, cols=None)),
                     ('gaussiannb',
                      GaussianNB(priors=None, var_smoothing=1e-09))])
     """

@@ -144,14 +144,15 @@ def type_or_iterable_to_col_mapping(cols, param, param_name,
     Examples
     --------
     >>> cols = ["a", "c"]
-    >>> type_or_iterable_to_col_mapping(cols, 0.5, "n_components", (float, int))
-    {"a": 0.5, "c": 0.5}
-    >>> type_or_iterable_to_col_mapping(cols, "uniform", "strategy", str)
-    {"a": "uniform", "c": "uniform"}
-    >>> type_or_iterable_to_col_mapping(cols, [3, 5], "q", int)
-    {"a": 3, "c": 5}
-    >>> type_or_iterable_to_col_mapping(cols, {"a": 3, "c": 5}, "q", int)
-    {"a": 3, "c": 5}
+    >>> type_or_iterable_to_col_mapping(cols, 0.5, "n_components",
+    ...                                 (float, int)) == {'a': 0.5, 'c': 0.5}
+    >>> type_or_iterable_to_col_mapping(cols, "uniform",
+    ...                                 "strategy", str) == {'a': 'uniform',
+    ...                                                      'c': 'uniform'}
+    >>> type_or_iterable_to_col_mapping(cols, [3, 5],
+    ...                                 "q", int) == {'a': 3, 'c': 5}
+    >>> type_or_iterable_to_col_mapping(cols, {"a": 3, "c": 5},
+    ...                                 "q", int) == {'a': 3, 'c': 5}
 
     Returns
     -------
