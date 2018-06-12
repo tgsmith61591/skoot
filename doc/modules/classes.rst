@@ -201,7 +201,7 @@ Pipelines with built-in monitoring at each stage
 ------------------------------------------------
 .. currentmodule:: skoot
 
-..autosummary::
+.. autosummary::
     :toctree: generated/
     :template: function.rst
 

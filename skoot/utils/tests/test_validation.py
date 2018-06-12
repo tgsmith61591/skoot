@@ -161,6 +161,15 @@ def test_validate_multiple_rows():
     validate_multiple_rows("cls", X_copy)
 
 
+def test_validate_np_array_with_provided_cols():
+    # test check_dataframe with a np.ndarray and provided cols
+    x, cols = check_dataframe(np.random.rand(5, 5), cols=[0, 1, 3])
+    assert isinstance(x, pd.DataFrame)
+    assert isinstance(cols, list)
+    assert cols == [0, 1, 3]
+    assert x.columns.tolist() == [0, 1, 2, 3, 4]
+
+
 def test_type_or_iterable():
     c = ["a", "c"]
     x = type_or_iterable_to_col_mapping(c, 0.5, "n_components", (float, int))

@@ -27,8 +27,10 @@ def check_dataframe(X, cols=None, assert_all_finite=False, column_diff=False):
     values if specified. If columns are provided, checks that all columns
     are present within the dataframe and raises an assertion error if not.
 
-    Note that if the input ``X`` is *not* a dataframe, and columns are
-    provided via the ``cols`` arg, a ValueError will be raised.
+    **Note**: if ``X`` is not a dataframe (i.e., a list of lists or a numpy
+    array), the columns will not be specified when creating a pandas dataframe
+    and will thus be indices. Any columns provided should account for this
+    behavior.
 
     Parameters
     ----------
@@ -51,6 +53,49 @@ def check_dataframe(X, cols=None, assert_all_finite=False, column_diff=False):
         in ``cols``. This is returned as the third element in the output if
         ``column_diff`` is True.
 
+    Examples
+    --------
+    When providing a dataframe and columns, the columns should be present:
+
+    >>> from skoot.datasets import load_iris_df
+    >>> df = load_iris_df(include_tgt=False, names=['a', 'b', 'c', 'd'])
+    >>> df, cols = check_dataframe(df, cols=('a', 'c'))
+    >>> assert cols == ['a', 'c']
+    >>> df.head()
+         a    b    c    d
+    0  5.1  3.5  1.4  0.2
+    1  4.9  3.0  1.4  0.2
+    2  4.7  3.2  1.3  0.2
+    3  4.6  3.1  1.5  0.2
+    4  5.0  3.6  1.4  0.2
+
+    When passing numpy arrays, account for the fact that the columns cannot
+    be specified when creating the pandas dataframe:
+
+    >>> df2, cols = check_dataframe(df.values, cols=[0, 2])
+    >>> cols
+    [0, 2]
+    >>> df2.columns.tolist()
+    [0, 1, 2, 3]
+    >>> df2.head()
+         0    1    2    3
+    0  5.1  3.5  1.4  0.2
+    1  4.9  3.0  1.4  0.2
+    2  4.7  3.2  1.3  0.2
+    3  4.6  3.1  1.5  0.2
+    4  5.0  3.6  1.4  0.2
+
+    If you want to get the ``column_diff``, or the left-out columns, this will
+    be returned as a third element in the tuple when specifed:
+
+    >>> df2, cols, diff = check_dataframe(df.values, [0, 2], column_diff=True)
+    >>> cols
+    [0, 2]
+    >>> df2.columns.tolist()
+    [0, 1, 2, 3]
+    >>> diff
+    [1, 3]
+
     Returns
     -------
     X_copy : pd.DataFrame
@@ -71,11 +116,22 @@ def check_dataframe(X, cols=None, assert_all_finite=False, column_diff=False):
             raise TypeError("X must be a DataFrame, iterable or np.ndarray, "
                             "but got type=%s" % type(X))
 
-        # if columns was defined, we have to break
-        if cols is not None:
-            raise ValueError("When X is not a DataFrame, cols cannot be "
-                             "defined. Either pre-cast your data to Pandas, "
-                             "or pass cols=None.")
+        # Old behavior:
+        # if cols is not None:
+        #     raise ValueError("When X is not a DataFrame, cols cannot be "
+        #                      "defined. Either pre-cast your data to Pandas, "
+        #                      "or pass cols=None.")
+
+        # Discussion (feel free to add below):
+        #   * Skoot is intended to speed things up and make life easier.
+        #     Unnecessary constraints like this make life more difficult and
+        #     add work for the user. I vote we do away with this constraint.
+        #     This will allow users to pipe a sklearn transformer into a skoot
+        #     transformer and use numeric columns as indices rather than having
+        #     to pipe into a DF transformer FIRST. ALSO the next stage makes
+        #     sure the columns they pass are valid, so as long as they pass
+        #     integers, this should be totally fine.
+
         X = pd.DataFrame.from_records(X)
 
     # if columns are provided, check...
@@ -97,6 +153,8 @@ def check_dataframe(X, cols=None, assert_all_finite=False, column_diff=False):
     # cols might have been a np.array or might be an Index -- make it a list
     if hasattr(cols, 'tolist'):
         cols = cols.tolist()
+    elif not isinstance(cols, list):
+        cols = list(cols)
 
     # if specified, check that all values are finite
     if assert_all_finite and \
@@ -110,7 +168,8 @@ def check_dataframe(X, cols=None, assert_all_finite=False, column_diff=False):
     # if column diff is defined, we need to get it...
     if column_diff:
         colset = set(cols)
-        diff = [c for c in present_columns if c not in colset]  # O(1) lookup
+        # make sure to iter X.columns and not present_columns to preserve order
+        diff = [c for c in X.columns if c not in colset]  # O(1) lookup (set)
         return X_copy, cols, diff
 
     return X_copy, cols
