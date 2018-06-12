@@ -203,7 +203,7 @@ class CustomValidator(_BaseValidator):
 
 
 class DistHypothesisValidator(_BaseValidator):
-    """Validate test distributions using various hypothesis tests.
+    r"""Validate test distributions using various hypothesis tests.
 
     The distribution validator learns statistics from the training set and then
     validates that the test set features match their expected distributions.
@@ -215,7 +215,7 @@ class DistHypothesisValidator(_BaseValidator):
     For categorical (int, object) features, we compare the frequencies of
     different categorical levels within a tolerance of ``alpha``.
 
-    **Note:** this class is NaN-safe, meaning if it is used early in your
+    **Note**: this class is NaN-safe, meaning if it is used early in your
     pipeline when you still have NaN values in your features, it will still
     function!
 

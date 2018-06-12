@@ -20,7 +20,7 @@ __all__ = [
 
 
 def check_dataframe(X, cols=None, assert_all_finite=False, column_diff=False):
-    """Check an input dataframe.
+    r"""Check an input dataframe.
 
     Determine whether an input frame is a Pandas dataframe or whether it can
     be coerced as one, and raise a TypeError if not. Also check for finite
@@ -35,8 +35,10 @@ def check_dataframe(X, cols=None, assert_all_finite=False, column_diff=False):
     Parameters
     ----------
     X : array-like, shape=(n_samples, n_features)
-        The input frame. If not a Pandas DataFrame, will raise a
-        TypeError.
+        The input frame. Should be a pandas DataFrame, numpy ``ndarray`` or
+        a similar array-like structure. Any non-pandas structure will be
+        attempted to be cast to pandas; if it cannot be cast, it will fail
+        with a TypeError.
 
     cols : list, iterable or None
         Any columns to check for. If this is provided, all columns will

@@ -30,16 +30,8 @@ def make_validated_pipeline(*steps, **kwargs):
     ----------
     *steps : list of estimators.
 
-    alpha : float, optional
-        The :math:`\alpha` value for the T-test or chi-squared test.
-        If the resulting p-value is LESS than ``alpha``, it means that
-        we would reject the null hypothesis, and that the variable likely
-        follows a different distribution from the training set.
-
-    action : str or unicode, optional
-        The default action for handling validation mismatches. Options include
-        "warn", "error" or "ignore". If ``action`` is "error", will raise a
-        ValueError if mismatched.
+    **kwargs : keyword args or dict, optional
+        Any keyword arguments to pass to the validation constructor(s).
 
     Examples
     --------
@@ -51,8 +43,9 @@ def make_validated_pipeline(*steps, **kwargs):
                      StandardScaler(copy=True, with_mean=True, with_std=True)),
                     ('disthypothesisvalidator',
                      DistHypothesisValidator(action='warn', alpha=0.05,
-                                             as_df=True, cols=None,
-                                             categorical_strategy='ratio')),
+                                             as_df=True,
+                                             categorical_strategy='ratio',
+                                             cols=None)),
                     ('gaussiannb', GaussianNB(priors=None))])
     """
     alpha = kwargs.pop("alpha", 0.05)

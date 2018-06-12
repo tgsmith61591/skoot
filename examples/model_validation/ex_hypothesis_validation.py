@@ -20,6 +20,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import make_pipeline
 from skoot.model_validation import DistHypothesisValidator
+from skoot.model_validation import make_validated_pipeline
 import warnings
 
 # #############################################################################
@@ -55,3 +56,14 @@ with warnings.catch_warnings(record=True) as w:
     warnings.simplefilter("always")
     pipe.predict(X_test)
     print(w[0].message)
+
+# #############################################################################
+# Demonstrate internal make_pipeline variant
+
+# You can build a similar validated pipeline given your estimators by
+# using the internal make_validated_pipeline function:
+pipe2 = make_validated_pipeline(StandardScaler(with_mean=True, with_std=True),
+                                LogisticRegression(random_state=seed))
+
+print("\nInternal make_pipeline with embedded validation:")
+print(pipe2)
