@@ -126,6 +126,28 @@ Decomposition classes
     decomposition.QRDecomposition
 
 
+.. _exploration_ref:
+
+:mod:`skoot.exploration`: Exploratory data analysis
+===================================================
+
+.. automodule:: skoot.exploration
+    :no-members:
+    :no-inherited-members:
+
+**User guide:** See the :ref:`exploration` section for further details.
+
+Exploratory analysis functions
+------------------------------
+.. currentmodule:: skoot
+
+.. autosummary::
+    :toctree: generated/
+    :template: function.rst
+
+    exploration.summarize
+
+
 .. _feature_extraction_ref:
 
 :mod:`skoot.feature_extraction`: Feature extraction methods
