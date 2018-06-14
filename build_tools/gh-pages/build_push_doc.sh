@@ -42,7 +42,8 @@ git checkout gh-pages
 # remove all files that are not in the .git dir
 find . -not -name ".git/*" -type f -maxdepth 1 -delete
 
-# remove the remaining directories
+# Remove the remaining directories. Some of these are artifacts of the LAST
+# gh-pages build, and others are remnants of the package itself
 declare -a leftover=(".cache/"
                      ".idea/"
                      "build/"
@@ -50,7 +51,14 @@ declare -a leftover=(".cache/"
                      "doc/"
                      "examples/"
                      "skoot/"
-                     "skoot.egg-info/")
+                     "skoot.egg-info/"
+                     "_downloads/"
+                     "_images/"
+                     "_modules/"
+                     "_sources/"
+                     "_static/"
+                     "auto_examples/"
+                     "modules/")
 
 # check for each left over file/dir and remove it
 for left in "${leftover[@]}"
