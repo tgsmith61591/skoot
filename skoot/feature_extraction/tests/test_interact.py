@@ -10,7 +10,7 @@ import pandas as pd
 import numpy as np
 
 from skoot.feature_extraction import InteractionTermTransformer
-from skoot.testing import assert_raises
+from skoot.utils.testing import assert_raises
 
 x_dict = {
     'a': [0, 0, 0, 1],

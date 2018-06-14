@@ -18,7 +18,7 @@ __all__ = [
 
 
 class DummyEncoder(BasePDTransformer):
-    """
+    """Dummy encode categorical data.
 
     A custom one-hot encoding class that handles previously unseen
     levels and automatically drops one level from each categorical
@@ -26,13 +26,11 @@ class DummyEncoder(BasePDTransformer):
 
     Parameters
     ----------
-    cols : array-like, shape=(n_features,), optional (default=None)
+    cols : array-like, shape=(n_features,)
         The names of the columns on which to apply the transformation.
-        If no column names are provided, the transformer will be ``fit``
-        on the entire frame. Note that the transformation will also only
-        apply to the specified columns, and any other non-specified
-        columns will still be present after transformation. Specified
-        columns will be dropped after they are expanded.
+        Unlike other BasePDTransformer instances, this is not optional,
+        since dummy-encoding the entire frame could prove extremely expensive
+        if accidentally applied to continuous data.
 
     as_df : bool, optional (default=True)
         Whether to return a Pandas ``DataFrame`` in the ``transform``
@@ -112,8 +110,8 @@ class DummyEncoder(BasePDTransformer):
     def transform(self, X):
         """Apply the imputation to a dataframe.
 
-        This method will fill in the missing values within a test
-        dataframe with the statistics computed in ``fit``.
+        This method will encode the features in the test frame with the
+        levels discovered in the ``fit`` computation.
 
         Parameters
         ----------

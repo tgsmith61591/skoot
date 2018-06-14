@@ -126,6 +126,28 @@ Decomposition classes
     decomposition.QRDecomposition
 
 
+.. _exploration_ref:
+
+:mod:`skoot.exploration`: Exploratory data analysis
+===================================================
+
+.. automodule:: skoot.exploration
+    :no-members:
+    :no-inherited-members:
+
+**User guide:** See the :ref:`exploration` section for further details.
+
+Exploratory analysis functions
+------------------------------
+.. currentmodule:: skoot
+
+.. autosummary::
+    :toctree: generated/
+    :template: function.rst
+
+    exploration.summarize
+
+
 .. _feature_extraction_ref:
 
 :mod:`skoot.feature_extraction`: Feature extraction methods
@@ -175,6 +197,39 @@ Feature selection estimators
     feature_selection.SparseFeatureFilter
 
 
+.. _model_validation_ref:
+
+:mod:`skoot.model_validation`: Model validation & monitoring
+============================================================
+
+.. automodule:: skoot.model_validation
+    :no-members:
+    :no-inherited-members:
+
+**User guide:** See the :ref:`model_validation` section for further details.
+
+Model validators & monitoring classes
+-------------------------------------
+.. currentmodule:: skoot
+
+.. autosummary::
+    :toctree: generated/
+    :template: class.rst
+
+    model_validation.CustomValidator
+    model_validation.DistHypothesisValidator
+
+Pipelines with built-in monitoring at each stage
+------------------------------------------------
+.. currentmodule:: skoot
+
+.. autosummary::
+    :toctree: generated/
+    :template: function.rst
+
+    model_validation.make_validated_pipeline
+
+
 .. _preprocessing_ref:
 
 :mod:`skoot.preprocessing`: Pre-processing transformers
@@ -185,6 +240,16 @@ Feature selection estimators
     :no-inherited-members:
 
 **User guide:** See the :ref:`preprocessing` section for further details.
+
+Continuous feature binning
+--------------------------
+.. currentmodule:: skoot
+
+.. autosummary::
+    :toctree: generated/
+    :template: class.rst
+
+    preprocessing.BinningTransformer
 
 Dataframe schema transformers
 -----------------------------
@@ -262,6 +327,7 @@ Validation utilities
     :template: function.rst
 
     utils.check_dataframe
+    utils.type_or_iterable_to_col_mapping
     utils.validate_multiple_cols
     utils.validate_multiple_rows
     utils.validate_test_set_columns

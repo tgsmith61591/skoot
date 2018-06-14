@@ -4,7 +4,7 @@
 #
 # Sklearn-esque transformers and extension modules
 
-__version__ = '0.19.1'
+__version__ = '0.19.2-dev1'
 
 try:
     # This variable is injected in the __builtins__ by the build
@@ -22,23 +22,31 @@ else:
     # check that the build completed properly. This prints an informative
     # message in the case that any of the C code was not properly compiled.
     from . import __check_build
-
-    __all__ = [
-        'balance',
-        'datasets',
-        'decomposition',
-        'feature_extraction',
-        'feature_selection',
-        'preprocessing',
-        'utils'
-    ]
-
     from skoot._lib._testutils import PytestTester
     test = PytestTester(__name__)
     del PytestTester
 
     # in case anyone tries a nose runner...
     test.__test__ = False
+
+    # top-level imports that we want accessible from skoot
+    from skoot.exploration import summarize
+
+    __all__ = [
+        # submodules
+        'balance',
+        'datasets',
+        'decomposition',
+        'exploration',
+        'feature_extraction',
+        'feature_selection',
+        'model_validation',
+        'preprocessing',
+        'utils',
+
+        # functions we will allow top-level
+        'summarize'
+    ]
 
 
 def setup_module(module):

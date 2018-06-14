@@ -28,21 +28,25 @@ def configuration(parent_package='', top_path=None):
     config.add_subpackage('balance')
     config.add_subpackage('datasets')
     config.add_subpackage('decomposition')
+    config.add_subpackage('exploration')
     config.add_subpackage('feature_extraction')
     config.add_subpackage('feature_selection')
+    config.add_subpackage('model_validation')
     config.add_subpackage('preprocessing')
-    config.add_subpackage('testing')
     config.add_subpackage('utils')
 
     # module tests -- must be added after others!
     config.add_subpackage('balance/tests')
     config.add_subpackage('datasets/tests')
     config.add_subpackage('decomposition/tests')
+    config.add_subpackage('exploration/tests')
     config.add_subpackage('feature_extraction/tests')
     config.add_subpackage('feature_selection/tests')
+    config.add_subpackage('model_validation/tests')
     config.add_subpackage('preprocessing/tests')
-    config.add_subpackage('testing/tests')
     config.add_subpackage('utils/tests')
+
+    # cython modules
 
     # for testing utils
     config.add_subpackage('_lib')

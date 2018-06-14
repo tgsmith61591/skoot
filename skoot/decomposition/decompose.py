@@ -11,7 +11,10 @@ from sklearn.utils.validation import check_array
 from sklearn.decomposition import (PCA, TruncatedSVD, KernelPCA, NMF,
                                    IncrementalPCA)
 
-from ..base import _selective_copy_doc_for, _SelectiveTransformerWrapper
+from ..base import _SelectiveTransformerWrapper
+
+# namespace import to avoid explicitly protected imports in global namespace
+from ..utils import _docstr as dsutils
 
 # local submodule funcs that use Fortran subroutines
 from ._dqrutl import (qr_decomposition, _call_dqrcf,
@@ -28,54 +31,54 @@ __all__ = [
 
 
 # Selective decomposition classes
-@_selective_copy_doc_for(IncrementalPCA,
-                         see_also=('SelectiveKernelPCA',
-                                   'SelectiveNMF',
-                                   'SelectivePCA',
-                                   'SelectiveTruncatedSVD'),
-                         overwrite_existing_see_also=True)
+@dsutils.wraps_estimator(IncrementalPCA,
+                         add_sections=[(
+                                 'See also', ['SelectiveKernelPCA',
+                                              'SelectiveNMF',
+                                              'SelectivePCA',
+                                              'SelectiveTruncatedSVD'], True)])
 class SelectiveIncrementalPCA(_SelectiveTransformerWrapper):
-    _cls = IncrementalPCA
+    pass
 
 
-@_selective_copy_doc_for(KernelPCA,
-                         see_also=('SelectiveIncrementalPCA',
-                                   'SelectiveNMF',
-                                   'SelectivePCA',
-                                   'SelectiveTruncatedSVD'),
-                         overwrite_existing_see_also=True)
+@dsutils.wraps_estimator(KernelPCA,
+                         add_sections=[(
+                                 'See also', ['SelectiveIncrementalPCA',
+                                              'SelectiveNMF',
+                                              'SelectivePCA',
+                                              'SelectiveTruncatedSVD'], True)])
 class SelectiveKernelPCA(_SelectiveTransformerWrapper):
-    _cls = KernelPCA
+    pass
 
 
-@_selective_copy_doc_for(NMF,
-                         see_also=('SelectiveIncrementalPCA',
-                                   'SelectiveKernelPCA',
-                                   'SelectivePCA',
-                                   'SelectiveTruncatedSVD'),
-                         overwrite_existing_see_also=True)
+@dsutils.wraps_estimator(NMF,
+                         add_sections=[(
+                                 'See also', ['SelectiveIncrementalPCA',
+                                              'SelectiveKernalPCA',
+                                              'SelectivePCA',
+                                              'SelectiveTruncatedSVD'], True)])
 class SelectiveNMF(_SelectiveTransformerWrapper):
-    _cls = NMF
+    pass
 
 
-@_selective_copy_doc_for(PCA,
-                         see_also=('SelectiveIncrementalPCA',
-                                   'SelectiveKernelPCA',
-                                   'SelectiveNMF',
-                                   'SelectiveTruncatedSVD'),
-                         overwrite_existing_see_also=True)
+@dsutils.wraps_estimator(PCA,
+                         add_sections=[(
+                                 'See also', ['SelectiveIncrementalPCA',
+                                              'SelectiveKernalPCA',
+                                              'SelectiveNMF',
+                                              'SelectiveTruncatedSVD'], True)])
 class SelectivePCA(_SelectiveTransformerWrapper):
-    _cls = PCA
+    pass
 
 
-@_selective_copy_doc_for(TruncatedSVD,
-                         see_also=('SelectiveIncrementalPCA',
-                                   'SelectiveKernelPCA',
-                                   'SelectiveNMF',
-                                   'SelectivePCA'),
-                         overwrite_existing_see_also=True)
+@dsutils.wraps_estimator(TruncatedSVD,
+                         add_sections=[(
+                                 'See also', ['SelectiveIncrementalPCA',
+                                              'SelectiveKernalPCA',
+                                              'SelectiveNMF',
+                                              'SelectivePCA'], True)])
 class SelectiveTruncatedSVD(_SelectiveTransformerWrapper):
-    _cls = TruncatedSVD
+    pass
 
 
 class QRDecomposition(object):

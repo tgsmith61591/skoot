@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+#
+# This is pretty much just for Appveyor testing... that is all.
 
 from __future__ import absolute_import
 

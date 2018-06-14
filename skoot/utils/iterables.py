@@ -5,11 +5,36 @@
 from __future__ import absolute_import
 
 from sklearn.externals import six
+import types
+
+from .compat import xrange
 
 __all__ = [
+    'chunk',
+    'ensure_iterable',
     'flatten_all',
     'is_iterable'
 ]
+
+
+def ensure_iterable(element):
+    """Make an element an iterable.
+
+    If an element is already iterable, return it as is. If it's not, return
+    it inside of a list. This helper function allows us to avoid clunky if/then
+    checks all over the place::
+
+        if not is_iterable(this):
+            this = [this]
+
+    Parameters
+    ----------
+    element : object
+        An iterable or not
+    """
+    if not is_iterable(element):
+        element = [element]
+    return element
 
 
 def flatten_all(container):
@@ -26,7 +51,7 @@ def flatten_all(container):
     --------
     The example below produces a list of mixed results:
 
-        >>> a = [[[],3,4],['1','a'],[[[1]]],1,2]
+        >>> a = [[[], 3, 4],['1', 'a'],[[[1]]], 1, 2]
         >>> list(flatten_all(a))
         [3, 4, '1', 'a', 1, 1, 2]
 
@@ -63,3 +88,28 @@ def is_iterable(x):
     if isinstance(x, six.string_types):
         return False
     return hasattr(x, '__iter__')
+
+
+def chunk(v, n):
+    """Chunk a vector into k roughly equal parts.
+
+    Parameters
+    ----------
+    v : array-like, shape=(n_samples,)
+        The vector of values.
+
+    n : int
+        The number of chunks to produce.
+    """
+    # if v is a generator, we need it as a list...
+    if isinstance(v, types.GeneratorType):
+        v = list(v)
+    len_v = len(v)
+
+    # fail out if n > len_v
+    if n > len_v:
+        raise ValueError("N exceeds length of vector!")
+
+    k, m = divmod(len_v, n)
+    for i in xrange(n):
+        yield v[i * k + min(i, m): (i + 1) * k + min(i + 1, m)]
