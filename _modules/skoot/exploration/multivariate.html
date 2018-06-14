@@ -198,8 +198,9 @@
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; import skoot</span>
 <span class="sd">    &gt;&gt;&gt; from skoot.datasets import load_iris_df</span>
-<span class="sd">    &gt;&gt;&gt; skoot.summarize(load_iris_df())  # doctest:+SKIP</span>
-<span class="sd">                   sepal length (cm)  sepal width (cm)  petal length (cm)  \</span>
+<span class="sd">    &gt;&gt;&gt; X = load_iris_df()</span>
+<span class="sd">    &gt;&gt;&gt; skoot.summarize(X)  # doctest: +ELLIPSIS, +NORMALIZE_WHITESPACE</span>
+<span class="sd">                   sepal length (cm)  sepal width (cm)  petal length (cm) ...</span>
 <span class="sd">    Mean                    5.843333          3.054000           3.758667</span>
 <span class="sd">    Median                  5.800000          3.000000           4.350000</span>
 <span class="sd">    Max                     7.900000          4.400000           6.900000</span>
@@ -213,7 +214,7 @@
 <span class="sd">    Num Levels                   NaN               NaN                NaN</span>
 <span class="sd">    Arity                        NaN               NaN                NaN</span>
 <span class="sd">    Missing                 0.000000          0.000000           0.000000</span>
-
+<span class="sd">    &lt;BLANKLINE&gt;</span>
 <span class="sd">                   petal width (cm)    species</span>
 <span class="sd">    Mean                   1.198667        NaN</span>
 <span class="sd">    Median                 1.300000        NaN</span>

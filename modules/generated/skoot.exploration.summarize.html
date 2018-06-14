@@ -224,8 +224,10 @@ data are multi-modal, this may impact the sign of the skewness.</p>
 <p class="rubric">Examples</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skoot</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skoot.datasets</span> <span class="k">import</span> <span class="n">load_iris_df</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">skoot</span><span class="o">.</span><span class="n">summarize</span><span class="p">(</span><span class="n">load_iris_df</span><span class="p">())</span>  
-<span class="go">               sepal length (cm)  sepal width (cm)  petal length (cm)      Mean                    5.843333          3.054000           3.758667</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">load_iris_df</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">skoot</span><span class="o">.</span><span class="n">summarize</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>  
+<span class="go">               sepal length (cm)  sepal width (cm)  petal length (cm) ...</span>
+<span class="go">Mean                    5.843333          3.054000           3.758667</span>
 <span class="go">Median                  5.800000          3.000000           4.350000</span>
 <span class="go">Max                     7.900000          4.400000           6.900000</span>
 <span class="go">Min                     4.300000          2.000000           1.000000</span>
@@ -238,23 +240,23 @@ data are multi-modal, this may impact the sign of the skewness.</p>
 <span class="go">Num Levels                   NaN               NaN                NaN</span>
 <span class="go">Arity                        NaN               NaN                NaN</span>
 <span class="go">Missing                 0.000000          0.000000           0.000000</span>
+
+<span class="go">               petal width (cm)    species</span>
+<span class="go">Mean                   1.198667        NaN</span>
+<span class="go">Median                 1.300000        NaN</span>
+<span class="go">Max                    2.500000        NaN</span>
+<span class="go">Min                    0.100000        NaN</span>
+<span class="go">Variance               0.582414        NaN</span>
+<span class="go">Skewness              -0.103944        NaN</span>
+<span class="go">Kurtosis              -1.335246        NaN</span>
+<span class="go">Least Freq.                 NaN  (2, 1, 0)</span>
+<span class="go">Most Freq.                  NaN  (2, 1, 0)</span>
+<span class="go">Class Balance               NaN          1</span>
+<span class="go">Num Levels                  NaN          3</span>
+<span class="go">Arity                       NaN       0.02</span>
+<span class="go">Missing                0.000000          0</span>
 </pre></div>
 </div>
-<blockquote>
-<div>petal width (cm)    species</div></blockquote>
-<p>Mean                   1.198667        NaN
-Median                 1.300000        NaN
-Max                    2.500000        NaN
-Min                    0.100000        NaN
-Variance               0.582414        NaN
-Skewness              -0.103944        NaN
-Kurtosis              -1.335246        NaN
-Least Freq.                 NaN  (2, 1, 0)
-Most Freq.                  NaN  (2, 1, 0)
-Class Balance               NaN          1
-Num Levels                  NaN          3
-Arity                       NaN       0.02
-Missing                0.000000          0</p>
 </dd></dl>
 
 <div class="clearer"></div></div>
