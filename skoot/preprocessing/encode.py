@@ -108,7 +108,7 @@ class DummyEncoder(BasePDTransformer):
         return self
 
     def transform(self, X):
-        """Apply the imputation to a dataframe.
+        """Apply the encoding to a dataframe.
 
         This method will encode the features in the test frame with the
         levels discovered in the ``fit`` computation.

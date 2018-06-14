@@ -4,6 +4,7 @@
 
 from .dataframe import *
 from .iterables import *
+from .series import *
 from .validation import *
 
 # don't import from .compat since it overloads mostly builtins

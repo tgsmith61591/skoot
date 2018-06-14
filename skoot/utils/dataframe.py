@@ -7,6 +7,7 @@ import numpy as np
 
 __all__ = [
     'get_continuous_columns',
+    'get_datetime_columns',
     'get_numeric_columns',
     'safe_drop_samples',
     'safe_mask_samples',
@@ -26,6 +27,20 @@ def get_continuous_columns(X):
         The input dataframe.
     """
     return X.select_dtypes(include=[float])
+
+
+def get_datetime_columns(X):
+    """Get all datetime features from a pandas DataFrame.
+
+    This function selects all datetime columns from a pandas
+    DataFrame that are within the ``np.datetime`` family.
+
+    Parameters
+    ----------
+    X : pd.DataFrame
+        The input dataframe.
+    """
+    return X.select_dtypes(include=[np.datetime64])
 
 
 def get_numeric_columns(X):
