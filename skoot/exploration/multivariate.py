@@ -4,6 +4,7 @@ from __future__ import absolute_import
 
 from ..utils.validation import check_dataframe
 from ..utils.dataframe import get_continuous_columns
+from .univariate import fisher_pearson_skewness, kurtosis
 
 import pandas as pd
 import numpy as np
@@ -27,6 +28,7 @@ def summarize(X):
         * Min
         * Variance
         * Skewness
+        * Kurtosis
 
     For categorical features:
 
@@ -47,6 +49,13 @@ def summarize(X):
     stats : DataFrame
         The summarized dataframe
 
+    Notes
+    -----
+    The skewness of a normal distribution is zero, and symmetric data should
+    exhibit a skewness near zero. Positive values for skewness indicate the
+    data is skewed right, and negative indicate they're skewed left. If the
+    data are multi-modal, this may impact the sign of the skewness.
+
     Examples
     --------
     >>> import skoot
@@ -58,7 +67,8 @@ def summarize(X):
     Max                     7.900000          4.400000           6.900000
     Min                     4.300000          2.000000           1.000000
     Variance                0.685694          0.188004           3.113179
-    Skewness                0.308641          0.327401          -0.268999
+    Skewness                0.311753          0.330703          -0.271712
+    Kurtosis               -0.573568          0.241443          -1.395359
     Least Freq.                  NaN               NaN                NaN
     Most Freq.                   NaN               NaN                NaN
     Class Balance                NaN               NaN                NaN
@@ -66,19 +76,25 @@ def summarize(X):
     Arity                        NaN               NaN                NaN
     Missing                 0.000000          0.000000           0.000000
 
-                   petal width (cm)  species
-    Mean                   1.198667      NaN
-    Median                 1.300000      NaN
-    Max                    2.500000      NaN
-    Min                    0.100000      NaN
-    Variance               0.582414      NaN
-    Skewness              -0.102906      NaN
-    Least Freq.                 NaN     0.00
-    Most Freq.                  NaN     2.00
-    Class Balance               NaN     1.00
-    Num Levels                  NaN     3.00
-    Arity                       NaN     0.02
-    Missing                0.000000     0.00
+                   petal width (cm)    species
+    Mean                   1.198667        NaN
+    Median                 1.300000        NaN
+    Max                    2.500000        NaN
+    Min                    0.100000        NaN
+    Variance               0.582414        NaN
+    Skewness              -0.103944        NaN
+    Kurtosis              -1.335246        NaN
+    Least Freq.                 NaN  (2, 1, 0)
+    Most Freq.                  NaN  (2, 1, 0)
+    Class Balance               NaN          1
+    Num Levels                  NaN          3
+    Arity                       NaN       0.02
+    Missing                0.000000          0
+
+    References
+    ----------
+    .. [1] Measures of Skewness and Kurtosis
+           https://www.itl.nist.gov/div898/handbook/eda/section3/eda35b.htm
     """
     X, cols = check_dataframe(X, cols=None, assert_all_finite=False)
     n_samples = X.shape[0]
@@ -94,7 +110,7 @@ def summarize(X):
                   if c not in scont_cols]
 
     continuous_stats_cols = ["Mean", "Median", "Max", "Min",
-                             "Variance", "Skewness"]
+                             "Variance", "Skewness", "Kurtosis"]
     categorical_stats_cols = ["Least Freq.", "Most Freq.",
                               "Class Balance", "Num Levels",
                               "Arity"]
@@ -106,6 +122,7 @@ def summarize(X):
         #   * min
         #   * variance
         #   * Fisher-Pearson skewness
+        #   * Kurtosis
         #
         # We can largely vectorize each of these over the axis...
         means = continuous.mean().values
@@ -113,13 +130,12 @@ def summarize(X):
         maxes = continuous.max().values
         mins = continuous.min().values
         var = continuous.var().values
-        s = np.sqrt(var)  # used just internally
 
         # https://www.itl.nist.gov/div898/handbook/eda/section3/eda35b.htm
-        skew_numer = (((continuous - means) ** 3.) / continuous.shape[0]).sum()
-        fp_skew = (skew_numer / (s ** 3.)).values
+        fp_skew = continuous.apply(fisher_pearson_skewness).values
+        kurt = continuous.apply(kurtosis).values
         stats = pd.DataFrame.from_records(
-            data=[means, medians, maxes, mins, var, fp_skew],
+            data=[means, medians, maxes, mins, var, fp_skew, kurt],
             columns=continuous.columns.tolist(),
             index=continuous_stats_cols).T
 
@@ -149,8 +165,12 @@ def summarize(X):
             least_pop = most_pop = idcs[0]
             ratio = 1.
         else:
-            least_pop = idcs[-1]
-            most_pop = idcs[0]
+            # there might be ties, so use masks to determine all classes
+            # that are least/most populated & return those as tuples
+            least_pop = tuple(idcs[values == values[-1]])
+            most_pop = tuple(idcs[values == values[0]])
+
+            # only care about the ratio of the LEAST populous class to the most
             ratio = values[-1] / float(values[0])
 
         arity = n_levels / float(n_samples)
