@@ -51,7 +51,7 @@ def summarize(X):
     --------
     >>> import skoot
     >>> from skoot.datasets import load_iris_df
-    >>> skoot.summarize(load_iris_df())
+    >>> skoot.summarize(load_iris_df())  # doctest: +NORMALIZE_WHITESPACE
                    sepal length (cm)  sepal width (cm)  petal length (cm)  \
     Mean                    5.843333          3.054000           3.758667
     Median                  5.800000          3.000000           4.350000
