@@ -29,7 +29,7 @@ between scikit-learn and skoot.
 
  Out::
 
-    ['QRDecomposition', 'SelectiveIncrementalPCA', 'SelectiveKernelPCA', 'SelectiveNMF', 'SelectivePCA', 'SelectiveTruncatedSVD', '__all__', '__builtins__', '__cached__', '__doc__', '__file__', '__loader__', '__name__', '__package__', '__path__', '__spec__', '_dqrsl', '_dqrutl', 'decompose']
+    ['QRDecomposition', 'SelectiveIncrementalPCA', 'SelectiveKernelPCA', 'SelectiveNMF', 'SelectivePCA', 'SelectiveTruncatedSVD', '__all__', '__builtins__', '__doc__', '__file__', '__name__', '__package__', '__path__', '_dqrsl', '_dqrutl', 'decompose', 's']
 
        sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)  \
     0                5.1               3.5                1.4               0.2   
@@ -52,20 +52,22 @@ between scikit-learn and skoot.
 
         Parameters
         ----------
-        cols : array-like, shape=(n_features,), optional (default=None)
+            cols : array-like, shape=(n_features,), optional (default=None)
             The names of the columns on which to apply the transformation.
             If no column names are provided, the transformer will be fit
             on the entire frame. Note that the transformation will also 
             only apply to the specified columns, and any other 
             non-specified columns will still be present after 
             the transformation.
+        
     
-        as_df : bool, optional (default=True)
+            as_df : bool, optional (default=True)
             Whether to return a Pandas ``DataFrame`` in the ``transform``
             method. If False, will return a Numpy ``ndarray`` instead. 
             Since most skoot transformers depend on explicitly-named
             ``DataFrame`` features, the ``as_df`` parameter is True by 
             default.
+        
 
         Examples
         --------
@@ -96,7 +98,7 @@ between scikit-learn and skoot.
     # exist in skoot that are present in scikit. For example:
     from skoot import decomposition
     print(dir(decomposition))  # many are similar to sklearn classes
-    print()
+    print("")
 
     # #############################################################################
     # Skoot also has a dataset interface, like sklearn. Except it returns
@@ -104,7 +106,7 @@ between scikit-learn and skoot.
     from skoot.datasets import load_iris_df
     df = load_iris_df(include_tgt=True, tgt_name='Species')
     print(df.head())
-    print()
+    print("")
 
     # #############################################################################
     # All skoot transformers are based on the BasePDTransformer:
@@ -112,7 +114,7 @@ between scikit-learn and skoot.
 
     print(BasePDTransformer.__doc__)
 
-**Total running time of the script:** ( 0 minutes  0.066 seconds)
+**Total running time of the script:** ( 0 minutes  0.071 seconds)
 
 
 

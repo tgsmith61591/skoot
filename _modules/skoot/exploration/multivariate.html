@@ -1,0 +1,410 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>skoot.exploration.multivariate &mdash; skoot 0.19.2.dev1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../../_static/gallery.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../../_static/css/style.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="skoot 0.19.2.dev1 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> skoot
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.19.2.dev1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto_examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide.html">User Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">skoot</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>skoot.exploration.multivariate</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for skoot.exploration.multivariate</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+
+<span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="k">import</span> <span class="n">check_dataframe</span>
+<span class="kn">from</span> <span class="nn">..utils.dataframe</span> <span class="k">import</span> <span class="n">get_continuous_columns</span>
+<span class="kn">from</span> <span class="nn">.univariate</span> <span class="k">import</span> <span class="n">fisher_pearson_skewness</span><span class="p">,</span> <span class="n">kurtosis</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;summarize&#39;</span>
+<span class="p">]</span>
+
+
+<div class="viewcode-block" id="summarize"><a class="viewcode-back" href="../../../modules/generated/skoot.exploration.summarize.html#skoot.exploration.summarize">[docs]</a><span class="k">def</span> <span class="nf">summarize</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Summarize a dataframe.</span>
+
+<span class="sd">    Create a more in-depth summary of a dataframe than ``pd.describe`` will</span>
+<span class="sd">    give you. This includes details on skewness, arity (for categorical</span>
+<span class="sd">    features) and more. For continuous features (floats), this summary</span>
+<span class="sd">    computes:</span>
+
+<span class="sd">        * Mean</span>
+<span class="sd">        * Median</span>
+<span class="sd">        * Max</span>
+<span class="sd">        * Min</span>
+<span class="sd">        * Variance</span>
+<span class="sd">        * Skewness</span>
+<span class="sd">        * Kurtosis</span>
+
+<span class="sd">    For categorical features:</span>
+
+<span class="sd">        * Least frequent class</span>
+<span class="sd">        * Most frequent class</span>
+<span class="sd">        * Class balance (n_least_freq / n_most_freq; higher is better)</span>
+<span class="sd">        * Num Levels</span>
+<span class="sd">        * Arity (n_unique_classes / n_samples; lower is better)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X : array-like, shape=(n_samples, n_features)</span>
+<span class="sd">        The input data. Can be comprised of categorical or continuous data,</span>
+<span class="sd">        and will be cast to pandas DataFrame for the computations.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    stats : DataFrame</span>
+<span class="sd">        The summarized dataframe</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The skewness of a normal distribution is zero, and symmetric data should</span>
+<span class="sd">    exhibit a skewness near zero. Positive values for skewness indicate the</span>
+<span class="sd">    data is skewed right, and negative indicate they&#39;re skewed left. If the</span>
+<span class="sd">    data are multi-modal, this may impact the sign of the skewness.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import skoot</span>
+<span class="sd">    &gt;&gt;&gt; from skoot.datasets import load_iris_df</span>
+<span class="sd">    &gt;&gt;&gt; skoot.summarize(load_iris_df())  # doctest:+SKIP</span>
+<span class="sd">                   sepal length (cm)  sepal width (cm)  petal length (cm)  \</span>
+<span class="sd">    Mean                    5.843333          3.054000           3.758667</span>
+<span class="sd">    Median                  5.800000          3.000000           4.350000</span>
+<span class="sd">    Max                     7.900000          4.400000           6.900000</span>
+<span class="sd">    Min                     4.300000          2.000000           1.000000</span>
+<span class="sd">    Variance                0.685694          0.188004           3.113179</span>
+<span class="sd">    Skewness                0.311753          0.330703          -0.271712</span>
+<span class="sd">    Kurtosis               -0.573568          0.241443          -1.395359</span>
+<span class="sd">    Least Freq.                  NaN               NaN                NaN</span>
+<span class="sd">    Most Freq.                   NaN               NaN                NaN</span>
+<span class="sd">    Class Balance                NaN               NaN                NaN</span>
+<span class="sd">    Num Levels                   NaN               NaN                NaN</span>
+<span class="sd">    Arity                        NaN               NaN                NaN</span>
+<span class="sd">    Missing                 0.000000          0.000000           0.000000</span>
+
+<span class="sd">                   petal width (cm)    species</span>
+<span class="sd">    Mean                   1.198667        NaN</span>
+<span class="sd">    Median                 1.300000        NaN</span>
+<span class="sd">    Max                    2.500000        NaN</span>
+<span class="sd">    Min                    0.100000        NaN</span>
+<span class="sd">    Variance               0.582414        NaN</span>
+<span class="sd">    Skewness              -0.103944        NaN</span>
+<span class="sd">    Kurtosis              -1.335246        NaN</span>
+<span class="sd">    Least Freq.                 NaN  (2, 1, 0)</span>
+<span class="sd">    Most Freq.                  NaN  (2, 1, 0)</span>
+<span class="sd">    Class Balance               NaN          1</span>
+<span class="sd">    Num Levels                  NaN          3</span>
+<span class="sd">    Arity                       NaN       0.02</span>
+<span class="sd">    Missing                0.000000          0</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] Measures of Skewness and Kurtosis</span>
+<span class="sd">           https://www.itl.nist.gov/div898/handbook/eda/section3/eda35b.htm</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">cols</span> <span class="o">=</span> <span class="n">check_dataframe</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">assert_all_finite</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">n_samples</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># There are some operations we&#39;ll compute on all variable types:</span>
+    <span class="c1">#   * n_missing</span>
+    <span class="n">n_missing</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="c1"># compute stats on each continuous col</span>
+    <span class="n">continuous</span> <span class="o">=</span> <span class="n">get_continuous_columns</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="n">scont_cols</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">continuous</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+    <span class="n">other_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cols</span>
+                  <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">scont_cols</span><span class="p">]</span>
+
+    <span class="n">continuous_stats_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Mean&quot;</span><span class="p">,</span> <span class="s2">&quot;Median&quot;</span><span class="p">,</span> <span class="s2">&quot;Max&quot;</span><span class="p">,</span> <span class="s2">&quot;Min&quot;</span><span class="p">,</span>
+                             <span class="s2">&quot;Variance&quot;</span><span class="p">,</span> <span class="s2">&quot;Skewness&quot;</span><span class="p">,</span> <span class="s2">&quot;Kurtosis&quot;</span><span class="p">]</span>
+    <span class="n">categorical_stats_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Least Freq.&quot;</span><span class="p">,</span> <span class="s2">&quot;Most Freq.&quot;</span><span class="p">,</span>
+                              <span class="s2">&quot;Class Balance&quot;</span><span class="p">,</span> <span class="s2">&quot;Num Levels&quot;</span><span class="p">,</span>
+                              <span class="s2">&quot;Arity&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">scont_cols</span><span class="p">:</span>
+        <span class="c1"># For each continuous feature, compute the following:</span>
+        <span class="c1">#   * mean</span>
+        <span class="c1">#   * median</span>
+        <span class="c1">#   * max</span>
+        <span class="c1">#   * min</span>
+        <span class="c1">#   * variance</span>
+        <span class="c1">#   * Fisher-Pearson skewness</span>
+        <span class="c1">#   * Kurtosis</span>
+        <span class="c1">#</span>
+        <span class="c1"># We can largely vectorize each of these over the axis...</span>
+        <span class="n">means</span> <span class="o">=</span> <span class="n">continuous</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">medians</span> <span class="o">=</span> <span class="n">continuous</span><span class="o">.</span><span class="n">median</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">maxes</span> <span class="o">=</span> <span class="n">continuous</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">mins</span> <span class="o">=</span> <span class="n">continuous</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="n">continuous</span><span class="o">.</span><span class="n">var</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
+
+        <span class="c1"># https://www.itl.nist.gov/div898/handbook/eda/section3/eda35b.htm</span>
+        <span class="n">fp_skew</span> <span class="o">=</span> <span class="n">continuous</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">fisher_pearson_skewness</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">kurt</span> <span class="o">=</span> <span class="n">continuous</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">kurtosis</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">stats</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">(</span>
+            <span class="n">data</span><span class="o">=</span><span class="p">[</span><span class="n">means</span><span class="p">,</span> <span class="n">medians</span><span class="p">,</span> <span class="n">maxes</span><span class="p">,</span> <span class="n">mins</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">fp_skew</span><span class="p">,</span> <span class="n">kurt</span><span class="p">],</span>
+            <span class="n">columns</span><span class="o">=</span><span class="n">continuous</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+            <span class="n">index</span><span class="o">=</span><span class="n">continuous_stats_cols</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+
+        <span class="c1"># for each column in the categorical statistics (that we won&#39;t be</span>
+        <span class="c1"># computing over these features), set as NaN</span>
+        <span class="k">for</span> <span class="n">stat</span> <span class="ow">in</span> <span class="n">categorical_stats_cols</span><span class="p">:</span>
+            <span class="n">stats</span><span class="p">[</span><span class="n">stat</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+        <span class="n">stats</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">T</span>
+
+    <span class="c1"># otherwise we need &quot;stats&quot; in the namespace</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">stats</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># Now for each categorical feature, compute the following:</span>
+    <span class="c1">#   * Least populated class</span>
+    <span class="c1">#   * Most populated class</span>
+    <span class="c1">#   * Ratio of most-populous class: least-populous</span>
+    <span class="c1">#   * Arity (num unique factor levels/num samples)</span>
+    <span class="k">def</span> <span class="nf">categ_summary</span><span class="p">(</span><span class="n">feature</span><span class="p">):</span>
+        <span class="n">vc</span> <span class="o">=</span> <span class="n">feature</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+        <span class="n">idcs</span><span class="p">,</span> <span class="n">values</span> <span class="o">=</span> <span class="n">vc</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">n_levels</span> <span class="o">=</span> <span class="n">idcs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># if there is only one value we have to return it as both</span>
+        <span class="c1"># the most populous and the least-populous...</span>
+        <span class="k">if</span> <span class="n">n_levels</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">least_pop</span> <span class="o">=</span> <span class="n">most_pop</span> <span class="o">=</span> <span class="n">idcs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">ratio</span> <span class="o">=</span> <span class="mf">1.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># there might be ties, so use masks to determine all classes</span>
+            <span class="c1"># that are least/most populated &amp; return those as tuples</span>
+            <span class="n">least_pop</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">idcs</span><span class="p">[</span><span class="n">values</span> <span class="o">==</span> <span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+            <span class="n">most_pop</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">idcs</span><span class="p">[</span><span class="n">values</span> <span class="o">==</span> <span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+
+            <span class="c1"># only care about the ratio of the LEAST populous class to the most</span>
+            <span class="n">ratio</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="n">arity</span> <span class="o">=</span> <span class="n">n_levels</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">n_samples</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">least_pop</span><span class="p">,</span> <span class="n">most_pop</span><span class="p">,</span> <span class="n">ratio</span><span class="p">,</span> <span class="n">n_levels</span><span class="p">,</span> <span class="n">arity</span>
+
+    <span class="c1"># apply the categorical function</span>
+    <span class="k">if</span> <span class="n">other_cols</span><span class="p">:</span>
+        <span class="c1"># Compute and then transpose so we can tack this onto</span>
+        <span class="c1"># the continuous statistics</span>
+        <span class="n">categ_results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">(</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="n">X</span><span class="p">[</span><span class="n">other_cols</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">categ_summary</span><span class="p">)</span>
+                             <span class="o">.</span><span class="n">values</span>
+                             <span class="o">.</span><span class="n">tolist</span><span class="p">())</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+            <span class="n">columns</span><span class="o">=</span><span class="n">other_cols</span><span class="p">,</span>
+            <span class="n">index</span><span class="o">=</span><span class="n">categorical_stats_cols</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+
+        <span class="c1"># for each stat in the continuous stats (that we won&#39;t compute for</span>
+        <span class="c1"># these features), set to np.nan</span>
+        <span class="k">for</span> <span class="n">stat</span> <span class="ow">in</span> <span class="n">continuous_stats_cols</span><span class="p">:</span>
+            <span class="n">categ_results</span><span class="p">[</span><span class="n">stat</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+        <span class="c1"># select in this order to make sure our index will be in the right</span>
+        <span class="c1"># order after we transpose back</span>
+        <span class="n">categ_results</span> <span class="o">=</span> <span class="n">categ_results</span><span class="p">[</span><span class="n">continuous_stats_cols</span> <span class="o">+</span>
+                                      <span class="n">categorical_stats_cols</span><span class="p">]</span><span class="o">.</span><span class="n">T</span>
+
+        <span class="c1"># cbind to stats if it&#39;s defined, otherwise just rename it</span>
+        <span class="k">if</span> <span class="n">stats</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">stats</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">stats</span><span class="p">,</span> <span class="n">categ_results</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">stats</span> <span class="o">=</span> <span class="n">categ_results</span>
+
+    <span class="c1"># Make sure we&#39;re in order</span>
+    <span class="n">stats</span> <span class="o">=</span> <span class="n">stats</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s2">&quot;Missing&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">n_missing</span>
+    <span class="k">return</span> <span class="n">stats</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Taylor G Smith.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.19.2.dev1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

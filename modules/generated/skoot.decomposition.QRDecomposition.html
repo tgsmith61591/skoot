@@ -8,11 +8,9 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>skoot.decomposition.QRDecomposition &mdash; skoot 0.19.1 documentation</title>
+  <title>skoot.decomposition.QRDecomposition &mdash; skoot 0.19.2.dev1 documentation</title>
   
 
-  
-  
   
   
 
@@ -25,23 +23,32 @@
   
 
   
+  
     <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/css/style.css" type="text/css" />
-    <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="skoot.feature_extraction.InteractionTermTransformer" href="skoot.feature_extraction.InteractionTermTransformer.html" />
-    <link rel="prev" title="skoot.decomposition.SelectiveTruncatedSVD" href="skoot.decomposition.SelectiveTruncatedSVD.html" /> 
+  
+
+  
+    <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../_static/css/style.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="skoot 0.19.2.dev1 documentation" href="../../index.html"/>
+        <link rel="up" title="API Reference" href="../classes.html"/>
+        <link rel="next" title="skoot.exploration.summarize" href="skoot.exploration.summarize.html"/>
+        <link rel="prev" title="skoot.decomposition.SelectiveTruncatedSVD" href="skoot.decomposition.SelectiveTruncatedSVD.html"/> 
 
   
   <script src="../../_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav">
+<body class="wy-body-for-nav" role="document">
 
-   
   <div class="wy-grid-for-nav">
 
     
@@ -61,7 +68,7 @@
             
             
               <div class="version">
-                0.19.1
+                0.19.2.dev1
               </div>
             
           
@@ -82,31 +89,30 @@
           
             
             
-              
-            
-            
-              <ul class="current">
+                <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../classes.html">API Reference</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.base"><code class="docutils literal notranslate"><span class="pre">skoot.base</span></code>: Base metaclasses and utility functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot"><code class="docutils literal notranslate"><span class="pre">skoot.decorators</span></code>: Decorator utilities</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.balance"><code class="docutils literal notranslate"><span class="pre">skoot.balance</span></code>: Class imbalance remedies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.datasets"><code class="docutils literal notranslate"><span class="pre">skoot.datasets</span></code>: Dataset loaders</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../classes.html#module-skoot.decomposition"><code class="docutils literal notranslate"><span class="pre">skoot.decomposition</span></code>: Various matrix decompositions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.base"><code class="docutils literal"><span class="pre">skoot.base</span></code>: Base metaclasses and utility functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot"><code class="docutils literal"><span class="pre">skoot.decorators</span></code>: Decorator utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.balance"><code class="docutils literal"><span class="pre">skoot.balance</span></code>: Class imbalance remedies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.datasets"><code class="docutils literal"><span class="pre">skoot.datasets</span></code>: Dataset loaders</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../classes.html#module-skoot.decomposition"><code class="docutils literal"><span class="pre">skoot.decomposition</span></code>: Various matrix decompositions</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="../classes.html#decomposition-classes">Decomposition classes</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="skoot.decomposition.SelectiveIncrementalPCA.html"><code class="docutils literal notranslate"><span class="pre">skoot.decomposition</span></code>.SelectiveIncrementalPCA</a></li>
-<li class="toctree-l4"><a class="reference internal" href="skoot.decomposition.SelectiveKernelPCA.html"><code class="docutils literal notranslate"><span class="pre">skoot.decomposition</span></code>.SelectiveKernelPCA</a></li>
-<li class="toctree-l4"><a class="reference internal" href="skoot.decomposition.SelectiveNMF.html"><code class="docutils literal notranslate"><span class="pre">skoot.decomposition</span></code>.SelectiveNMF</a></li>
-<li class="toctree-l4"><a class="reference internal" href="skoot.decomposition.SelectivePCA.html"><code class="docutils literal notranslate"><span class="pre">skoot.decomposition</span></code>.SelectivePCA</a></li>
-<li class="toctree-l4"><a class="reference internal" href="skoot.decomposition.SelectiveTruncatedSVD.html"><code class="docutils literal notranslate"><span class="pre">skoot.decomposition</span></code>.SelectiveTruncatedSVD</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">skoot.decomposition</span></code>.QRDecomposition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="skoot.decomposition.SelectiveIncrementalPCA.html"><code class="docutils literal"><span class="pre">skoot.decomposition</span></code>.SelectiveIncrementalPCA</a></li>
+<li class="toctree-l4"><a class="reference internal" href="skoot.decomposition.SelectiveKernelPCA.html"><code class="docutils literal"><span class="pre">skoot.decomposition</span></code>.SelectiveKernelPCA</a></li>
+<li class="toctree-l4"><a class="reference internal" href="skoot.decomposition.SelectiveNMF.html"><code class="docutils literal"><span class="pre">skoot.decomposition</span></code>.SelectiveNMF</a></li>
+<li class="toctree-l4"><a class="reference internal" href="skoot.decomposition.SelectivePCA.html"><code class="docutils literal"><span class="pre">skoot.decomposition</span></code>.SelectivePCA</a></li>
+<li class="toctree-l4"><a class="reference internal" href="skoot.decomposition.SelectiveTruncatedSVD.html"><code class="docutils literal"><span class="pre">skoot.decomposition</span></code>.SelectiveTruncatedSVD</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#"><code class="docutils literal"><span class="pre">skoot.decomposition</span></code>.QRDecomposition</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.feature_extraction"><code class="docutils literal notranslate"><span class="pre">skoot.feature_extraction</span></code>: Feature extraction methods</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.feature_selection"><code class="docutils literal notranslate"><span class="pre">skoot.feature_selection</span></code>: Feature selection methods</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.preprocessing"><code class="docutils literal notranslate"><span class="pre">skoot.preprocessing</span></code>: Pre-processing transformers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.utils"><code class="docutils literal notranslate"><span class="pre">skoot.utils</span></code>: Common utility functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.exploration"><code class="docutils literal"><span class="pre">skoot.exploration</span></code>: Exploratory data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.feature_extraction"><code class="docutils literal"><span class="pre">skoot.feature_extraction</span></code>: Feature extraction methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.feature_selection"><code class="docutils literal"><span class="pre">skoot.feature_selection</span></code>: Feature selection methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.model_validation"><code class="docutils literal"><span class="pre">skoot.model_validation</span></code>: Model validation &amp; monitoring</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.preprocessing"><code class="docutils literal"><span class="pre">skoot.preprocessing</span></code>: Pre-processing transformers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.utils"><code class="docutils literal"><span class="pre">skoot.utils</span></code>: Common utility functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">Examples</a></li>
@@ -122,63 +128,43 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">skoot</a>
-        
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">skoot</a>
       </nav>
 
 
+      
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
           
 
-
-
-
-
-
-
-
-
-
-
-
+ 
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
-
   <ul class="wy-breadcrumbs">
-    
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
-        
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
           <li><a href="../classes.html">API Reference</a> &raquo;</li>
-        
-      <li><code class="docutils literal notranslate"><span class="pre">skoot.decomposition</span></code>.QRDecomposition</li>
-    
-    
+      
+    <li><code class="docutils literal"><span class="pre">skoot.decomposition</span></code>.QRDecomposition</li>
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../../_sources/modules/generated/skoot.decomposition.QRDecomposition.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
   <div class="section" id="skoot-decomposition-qrdecomposition">
-<h1><a class="reference internal" href="../classes.html#module-skoot.decomposition" title="skoot.decomposition"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skoot.decomposition</span></code></a>.QRDecomposition<a class="headerlink" href="#skoot-decomposition-qrdecomposition" title="Permalink to this headline">¶</a></h1>
+<h1><a class="reference internal" href="../classes.html#module-skoot.decomposition" title="skoot.decomposition"><code class="xref py py-mod docutils literal"><span class="pre">skoot.decomposition</span></code></a>.QRDecomposition<a class="headerlink" href="#skoot-decomposition-qrdecomposition" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="skoot.decomposition.QRDecomposition">
 <em class="property">class </em><code class="descclassname">skoot.decomposition.</code><code class="descname">QRDecomposition</code><span class="sig-paren">(</span><em>X</em>, <em>pivot=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/decomposition/decompose.html#QRDecomposition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.decomposition.QRDecomposition" title="Permalink to this definition">¶</a></dt>
@@ -193,40 +179,23 @@ instantiation.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>X</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array-like, shape (n_samples, n_features)</span></dt>
-<dd><p class="first last">The matrix to decompose. Unlike many other classes in skoot,
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>X</strong> : array-like, shape (n_samples, n_features)</p>
+<blockquote>
+<div><p>The matrix to decompose. Unlike many other classes in skoot,
 this one does not require a Pandas frame, and can be applied
 directly to numpy arrays.</p>
-</dd>
-<dt><strong>pivot</strong> <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional (default=True)</span></dt>
-<dd><p class="first last">Whether to perform pivoting. Default is True.</p>
-</dd>
-</dl>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Attributes:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>qr</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array-like, shape (n_samples, n_features)</span></dt>
-<dd><p class="first last">The decomposed matrix</p>
-</dd>
-<dt><strong>qraux</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array-like, shape (n_features,)</span></dt>
-<dd><p class="first last">Contains further information required to recover
-the orthogonal part of the decomposition.</p>
-</dd>
-<dt><strong>pivot</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array-like, shape (n_features,)</span></dt>
-<dd><p class="first last">The pivots, if pivot was set to 1, else None</p>
-</dd>
-<dt><strong>rank</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
-<dd><p class="first last">The rank of the input matrix</p>
-</dd>
-</dl>
+</div></blockquote>
+<p><strong>pivot</strong> : bool, optional (default=True)</p>
+<blockquote class="last">
+<div><p>Whether to perform pivoting. Default is True.</p>
+</div></blockquote>
 </td>
 </tr>
 </tbody>
 </table>
 <p class="rubric">Examples</p>
 <p>The following example applies the QRDecomposition to the Iris dataset:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skoot.datasets</span> <span class="k">import</span> <span class="n">load_iris_df</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skoot.datasets</span> <span class="k">import</span> <span class="n">load_iris_df</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">iris</span> <span class="o">=</span> <span class="n">load_iris_df</span><span class="p">(</span><span class="n">include_tgt</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">qr</span> <span class="o">=</span> <span class="n">QRDecomposition</span><span class="p">(</span><span class="n">iris</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">qr</span><span class="o">.</span><span class="n">qr</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span>
@@ -242,6 +211,27 @@ the orthogonal part of the decomposition.</p>
 <span class="go">          2.63036986e-02]])</span>
 </pre></div>
 </div>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="4%" />
+<col width="96%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>qr</td>
+<td>(array-like, shape (n_samples, n_features)) The decomposed matrix</td>
+</tr>
+<tr class="row-even"><td>qraux</td>
+<td>(array-like, shape (n_features,)) Contains further information required to recover the orthogonal part of the decomposition.</td>
+</tr>
+<tr class="row-odd"><td>pivot</td>
+<td>(array-like, shape (n_features,)) The pivots, if pivot was set to 1, else None</td>
+</tr>
+<tr class="row-even"><td>rank</td>
+<td>(int) The rank of the input matrix</td>
+</tr>
+</tbody>
+</table>
 <p class="rubric">Methods</p>
 <table border="1" class="longtable docutils">
 <colgroup>
@@ -249,33 +239,24 @@ the orthogonal part of the decomposition.</p>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#skoot.decomposition.QRDecomposition.get_R" title="skoot.decomposition.QRDecomposition.get_R"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_R</span></code></a>()</td>
+<tr class="row-odd"><td><a class="reference internal" href="#skoot.decomposition.QRDecomposition.get_R" title="skoot.decomposition.QRDecomposition.get_R"><code class="xref py py-obj docutils literal"><span class="pre">get_R</span></code></a>()</td>
 <td>Get the R matrix from the decomposition.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#skoot.decomposition.QRDecomposition.get_R_rank" title="skoot.decomposition.QRDecomposition.get_R_rank"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_R_rank</span></code></a>()</td>
+<tr class="row-even"><td><a class="reference internal" href="#skoot.decomposition.QRDecomposition.get_R_rank" title="skoot.decomposition.QRDecomposition.get_R_rank"><code class="xref py py-obj docutils literal"><span class="pre">get_R_rank</span></code></a>()</td>
 <td>Get the rank of the R matrix.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#skoot.decomposition.QRDecomposition.get_rank" title="skoot.decomposition.QRDecomposition.get_rank"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_rank</span></code></a>()</td>
-<td>Get the rank of the decomposition.</td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">get_coef</span></code>(X)</td>
+<td></td>
 </tr>
-</tbody>
-</table>
-<table border="1" class="docutils">
-<colgroup>
-<col width="55%" />
-<col width="45%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><strong>get_coef</strong></td>
-<td>&#160;</td>
+<tr class="row-even"><td><a class="reference internal" href="#skoot.decomposition.QRDecomposition.get_rank" title="skoot.decomposition.QRDecomposition.get_rank"><code class="xref py py-obj docutils literal"><span class="pre">get_rank</span></code></a>()</td>
+<td>Get the rank of the decomposition.</td>
 </tr>
 </tbody>
 </table>
 <dl class="method">
 <dt id="skoot.decomposition.QRDecomposition.__init__">
 <code class="descname">__init__</code><span class="sig-paren">(</span><em>X</em>, <em>pivot=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/decomposition/decompose.html#QRDecomposition.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.decomposition.QRDecomposition.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="skoot.decomposition.QRDecomposition.get_R">
@@ -285,11 +266,10 @@ the orthogonal part of the decomposition.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>r</strong> <span class="classifier-delimiter">:</span> <span class="classifier">np.ndarray</span></dt>
-<dd><p class="first last">The R portion of the decomposed matrix.</p>
-</dd>
-</dl>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>r</strong> : np.ndarray</p>
+<blockquote class="last">
+<div><p>The R portion of the decomposed matrix.</p>
+</div></blockquote>
 </td>
 </tr>
 </tbody>
@@ -304,11 +284,10 @@ the orthogonal part of the decomposition.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>rank</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
-<dd><p class="first last">The rank of the R matrix</p>
-</dd>
-</dl>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>rank</strong> : int</p>
+<blockquote class="last">
+<div><p>The rank of the R matrix</p>
+</div></blockquote>
 </td>
 </tr>
 </tbody>
@@ -323,11 +302,10 @@ the orthogonal part of the decomposition.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>self.rank</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
-<dd><p class="first last">The rank of the decomposition</p>
-</dd>
-</dl>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>self.rank</strong> : int</p>
+<blockquote class="last">
+<div><p>The rank of the decomposition</p>
+</div></blockquote>
 </td>
 </tr>
 </tbody>
@@ -340,16 +318,15 @@ the orthogonal part of the decomposition.</p>
 
 
            </div>
-           
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="skoot.feature_extraction.InteractionTermTransformer.html" class="btn btn-neutral float-right" title="skoot.feature_extraction.InteractionTermTransformer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="skoot.exploration.summarize.html" class="btn btn-neutral float-right" title="skoot.exploration.summarize" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="skoot.decomposition.SelectiveTruncatedSVD.html" class="btn btn-neutral" title="skoot.decomposition.SelectiveTruncatedSVD" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="skoot.decomposition.SelectiveTruncatedSVD.html" class="btn btn-neutral" title="skoot.decomposition.SelectiveTruncatedSVD" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -362,7 +339,7 @@ the orthogonal part of the decomposition.</p>
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -380,12 +357,10 @@ the orthogonal part of the decomposition.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.19.1',
-            LANGUAGE:'None',
+            VERSION:'0.19.2.dev1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
+            HAS_SOURCE:  true
         };
     </script>
       <script type="text/javascript" src="../../_static/jquery.js"></script>
@@ -400,13 +375,14 @@ the orthogonal part of the decomposition.</p>
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
   
 
+  
+  
   <script type="text/javascript">
       jQuery(function () {
-          
-          SphinxRtdTheme.Navigation.enableSticky();
-          
+          SphinxRtdTheme.StickyNav.enable();
       });
-  </script> 
+  </script>
+   
 
 </body>
 </html>

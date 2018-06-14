@@ -1,0 +1,306 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Hypothesis testing for model monitoring &mdash; skoot 0.19.2.dev1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../_static/css/style.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="skoot 0.19.2.dev1 documentation" href="../../index.html"/>
+        <link rel="up" title="Examples" href="../index.html"/>
+        <link rel="next" title="Binning transformer" href="../preprocessing/ex_binning.html"/>
+        <link rel="prev" title="Example summarize" href="../exploration/ex_summarize.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> skoot
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.19.2.dev1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../modules/classes.html">API Reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../index.html#id1">General examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#class-balancing-examples">Class balancing examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#exploratory-data-analysis-examples">Exploratory data analysis examples</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#model-validation-examples">Model validation examples</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Hypothesis testing for model monitoring</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#preprocessing-examples">Preprocessing examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide.html">User Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">skoot</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">Examples</a> &raquo;</li>
+      
+    <li>Hypothesis testing for model monitoring</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../_sources/auto_examples/model_validation/ex_hypothesis_validation.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="hypothesis-testing-for-model-monitoring">
+<span id="sphx-glr-auto-examples-model-validation-ex-hypothesis-validation-py"></span><h1>Hypothesis testing for model monitoring<a class="headerlink" href="#hypothesis-testing-for-model-monitoring" title="Permalink to this headline">¶</a></h1>
+<p>Demonstrates how to use hypothesis testing for model monitoring
+and validation.</p>
+<br/><p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-default"><div class="highlight"><pre><span></span><span class="n">Feature</span> <span class="mi">1</span> <span class="n">does</span> <span class="ow">not</span> <span class="n">match</span> <span class="n">expectation</span> <span class="k">as</span> <span class="nb">set</span> <span class="n">by</span> <a href="../../modules/generated/skoot.model_validation.DistHypothesisValidator.html#skoot.model_validation.DistHypothesisValidator" title="View documentation for skoot.model_validation.DistHypothesisValidator"><span class="n">DistHypothesisValidator</span></a>
+
+<span class="n">Internal</span> <span class="n">make_pipeline</span> <span class="k">with</span> <span class="n">embedded</span> <span class="n">validation</span><span class="p">:</span>
+<span class="n">Pipeline</span><span class="p">(</span><span class="n">steps</span><span class="o">=</span><span class="p">[(</span><span class="s1">&#39;standardscaler&#39;</span><span class="p">,</span> <span class="n">StandardScaler</span><span class="p">(</span><span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">with_mean</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">with_std</span><span class="o">=</span><span class="kc">True</span><span class="p">)),</span> <span class="p">(</span><span class="s1">&#39;disthypothesisvalidator-1&#39;</span><span class="p">,</span> <a href="../../modules/generated/skoot.model_validation.DistHypothesisValidator.html#skoot.model_validation.DistHypothesisValidator" title="View documentation for skoot.model_validation.DistHypothesisValidator"><span class="n">DistHypothesisValidator</span></a><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s1">&#39;warn&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">categorical_strategy</span><span class="o">=</span><span class="s1">&#39;ratio&#39;</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="kc">None</span><span class="p">)),</span> <span class="p">(</span><span class="s1">&#39;logisticregression&#39;</span><span class="p">,</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">C</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">class_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="o">...</span><span class="n">idator</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s1">&#39;warn&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">categorical_strategy</span><span class="o">=</span><span class="s1">&#39;ratio&#39;</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="kc">None</span><span class="p">))])</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">print</span><span class="p">(</span><span class="n">__doc__</span><span class="p">)</span>
+
+<span class="c1"># Author: Taylor Smith &lt;taylor.smith@alkaline-ml.com&gt;</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">make_classification</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <span class="n">make_pipeline</span>
+<span class="kn">from</span> <span class="nn">skoot.model_validation</span> <span class="kn">import</span> <a href="../../modules/generated/skoot.model_validation.DistHypothesisValidator.html#skoot.model_validation.DistHypothesisValidator" title="View documentation for skoot.model_validation.DistHypothesisValidator"><span class="n">DistHypothesisValidator</span></a>
+<span class="kn">from</span> <span class="nn">skoot.model_validation</span> <span class="kn">import</span> <a href="../../modules/generated/skoot.model_validation.make_validated_pipeline.html#skoot.model_validation.make_validated_pipeline" title="View documentation for skoot.model_validation.make_validated_pipeline"><span class="n">make_validated_pipeline</span></a>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="c1"># #############################################################################</span>
+<span class="c1"># Create a classification dataset and split it</span>
+<span class="n">seed</span> <span class="o">=</span> <span class="mi">42</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_classification</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">n_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">],</span>
+                           <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="c1"># split the data</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+                                                    <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+
+<span class="c1"># #############################################################################</span>
+<span class="c1"># Build a pipeline with a validator</span>
+<span class="n">pipe</span> <span class="o">=</span> <span class="n">make_pipeline</span><span class="p">(</span><span class="n">StandardScaler</span><span class="p">(</span><span class="n">with_mean</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">with_std</span><span class="o">=</span><span class="bp">True</span><span class="p">),</span>
+                     <a href="../../modules/generated/skoot.model_validation.DistHypothesisValidator.html#skoot.model_validation.DistHypothesisValidator" title="View documentation for skoot.model_validation.DistHypothesisValidator"><span class="n">DistHypothesisValidator</span></a><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;warn&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">),</span>
+                     <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">))</span>
+
+<span class="c1"># push data through the pipeline &amp; show we can predict on train data with</span>
+<span class="c1"># no warnings of any kind</span>
+<span class="n">pipe</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">pipe</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+
+<span class="c1"># #############################################################################</span>
+<span class="c1"># Show how this can break for a dataset that does NOT conform to</span>
+<span class="c1"># the expected distributions</span>
+
+<span class="n">X_test</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*=</span> <span class="mf">5.</span>  <span class="c1"># multiply a feature by some large factor</span>
+
+<span class="c1"># This will now produce a warning in the model validator class, since the</span>
+<span class="c1"># two-tailed T-test will produce a P-value &lt; alpha:</span>
+<span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">(</span><span class="n">record</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;always&quot;</span><span class="p">)</span>
+    <span class="n">pipe</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">w</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+
+<span class="c1"># #############################################################################</span>
+<span class="c1"># Demonstrate internal make_pipeline variant</span>
+
+<span class="c1"># You can build a similar validated pipeline given your estimators by</span>
+<span class="c1"># using the internal make_validated_pipeline function:</span>
+<span class="n">pipe2</span> <span class="o">=</span> <a href="../../modules/generated/skoot.model_validation.make_validated_pipeline.html#skoot.model_validation.make_validated_pipeline" title="View documentation for skoot.model_validation.make_validated_pipeline"><span class="n">make_validated_pipeline</span></a><span class="p">(</span><span class="n">StandardScaler</span><span class="p">(</span><span class="n">with_mean</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">with_std</span><span class="o">=</span><span class="bp">True</span><span class="p">),</span>
+                                <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">))</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Internal make_pipeline with embedded validation:&quot;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">pipe2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  0.056 seconds)</p>
+<div class="sphx-glr-footer container">
+<div class="sphx-glr-download container">
+<a class="reference download internal" href="../../_downloads/ex_hypothesis_validation.py" download=""><code class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">ex_hypothesis_validation.py</span></code></a></div>
+<div class="sphx-glr-download container">
+<a class="reference download internal" href="../../_downloads/ex_hypothesis_validation.ipynb" download=""><code class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">ex_hypothesis_validation.ipynb</span></code></a></div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.readthedocs.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../preprocessing/ex_binning.html" class="btn btn-neutral float-right" title="Binning transformer" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../exploration/ex_summarize.html" class="btn btn-neutral" title="Example summarize" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Taylor G Smith.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.19.2.dev1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

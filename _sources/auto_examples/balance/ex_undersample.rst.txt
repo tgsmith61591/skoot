@@ -7,12 +7,6 @@
 Undersampling minority samples
 ==============================
 
-Demonstrates how to under-sample your imbalanced dataset.
-
-.. raw:: html
-
-   <br/>
-
 This example creates an imbalanced classification dataset, and
 under-samples it to balance the class ratios. Under-sampling is
 typically only possible if your dataset is large enough to
@@ -104,7 +98,7 @@ you may later suffer from a high variance problem.
 
     print(X_balance_df.head())
 
-**Total running time of the script:** ( 0 minutes  0.041 seconds)
+**Total running time of the script:** ( 0 minutes  0.053 seconds)
 
 
 

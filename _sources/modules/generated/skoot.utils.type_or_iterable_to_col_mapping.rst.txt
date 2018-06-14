@@ -1,0 +1,12 @@
+:mod:`skoot.utils`.type_or_iterable_to_col_mapping
+===============================================================
+
+.. currentmodule:: skoot.utils
+
+.. autofunction:: type_or_iterable_to_col_mapping
+
+.. include:: skoot.utils.type_or_iterable_to_col_mapping.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

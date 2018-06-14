@@ -8,11 +8,9 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>skoot.base &mdash; skoot 0.19.1 documentation</title>
+  <title>skoot.base &mdash; skoot 0.19.2.dev1 documentation</title>
   
 
-  
-  
   
   
 
@@ -25,21 +23,30 @@
   
 
   
+  
     <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/css/style.css" type="text/css" />
-    <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
+  
+
+  
+    <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../_static/css/style.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="skoot 0.19.2.dev1 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
 
   
   <script src="../../_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav">
+<body class="wy-body-for-nav" role="document">
 
-   
   <div class="wy-grid-for-nav">
 
     
@@ -59,7 +66,7 @@
             
             
               <div class="version">
-                0.19.1
+                0.19.2.dev1
               </div>
             
           
@@ -80,10 +87,7 @@
           
             
             
-              
-            
-            
-              <ul>
+                <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../modules/classes.html">API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../user_guide.html">User Guide</a></li>
@@ -98,52 +102,34 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">skoot</a>
-        
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">skoot</a>
       </nav>
 
 
+      
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
           
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
 <div role="navigation" aria-label="breadcrumbs navigation">
-
   <ul class="wy-breadcrumbs">
-    
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
-        
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
           <li><a href="../index.html">Module code</a> &raquo;</li>
-        
-      <li>skoot.base</li>
-    
-    
+      
+    <li>skoot.base</li>
       <li class="wy-breadcrumbs-aside">
         
+          
+        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -166,55 +152,21 @@
 <span class="kn">from</span> <span class="nn">.exceptions</span> <span class="k">import</span> <span class="n">DeveloperError</span>
 <span class="kn">from</span> <span class="nn">.utils.validation</span> <span class="k">import</span> <span class="n">check_dataframe</span><span class="p">,</span> <span class="n">validate_test_set_columns</span>
 <span class="kn">from</span> <span class="nn">.utils.iterables</span> <span class="k">import</span> <span class="n">is_iterable</span>
+<span class="kn">from</span> <span class="nn">.utils.compat</span> <span class="k">import</span> <span class="n">xrange</span>
+
+<span class="c1"># namespace import to avoid explicitly protected imports in global namespace</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">_docstr</span> <span class="k">as</span> <span class="n">dsutils</span>
 
 <span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">import</span> <span class="nn">os</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s1">&#39;BasePDTransformer&#39;</span>
 <span class="p">]</span>
 
-<span class="c1"># compat:</span>
-<span class="k">try</span><span class="p">:</span>
-    <span class="c1"># PY2</span>
-    <span class="n">xrange</span>
-<span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>
-    <span class="n">xrange</span> <span class="o">=</span> <span class="nb">range</span>
-
-
-<span class="n">_cols_doc</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;cols : array-like, shape=(n_features,), optional (default=None)</span>
-<span class="s2">        The names of the columns on which to apply the transformation.</span>
-<span class="s2">        If no column names are provided, the transformer will be fit</span>
-<span class="s2">        on the entire frame. Note that the transformation will also </span>
-<span class="s2">        only apply to the specified columns, and any other </span>
-<span class="s2">        non-specified columns will still be present after </span>
-<span class="s2">        the transformation.&quot;&quot;&quot;</span>
-
-<span class="n">_as_df_doc</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;as_df : bool, optional (default=True)</span>
-<span class="s2">        Whether to return a Pandas ``DataFrame`` in the ``transform``</span>
-<span class="s2">        method. If False, will return a Numpy ``ndarray`` instead. </span>
-<span class="s2">        Since most skoot transformers depend on explicitly-named</span>
-<span class="s2">        ``DataFrame`` features, the ``as_df`` parameter is True by </span>
-<span class="s2">        default.&quot;&quot;&quot;</span>
-
-<span class="n">_trans_col_name_doc</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;trans_col_name : str, unicode or iterable, optional</span>
-<span class="s2">        The name or list of names to apply to the transformed column(s).</span>
-<span class="s2">        If a string is provided, it is used as a prefix for new columns.</span>
-<span class="s2">        If an iterable is provided, its dimensions must match the number of</span>
-<span class="s2">        produced columns. If None (default), will use the estimator class</span>
-<span class="s2">        name as the prefix.&quot;&quot;&quot;</span>
-
-<span class="n">_wrapper_msg</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-
-<span class="s2">    This class wraps scikit-learn&#39;s </span><span class="si">{classname}</span><span class="s2">. When a pd.DataFrame is </span>
-<span class="s2">    passed to the ``fit`` method, the transformation is applied to the </span>
-<span class="s2">    selected columns, which are subsequently dropped from the frame. All </span>
-<span class="s2">    remaining columns are left alone.&quot;&quot;&quot;</span>
-
 
 <div class="viewcode-block" id="BasePDTransformer"><a class="viewcode-back" href="../../modules/generated/skoot.base.BasePDTransformer.html#skoot.base.BasePDTransformer">[docs]</a><span class="k">class</span> <span class="nc">BasePDTransformer</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">with_metaclass</span><span class="p">(</span><span class="n">ABCMeta</span><span class="p">,</span> <span class="n">BaseEstimator</span><span class="p">,</span>
                                            <span class="n">TransformerMixin</span><span class="p">)):</span>
-    <span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;The base class for all Pandas frame transformers.</span>
+    <span class="n">__doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;The base class for all Pandas frame transformers.</span>
 
 <span class="s2">    Provides the base class for all skoot transformers that require</span>
 <span class="s2">    Pandas dataframes as input.</span>
@@ -236,7 +188,7 @@
 <span class="s2">        ...</span>
 <span class="s2">        &gt;&gt;&gt; A()</span>
 <span class="s2">        A(as_df=None, cols=None)</span>
-<span class="s2">    &quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_cols_doc</span><span class="o">=</span><span class="n">_cols_doc</span><span class="p">,</span> <span class="n">_as_df_doc</span><span class="o">=</span><span class="n">_as_df_doc</span><span class="p">)</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_cols_doc</span><span class="o">=</span><span class="n">dsutils</span><span class="o">.</span><span class="n">_cols_doc</span><span class="p">,</span> <span class="n">_as_df_doc</span><span class="o">=</span><span class="n">dsutils</span><span class="o">.</span><span class="n">_as_df_doc</span><span class="p">)</span>
 
 <div class="viewcode-block" id="BasePDTransformer.__init__"><a class="viewcode-back" href="../../modules/generated/skoot.base.BasePDTransformer.html#skoot.base.BasePDTransformer.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cols</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span>  <span class="c1"># do not let be mutable!</span>
@@ -260,139 +212,7 @@
         <span class="k">return</span> <span class="bp">self</span></div></div>
 
 
-<span class="k">class</span> <span class="nc">_WritableDoc</span><span class="p">(</span><span class="n">ABCMeta</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;In py27, classes inheriting from `object` do not have</span>
-<span class="sd">    a mutable __doc__. This is shamelessly used from dask_ml</span>
-
-<span class="sd">    We inherit from ABCMeta instead of type to avoid metaclass</span>
-<span class="sd">    conflicts, since some sklearn estimators (eventually) subclass</span>
-<span class="sd">    ABCMeta</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># TODO: Py2: remove all this</span>
-
-
-<span class="k">def</span> <span class="nf">_get_docstr_section_idx</span><span class="p">(</span><span class="n">docstr</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">case_matters</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">case_matters</span><span class="p">:</span>
-        <span class="n">section</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-        <span class="n">contains</span> <span class="o">=</span> <span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">section</span> <span class="ow">in</span> <span class="n">field</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">contains</span> <span class="o">=</span> <span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">section</span> <span class="ow">in</span> <span class="n">field</span><span class="p">)</span>
-
-    <span class="n">sec_idx</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">field</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">docstr</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">contains</span><span class="p">():</span>
-            <span class="n">sec_idx</span> <span class="o">=</span> <span class="n">i</span>
-            <span class="k">break</span>
-    <span class="k">return</span> <span class="n">sec_idx</span>
-
-
-<span class="k">def</span> <span class="nf">_append_parameters</span><span class="p">(</span><span class="n">docstr</span><span class="p">):</span>
-    <span class="c1"># search for &quot;Parameters&quot;</span>
-    <span class="n">parm_idx</span> <span class="o">=</span> <span class="n">_get_docstr_section_idx</span><span class="p">(</span><span class="n">docstr</span><span class="p">,</span> <span class="s2">&quot;Parameters&quot;</span><span class="p">)</span>
-
-    <span class="c1"># Only do this if we found &quot;Parameters&quot;</span>
-    <span class="k">if</span> <span class="n">parm_idx</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-        <span class="c1"># The separator is the next index</span>
-        <span class="n">sep_idx</span> <span class="o">=</span> <span class="n">parm_idx</span> <span class="o">+</span> <span class="mi">1</span>
-
-        <span class="c1"># start one AFTER sep idx and make sure to prepend tabs</span>
-        <span class="n">docstr</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">sep_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;    &quot;</span> <span class="o">+</span> <span class="n">_cols_doc</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">linesep</span><span class="p">)</span>
-        <span class="n">docstr</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">sep_idx</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;    &quot;</span> <span class="o">+</span> <span class="n">_as_df_doc</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">linesep</span><span class="p">)</span>
-        <span class="n">docstr</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">sep_idx</span> <span class="o">+</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;    &quot;</span> <span class="o">+</span> <span class="n">_trans_col_name_doc</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">linesep</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">docstr</span>
-
-
-<span class="k">def</span> <span class="nf">_append_see_also</span><span class="p">(</span><span class="n">see_also</span><span class="p">,</span> <span class="n">docstr</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">):</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_iterable</span><span class="p">(</span><span class="n">see_also</span><span class="p">):</span>
-        <span class="n">see_also</span> <span class="o">=</span> <span class="p">[</span><span class="n">see_also</span><span class="p">]</span>
-
-    <span class="c1"># find the &quot;See Also&quot; section of the docstring (sklearn devs are</span>
-    <span class="c1"># inconsistent with the casing of &quot;See also&quot;...)</span>
-    <span class="n">sa_idx</span> <span class="o">=</span> <span class="n">_get_docstr_section_idx</span><span class="p">(</span><span class="n">docstr</span><span class="p">,</span> <span class="s2">&quot;See Also&quot;</span><span class="p">,</span> <span class="n">case_matters</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-    <span class="c1"># if it DOES exist, replace it. If it does NOT exist, append it.</span>
-    <span class="k">if</span> <span class="n">sa_idx</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-        <span class="c1"># we&#39;ll append to the FRONT of the existing see also section</span>
-        <span class="n">sep_idx</span> <span class="o">=</span> <span class="n">sa_idx</span> <span class="o">+</span> <span class="mi">1</span>
-        <span class="k">for</span> <span class="n">see_this</span> <span class="ow">in</span> <span class="n">see_also</span><span class="p">:</span>
-            <span class="n">docstr</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">sep_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;    &quot;</span> <span class="o">+</span> <span class="n">see_this</span><span class="p">)</span>  <span class="c1"># no newline here</span>
-            <span class="n">sep_idx</span> <span class="o">+=</span> <span class="mi">1</span>
-
-        <span class="c1"># if we&#39;re here, we&#39;ve added everything in and may need to remove the</span>
-        <span class="c1"># previously existing records... so let&#39;s track where they go to/stop</span>
-        <span class="k">if</span> <span class="n">overwrite</span><span class="p">:</span>
-            <span class="c1"># starting from sep_idx + 1, omit until there is another</span>
-            <span class="c1"># empty string</span>
-            <span class="n">omit_idcs</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sep_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">docstr</span><span class="p">)):</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">docstr</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
-                    <span class="k">break</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">omit_idcs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-            <span class="c1"># i don&#39;t love this... but...</span>
-            <span class="n">docstr</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">docstr</span><span class="p">)</span>
-                      <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">omit_idcs</span><span class="p">)]</span>
-
-    <span class="c1"># otherwise we need to create it</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">_create_new_docstr_section</span><span class="p">(</span><span class="s2">&quot;See Also&quot;</span><span class="p">,</span> <span class="n">docstr</span><span class="p">,</span> <span class="n">see_also</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">docstr</span>
-
-
-<span class="k">def</span> <span class="nf">_create_new_docstr_section</span><span class="p">(</span><span class="n">header</span><span class="p">,</span> <span class="n">docstr</span><span class="p">,</span> <span class="n">lines</span><span class="p">):</span>
-    <span class="c1"># docstr is a LIST</span>
-    <span class="k">return</span> <span class="n">docstr</span> <span class="o">+</span> \
-           <span class="p">[</span><span class="s1">&#39;    &#39;</span> <span class="o">+</span> <span class="n">header</span><span class="p">,</span> <span class="s1">&#39;    &#39;</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">header</span><span class="p">)]</span> <span class="o">+</span> \
-           <span class="p">[</span><span class="s1">&#39;    &#39;</span> <span class="o">+</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">]</span>
-
-
-<span class="k">def</span> <span class="nf">_selective_copy_doc_for</span><span class="p">(</span><span class="n">skclass</span><span class="p">,</span> <span class="n">examples</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">see_also</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                            <span class="n">overwrite_existing_see_also</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Applied to classes to inherit doc from sklearn.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    skclass : BaseEstimator</span>
-<span class="sd">        The scikit-learn class from which the new estimator will inherit</span>
-<span class="sd">        documentation. This class must have a populated docstring and a</span>
-<span class="sd">        &quot;Parameters&quot; section in order to behave properly.</span>
-
-<span class="sd">    examples : str or unicode, optional (default=None)</span>
-<span class="sd">        Any examples to inject into the documentation.</span>
-
-<span class="sd">    see_also : str, unicode or iterable[str], optional (default=None)</span>
-<span class="sd">        Any classes that should also be seen. If these are provided, any</span>
-<span class="sd">        that may exist in sklearn will be overwritten!</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">_copy_wrapper_doc</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
-        <span class="n">lines</span> <span class="o">=</span> <span class="n">skclass</span><span class="o">.</span><span class="vm">__doc__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">linesep</span><span class="p">)</span>
-        <span class="n">header</span><span class="p">,</span> <span class="n">rest</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
-
-        <span class="c1"># format msg with the classname</span>
-        <span class="n">insert</span> <span class="o">=</span> <span class="n">_wrapper_msg</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">classname</span><span class="o">=</span><span class="n">skclass</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
-
-        <span class="c1"># Add &quot;selective&quot; to the header</span>
-        <span class="n">header</span> <span class="o">+=</span> <span class="s2">&quot; (applied to selected columns).&quot;</span>
-
-        <span class="c1"># update the parameters</span>
-        <span class="n">rest</span> <span class="o">=</span> <span class="n">_append_parameters</span><span class="p">(</span><span class="n">rest</span><span class="p">)</span>
-
-        <span class="c1"># update the See Also section</span>
-        <span class="k">if</span> <span class="n">see_also</span><span class="p">:</span>
-            <span class="n">rest</span> <span class="o">=</span> <span class="n">_append_see_also</span><span class="p">(</span><span class="n">see_also</span><span class="p">,</span> <span class="n">rest</span><span class="p">,</span>
-                                    <span class="n">overwrite_existing_see_also</span><span class="p">)</span>
-
-        <span class="c1"># TODO: update examples</span>
-
-        <span class="n">doc</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">header</span> <span class="o">+</span> <span class="n">insert</span><span class="p">]</span> <span class="o">+</span> <span class="n">rest</span><span class="p">)</span>
-
-        <span class="bp">cls</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">doc</span>
-        <span class="k">return</span> <span class="bp">cls</span>
-    <span class="k">return</span> <span class="n">_copy_wrapper_doc</span>
-
-
-<span class="k">class</span> <span class="nc">_SelectiveTransformerWrapper</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">with_metaclass</span><span class="p">(</span><span class="n">_WritableDoc</span><span class="p">,</span>
+<span class="k">class</span> <span class="nc">_SelectiveTransformerWrapper</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">with_metaclass</span><span class="p">(</span><span class="n">dsutils</span><span class="o">.</span><span class="n">_WritableDoc</span><span class="p">,</span>
                                                       <span class="n">BasePDTransformer</span><span class="p">)):</span>
     <span class="c1"># non-estimator parameters only used for the wrapper and not in set_params</span>
     <span class="n">_p_names</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;cols&#39;</span><span class="p">,</span> <span class="s1">&#39;as_df&#39;</span><span class="p">,</span> <span class="s1">&#39;trans_col_name&#39;</span><span class="p">)</span>
@@ -406,12 +226,12 @@
     <span class="c1"># developers.</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">trans_col_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 
-        <span class="nb">super</span><span class="p">(</span><span class="n">_SelectiveTransformerWrapper</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">_SelectiveTransformerWrapper</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span>
             <span class="n">cols</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="n">as_df</span><span class="p">)</span>
 
         <span class="c1"># this is a STATIC attribute of subclasses</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="bp">cls</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cls</span>
+            <span class="n">cls</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cls</span>
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">DeveloperError</span><span class="p">(</span><span class="s2">&quot;_SelectiveTransformerWrapper subclasses &quot;</span>
                                  <span class="s2">&quot;must contain a static _cls attribute that &quot;</span>
@@ -419,7 +239,7 @@
 
         <span class="c1"># get the (default) parameters for the estimator in question</span>
         <span class="c1"># and initialize to default</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">estimator_</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">estimator_</span> <span class="o">=</span> <span class="n">cls</span><span class="p">()</span>
         <span class="n">default_est_parms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimator_</span><span class="o">.</span><span class="n">get_params</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="c1"># set the attributes in the estimator AND in the constructor so this</span>
@@ -504,7 +324,7 @@
         <span class="c1"># else it&#39;s some scalar</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">trans</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># default to class name</span>
-                <span class="n">trans</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimator_</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+                <span class="n">trans</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimator_</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span>
             <span class="c1"># this gets caught if it&#39;s None as well:</span>
             <span class="n">trans</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">%s%i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">trans</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="n">n_trans_cols</span><span class="p">)]</span>
 
@@ -518,15 +338,14 @@
         <span class="k">return</span> <span class="n">x</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_df</span> <span class="k">else</span> <span class="n">x</span><span class="o">.</span><span class="n">values</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_get_param_names</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_get_param_names</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
         <span class="c1"># so we can get constructor args for grid search</span>
         <span class="c1"># (this is a closure)</span>
-        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_p_names</span><span class="p">)</span> <span class="o">+</span> \
-               <span class="bp">cls</span><span class="o">.</span><span class="n">_cls</span><span class="o">.</span><span class="n">_get_param_names</span><span class="p">()</span>  <span class="c1"># must have _cls!</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">_p_names</span><span class="p">)</span> <span class="o">+</span> \
+               <span class="n">cls</span><span class="o">.</span><span class="n">_cls</span><span class="o">.</span><span class="n">_get_param_names</span><span class="p">()</span>  <span class="c1"># must have _cls!</span>
 </pre></div>
 
            </div>
-           
           </div>
           <footer>
   
@@ -539,7 +358,7 @@
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -557,12 +376,10 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.19.1',
-            LANGUAGE:'None',
+            VERSION:'0.19.2.dev1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
+            HAS_SOURCE:  true
         };
     </script>
       <script type="text/javascript" src="../../_static/jquery.js"></script>
@@ -577,13 +394,14 @@
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
   
 
+  
+  
   <script type="text/javascript">
       jQuery(function () {
-          
-          SphinxRtdTheme.Navigation.enableSticky();
-          
+          SphinxRtdTheme.StickyNav.enable();
       });
-  </script> 
+  </script>
+   
 
 </body>
 </html>

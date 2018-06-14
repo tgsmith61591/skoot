@@ -8,11 +8,9 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>skoot.decomposition.SelectiveNMF &mdash; skoot 0.19.1 documentation</title>
+  <title>skoot.decomposition.SelectiveNMF &mdash; skoot 0.19.2.dev1 documentation</title>
   
 
-  
-  
   
   
 
@@ -25,23 +23,32 @@
   
 
   
+  
     <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/css/style.css" type="text/css" />
-    <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="skoot.decomposition.SelectivePCA" href="skoot.decomposition.SelectivePCA.html" />
-    <link rel="prev" title="skoot.decomposition.SelectiveKernelPCA" href="skoot.decomposition.SelectiveKernelPCA.html" /> 
+  
+
+  
+    <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../_static/css/style.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="skoot 0.19.2.dev1 documentation" href="../../index.html"/>
+        <link rel="up" title="API Reference" href="../classes.html"/>
+        <link rel="next" title="skoot.decomposition.SelectivePCA" href="skoot.decomposition.SelectivePCA.html"/>
+        <link rel="prev" title="skoot.decomposition.SelectiveKernelPCA" href="skoot.decomposition.SelectiveKernelPCA.html"/> 
 
   
   <script src="../../_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav">
+<body class="wy-body-for-nav" role="document">
 
-   
   <div class="wy-grid-for-nav">
 
     
@@ -61,7 +68,7 @@
             
             
               <div class="version">
-                0.19.1
+                0.19.2.dev1
               </div>
             
           
@@ -82,31 +89,30 @@
           
             
             
-              
-            
-            
-              <ul class="current">
+                <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../classes.html">API Reference</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.base"><code class="docutils literal notranslate"><span class="pre">skoot.base</span></code>: Base metaclasses and utility functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot"><code class="docutils literal notranslate"><span class="pre">skoot.decorators</span></code>: Decorator utilities</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.balance"><code class="docutils literal notranslate"><span class="pre">skoot.balance</span></code>: Class imbalance remedies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.datasets"><code class="docutils literal notranslate"><span class="pre">skoot.datasets</span></code>: Dataset loaders</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../classes.html#module-skoot.decomposition"><code class="docutils literal notranslate"><span class="pre">skoot.decomposition</span></code>: Various matrix decompositions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.base"><code class="docutils literal"><span class="pre">skoot.base</span></code>: Base metaclasses and utility functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot"><code class="docutils literal"><span class="pre">skoot.decorators</span></code>: Decorator utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.balance"><code class="docutils literal"><span class="pre">skoot.balance</span></code>: Class imbalance remedies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.datasets"><code class="docutils literal"><span class="pre">skoot.datasets</span></code>: Dataset loaders</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../classes.html#module-skoot.decomposition"><code class="docutils literal"><span class="pre">skoot.decomposition</span></code>: Various matrix decompositions</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="../classes.html#decomposition-classes">Decomposition classes</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="skoot.decomposition.SelectiveIncrementalPCA.html"><code class="docutils literal notranslate"><span class="pre">skoot.decomposition</span></code>.SelectiveIncrementalPCA</a></li>
-<li class="toctree-l4"><a class="reference internal" href="skoot.decomposition.SelectiveKernelPCA.html"><code class="docutils literal notranslate"><span class="pre">skoot.decomposition</span></code>.SelectiveKernelPCA</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">skoot.decomposition</span></code>.SelectiveNMF</a></li>
-<li class="toctree-l4"><a class="reference internal" href="skoot.decomposition.SelectivePCA.html"><code class="docutils literal notranslate"><span class="pre">skoot.decomposition</span></code>.SelectivePCA</a></li>
-<li class="toctree-l4"><a class="reference internal" href="skoot.decomposition.SelectiveTruncatedSVD.html"><code class="docutils literal notranslate"><span class="pre">skoot.decomposition</span></code>.SelectiveTruncatedSVD</a></li>
-<li class="toctree-l4"><a class="reference internal" href="skoot.decomposition.QRDecomposition.html"><code class="docutils literal notranslate"><span class="pre">skoot.decomposition</span></code>.QRDecomposition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="skoot.decomposition.SelectiveIncrementalPCA.html"><code class="docutils literal"><span class="pre">skoot.decomposition</span></code>.SelectiveIncrementalPCA</a></li>
+<li class="toctree-l4"><a class="reference internal" href="skoot.decomposition.SelectiveKernelPCA.html"><code class="docutils literal"><span class="pre">skoot.decomposition</span></code>.SelectiveKernelPCA</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#"><code class="docutils literal"><span class="pre">skoot.decomposition</span></code>.SelectiveNMF</a></li>
+<li class="toctree-l4"><a class="reference internal" href="skoot.decomposition.SelectivePCA.html"><code class="docutils literal"><span class="pre">skoot.decomposition</span></code>.SelectivePCA</a></li>
+<li class="toctree-l4"><a class="reference internal" href="skoot.decomposition.SelectiveTruncatedSVD.html"><code class="docutils literal"><span class="pre">skoot.decomposition</span></code>.SelectiveTruncatedSVD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="skoot.decomposition.QRDecomposition.html"><code class="docutils literal"><span class="pre">skoot.decomposition</span></code>.QRDecomposition</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.feature_extraction"><code class="docutils literal notranslate"><span class="pre">skoot.feature_extraction</span></code>: Feature extraction methods</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.feature_selection"><code class="docutils literal notranslate"><span class="pre">skoot.feature_selection</span></code>: Feature selection methods</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.preprocessing"><code class="docutils literal notranslate"><span class="pre">skoot.preprocessing</span></code>: Pre-processing transformers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.utils"><code class="docutils literal notranslate"><span class="pre">skoot.utils</span></code>: Common utility functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.exploration"><code class="docutils literal"><span class="pre">skoot.exploration</span></code>: Exploratory data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.feature_extraction"><code class="docutils literal"><span class="pre">skoot.feature_extraction</span></code>: Feature extraction methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.feature_selection"><code class="docutils literal"><span class="pre">skoot.feature_selection</span></code>: Feature selection methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.model_validation"><code class="docutils literal"><span class="pre">skoot.model_validation</span></code>: Model validation &amp; monitoring</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.preprocessing"><code class="docutils literal"><span class="pre">skoot.preprocessing</span></code>: Pre-processing transformers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.utils"><code class="docutils literal"><span class="pre">skoot.utils</span></code>: Common utility functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">Examples</a></li>
@@ -122,76 +128,52 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">skoot</a>
-        
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">skoot</a>
       </nav>
 
 
+      
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
           
 
-
-
-
-
-
-
-
-
-
-
-
+ 
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
-
   <ul class="wy-breadcrumbs">
-    
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
-        
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
           <li><a href="../classes.html">API Reference</a> &raquo;</li>
-        
-      <li><code class="docutils literal notranslate"><span class="pre">skoot.decomposition</span></code>.SelectiveNMF</li>
-    
-    
+      
+    <li><code class="docutils literal"><span class="pre">skoot.decomposition</span></code>.SelectiveNMF</li>
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../../_sources/modules/generated/skoot.decomposition.SelectiveNMF.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
   <div class="section" id="skoot-decomposition-selectivenmf">
-<h1><a class="reference internal" href="../classes.html#module-skoot.decomposition" title="skoot.decomposition"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skoot.decomposition</span></code></a>.SelectiveNMF<a class="headerlink" href="#skoot-decomposition-selectivenmf" title="Permalink to this headline">¶</a></h1>
+<h1><a class="reference internal" href="../classes.html#module-skoot.decomposition" title="skoot.decomposition"><code class="xref py py-mod docutils literal"><span class="pre">skoot.decomposition</span></code></a>.SelectiveNMF<a class="headerlink" href="#skoot-decomposition-selectivenmf" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="skoot.decomposition.SelectiveNMF">
 <em class="property">class </em><code class="descclassname">skoot.decomposition.</code><code class="descname">SelectiveNMF</code><span class="sig-paren">(</span><em>cols=None</em>, <em>as_df=True</em>, <em>trans_col_name=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/decomposition/decompose.html#SelectiveNMF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.decomposition.SelectiveNMF" title="Permalink to this definition">¶</a></dt>
 <dd><p>Non-Negative Matrix Factorization (NMF) (applied to selected columns).</p>
-<p>This class wraps scikit-learn’s NMF. When a pd.DataFrame is 
-passed to the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method, the transformation is applied to the 
-selected columns, which are subsequently dropped from the frame. All 
-remaining columns are left alone.</p>
 <p>Find two non-negative matrices (W, H) whose product approximates the non-
 negative matrix X. This factorization can be used for example for
 dimensionality reduction, source separation or topic extraction.</p>
 <p>The objective function is:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">0.5</span> <span class="o">*</span> <span class="o">||</span><span class="n">X</span> <span class="o">-</span> <span class="n">WH</span><span class="o">||</span><span class="n">_Fro</span><span class="o">^</span><span class="mi">2</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="mf">0.5</span> <span class="o">*</span> <span class="o">||</span><span class="n">X</span> <span class="o">-</span> <span class="n">WH</span><span class="o">||</span><span class="n">_Fro</span><span class="o">^</span><span class="mi">2</span>
 <span class="o">+</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">l1_ratio</span> <span class="o">*</span> <span class="o">||</span><span class="n">vec</span><span class="p">(</span><span class="n">W</span><span class="p">)</span><span class="o">||</span><span class="n">_1</span>
 <span class="o">+</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">l1_ratio</span> <span class="o">*</span> <span class="o">||</span><span class="n">vec</span><span class="p">(</span><span class="n">H</span><span class="p">)</span><span class="o">||</span><span class="n">_1</span>
 <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">alpha</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">l1_ratio</span><span class="p">)</span> <span class="o">*</span> <span class="o">||</span><span class="n">W</span><span class="o">||</span><span class="n">_Fro</span><span class="o">^</span><span class="mi">2</span>
@@ -199,177 +181,225 @@ dimensionality reduction, source separation or topic extraction.</p>
 </pre></div>
 </div>
 <p>Where:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">||</span><span class="n">A</span><span class="o">||</span><span class="n">_Fro</span><span class="o">^</span><span class="mi">2</span> <span class="o">=</span> \<span class="n">sum_</span><span class="p">{</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">}</span> <span class="n">A_</span><span class="p">{</span><span class="n">ij</span><span class="p">}</span><span class="o">^</span><span class="mi">2</span> <span class="p">(</span><span class="n">Frobenius</span> <span class="n">norm</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">||</span><span class="n">A</span><span class="o">||</span><span class="n">_Fro</span><span class="o">^</span><span class="mi">2</span> <span class="o">=</span> \<span class="n">sum_</span><span class="p">{</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">}</span> <span class="n">A_</span><span class="p">{</span><span class="n">ij</span><span class="p">}</span><span class="o">^</span><span class="mi">2</span> <span class="p">(</span><span class="n">Frobenius</span> <span class="n">norm</span><span class="p">)</span>
 <span class="o">||</span><span class="n">vec</span><span class="p">(</span><span class="n">A</span><span class="p">)</span><span class="o">||</span><span class="n">_1</span> <span class="o">=</span> \<span class="n">sum_</span><span class="p">{</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">}</span> <span class="nb">abs</span><span class="p">(</span><span class="n">A_</span><span class="p">{</span><span class="n">ij</span><span class="p">})</span> <span class="p">(</span><span class="n">Elementwise</span> <span class="n">L1</span> <span class="n">norm</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>For multiplicative-update (‘mu’) solver, the Frobenius norm
-(0.5 * ||X - WH||_Fro^2) can be changed into another beta-divergence loss,
-by changing the beta_loss parameter.</p>
 <p>The objective function is minimized with an alternating minimization of W
 and H.</p>
 <p>Read more in the <span class="xref std std-ref">User Guide</span>.</p>
+<p>This class wraps scikit-learn’s NMF. When a 
+pd.DataFrame is passed to the <code class="docutils literal"><span class="pre">fit</span></code> method, the transformation is 
+applied to the selected columns, which are subsequently dropped from the 
+frame. All remaining columns are left alone.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>cols</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array-like, shape=(n_features,), optional (default=None)</span></dt>
-<dd><p class="first last">The names of the columns on which to apply the transformation.
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>cols</strong> : array-like, shape=(n_features,), optional (default=None)</p>
+<blockquote>
+<div><p>The names of the columns on which to apply the transformation.
 If no column names are provided, the transformer will be fit
 on the entire frame. Note that the transformation will also 
 only apply to the specified columns, and any other 
 non-specified columns will still be present after 
 the transformation.</p>
-</dd>
-<dt><strong>as_df</strong> <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional (default=True)</span></dt>
-<dd><p class="first last">Whether to return a Pandas <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> in the <code class="docutils literal notranslate"><span class="pre">transform</span></code>
-method. If False, will return a Numpy <code class="docutils literal notranslate"><span class="pre">ndarray</span></code> instead. 
+</div></blockquote>
+<p><strong>as_df</strong> : bool, optional (default=True)</p>
+<blockquote>
+<div><p>Whether to return a Pandas <code class="docutils literal"><span class="pre">DataFrame</span></code> in the <code class="docutils literal"><span class="pre">transform</span></code>
+method. If False, will return a Numpy <code class="docutils literal"><span class="pre">ndarray</span></code> instead. 
 Since most skoot transformers depend on explicitly-named
-<code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> features, the <code class="docutils literal notranslate"><span class="pre">as_df</span></code> parameter is True by 
+<code class="docutils literal"><span class="pre">DataFrame</span></code> features, the <code class="docutils literal"><span class="pre">as_df</span></code> parameter is True by 
 default.</p>
-</dd>
-<dt><strong>trans_col_name</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str, unicode or iterable, optional</span></dt>
-<dd><p class="first last">The name or list of names to apply to the transformed column(s).
+</div></blockquote>
+<p><strong>trans_col_name</strong> : str, unicode or iterable, optional</p>
+<blockquote>
+<div><p>The name or list of names to apply to the transformed column(s).
 If a string is provided, it is used as a prefix for new columns.
 If an iterable is provided, its dimensions must match the number of
 produced columns. If None (default), will use the estimator class
 name as the prefix.</p>
-</dd>
-<dt><strong>n_components</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int or None</span></dt>
-<dd><p class="first last">Number of components, if n_components is not set all features
+</div></blockquote>
+<p><strong>n_components</strong> : int or None</p>
+<blockquote>
+<div><p>Number of components, if n_components is not set all features
 are kept.</p>
-</dd>
-<dt><strong>init</strong> <span class="classifier-delimiter">:</span> <span class="classifier">‘random’ | ‘nndsvd’ |  ‘nndsvda’ | ‘nndsvdar’ | ‘custom’</span></dt>
-<dd><p class="first">Method used to initialize the procedure.
-Default: ‘nndsvd’ if n_components &lt; n_features, otherwise random.
+</div></blockquote>
+<p><strong>init</strong> :  ‘random’ | ‘nndsvd’ |  ‘nndsvda’ | ‘nndsvdar’ | ‘custom’</p>
+<blockquote>
+<div><p>Method used to initialize the procedure.
+Default: ‘nndsvdar’ if n_components &lt; n_features, otherwise random.
 Valid options:</p>
-<ul class="last simple">
+<ul>
 <li><dl class="first docutils">
 <dt>‘random’: non-negative random matrices, scaled with:</dt>
-<dd>sqrt(X.mean() / n_components)</dd>
+<dd><p class="first last">sqrt(X.mean() / n_components)</p>
+</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt>‘nndsvd’: Nonnegative Double Singular Value Decomposition (NNDSVD)</dt>
-<dd>initialization (better for sparseness)</dd>
+<dd><p class="first last">initialization (better for sparseness)</p>
+</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt>‘nndsvda’: NNDSVD with zeros filled with the average of X</dt>
-<dd>(better when sparsity is not desired)</dd>
+<dd><p class="first last">(better when sparsity is not desired)</p>
+</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt>‘nndsvdar’: NNDSVD with zeros filled with small random values</dt>
-<dd>(generally faster, less accurate alternative to NNDSVDa
-for when sparsity is not desired)</dd>
+<dd><p class="first last">(generally faster, less accurate alternative to NNDSVDa
+for when sparsity is not desired)</p>
+</dd>
 </dl>
 </li>
-<li>‘custom’: use custom matrices W and H</li>
+<li><p class="first">‘custom’: use custom matrices W and H</p>
+</li>
 </ul>
-</dd>
-<dt><strong>solver</strong> <span class="classifier-delimiter">:</span> <span class="classifier">‘cd’ | ‘mu’</span></dt>
-<dd><p class="first">Numerical solver to use:
-‘cd’ is a Coordinate Descent solver.
-‘mu’ is a Multiplicative Update solver.</p>
+</div></blockquote>
+<p><strong>solver</strong> : ‘pg’ | ‘cd’</p>
+<blockquote>
+<div><p>Numerical solver to use:
+‘pg’ is a Projected Gradient solver (deprecated).
+‘cd’ is a Coordinate Descent solver (recommended).</p>
 <div class="versionadded">
 <p><span class="versionmodified">New in version 0.17: </span>Coordinate Descent solver.</p>
 </div>
-<div class="last versionadded">
-<p><span class="versionmodified">New in version 0.19: </span>Multiplicative Update solver.</p>
+<div class="versionchanged">
+<p><span class="versionmodified">Changed in version 0.17: </span>Deprecated Projected Gradient solver.</p>
 </div>
-</dd>
-<dt><strong>beta_loss</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float or string, default ‘frobenius’</span></dt>
-<dd><p class="first">String must be in {‘frobenius’, ‘kullback-leibler’, ‘itakura-saito’}.
-Beta divergence to be minimized, measuring the distance between X
-and the dot product WH. Note that values different from ‘frobenius’
-(or 2) and ‘kullback-leibler’ (or 1) lead to significantly slower
-fits. Note that for beta_loss &lt;= 0 (or ‘itakura-saito’), the input
-matrix X cannot contain zeros. Used only in ‘mu’ solver.</p>
-<div class="last versionadded">
-<p><span class="versionmodified">New in version 0.19.</span></p>
-</div>
-</dd>
-<dt><strong>tol</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float, default: 1e-4</span></dt>
-<dd><p class="first last">Tolerance of the stopping condition.</p>
-</dd>
-<dt><strong>max_iter</strong> <span class="classifier-delimiter">:</span> <span class="classifier">integer, default: 200</span></dt>
-<dd><p class="first last">Maximum number of iterations before timing out.</p>
-</dd>
-<dt><strong>random_state</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int, RandomState instance or None, optional, default: None</span></dt>
-<dd><p class="first last">If int, random_state is the seed used by the random number generator;
-If RandomState instance, random_state is the random number generator;
-If None, the random number generator is the RandomState instance used
-by <cite>np.random</cite>.</p>
-</dd>
-<dt><strong>alpha</strong> <span class="classifier-delimiter">:</span> <span class="classifier">double, default: 0.</span></dt>
-<dd><p class="first">Constant that multiplies the regularization terms. Set it to zero to
+</div></blockquote>
+<p><strong>tol</strong> : double, default: 1e-4</p>
+<blockquote>
+<div><p>Tolerance value used in stopping conditions.</p>
+</div></blockquote>
+<p><strong>max_iter</strong> : integer, default: 200</p>
+<blockquote>
+<div><p>Number of iterations to compute.</p>
+</div></blockquote>
+<p><strong>random_state</strong> : integer seed, RandomState instance, or None (default)</p>
+<blockquote>
+<div><p>Random number generator seed control.</p>
+</div></blockquote>
+<p><strong>alpha</strong> : double, default: 0.</p>
+<blockquote>
+<div><p>Constant that multiplies the regularization terms. Set it to zero to
 have no regularization.</p>
-<div class="last versionadded">
+<div class="versionadded">
 <p><span class="versionmodified">New in version 0.17: </span><em>alpha</em> used in the Coordinate Descent solver.</p>
 </div>
-</dd>
-<dt><strong>l1_ratio</strong> <span class="classifier-delimiter">:</span> <span class="classifier">double, default: 0.</span></dt>
-<dd><p class="first">The regularization mixing parameter, with 0 &lt;= l1_ratio &lt;= 1.
+</div></blockquote>
+<p><strong>l1_ratio</strong> : double, default: 0.</p>
+<blockquote>
+<div><p>The regularization mixing parameter, with 0 &lt;= l1_ratio &lt;= 1.
 For l1_ratio = 0 the penalty is an elementwise L2 penalty
 (aka Frobenius Norm).
 For l1_ratio = 1 it is an elementwise L1 penalty.
 For 0 &lt; l1_ratio &lt; 1, the penalty is a combination of L1 and L2.</p>
-<div class="last versionadded">
+<div class="versionadded">
 <p><span class="versionmodified">New in version 0.17: </span>Regularization parameter <em>l1_ratio</em> used in the Coordinate Descent
 solver.</p>
 </div>
-</dd>
-<dt><strong>verbose</strong> <span class="classifier-delimiter">:</span> <span class="classifier">bool, default=False</span></dt>
-<dd><p class="first last">Whether to be verbose.</p>
-</dd>
-<dt><strong>shuffle</strong> <span class="classifier-delimiter">:</span> <span class="classifier">boolean, default: False</span></dt>
-<dd><p class="first">If true, randomize the order of coordinates in the CD solver.</p>
-<div class="last versionadded">
+</div></blockquote>
+<p><strong>shuffle</strong> : boolean, default: False</p>
+<blockquote>
+<div><p>If true, randomize the order of coordinates in the CD solver.</p>
+<div class="versionadded">
 <p><span class="versionmodified">New in version 0.17: </span><em>shuffle</em> parameter used in the Coordinate Descent solver.</p>
 </div>
-</dd>
-</dl>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Attributes:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>components_</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array, [n_components, n_features]</span></dt>
-<dd><p class="first last">Factorization matrix, sometimes called ‘dictionary’.</p>
-</dd>
-<dt><strong>reconstruction_err_</strong> <span class="classifier-delimiter">:</span> <span class="classifier">number</span></dt>
-<dd><p class="first last">Frobenius norm of the matrix difference, or beta-divergence, between
-the training data <code class="docutils literal notranslate"><span class="pre">X</span></code> and the reconstructed data <code class="docutils literal notranslate"><span class="pre">WH</span></code> from
-the fitted model.</p>
-</dd>
-<dt><strong>n_iter_</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
-<dd><p class="first last">Actual number of iterations.</p>
-</dd>
-</dl>
+</div></blockquote>
+<p><strong>nls_max_iter</strong> : integer, default: 2000</p>
+<blockquote>
+<div><p>Number of iterations in NLS subproblem.
+Used only in the deprecated ‘pg’ solver.</p>
+<div class="versionchanged">
+<p><span class="versionmodified">Changed in version 0.17: </span>Deprecated Projected Gradient solver. Use Coordinate Descent solver
+instead.</p>
+</div>
+</div></blockquote>
+<p><strong>sparseness</strong> : ‘data’ | ‘components’ | None, default: None</p>
+<blockquote>
+<div><p>Where to enforce sparsity in the model.
+Used only in the deprecated ‘pg’ solver.</p>
+<div class="versionchanged">
+<p><span class="versionmodified">Changed in version 0.17: </span>Deprecated Projected Gradient solver. Use Coordinate Descent solver
+instead.</p>
+</div>
+</div></blockquote>
+<p><strong>beta</strong> : double, default: 1</p>
+<blockquote>
+<div><p>Degree of sparseness, if sparseness is not None. Larger values mean
+more sparseness. Used only in the deprecated ‘pg’ solver.</p>
+<div class="versionchanged">
+<p><span class="versionmodified">Changed in version 0.17: </span>Deprecated Projected Gradient solver. Use Coordinate Descent solver
+instead.</p>
+</div>
+</div></blockquote>
+<p><strong>eta</strong> : double, default: 0.1</p>
+<blockquote class="last">
+<div><p>Degree of correctness to maintain, if sparsity is not None. Smaller
+values mean larger error. Used only in the deprecated ‘pg’ solver.</p>
+<div class="versionchanged">
+<p><span class="versionmodified">Changed in version 0.17: </span>Deprecated Projected Gradient solver. Use Coordinate Descent solver
+instead.</p>
+</div>
+</div></blockquote>
 </td>
 </tr>
 </tbody>
 </table>
 <div class="admonition seealso">
 <p class="first admonition-title">See also</p>
-<p class="last"><a class="reference internal" href="skoot.decomposition.SelectiveIncrementalPCA.html#skoot.decomposition.SelectiveIncrementalPCA" title="skoot.decomposition.SelectiveIncrementalPCA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SelectiveIncrementalPCA</span></code></a>, <a class="reference internal" href="skoot.decomposition.SelectiveKernelPCA.html#skoot.decomposition.SelectiveKernelPCA" title="skoot.decomposition.SelectiveKernelPCA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SelectiveKernelPCA</span></code></a>, <a class="reference internal" href="skoot.decomposition.SelectivePCA.html#skoot.decomposition.SelectivePCA" title="skoot.decomposition.SelectivePCA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SelectivePCA</span></code></a>, <a class="reference internal" href="skoot.decomposition.SelectiveTruncatedSVD.html#skoot.decomposition.SelectiveTruncatedSVD" title="skoot.decomposition.SelectiveTruncatedSVD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SelectiveTruncatedSVD</span></code></a></p>
+<p class="last"><a class="reference internal" href="skoot.decomposition.SelectiveIncrementalPCA.html#skoot.decomposition.SelectiveIncrementalPCA" title="skoot.decomposition.SelectiveIncrementalPCA"><code class="xref py py-obj docutils literal"><span class="pre">SelectiveIncrementalPCA</span></code></a>, <code class="xref py py-obj docutils literal"><span class="pre">SelectiveKernalPCA</span></code>, <a class="reference internal" href="skoot.decomposition.SelectivePCA.html#skoot.decomposition.SelectivePCA" title="skoot.decomposition.SelectivePCA"><code class="xref py py-obj docutils literal"><span class="pre">SelectivePCA</span></code></a>, <a class="reference internal" href="skoot.decomposition.SelectiveTruncatedSVD.html#skoot.decomposition.SelectiveTruncatedSVD" title="skoot.decomposition.SelectiveTruncatedSVD"><code class="xref py py-obj docutils literal"><span class="pre">SelectiveTruncatedSVD</span></code></a></p>
 </div>
 <p class="rubric">References</p>
+<p>C.-J. Lin. Projected gradient methods for non-negative matrix
+factorization. Neural Computation, 19(2007), 2756-2779.
+<a class="reference external" href="http://www.csie.ntu.edu.tw/~cjlin/nmf/">http://www.csie.ntu.edu.tw/~cjlin/nmf/</a></p>
 <p>Cichocki, Andrzej, and P. H. A. N. Anh-Huy. “Fast local algorithms for
 large scale nonnegative matrix and tensor factorizations.”
 IEICE transactions on fundamentals of electronics, communications and
 computer sciences 92.3: 708-721, 2009.</p>
-<p>Fevotte, C., &amp; Idier, J. (2011). Algorithms for nonnegative matrix
-factorization with the beta-divergence. Neural Computation, 23(9).</p>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">],</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">],</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="k">import</span> <span class="n">NMF</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">NMF</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="s1">&#39;random&#39;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">W</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">components_</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> 
+<span class="go">NMF(alpha=0.0, beta=1, eta=0.1, init=&#39;random&#39;, l1_ratio=0.0, max_iter=200,</span>
+<span class="go">  n_components=2, nls_max_iter=2000, random_state=0, shuffle=False,</span>
+<span class="go">  solver=&#39;cd&#39;, sparseness=None, tol=0.0001, verbose=0)</span>
 </pre></div>
 </div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">components_</span>
+<span class="go">array([[ 2.09783018,  0.30560234],</span>
+<span class="go">       [ 2.13443044,  2.13171694]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">reconstruction_err_</span> 
+<span class="go">0.00115993...</span>
+</pre></div>
+</div>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="11%" />
+<col width="89%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a href="#id1"><span class="problematic" id="id2">components_</span></a></td>
+<td>(array, [n_components, n_features]) Non-negative components of the data.</td>
+</tr>
+<tr class="row-even"><td><a href="#id3"><span class="problematic" id="id4">reconstruction_err_</span></a></td>
+<td>(number) Frobenius norm of the matrix difference between the training data and the reconstructed data from the fit produced by the model. <code class="docutils literal"><span class="pre">||</span> <span class="pre">X</span> <span class="pre">-</span> <span class="pre">WH</span> <span class="pre">||_2</span></code></td>
+</tr>
+<tr class="row-odd"><td><a href="#id5"><span class="problematic" id="id6">n_iter_</span></a></td>
+<td>(int) Actual number of iterations.</td>
+</tr>
+</tbody>
+</table>
 <p class="rubric">Methods</p>
 <table border="1" class="longtable docutils">
 <colgroup>
@@ -377,19 +407,19 @@ factorization with the beta-divergence. Neural Computation, 23(9).</p>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#skoot.decomposition.SelectiveNMF.fit" title="skoot.decomposition.SelectiveNMF.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(X[,&nbsp;y])</td>
+<tr class="row-odd"><td><a class="reference internal" href="#skoot.decomposition.SelectiveNMF.fit" title="skoot.decomposition.SelectiveNMF.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(X[,&nbsp;y])</td>
 <td>Fit the wrapped transformer.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#skoot.decomposition.SelectiveNMF.fit_transform" title="skoot.decomposition.SelectiveNMF.fit_transform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_transform</span></code></a>(X[,&nbsp;y])</td>
+<tr class="row-even"><td><a class="reference internal" href="#skoot.decomposition.SelectiveNMF.fit_transform" title="skoot.decomposition.SelectiveNMF.fit_transform"><code class="xref py py-obj docutils literal"><span class="pre">fit_transform</span></code></a>(X[,&nbsp;y])</td>
 <td>Fit to data, then transform it.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#skoot.decomposition.SelectiveNMF.get_params" title="skoot.decomposition.SelectiveNMF.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code></a>([deep])</td>
+<tr class="row-odd"><td><a class="reference internal" href="#skoot.decomposition.SelectiveNMF.get_params" title="skoot.decomposition.SelectiveNMF.get_params"><code class="xref py py-obj docutils literal"><span class="pre">get_params</span></code></a>([deep])</td>
 <td>Get parameters for this estimator.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#skoot.decomposition.SelectiveNMF.set_params" title="skoot.decomposition.SelectiveNMF.set_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_params</span></code></a>(**params)</td>
+<tr class="row-even"><td><a class="reference internal" href="#skoot.decomposition.SelectiveNMF.set_params" title="skoot.decomposition.SelectiveNMF.set_params"><code class="xref py py-obj docutils literal"><span class="pre">set_params</span></code></a>(**params)</td>
 <td>Set the parameters of this estimator.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#skoot.decomposition.SelectiveNMF.transform" title="skoot.decomposition.SelectiveNMF.transform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">transform</span></code></a>(X)</td>
+<tr class="row-odd"><td><a class="reference internal" href="#skoot.decomposition.SelectiveNMF.transform" title="skoot.decomposition.SelectiveNMF.transform"><code class="xref py py-obj docutils literal"><span class="pre">transform</span></code></a>(X)</td>
 <td>Transform a test dataframe.</td>
 </tr>
 </tbody>
@@ -397,8 +427,7 @@ factorization with the beta-divergence. Neural Computation, 23(9).</p>
 <dl class="method">
 <dt id="skoot.decomposition.SelectiveNMF.__init__">
 <code class="descname">__init__</code><span class="sig-paren">(</span><em>cols=None</em>, <em>as_df=True</em>, <em>trans_col_name=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.decomposition.SelectiveNMF.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="skoot.decomposition.SelectiveNMF.fit">
@@ -410,18 +439,18 @@ selected columns, leaving other columns alone.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>X</strong> <span class="classifier-delimiter">:</span> <span class="classifier">pd.DataFrame, shape=(n_samples, n_features)</span></dt>
-<dd><p class="first last">The Pandas frame to fit. The frame will only
-be fit on the prescribed <code class="docutils literal notranslate"><span class="pre">cols</span></code> (see <code class="docutils literal notranslate"><span class="pre">__init__</span></code>) or
-all of them if <code class="docutils literal notranslate"><span class="pre">cols</span></code> is None. Furthermore, <code class="docutils literal notranslate"><span class="pre">X</span></code> will
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>X</strong> : pd.DataFrame, shape=(n_samples, n_features)</p>
+<blockquote>
+<div><p>The Pandas frame to fit. The frame will only
+be fit on the prescribed <code class="docutils literal"><span class="pre">cols</span></code> (see <code class="docutils literal"><span class="pre">__init__</span></code>) or
+all of them if <code class="docutils literal"><span class="pre">cols</span></code> is None. Furthermore, <code class="docutils literal"><span class="pre">X</span></code> will
 not be altered in the process of the fit.</p>
-</dd>
-<dt><strong>y</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array-like or None, shape=(n_samples,), optional (default=None)</span></dt>
-<dd><p class="first last">Pass-through for <code class="docutils literal notranslate"><span class="pre">sklearn.pipeline.Pipeline</span></code>. Even
-if explicitly set, will not change behavior of <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p>
-</dd>
-</dl>
+</div></blockquote>
+<p><strong>y</strong> : array-like or None, shape=(n_samples,), optional (default=None)</p>
+<blockquote class="last">
+<div><p>Pass-through for <code class="docutils literal"><span class="pre">sklearn.pipeline.Pipeline</span></code>. Even
+if explicitly set, will not change behavior of <code class="docutils literal"><span class="pre">fit</span></code>.</p>
+</div></blockquote>
 </td>
 </tr>
 </tbody>
@@ -438,21 +467,20 @@ and returns a transformed version of X.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>X</strong> <span class="classifier-delimiter">:</span> <span class="classifier">numpy array of shape [n_samples, n_features]</span></dt>
-<dd><p class="first last">Training set.</p>
-</dd>
-<dt><strong>y</strong> <span class="classifier-delimiter">:</span> <span class="classifier">numpy array of shape [n_samples]</span></dt>
-<dd><p class="first last">Target values.</p>
-</dd>
-</dl>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>X</strong> : numpy array of shape [n_samples, n_features]</p>
+<blockquote>
+<div><p>Training set.</p>
+</div></blockquote>
+<p><strong>y</strong> : numpy array of shape [n_samples]</p>
+<blockquote>
+<div><p>Target values.</p>
+</div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>X_new</strong> <span class="classifier-delimiter">:</span> <span class="classifier">numpy array of shape [n_samples, n_features_new]</span></dt>
-<dd><p class="first last">Transformed array.</p>
-</dd>
-</dl>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X_new</strong> : numpy array of shape [n_samples, n_features_new]</p>
+<blockquote class="last">
+<div><p>Transformed array.</p>
+</div></blockquote>
 </td>
 </tr>
 </tbody>
@@ -467,19 +495,17 @@ and returns a transformed version of X.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>deep</strong> <span class="classifier-delimiter">:</span> <span class="classifier">boolean, optional</span></dt>
-<dd><p class="first last">If True, will return the parameters for this estimator and
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>deep</strong> : boolean, optional</p>
+<blockquote>
+<div><p>If True, will return the parameters for this estimator and
 contained subobjects that are estimators.</p>
-</dd>
-</dl>
+</div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>params</strong> <span class="classifier-delimiter">:</span> <span class="classifier">mapping of string to any</span></dt>
-<dd><p class="first last">Parameter names mapped to their values.</p>
-</dd>
-</dl>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>params</strong> : mapping of string to any</p>
+<blockquote class="last">
+<div><p>Parameter names mapped to their values.</p>
+</div></blockquote>
 </td>
 </tr>
 </tbody>
@@ -492,17 +518,13 @@ contained subobjects that are estimators.</p>
 <dd><p>Set the parameters of this estimator.</p>
 <p>The method works on simple estimators as well as on nested objects
 (such as pipelines). The latter have parameters of the form
-<code class="docutils literal notranslate"><span class="pre">&lt;component&gt;__&lt;parameter&gt;</span></code> so that it’s possible to update each
+<code class="docutils literal"><span class="pre">&lt;component&gt;__&lt;parameter&gt;</span></code> so that it’s possible to update each
 component of a nested object.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>self</strong></dt>
-<dd></dd>
-</dl>
-</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">self</td>
 </tr>
 </tbody>
 </table>
@@ -516,21 +538,19 @@ component of a nested object.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>X</strong> <span class="classifier-delimiter">:</span> <span class="classifier">pd.DataFrame, shape=(n_samples, n_features)</span></dt>
-<dd><p class="first last">The Pandas frame to transform. The operation will
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>X</strong> : pd.DataFrame, shape=(n_samples, n_features)</p>
+<blockquote>
+<div><p>The Pandas frame to transform. The operation will
 be applied to a copy of the input data, and the result
 will be returned.</p>
-</dd>
-</dl>
+</div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>X</strong> <span class="classifier-delimiter">:</span> <span class="classifier">pd.DataFrame, shape=(n_samples, n_features)</span></dt>
-<dd><p class="first last">The operation is applied to a copy of <code class="docutils literal notranslate"><span class="pre">X</span></code>,
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X</strong> : pd.DataFrame, shape=(n_samples, n_features)</p>
+<blockquote class="last">
+<div><p>The operation is applied to a copy of <code class="docutils literal"><span class="pre">X</span></code>,
 and the result set is returned.</p>
-</dd>
-</dl>
+</div></blockquote>
 </td>
 </tr>
 </tbody>
@@ -543,16 +563,15 @@ and the result set is returned.</p>
 
 
            </div>
-           
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="skoot.decomposition.SelectivePCA.html" class="btn btn-neutral float-right" title="skoot.decomposition.SelectivePCA" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="skoot.decomposition.SelectivePCA.html" class="btn btn-neutral float-right" title="skoot.decomposition.SelectivePCA" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="skoot.decomposition.SelectiveKernelPCA.html" class="btn btn-neutral" title="skoot.decomposition.SelectiveKernelPCA" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="skoot.decomposition.SelectiveKernelPCA.html" class="btn btn-neutral" title="skoot.decomposition.SelectiveKernelPCA" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -565,7 +584,7 @@ and the result set is returned.</p>
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -583,12 +602,10 @@ and the result set is returned.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.19.1',
-            LANGUAGE:'None',
+            VERSION:'0.19.2.dev1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
+            HAS_SOURCE:  true
         };
     </script>
       <script type="text/javascript" src="../../_static/jquery.js"></script>
@@ -603,13 +620,14 @@ and the result set is returned.</p>
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
   
 
+  
+  
   <script type="text/javascript">
       jQuery(function () {
-          
-          SphinxRtdTheme.Navigation.enableSticky();
-          
+          SphinxRtdTheme.StickyNav.enable();
       });
-  </script> 
+  </script>
+   
 
 </body>
 </html>
