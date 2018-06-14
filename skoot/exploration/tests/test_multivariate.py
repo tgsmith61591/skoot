@@ -70,7 +70,7 @@ def test_summarize_all_categorical():
     ]
 
     levels = summary.values[remove, :].tolist()
-    levels = map(lambda row: [sorted(row[0]), sorted(row[1])], levels)
+    levels = list(map(lambda row: [sorted(row[0]), sorted(row[1])], levels))
     assert_array_equal(levels, expected_levels)
 
 
