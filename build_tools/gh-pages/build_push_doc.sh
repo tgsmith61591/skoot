@@ -41,8 +41,23 @@ git stash
 git checkout gh-pages
 # remove all files that are not in the .git dir
 find . -not -name ".git/*" -type f -maxdepth 1 -delete
+
 # remove the remaining directories
-rm -r .cache/ build/ build_tools/ doc/ examples/ skoot/
+declare -a leftover=(".cache/"
+                     ".idea/"
+                     "build/"
+                     "build_tools/"
+                     "doc/"
+                     "examples/"
+                     "skoot/"
+                     "skoot.egg-info/")
+
+# check for each left over file/dir and remove it
+for left in "${leftover[@]}"
+do
+    rm -r ${left} || echo "${left} does not exist; will not remove"
+done
+
 # we need this empty file for git not to try to build a jekyll project
 touch .nojekyll
 mv html/* ./
