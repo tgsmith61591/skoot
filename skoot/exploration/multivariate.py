@@ -76,8 +76,8 @@ def summarize(X):
     Num Levels                   NaN               NaN                NaN
     Arity                        NaN               NaN                NaN
     Missing                 0.000000          0.000000           0.000000
-    <BLANK_LINE>
-    ...            petal width (cm)    species
+    <BLANKLINE>
+                   petal width (cm)    species
     Mean                   1.198667        NaN
     Median                 1.300000        NaN
     Max                    2.500000        NaN
