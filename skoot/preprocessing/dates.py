@@ -20,7 +20,7 @@ __all__ = [
 ]
 
 
-def _cast_to_datetime(X, cols, formats):
+def _cast_to_datetime(X, cols, formats, allowed_types):
     # Now the real challenge here is that some of the columns passed
     # may not be date-parseable... we'll duck type it. If it fails, it
     # cannot be parsed, and we will let Pandas raise for that. No sense
@@ -28,13 +28,20 @@ def _cast_to_datetime(X, cols, formats):
     def cast(f):
         fmt = formats[f.name]
 
+        # First make sure the type is in allowed types
+        dtype = f.dtype.name
+        if dtype not in allowed_types:
+            raise ValueError("dtype '%s' not in `allowed_types` (%r)"
+                             % (dtype, allowed_types))
+
         # Now if the format is already a datetime, we can return early.
         # If the format isn't defined we can infer it, otherwise we can
         # parse it explicitly
         if is_datetime_type(f):
             return f
         elif fmt is None:
-            return pd.to_datetime(f, infer_datetime_format=True)
+            return pd.to_datetime(f, infer_datetime_format=True,
+                                  errors='raise')
         # otherwise the fmt is defined so we'll let it fail out on its own
         # if it cannot cast it
         return pd.to_datetime(f, format=fmt)
@@ -62,6 +69,11 @@ class DateTransformer(BasePDTransformer):
         positionally corresponding to ``cols`` (or a dict mapping columns
         to formats).
 
+    allowed_types : iterable, optional (default=("object", "datetime64[ns]"))
+        Permitted Series types. This is used to prevent accidentally casting
+        Series of unexpected types to DateTime. For instance, integer types
+        can be cast to DateTime even though the behavior may be unexpected.
+
     Notes
     -----
     The ``fit`` method here is only used for validation that the columns can
@@ -69,13 +81,33 @@ class DateTransformer(BasePDTransformer):
 
     Examples
     --------
-    TODO:
+    >>> import pandas as pd
+    >>> from datetime import datetime as dt
+    >>> data = [
+    ...     [1, "06/01/2018", dt.strptime("06-01-2018", "%m-%d-%Y")],
+    ...     [2, "06/02/2018", dt.strptime("06-02-2018", "%m-%d-%Y")],
+    ...     [3, "06/03/2018", dt.strptime("06-03-2018", "%m-%d-%Y")],
+    ...     [4, None, dt.strptime("06-04-2018", "%m-%d-%Y")],
+    ...     [4, "06/05/2018", None]
+    ... ]
+    >>> df = pd.DataFrame.from_records(data, columns=["a", "b", "c"])
+    >>> converter = DateTransformer(cols=["b", "c"],
+    ...                             date_format=["%m/%d/%Y", None])
+    >>> converter.fit_transform(df)
+       a          b          c
+    0  1 2018-06-01 2018-06-01
+    1  2 2018-06-02 2018-06-02
+    2  3 2018-06-03 2018-06-03
+    3  4        NaT 2018-06-04
+    4  4 2018-06-05        NaT
     """
-    def __init__(self, cols=None, date_format=None):
+    def __init__(self, cols=None, date_format=None,
+                 allowed_types=("object", "datetime64[ns]")):
         super(DateTransformer, self).__init__(
             cols=cols, as_df=True)
 
         self.date_format = date_format
+        self.allowed_types = allowed_types
 
     def fit(self, X, y=None):
         """Fit the date transformer.
@@ -129,7 +161,7 @@ class DateTransformer(BasePDTransformer):
             param_name="date_format",
             permitted_scalar_types=six.string_types + (NoneType,))
 
-        X = _cast_to_datetime(X, cols, formats)
+        X = _cast_to_datetime(X, cols, formats, self.allowed_types)
 
         self.fit_cols_ = cols
         self.formats_ = formats
@@ -162,4 +194,4 @@ class DateTransformer(BasePDTransformer):
         validate_test_set_columns(cols, X.columns)
 
         # transform
-        return _cast_to_datetime(X, cols, self.formats_)
+        return _cast_to_datetime(X, cols, self.formats_, self.allowed_types)
