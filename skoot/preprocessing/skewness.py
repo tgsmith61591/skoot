@@ -20,6 +20,7 @@ from ..base import BasePDTransformer
 from ..decorators import suppress_warnings as suppress
 from ..utils.validation import (check_dataframe, validate_multiple_rows,
                                 validate_test_set_columns)
+from ..utils.dataframe import dataframe_or_array
 
 __all__ = [
     'BoxCoxTransformer',
@@ -259,7 +260,7 @@ class _BaseSkewnessTransformer(six.with_metaclass(ABCMeta, BasePDTransformer)):
         for nm, lam in zip(cols, lambdas_):
             X[nm] = self._transform_vector(X[nm], lam)
 
-        return X if self.as_df else X.values
+        return dataframe_or_array(X, self.as_df)
 
 
 # A dumb hack bc we cannot pickle functions or instancemethods...

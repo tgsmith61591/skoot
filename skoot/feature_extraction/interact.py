@@ -12,6 +12,7 @@ from itertools import combinations
 from ..base import BasePDTransformer
 from ..utils.validation import (check_dataframe, validate_multiple_cols,
                                 validate_test_set_columns)
+from ..utils.dataframe import dataframe_or_array
 
 __all__ = [
     'InteractionTermTransformer'
@@ -158,4 +159,4 @@ class InteractionTermTransformer(BasePDTransformer):
             X[new_nm] = fun(feat_a, feat_b)
 
         # return matrix if needed
-        return X if self.as_df else X.values
+        return dataframe_or_array(X, self.as_df)

@@ -100,7 +100,7 @@ def check_dataframe(X, cols=None, assert_all_finite=False, column_diff=False):
 
     Returns
     -------
-    X_copy : pd.DataFrame
+    X_copy : DataFrame
         A copy of the ``X`` dataframe.
 
     cols : list

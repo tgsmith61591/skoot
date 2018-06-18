@@ -88,7 +88,7 @@ class DateTransformer(BasePDTransformer):
     ...     [2, "06/02/2018", dt.strptime("06-02-2018", "%m-%d-%Y")],
     ...     [3, "06/03/2018", dt.strptime("06-03-2018", "%m-%d-%Y")],
     ...     [4, None, dt.strptime("06-04-2018", "%m-%d-%Y")],
-    ...     [4, "06/05/2018", None]
+    ...     [5, "06/05/2018", None]
     ... ]
     >>> df = pd.DataFrame.from_records(data, columns=["a", "b", "c"])
     >>> converter = DateTransformer(cols=["b", "c"],
@@ -99,7 +99,7 @@ class DateTransformer(BasePDTransformer):
     1  2 2018-06-02 2018-06-02
     2  3 2018-06-03 2018-06-03
     3  4        NaT 2018-06-04
-    4  4 2018-06-05        NaT
+    4  5 2018-06-05        NaT
     """
     def __init__(self, cols=None, date_format=None,
                  allowed_types=("object", "datetime64[ns]")):
@@ -146,6 +146,9 @@ class DateTransformer(BasePDTransformer):
             be applied to a copy of the input data, and the result
             will be returned.
 
+        y : array-like or None, shape=(n_samples,), optional (default=None)
+            Pass-through for ``sklearn.pipeline.Pipeline``.
+
         Returns
         -------
         X : pd.DataFrame or np.ndarray, shape=(n_samples, n_features)
@@ -170,7 +173,7 @@ class DateTransformer(BasePDTransformer):
     def transform(self, X):
         """Apply the date transformation to a dataframe.
 
-        This method will cast string features to datetimes as specifed by
+        This method will cast string features to datetimes as specified by
         the ``date_format`` arg.
 
         Parameters

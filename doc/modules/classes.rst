@@ -167,6 +167,7 @@ Feature extraction estimators
     :toctree: generated/
     :template: class.rst
 
+    feature_extraction.DateFactorizer
     feature_extraction.InteractionTermTransformer
 
 
@@ -295,6 +296,16 @@ Skewness transformers
     preprocessing.BoxCoxTransformer
     preprocessing.YeoJohnsonTransformer
 
+Other transformers
+------------------
+.. py:currentmodule:: skoot
+
+.. autosummary::
+    :toctree: generated/
+    :template: class.rst
+
+    preprocessing.DateTransformer
+
 
 .. _utils_ref:
 
@@ -315,6 +326,7 @@ DataFrame utilities
     :toctree: generated/
     :template: function.rst
 
+    utils.dataframe_or_array
     utils.get_continuous_columns
     utils.get_datetime_columns
     utils.get_numeric_columns

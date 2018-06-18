@@ -11,6 +11,7 @@ import pandas as pd
 
 from ..base import BasePDTransformer
 from ..utils.validation import check_dataframe, validate_test_set_columns
+from ..utils.dataframe import dataframe_or_array
 
 __all__ = [
     'DummyEncoder'
@@ -175,4 +176,4 @@ class DummyEncoder(BasePDTransformer):
 
         # concat the new columns
         X = pd.concat([X, ohe_trans], axis=1)  # type: pd.DataFrame
-        return X if self.as_df else X.values
+        return dataframe_or_array(X, self.as_df)

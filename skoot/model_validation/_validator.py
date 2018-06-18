@@ -11,7 +11,7 @@ from __future__ import absolute_import
 
 from ..base import BasePDTransformer
 from ..utils.validation import check_dataframe, type_or_iterable_to_col_mapping
-from ..utils.dataframe import get_continuous_columns
+from ..utils.dataframe import get_continuous_columns, dataframe_or_array
 from ..exceptions import ValidationWarning
 
 from sklearn.externals import six
@@ -106,7 +106,7 @@ class _BaseValidator(six.with_metaclass(ABCMeta, BasePDTransformer)):
                     warnings.warn(msg, ValidationWarning)
 
         # just return X if we get here
-        return X if self.as_df else X.values
+        return dataframe_or_array(X, self.as_df)
 
 
 class CustomValidator(_BaseValidator):

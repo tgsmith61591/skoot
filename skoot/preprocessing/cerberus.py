@@ -7,8 +7,9 @@ from __future__ import absolute_import
 from sklearn.utils.validation import check_is_fitted
 from cerberus import Validator
 
-from skoot.base import BasePDTransformer
-from skoot.utils.validation import check_dataframe
+from ..base import BasePDTransformer
+from ..utils.validation import check_dataframe
+from ..utils.dataframe import dataframe_or_array
 
 import pandas as pd
 
@@ -97,4 +98,4 @@ class SchemaNormalizer(BasePDTransformer):
             for record in X.to_dict(orient='records')
         ])
 
-        return X if self.as_df else X.values
+        return dataframe_or_array(X, self.as_df)

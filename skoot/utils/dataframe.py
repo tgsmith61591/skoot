@@ -6,6 +6,7 @@ import pandas as pd
 import numpy as np
 
 __all__ = [
+    'dataframe_or_array',
     'get_continuous_columns',
     'get_datetime_columns',
     'get_numeric_columns',
@@ -13,6 +14,24 @@ __all__ = [
     'safe_mask_samples',
     'safe_vstack'
 ]
+
+
+def dataframe_or_array(X, as_df):
+    """Get a dataframe or numpy array.
+
+    If the ``as_df`` param is True, returns a Pandas dataframe. Otherwise
+    returns the underlying numpy array values.
+
+    Parameters
+    ----------
+    X : DataFrame
+        The Pandas dataframe
+
+    as_df : bool
+        Whether to return a dataframe
+    """
+    assert isinstance(X, pd.DataFrame), "Expected X to be a DataFrame"
+    return X if as_df else X.values
 
 
 def get_continuous_columns(X):

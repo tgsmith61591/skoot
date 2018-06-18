@@ -5,8 +5,10 @@
 from __future__ import absolute_import
 
 from skoot.datasets import load_iris_df
+from skoot.utils.testing import assert_raises
 from skoot.utils.dataframe import (get_numeric_columns, safe_vstack,
-                                   safe_drop_samples, safe_mask_samples)
+                                   safe_drop_samples, safe_mask_samples,
+                                   dataframe_or_array)
 
 from numpy.testing import assert_array_equal
 
@@ -15,6 +17,14 @@ import pandas as pd
 
 # get iris loaded
 iris = load_iris_df(names=['a', 'b', 'c', 'd'], tgt_name='e')
+
+
+def test_dataframe_or_array():
+    X = dataframe_or_array(iris, True)
+    assert X is iris
+    X_np = dataframe_or_array(iris, False)
+    assert isinstance(X_np, np.ndarray)
+    assert_raises(AssertionError, dataframe_or_array, X_np, True)
 
 
 def test_get_numeric():
