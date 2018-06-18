@@ -3,6 +3,7 @@
 # Author: Taylor Smith <taylor.smith@alkaline-ml.com>
 
 from .binning import *
+from .dates import *
 from .cerberus import *
 from .encode import *
 from .scale import *

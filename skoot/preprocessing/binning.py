@@ -13,7 +13,8 @@ import numpy as np
 import pandas as pd
 
 from ..base import BasePDTransformer
-from ..utils.iterables import is_iterable, chunk
+from ..utils.iterables import chunk
+from ..utils.dataframe import dataframe_or_array
 from ..utils.validation import (check_dataframe, validate_test_set_columns,
                                 type_or_iterable_to_col_mapping)
 
@@ -346,4 +347,4 @@ class BinningTransformer(BasePDTransformer):
             else:
                 X["%s_binned" % col] = binned
 
-        return X if self.as_df else X.values
+        return dataframe_or_array(X, self.as_df)

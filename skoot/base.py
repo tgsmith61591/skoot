@@ -15,6 +15,7 @@ from .exceptions import DeveloperError
 from .utils.validation import check_dataframe, validate_test_set_columns
 from .utils.iterables import is_iterable
 from .utils.compat import xrange
+from .utils.dataframe import dataframe_or_array
 
 # namespace import to avoid explicitly protected imports in global namespace
 from .utils import _docstr as dsutils
@@ -197,7 +198,7 @@ class _SelectiveTransformerWrapper(six.with_metaclass(dsutils._WritableDoc,
 
         # concat if needed
         x = pd.concat([X[other_nms], right], axis=1) if other_nms else right
-        return x if self.as_df else x.values
+        return dataframe_or_array(x, self.as_df)
 
     @classmethod
     def _get_param_names(cls):
