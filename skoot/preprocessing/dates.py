@@ -100,9 +100,29 @@ class DateTransformer(BasePDTransformer):
     2  3 2018-06-03 2018-06-03
     3  4        NaT 2018-06-04
     4  5 2018-06-05        NaT
+
+    Attributes
+    ----------
+    DEFAULT_PERMITTED_DTYPES : tuple
+        This is a static attribute that controls what types can be cast.
+        These are the default permitted pandas dtypes that are allowed.
+        If a column is not one of these types, a ValueError will be raised.
+        To cast an int to datetime, for instance, the ``allowed_types`` arg
+        will need to include "int64"::
+
+            allowed_types=DateTransformer.DEFAULT_PERMITTED_DTYPES + ('int64',)
+
+    fit_cols_ : list
+        The columns the transformer was fit on.
+
+    formats_ : dict
+        Maps column name to date format, in case of varying date formats
+        passed in the ``date_format`` parameter.
     """
+    DEFAULT_PERMITTED_DTYPES = ("object", "datetime64[ns]")
+
     def __init__(self, cols=None, date_format=None,
-                 allowed_types=("object", "datetime64[ns]")):
+                 allowed_types=DEFAULT_PERMITTED_DTYPES):
         super(DateTransformer, self).__init__(
             cols=cols, as_df=True)
 

@@ -45,7 +45,6 @@ find . -not -name ".git/*" -type f -maxdepth 1 -delete
 # Remove the remaining directories. Some of these are artifacts of the LAST
 # gh-pages build, and others are remnants of the package itself
 declare -a leftover=(".cache/"
-                     ".idea/"
                      "build/"
                      "build_tools/"
                      "doc/"
@@ -66,6 +65,15 @@ do
     rm -r ${left} || echo "${left} does not exist; will not remove"
 done
 
+# We do NOT want to remove the .idea/ folder if it's there, because it contains
+# user preferences for PyCharm. So we'll move it back one level, rename it, and
+# then retrieve it after we switch back over to master
+tmp_idea_dir="../.tmp_idea/"
+if [[ -d .idea/ ]]; then
+    echo "Found .idea/ directory. Moving it to ${tmp_idea_dir} for the push"
+    mv .idea/ ${tmp_idea_dir}
+fi
+
 # we need this empty file for git not to try to build a jekyll project
 touch .nojekyll
 mv html/* ./
@@ -78,3 +86,14 @@ git push origin gh-pages
 
 # switch back to master
 git checkout master
+
+# Check for the existing .tmp_idea/ and move it back into the directory
+# if needed
+if [[ -d ${tmp_idea_dir} ]]; then
+    echo "Found stashed temporary .idea/ directory at ${tmp_idea_dir}"
+
+    # if there is already an .idea dir, don't do anything
+    if [[ ! -d ${tmp_idea_dir} ]]; then
+        mv ${tmp_idea_dir} .idea/
+    fi
+fi
