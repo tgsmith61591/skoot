@@ -8,14 +8,47 @@ from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 from sklearn.utils.validation import check_is_fitted
 
 import pandas as pd
+import numpy as np
 
 from ..base import BasePDTransformer
 from ..utils.validation import check_dataframe, validate_test_set_columns
 from ..utils.dataframe import dataframe_or_array
 
+import warnings
+
 __all__ = [
     'DummyEncoder'
 ]
+
+
+def _le_transform(vec, le, handle):
+    # if "ignore" and there are unknown labels in the array,
+    # we need to handle it...
+    missing_mask = ~np.in1d(vec, le.classes_)  # type: np.ndarray
+    any_missing = missing_mask.any()
+    ignore = handle in ("ignore", "warn")
+
+    if ignore and any_missing:
+        # if we want to warn, do so now
+        if handle == "warn":
+            warnings.warn("Previously unseen level(s) found in data! %r"
+                          % le.classes_[missing_mask])
+
+        # initialize vec_trans as zeros
+        vec_trans = np.zeros(vec.shape[0]).astype(int)
+
+        # where the labels are present, transform
+        vec_trans[~missing_mask] = \
+            le.transform(vec[~missing_mask])
+
+        # where the labels are NOT present, set them to n_classes + 1
+        vec_trans[missing_mask] = le.classes_.shape[0]
+
+    # Otherwise take our chances that they're all there
+    else:
+        vec_trans = le.transform(vec)  # Union[str, int] -> int
+
+    return vec_trans
 
 
 class DummyEncoder(BasePDTransformer):
@@ -47,6 +80,11 @@ class DummyEncoder(BasePDTransformer):
         Whether to drop one level for each categorical variable.
         This helps avoid the dummy variable trap.
 
+    handle_unknown : str or unicode, optional (default='ignore')
+        How to handle the unknown levels. "ignore" will not raise an error
+        for unknown test set levels, but "error" will. "warn" will produce
+        a warning.
+
     Attributes
     ----------
     ohe_ : OneHotEncoder
@@ -61,13 +99,15 @@ class DummyEncoder(BasePDTransformer):
         is used to validate the presence of the features in the test set
         during the ``transform`` stage.
     """
-    def __init__(self, cols, as_df=True, sep='_', drop_one_level=True):
+    def __init__(self, cols, as_df=True, sep='_', drop_one_level=True,
+                 handle_unknown="ignore"):
 
         super(DummyEncoder, self).__init__(
             cols=cols, as_df=as_df)
 
         self.sep = sep
         self.drop_one_level = drop_one_level
+        self.handle_unknown = handle_unknown
 
     def fit(self, X, y=None):
         """Fit the dummy encoder.
@@ -98,8 +138,12 @@ class DummyEncoder(BasePDTransformer):
             # transform the column, re-assign
             X[col] = le.transform(vec)
 
-        # fit a single OHE on the transformed columns
-        ohe = OneHotEncoder(sparse=False).fit(X[cols])
+        # fit a single OHE on the transformed columns.
+        handle = "ignore" if self.handle_unknown in ("warn", "ignore") \
+            else "error"
+        ohe = OneHotEncoder(
+            sparse=False,
+            handle_unknown=handle).fit(X[cols])
 
         # assign fit params
         self.ohe_ = ohe
@@ -145,9 +189,9 @@ class DummyEncoder(BasePDTransformer):
         for col in cols:
             # get the vec, transform via the label encoder
             vec = X[col].values
-
             le = lenc[col]
-            vec_trans = le.transform(vec)  # Union[str, int] -> int
+
+            vec_trans = _le_transform(vec, le, self.handle_unknown)
             X[col] = vec_trans
 
             # get the column names (levels) so we can predict the
