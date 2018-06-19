@@ -34,6 +34,16 @@ cd ..
 
 # move the docs to the top-level directory, stash for checkout
 mv doc/_build/html ./
+
+# We do NOT want to remove the .idea/ folder if it's there, because it contains
+# user preferences for PyCharm. So we'll move it back one level, rename it, and
+# then retrieve it after we switch back over to master
+tmp_idea_dir="../.tmp_idea/"
+if [[ -d .idea/ ]]; then
+    echo "Found .idea/ directory. Moving it to ${tmp_idea_dir} for the push"
+    mv .idea/ ${tmp_idea_dir}
+fi
+
 # html/ will stay there actually...
 git stash
 
@@ -65,15 +75,6 @@ do
     rm -r ${left} || echo "${left} does not exist; will not remove"
 done
 
-# We do NOT want to remove the .idea/ folder if it's there, because it contains
-# user preferences for PyCharm. So we'll move it back one level, rename it, and
-# then retrieve it after we switch back over to master
-tmp_idea_dir="../.tmp_idea/"
-if [[ -d .idea/ ]]; then
-    echo "Found .idea/ directory. Moving it to ${tmp_idea_dir} for the push"
-    mv .idea/ ${tmp_idea_dir}
-fi
-
 # we need this empty file for git not to try to build a jekyll project
 touch .nojekyll
 mv html/* ./
@@ -94,6 +95,9 @@ if [[ -d ${tmp_idea_dir} ]]; then
 
     # if there is already an .idea dir, don't do anything
     if [[ ! -d ${tmp_idea_dir} ]]; then
+        echo "Moving stashed temporary .idea/ back to git repo"
         mv ${tmp_idea_dir} .idea/
+    else
+        echo "Existing .idea/ found. Will not replace with ${tmp_idea_dir}"
     fi
 fi
