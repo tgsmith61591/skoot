@@ -84,7 +84,7 @@ class DummyEncoder(BasePDTransformer):
         """
         # validate the input, and get a copy of it
         X, cols = check_dataframe(X, cols=self.cols,
-                                  assert_all_finite=True)
+                                  assert_all_finite=False)
 
         # begin fit
         # for each column, fit a label encoder
