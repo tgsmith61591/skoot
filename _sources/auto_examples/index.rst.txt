@@ -154,6 +154,43 @@ explore your data and learn its characteristics.
 
     <div style='clear:both'></div>
 
+.. _feature_extraction_examples:
+
+Feature extraction examples
+---------------------------
+
+Examples for how to use the :mod:`skoot.feature_extraction` module to discover
+new features in your dataset for better modeling.
+
+.. raw:: html
+
+   <br/>
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Demonstrates how to automatically extract factor-level features from datetime fields.">
+
+.. only:: html
+
+    .. figure:: /auto_examples/feature_extraction/images/thumb/sphx_glr_ex_date_extraction_thumb.png
+
+        :ref:`sphx_glr_auto_examples_feature_extraction_ex_date_extraction.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/feature_extraction/ex_date_extraction
+.. raw:: html
+
+    <div style='clear:both'></div>
+
 .. _model_validation_examples:
 
 Model validation examples
@@ -224,6 +261,26 @@ features in your dataset for better modeling.
    :hidden:
 
    /auto_examples/preprocessing/ex_binning
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Demonstrates how to automatically transform string date-representation fields into datetime typ...">
+
+.. only:: html
+
+    .. figure:: /auto_examples/preprocessing/images/thumb/sphx_glr_ex_date_transformation_thumb.png
+
+        :ref:`sphx_glr_auto_examples_preprocessing_ex_date_transformation.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/preprocessing/ex_date_transformation
 .. raw:: html
 
     <div style='clear:both'></div>

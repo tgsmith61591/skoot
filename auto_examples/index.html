@@ -105,12 +105,17 @@
 <li class="toctree-l3"><a class="reference internal" href="exploration/ex_summarize.html">Example summarize</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#feature-extraction-examples">Feature extraction examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="feature_extraction/ex_date_extraction.html">Extracting date features</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#model-validation-examples">Model validation examples</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="model_validation/ex_hypothesis_validation.html">Hypothesis testing for model monitoring</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#preprocessing-examples">Preprocessing examples</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="preprocessing/ex_binning.html">Binning transformer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="preprocessing/ex_date_transformation.html">Date transformer</a></li>
 </ul>
 </li>
 </ul>
@@ -166,7 +171,7 @@
 <h2>General examples<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <p>General-purpose and introductory examples for skoot. These examples are
 designed to introduce you to the package style and layout.</p>
-<br/><div class="sphx-glr-thumbcontainer" tooltip="Introduces the user to skoot and its layout."><div class="figure" id="id4">
+<br/><div class="sphx-glr-thumbcontainer" tooltip="Introduces the user to skoot and its layout."><div class="figure" id="id5">
 <img alt="../_images/sphx_glr_ex_getting_acquainted_thumb.png" src="../_images/sphx_glr_ex_getting_acquainted_thumb.png" />
 <p class="caption"><span class="caption-text"><a class="reference internal" href="ex_getting_acquainted.html#sphx-glr-auto-examples-ex-getting-acquainted-py"><span class="std std-ref">Getting acquainted with skoot</span></a></span></p>
 </div>
@@ -177,19 +182,19 @@ designed to introduce you to the package style and layout.</p>
 <span id="balance-examples"></span><h2>Class balancing examples<a class="headerlink" href="#class-balancing-examples" title="Permalink to this headline">¶</a></h2>
 <p>Examples for how to use the <a class="reference internal" href="../modules/classes.html#module-skoot.balance" title="skoot.balance"><code class="xref py py-mod docutils literal"><span class="pre">skoot.balance</span></code></a> module to balance
 your imbalanced classification datasets.</p>
-<br/><div class="sphx-glr-thumbcontainer" tooltip="This example creates an imbalanced classification dataset, and applies the `Synthetic Minority ..."><div class="figure" id="id5">
+<br/><div class="sphx-glr-thumbcontainer" tooltip="This example creates an imbalanced classification dataset, and applies the `Synthetic Minority ..."><div class="figure" id="id6">
 <img alt="../_images/sphx_glr_ex_smote_thumb.png" src="../_images/sphx_glr_ex_smote_thumb.png" />
 <p class="caption"><span class="caption-text"><a class="reference internal" href="balance/ex_smote.html#sphx-glr-auto-examples-balance-ex-smote-py"><span class="std std-ref">SMOTE class balancer</span></a></span></p>
 </div>
 </div><div class="toctree-wrapper compound">
 </div>
-<div class="sphx-glr-thumbcontainer" tooltip=" This example creates an imbalanced classification dataset, and oversamples the minority class ..."><div class="figure" id="id6">
+<div class="sphx-glr-thumbcontainer" tooltip=" This example creates an imbalanced classification dataset, and oversamples the minority class ..."><div class="figure" id="id7">
 <img alt="../_images/sphx_glr_ex_oversample_thumb.png" src="../_images/sphx_glr_ex_oversample_thumb.png" />
 <p class="caption"><span class="caption-text"><a class="reference internal" href="balance/ex_oversample.html#sphx-glr-auto-examples-balance-ex-oversample-py"><span class="std std-ref">Oversampling minority samples</span></a></span></p>
 </div>
 </div><div class="toctree-wrapper compound">
 </div>
-<div class="sphx-glr-thumbcontainer" tooltip="This example creates an imbalanced classification dataset, and under-samples it to balance the ..."><div class="figure" id="id7">
+<div class="sphx-glr-thumbcontainer" tooltip="This example creates an imbalanced classification dataset, and under-samples it to balance the ..."><div class="figure" id="id8">
 <img alt="../_images/sphx_glr_ex_undersample_thumb.png" src="../_images/sphx_glr_ex_undersample_thumb.png" />
 <p class="caption"><span class="caption-text"><a class="reference internal" href="balance/ex_undersample.html#sphx-glr-auto-examples-balance-ex-undersample-py"><span class="std std-ref">Undersampling minority samples</span></a></span></p>
 </div>
@@ -200,18 +205,29 @@ your imbalanced classification datasets.</p>
 <span id="exploration-examples"></span><h2>Exploratory data analysis examples<a class="headerlink" href="#exploratory-data-analysis-examples" title="Permalink to this headline">¶</a></h2>
 <p>Examples for how to use the <a class="reference internal" href="../modules/classes.html#module-skoot.exploration" title="skoot.exploration"><code class="xref py py-mod docutils literal"><span class="pre">skoot.exploration</span></code></a> module to quickly
 explore your data and learn its characteristics.</p>
-<br/><div class="sphx-glr-thumbcontainer" tooltip="Demonstrates how to use the ``summarize`` function to get a quick summary of your dataset."><div class="figure" id="id8">
+<br/><div class="sphx-glr-thumbcontainer" tooltip="Demonstrates how to use the ``summarize`` function to get a quick summary of your dataset."><div class="figure" id="id9">
 <img alt="../_images/sphx_glr_ex_summarize_thumb.png" src="../_images/sphx_glr_ex_summarize_thumb.png" />
 <p class="caption"><span class="caption-text"><a class="reference internal" href="exploration/ex_summarize.html#sphx-glr-auto-examples-exploration-ex-summarize-py"><span class="std std-ref">Example summarize</span></a></span></p>
 </div>
 </div><div class="toctree-wrapper compound">
 </div>
 <div style='clear:both'></div></div>
+<div class="section" id="feature-extraction-examples">
+<span id="id2"></span><h2>Feature extraction examples<a class="headerlink" href="#feature-extraction-examples" title="Permalink to this headline">¶</a></h2>
+<p>Examples for how to use the <a class="reference internal" href="../modules/classes.html#module-skoot.feature_extraction" title="skoot.feature_extraction"><code class="xref py py-mod docutils literal"><span class="pre">skoot.feature_extraction</span></code></a> module to discover
+new features in your dataset for better modeling.</p>
+<br/><div class="sphx-glr-thumbcontainer" tooltip="Demonstrates how to automatically extract factor-level features from datetime fields."><div class="figure" id="id10">
+<img alt="../_images/sphx_glr_ex_date_extraction_thumb.png" src="../_images/sphx_glr_ex_date_extraction_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="feature_extraction/ex_date_extraction.html#sphx-glr-auto-examples-feature-extraction-ex-date-extraction-py"><span class="std std-ref">Extracting date features</span></a></span></p>
+</div>
+</div><div class="toctree-wrapper compound">
+</div>
+<div style='clear:both'></div></div>
 <div class="section" id="model-validation-examples">
-<span id="id2"></span><h2>Model validation examples<a class="headerlink" href="#model-validation-examples" title="Permalink to this headline">¶</a></h2>
+<span id="id3"></span><h2>Model validation examples<a class="headerlink" href="#model-validation-examples" title="Permalink to this headline">¶</a></h2>
 <p>Examples for how to use the <a class="reference internal" href="../modules/classes.html#module-skoot.model_validation" title="skoot.model_validation"><code class="xref py py-mod docutils literal"><span class="pre">skoot.model_validation</span></code></a> module to safeguard
 your models from covariate shift.</p>
-<br/><div class="sphx-glr-thumbcontainer" tooltip="Demonstrates how to use hypothesis testing for model monitoring and validation."><div class="figure" id="id9">
+<br/><div class="sphx-glr-thumbcontainer" tooltip="Demonstrates how to use hypothesis testing for model monitoring and validation."><div class="figure" id="id11">
 <img alt="../_images/sphx_glr_ex_hypothesis_validation_thumb.png" src="../_images/sphx_glr_ex_hypothesis_validation_thumb.png" />
 <p class="caption"><span class="caption-text"><a class="reference internal" href="model_validation/ex_hypothesis_validation.html#sphx-glr-auto-examples-model-validation-ex-hypothesis-validation-py"><span class="std std-ref">Hypothesis testing for model monitoring</span></a></span></p>
 </div>
@@ -219,12 +235,18 @@ your models from covariate shift.</p>
 </div>
 <div style='clear:both'></div></div>
 <div class="section" id="preprocessing-examples">
-<span id="id3"></span><h2>Preprocessing examples<a class="headerlink" href="#preprocessing-examples" title="Permalink to this headline">¶</a></h2>
+<span id="id4"></span><h2>Preprocessing examples<a class="headerlink" href="#preprocessing-examples" title="Permalink to this headline">¶</a></h2>
 <p>Examples for how to use the <a class="reference internal" href="../modules/classes.html#module-skoot.preprocessing" title="skoot.preprocessing"><code class="xref py py-mod docutils literal"><span class="pre">skoot.preprocessing</span></code></a> module to transform
 features in your dataset for better modeling.</p>
-<br/><div class="sphx-glr-thumbcontainer" tooltip="Demonstrates how to bin continuous features in your dataset."><div class="figure" id="id10">
+<br/><div class="sphx-glr-thumbcontainer" tooltip="Demonstrates how to bin continuous features in your dataset."><div class="figure" id="id12">
 <img alt="../_images/sphx_glr_ex_binning_thumb.png" src="../_images/sphx_glr_ex_binning_thumb.png" />
 <p class="caption"><span class="caption-text"><a class="reference internal" href="preprocessing/ex_binning.html#sphx-glr-auto-examples-preprocessing-ex-binning-py"><span class="std std-ref">Binning transformer</span></a></span></p>
+</div>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="Demonstrates how to automatically transform string date-representation fields into datetime typ..."><div class="figure" id="id13">
+<img alt="../_images/sphx_glr_ex_date_transformation_thumb.png" src="../_images/sphx_glr_ex_date_transformation_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="preprocessing/ex_date_transformation.html#sphx-glr-auto-examples-preprocessing-ex-date-transformation-py"><span class="std std-ref">Date transformer</span></a></span></p>
 </div>
 </div><div class="toctree-wrapper compound">
 </div>

@@ -158,6 +158,7 @@
 <span class="kn">from</span> <span class="nn">..decorators</span> <span class="k">import</span> <span class="n">suppress_warnings</span> <span class="k">as</span> <span class="n">suppress</span>
 <span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="k">import</span> <span class="p">(</span><span class="n">check_dataframe</span><span class="p">,</span> <span class="n">validate_multiple_rows</span><span class="p">,</span>
                                 <span class="n">validate_test_set_columns</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">..utils.dataframe</span> <span class="k">import</span> <span class="n">dataframe_or_array</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s1">&#39;BoxCoxTransformer&#39;</span><span class="p">,</span>
@@ -397,7 +398,7 @@
         <span class="k">for</span> <span class="n">nm</span><span class="p">,</span> <span class="n">lam</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">lambdas_</span><span class="p">):</span>
             <span class="n">X</span><span class="p">[</span><span class="n">nm</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transform_vector</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">nm</span><span class="p">],</span> <span class="n">lam</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">X</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_df</span> <span class="k">else</span> <span class="n">X</span><span class="o">.</span><span class="n">values</span>
+        <span class="k">return</span> <span class="n">dataframe_or_array</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_df</span><span class="p">)</span>
 
 
 <span class="c1"># A dumb hack bc we cannot pickle functions or instancemethods...</span>

@@ -144,7 +144,9 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;dataframe_or_array&#39;</span><span class="p">,</span>
     <span class="s1">&#39;get_continuous_columns&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;get_datetime_columns&#39;</span><span class="p">,</span>
     <span class="s1">&#39;get_numeric_columns&#39;</span><span class="p">,</span>
     <span class="s1">&#39;safe_drop_samples&#39;</span><span class="p">,</span>
     <span class="s1">&#39;safe_mask_samples&#39;</span><span class="p">,</span>
@@ -152,7 +154,25 @@
 <span class="p">]</span>
 
 
-<span class="k">def</span> <span class="nf">get_continuous_columns</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+<div class="viewcode-block" id="dataframe_or_array"><a class="viewcode-back" href="../../../modules/generated/skoot.utils.dataframe_or_array.html#skoot.utils.dataframe_or_array">[docs]</a><span class="k">def</span> <span class="nf">dataframe_or_array</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">as_df</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get a dataframe or numpy array.</span>
+
+<span class="sd">    If the ``as_df`` param is True, returns a Pandas dataframe. Otherwise</span>
+<span class="sd">    returns the underlying numpy array values.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X : DataFrame</span>
+<span class="sd">        The Pandas dataframe</span>
+
+<span class="sd">    as_df : bool</span>
+<span class="sd">        Whether to return a dataframe</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">),</span> <span class="s2">&quot;Expected X to be a DataFrame&quot;</span>
+    <span class="k">return</span> <span class="n">X</span> <span class="k">if</span> <span class="n">as_df</span> <span class="k">else</span> <span class="n">X</span><span class="o">.</span><span class="n">values</span></div>
+
+
+<div class="viewcode-block" id="get_continuous_columns"><a class="viewcode-back" href="../../../modules/generated/skoot.utils.get_continuous_columns.html#skoot.utils.get_continuous_columns">[docs]</a><span class="k">def</span> <span class="nf">get_continuous_columns</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Get all continuous features from a pandas DataFrame.</span>
 
 <span class="sd">    This function selects all numeric columns from a pandas</span>
@@ -163,7 +183,21 @@
 <span class="sd">    X : pd.DataFrame</span>
 <span class="sd">        The input dataframe.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">X</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">X</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="get_datetime_columns"><a class="viewcode-back" href="../../../modules/generated/skoot.utils.get_datetime_columns.html#skoot.utils.get_datetime_columns">[docs]</a><span class="k">def</span> <span class="nf">get_datetime_columns</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get all datetime features from a pandas DataFrame.</span>
+
+<span class="sd">    This function selects all datetime columns from a pandas</span>
+<span class="sd">    DataFrame that are within the ``np.datetime`` family.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X : pd.DataFrame</span>
+<span class="sd">        The input dataframe.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">X</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">])</span></div>
 
 
 <div class="viewcode-block" id="get_numeric_columns"><a class="viewcode-back" href="../../../modules/generated/skoot.utils.get_numeric_columns.html#skoot.utils.get_numeric_columns">[docs]</a><span class="k">def</span> <span class="nf">get_numeric_columns</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
@@ -181,7 +215,7 @@
     <span class="k">return</span> <span class="n">X</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">])</span></div>
 
 
-<span class="k">def</span> <span class="nf">safe_drop_samples</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">drop_samples</span><span class="p">):</span>
+<div class="viewcode-block" id="safe_drop_samples"><a class="viewcode-back" href="../../../modules/generated/skoot.utils.safe_drop_samples.html#skoot.utils.safe_drop_samples">[docs]</a><span class="k">def</span> <span class="nf">safe_drop_samples</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">drop_samples</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Drop samples (rows) from a matrix.</span>
 
 <span class="sd">    Drop observations from a np.ndarray or pd.DataFrame. This</span>
@@ -198,10 +232,10 @@
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">X</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">drop_samples</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">drop_samples</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">drop_samples</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
 
 
-<span class="k">def</span> <span class="nf">safe_mask_samples</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">mask</span><span class="p">):</span>
+<div class="viewcode-block" id="safe_mask_samples"><a class="viewcode-back" href="../../../modules/generated/skoot.utils.safe_mask_samples.html#skoot.utils.safe_mask_samples">[docs]</a><span class="k">def</span> <span class="nf">safe_mask_samples</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">mask</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Select samples (rows) from a matrix from a mask.</span>
 
 <span class="sd">    Select observations from a np.ndarray or pd.DataFrame by using</span>
@@ -220,10 +254,10 @@
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">X</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">X</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">mask</span><span class="p">]]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">X</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="k">return</span> <span class="n">X</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="p">:]</span></div>
 
 
-<span class="k">def</span> <span class="nf">safe_vstack</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<div class="viewcode-block" id="safe_vstack"><a class="viewcode-back" href="../../../modules/generated/skoot.utils.safe_vstack.html#skoot.utils.safe_vstack">[docs]</a><span class="k">def</span> <span class="nf">safe_vstack</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Stack two arrays on top of one another.</span>
 
 <span class="sd">    Safely handle vertical stacking of arrays. This works for</span>
@@ -243,7 +277,7 @@
         <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
     <span class="c1"># otherwise, at least one of them is a numpy array (we think)</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">])</span></div>
 </pre></div>
 
            </div>

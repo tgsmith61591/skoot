@@ -1,0 +1,12 @@
+:mod:`skoot.utils`.safe_mask_samples
+=================================================
+
+.. currentmodule:: skoot.utils
+
+.. autofunction:: safe_mask_samples
+
+.. include:: skoot.utils.safe_mask_samples.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

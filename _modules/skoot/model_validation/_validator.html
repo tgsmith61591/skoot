@@ -151,7 +151,7 @@
 
 <span class="kn">from</span> <span class="nn">..base</span> <span class="k">import</span> <span class="n">BasePDTransformer</span>
 <span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="k">import</span> <span class="n">check_dataframe</span><span class="p">,</span> <span class="n">type_or_iterable_to_col_mapping</span>
-<span class="kn">from</span> <span class="nn">..utils.dataframe</span> <span class="k">import</span> <span class="n">get_continuous_columns</span>
+<span class="kn">from</span> <span class="nn">..utils.dataframe</span> <span class="k">import</span> <span class="n">get_continuous_columns</span><span class="p">,</span> <span class="n">dataframe_or_array</span>
 <span class="kn">from</span> <span class="nn">..exceptions</span> <span class="k">import</span> <span class="n">ValidationWarning</span>
 
 <span class="kn">from</span> <span class="nn">sklearn.externals</span> <span class="k">import</span> <span class="n">six</span>
@@ -246,7 +246,7 @@
                     <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">ValidationWarning</span><span class="p">)</span>
 
         <span class="c1"># just return X if we get here</span>
-        <span class="k">return</span> <span class="n">X</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_df</span> <span class="k">else</span> <span class="n">X</span><span class="o">.</span><span class="n">values</span>
+        <span class="k">return</span> <span class="n">dataframe_or_array</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_df</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="CustomValidator"><a class="viewcode-back" href="../../../modules/generated/skoot.model_validation.CustomValidator.html#skoot.model_validation.CustomValidator">[docs]</a><span class="k">class</span> <span class="nc">CustomValidator</span><span class="p">(</span><span class="n">_BaseValidator</span><span class="p">):</span>

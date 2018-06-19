@@ -144,6 +144,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-skoot.feature_extraction"><code class="docutils literal"><span class="pre">skoot.feature_extraction</span></code>: Feature extraction methods</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#feature-extraction-estimators">Feature extraction estimators</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.feature_extraction.DateFactorizer.html"><code class="docutils literal"><span class="pre">skoot.feature_extraction</span></code>.DateFactorizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/skoot.feature_extraction.InteractionTermTransformer.html"><code class="docutils literal"><span class="pre">skoot.feature_extraction</span></code>.InteractionTermTransformer</a></li>
 </ul>
 </li>
@@ -198,12 +199,32 @@
 <li class="toctree-l4"><a class="reference internal" href="generated/skoot.preprocessing.YeoJohnsonTransformer.html"><code class="docutils literal"><span class="pre">skoot.preprocessing</span></code>.YeoJohnsonTransformer</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#other-transformers">Other transformers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.preprocessing.DateTransformer.html"><code class="docutils literal"><span class="pre">skoot.preprocessing</span></code>.DateTransformer</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-skoot.utils"><code class="docutils literal"><span class="pre">skoot.utils</span></code>: Common utility functions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#iterable-utilities">Iterable utilities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dataframe-utilities">DataFrame utilities</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.utils.dataframe_or_array.html"><code class="docutils literal"><span class="pre">skoot.utils</span></code>.dataframe_or_array</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.utils.get_continuous_columns.html"><code class="docutils literal"><span class="pre">skoot.utils</span></code>.get_continuous_columns</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.utils.get_datetime_columns.html"><code class="docutils literal"><span class="pre">skoot.utils</span></code>.get_datetime_columns</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/skoot.utils.get_numeric_columns.html"><code class="docutils literal"><span class="pre">skoot.utils</span></code>.get_numeric_columns</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.utils.safe_drop_samples.html"><code class="docutils literal"><span class="pre">skoot.utils</span></code>.safe_drop_samples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.utils.safe_mask_samples.html"><code class="docutils literal"><span class="pre">skoot.utils</span></code>.safe_mask_samples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.utils.safe_vstack.html"><code class="docutils literal"><span class="pre">skoot.utils</span></code>.safe_vstack</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#iterable-utilities">Iterable utilities</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.utils.chunk.html"><code class="docutils literal"><span class="pre">skoot.utils</span></code>.chunk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.utils.ensure_iterable.html"><code class="docutils literal"><span class="pre">skoot.utils</span></code>.ensure_iterable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.utils.flatten_all.html"><code class="docutils literal"><span class="pre">skoot.utils</span></code>.flatten_all</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/skoot.utils.is_iterable.html"><code class="docutils literal"><span class="pre">skoot.utils</span></code>.is_iterable</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#series-utilities">Series utilities</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.utils.is_datetime_type.html"><code class="docutils literal"><span class="pre">skoot.utils</span></code>.is_datetime_type</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#validation-utilities">Validation utilities</a><ul>
@@ -418,7 +439,10 @@ uses.</p>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.feature_extraction.InteractionTermTransformer.html#skoot.feature_extraction.InteractionTermTransformer" title="skoot.feature_extraction.InteractionTermTransformer"><code class="xref py py-obj docutils literal"><span class="pre">feature_extraction.InteractionTermTransformer</span></code></a>([…])</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.feature_extraction.DateFactorizer.html#skoot.feature_extraction.DateFactorizer" title="skoot.feature_extraction.DateFactorizer"><code class="xref py py-obj docutils literal"><span class="pre">feature_extraction.DateFactorizer</span></code></a>([cols,&nbsp;…])</td>
+<td>Extract new features from datetime features.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/skoot.feature_extraction.InteractionTermTransformer.html#skoot.feature_extraction.InteractionTermTransformer" title="skoot.feature_extraction.InteractionTermTransformer"><code class="xref py py-obj docutils literal"><span class="pre">feature_extraction.InteractionTermTransformer</span></code></a>([…])</td>
 <td>Create interaction terms between predictors.</td>
 </tr>
 </tbody>
@@ -578,10 +602,56 @@ uses.</p>
 </tbody>
 </table>
 </div>
+<div class="section" id="other-transformers">
+<h3>Other transformers<a class="headerlink" href="#other-transformers" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.preprocessing.DateTransformer.html#skoot.preprocessing.DateTransformer" title="skoot.preprocessing.DateTransformer"><code class="xref py py-obj docutils literal"><span class="pre">preprocessing.DateTransformer</span></code></a>([cols,&nbsp;…])</td>
+<td>Cast features to datetime.</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <div class="section" id="module-skoot.utils">
 <span id="skoot-utils-common-utility-functions"></span><span id="utils-ref"></span><h2><a class="reference internal" href="#module-skoot.utils" title="skoot.utils"><code class="xref py py-mod docutils literal"><span class="pre">skoot.utils</span></code></a>: Common utility functions<a class="headerlink" href="#module-skoot.utils" title="Permalink to this headline">¶</a></h2>
 <p><strong>User guide:</strong> See the <a class="reference internal" href="utils.html#utils"><span class="std std-ref">The utils submodule</span></a> section for further details.</p>
+<div class="section" id="dataframe-utilities">
+<h3>DataFrame utilities<a class="headerlink" href="#dataframe-utilities" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.utils.dataframe_or_array.html#skoot.utils.dataframe_or_array" title="skoot.utils.dataframe_or_array"><code class="xref py py-obj docutils literal"><span class="pre">utils.dataframe_or_array</span></code></a>(X,&nbsp;as_df)</td>
+<td>Get a dataframe or numpy array.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/skoot.utils.get_continuous_columns.html#skoot.utils.get_continuous_columns" title="skoot.utils.get_continuous_columns"><code class="xref py py-obj docutils literal"><span class="pre">utils.get_continuous_columns</span></code></a>(X)</td>
+<td>Get all continuous features from a pandas DataFrame.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.utils.get_datetime_columns.html#skoot.utils.get_datetime_columns" title="skoot.utils.get_datetime_columns"><code class="xref py py-obj docutils literal"><span class="pre">utils.get_datetime_columns</span></code></a>(X)</td>
+<td>Get all datetime features from a pandas DataFrame.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/skoot.utils.get_numeric_columns.html#skoot.utils.get_numeric_columns" title="skoot.utils.get_numeric_columns"><code class="xref py py-obj docutils literal"><span class="pre">utils.get_numeric_columns</span></code></a>(X)</td>
+<td>Get all numeric columns from a pandas DataFrame.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.utils.safe_drop_samples.html#skoot.utils.safe_drop_samples" title="skoot.utils.safe_drop_samples"><code class="xref py py-obj docutils literal"><span class="pre">utils.safe_drop_samples</span></code></a>(X,&nbsp;drop_samples)</td>
+<td>Drop samples (rows) from a matrix.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/skoot.utils.safe_mask_samples.html#skoot.utils.safe_mask_samples" title="skoot.utils.safe_mask_samples"><code class="xref py py-obj docutils literal"><span class="pre">utils.safe_mask_samples</span></code></a>(X,&nbsp;mask)</td>
+<td>Select samples (rows) from a matrix from a mask.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.utils.safe_vstack.html#skoot.utils.safe_vstack" title="skoot.utils.safe_vstack"><code class="xref py py-obj docutils literal"><span class="pre">utils.safe_vstack</span></code></a>(a,&nbsp;b)</td>
+<td>Stack two arrays on top of one another.</td>
+</tr>
+</tbody>
+</table>
+</div>
 <div class="section" id="iterable-utilities">
 <h3>Iterable utilities<a class="headerlink" href="#iterable-utilities" title="Permalink to this headline">¶</a></h3>
 <table border="1" class="longtable docutils">
@@ -590,11 +660,31 @@ uses.</p>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.utils.get_numeric_columns.html#skoot.utils.get_numeric_columns" title="skoot.utils.get_numeric_columns"><code class="xref py py-obj docutils literal"><span class="pre">utils.get_numeric_columns</span></code></a>(X)</td>
-<td>Get all numeric columns from a pandas DataFrame.</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.utils.chunk.html#skoot.utils.chunk" title="skoot.utils.chunk"><code class="xref py py-obj docutils literal"><span class="pre">utils.chunk</span></code></a>(v,&nbsp;n)</td>
+<td>Chunk a vector into k roughly equal parts.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/skoot.utils.ensure_iterable.html#skoot.utils.ensure_iterable" title="skoot.utils.ensure_iterable"><code class="xref py py-obj docutils literal"><span class="pre">utils.ensure_iterable</span></code></a>(element)</td>
+<td>Make an element an iterable.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.utils.flatten_all.html#skoot.utils.flatten_all" title="skoot.utils.flatten_all"><code class="xref py py-obj docutils literal"><span class="pre">utils.flatten_all</span></code></a>(container)</td>
+<td>Recursively flattens an arbitrarily nested iterable.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="generated/skoot.utils.is_iterable.html#skoot.utils.is_iterable" title="skoot.utils.is_iterable"><code class="xref py py-obj docutils literal"><span class="pre">utils.is_iterable</span></code></a>(x)</td>
 <td>Determine whether an element is iterable.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="series-utilities">
+<h3>Series utilities<a class="headerlink" href="#series-utilities" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.utils.is_datetime_type.html#skoot.utils.is_datetime_type" title="skoot.utils.is_datetime_type"><code class="xref py py-obj docutils literal"><span class="pre">utils.is_datetime_type</span></code></a>(series)</td>
+<td>Determine whether a series is a datetime.</td>
 </tr>
 </tbody>
 </table>

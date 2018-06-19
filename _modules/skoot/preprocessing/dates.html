@@ -1,0 +1,420 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>skoot.preprocessing.dates &mdash; skoot 0.19.2.dev1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../../_static/gallery.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../../_static/css/style.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="skoot 0.19.2.dev1 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> skoot
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.19.2.dev1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto_examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide.html">User Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">skoot</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>skoot.preprocessing.dates</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for skoot.preprocessing.dates</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#</span>
+<span class="c1"># Coerce string fields to dates</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.externals</span> <span class="k">import</span> <span class="n">six</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="k">import</span> <span class="n">check_is_fitted</span>
+
+<span class="kn">from</span> <span class="nn">..base</span> <span class="k">import</span> <span class="n">BasePDTransformer</span>
+<span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="k">import</span> <span class="n">type_or_iterable_to_col_mapping</span>
+<span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="k">import</span> <span class="n">check_dataframe</span><span class="p">,</span> <span class="n">validate_test_set_columns</span>
+<span class="kn">from</span> <span class="nn">..utils.compat</span> <span class="k">import</span> <span class="n">NoneType</span>
+<span class="kn">from</span> <span class="nn">..utils.series</span> <span class="k">import</span> <span class="n">is_datetime_type</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;DateTransformer&quot;</span>
+<span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_cast_to_datetime</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">formats</span><span class="p">,</span> <span class="n">allowed_types</span><span class="p">):</span>
+    <span class="c1"># Now the real challenge here is that some of the columns passed</span>
+    <span class="c1"># may not be date-parseable... we&#39;ll duck type it. If it fails, it</span>
+    <span class="c1"># cannot be parsed, and we will let Pandas raise for that. No sense</span>
+    <span class="c1"># policing it if they are already doing that.</span>
+    <span class="k">def</span> <span class="nf">cast</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+        <span class="n">fmt</span> <span class="o">=</span> <span class="n">formats</span><span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+
+        <span class="c1"># First make sure the type is in allowed types</span>
+        <span class="n">dtype</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">if</span> <span class="n">dtype</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">allowed_types</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;dtype &#39;</span><span class="si">%s</span><span class="s2">&#39; not in `allowed_types` (</span><span class="si">%r</span><span class="s2">)&quot;</span>
+                             <span class="o">%</span> <span class="p">(</span><span class="n">dtype</span><span class="p">,</span> <span class="n">allowed_types</span><span class="p">))</span>
+
+        <span class="c1"># Now if the format is already a datetime, we can return early.</span>
+        <span class="c1"># If the format isn&#39;t defined we can infer it, otherwise we can</span>
+        <span class="c1"># parse it explicitly</span>
+        <span class="k">if</span> <span class="n">is_datetime_type</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">f</span>
+        <span class="k">elif</span> <span class="n">fmt</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">infer_datetime_format</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                  <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;raise&#39;</span><span class="p">)</span>
+        <span class="c1"># otherwise the fmt is defined so we&#39;ll let it fail out on its own</span>
+        <span class="c1"># if it cannot cast it</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="n">fmt</span><span class="p">)</span>
+
+    <span class="n">casted</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">cast</span><span class="p">)</span>
+    <span class="n">X</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span> <span class="o">=</span> <span class="n">casted</span>
+    <span class="k">return</span> <span class="n">X</span>
+
+
+<div class="viewcode-block" id="DateTransformer"><a class="viewcode-back" href="../../../modules/generated/skoot.preprocessing.DateTransformer.html#skoot.preprocessing.DateTransformer">[docs]</a><span class="k">class</span> <span class="nc">DateTransformer</span><span class="p">(</span><span class="n">BasePDTransformer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Cast features to datetime.</span>
+
+<span class="sd">    Convert multiple features with potentially differing formats to datetime</span>
+<span class="sd">    with specified formats or by inferring the formats.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cols : array-like, shape=(n_features,), optional (default=None)</span>
+<span class="sd">        The names of the columns on which to apply the transformation.</span>
+<span class="sd">        Will apply to all columns if None specified</span>
+
+<span class="sd">    date_format : str, iterable or None, optional (default=None)</span>
+<span class="sd">        The date format. If None, will infer. If a string, will be used to</span>
+<span class="sd">        parse the datetime. If an iterable, should contain strings or None</span>
+<span class="sd">        positionally corresponding to ``cols`` (or a dict mapping columns</span>
+<span class="sd">        to formats).</span>
+
+<span class="sd">    allowed_types : iterable, optional (default=(&quot;object&quot;, &quot;datetime64[ns]&quot;))</span>
+<span class="sd">        Permitted Series types. This is used to prevent accidentally casting</span>
+<span class="sd">        Series of unexpected types to DateTime. For instance, integer types</span>
+<span class="sd">        can be cast to DateTime even though the behavior may be unexpected.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The ``fit`` method here is only used for validation that the columns can</span>
+<span class="sd">    be cast to datetime.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; from datetime import datetime as dt</span>
+<span class="sd">    &gt;&gt;&gt; data = [</span>
+<span class="sd">    ...     [1, &quot;06/01/2018&quot;, dt.strptime(&quot;06-01-2018&quot;, &quot;%m-%d-%Y&quot;)],</span>
+<span class="sd">    ...     [2, &quot;06/02/2018&quot;, dt.strptime(&quot;06-02-2018&quot;, &quot;%m-%d-%Y&quot;)],</span>
+<span class="sd">    ...     [3, &quot;06/03/2018&quot;, dt.strptime(&quot;06-03-2018&quot;, &quot;%m-%d-%Y&quot;)],</span>
+<span class="sd">    ...     [4, None, dt.strptime(&quot;06-04-2018&quot;, &quot;%m-%d-%Y&quot;)],</span>
+<span class="sd">    ...     [5, &quot;06/05/2018&quot;, None]</span>
+<span class="sd">    ... ]</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame.from_records(data, columns=[&quot;a&quot;, &quot;b&quot;, &quot;c&quot;])</span>
+<span class="sd">    &gt;&gt;&gt; converter = DateTransformer(cols=[&quot;b&quot;, &quot;c&quot;],</span>
+<span class="sd">    ...                             date_format=[&quot;%m/%d/%Y&quot;, None])</span>
+<span class="sd">    &gt;&gt;&gt; converter.fit_transform(df)</span>
+<span class="sd">       a          b          c</span>
+<span class="sd">    0  1 2018-06-01 2018-06-01</span>
+<span class="sd">    1  2 2018-06-02 2018-06-02</span>
+<span class="sd">    2  3 2018-06-03 2018-06-03</span>
+<span class="sd">    3  4        NaT 2018-06-04</span>
+<span class="sd">    4  5 2018-06-05        NaT</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    DEFAULT_PERMITTED_DTYPES : tuple</span>
+<span class="sd">        This is a static attribute that controls what types can be cast.</span>
+<span class="sd">        These are the default permitted pandas dtypes that are allowed.</span>
+<span class="sd">        If a column is not one of these types, a ValueError will be raised.</span>
+<span class="sd">        To cast an int to datetime, for instance, the ``allowed_types`` arg</span>
+<span class="sd">        will need to include &quot;int64&quot;::</span>
+
+<span class="sd">            allowed_types=DateTransformer.DEFAULT_PERMITTED_DTYPES + (&#39;int64&#39;,)</span>
+
+<span class="sd">    fit_cols_ : list</span>
+<span class="sd">        The columns the transformer was fit on.</span>
+
+<span class="sd">    formats_ : dict</span>
+<span class="sd">        Maps column name to date format, in case of varying date formats</span>
+<span class="sd">        passed in the ``date_format`` parameter.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">DEFAULT_PERMITTED_DTYPES</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;object&quot;</span><span class="p">,</span> <span class="s2">&quot;datetime64[ns]&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DateTransformer.__init__"><a class="viewcode-back" href="../../../modules/generated/skoot.preprocessing.DateTransformer.html#skoot.preprocessing.DateTransformer.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">date_format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">allowed_types</span><span class="o">=</span><span class="n">DEFAULT_PERMITTED_DTYPES</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DateTransformer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span>
+            <span class="n">cols</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">date_format</span> <span class="o">=</span> <span class="n">date_format</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">allowed_types</span> <span class="o">=</span> <span class="n">allowed_types</span></div>
+
+<div class="viewcode-block" id="DateTransformer.fit"><a class="viewcode-back" href="../../../modules/generated/skoot.preprocessing.DateTransformer.html#skoot.preprocessing.DateTransformer.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fit the date transformer.</span>
+
+<span class="sd">        This is a tricky class because the &quot;fit&quot; isn&#39;t super necessary...</span>
+<span class="sd">        But we use it as a validation stage to ensure the defined cols</span>
+<span class="sd">        genuinely can be cast to datetime. That&#39;s the only reason this all</span>
+<span class="sd">        happens in the fit portion.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : pd.DataFrame, shape=(n_samples, n_features)</span>
+<span class="sd">            The Pandas frame to fit. The frame will only</span>
+<span class="sd">            be fit on the prescribed ``cols`` (see ``__init__``) or</span>
+<span class="sd">            all of them if ``cols`` is None.</span>
+
+<span class="sd">        y : array-like or None, shape=(n_samples,), optional (default=None)</span>
+<span class="sd">            Pass-through for ``sklearn.pipeline.Pipeline``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="DateTransformer.fit_transform"><a class="viewcode-back" href="../../../modules/generated/skoot.preprocessing.DateTransformer.html#skoot.preprocessing.DateTransformer.fit_transform">[docs]</a>    <span class="k">def</span> <span class="nf">fit_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fit the estimator and apply the date transformation</span>
+<span class="sd">        to a dataframe.</span>
+
+<span class="sd">        This is a tricky class because the &quot;fit&quot; isn&#39;t super necessary...</span>
+<span class="sd">        But we use it as a validation stage to ensure the defined cols</span>
+<span class="sd">        genuinely can be cast to datetime. That&#39;s the only reason this all</span>
+<span class="sd">        happens in the fit portion.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : pd.DataFrame, shape=(n_samples, n_features)</span>
+<span class="sd">            The Pandas frame to fit. The operation will</span>
+<span class="sd">            be applied to a copy of the input data, and the result</span>
+<span class="sd">            will be returned.</span>
+
+<span class="sd">        y : array-like or None, shape=(n_samples,), optional (default=None)</span>
+<span class="sd">            Pass-through for ``sklearn.pipeline.Pipeline``.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        X : pd.DataFrame or np.ndarray, shape=(n_samples, n_features)</span>
+<span class="sd">            The operation is applied to a copy of ``X``,</span>
+<span class="sd">            and the result set is returned.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">cols</span> <span class="o">=</span> <span class="n">check_dataframe</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">,</span> <span class="n">assert_all_finite</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># Different fields may have different formats, so we have to</span>
+        <span class="c1"># allow a number of different formats to be passed.</span>
+        <span class="n">formats</span> <span class="o">=</span> <span class="n">type_or_iterable_to_col_mapping</span><span class="p">(</span>
+            <span class="n">cols</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span> <span class="n">param</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">date_format</span><span class="p">,</span>
+            <span class="n">param_name</span><span class="o">=</span><span class="s2">&quot;date_format&quot;</span><span class="p">,</span>
+            <span class="n">permitted_scalar_types</span><span class="o">=</span><span class="n">six</span><span class="o">.</span><span class="n">string_types</span> <span class="o">+</span> <span class="p">(</span><span class="n">NoneType</span><span class="p">,))</span>
+
+        <span class="n">X</span> <span class="o">=</span> <span class="n">_cast_to_datetime</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">formats</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">allowed_types</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit_cols_</span> <span class="o">=</span> <span class="n">cols</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">formats_</span> <span class="o">=</span> <span class="n">formats</span>
+        <span class="k">return</span> <span class="n">X</span></div>
+
+<div class="viewcode-block" id="DateTransformer.transform"><a class="viewcode-back" href="../../../modules/generated/skoot.preprocessing.DateTransformer.html#skoot.preprocessing.DateTransformer.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Apply the date transformation to a dataframe.</span>
+
+<span class="sd">        This method will cast string features to datetimes as specified by</span>
+<span class="sd">        the ``date_format`` arg.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : pd.DataFrame, shape=(n_samples, n_features)</span>
+<span class="sd">            The Pandas frame to transform. The operation will</span>
+<span class="sd">            be applied to a copy of the input data, and the result</span>
+<span class="sd">            will be returned.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        X : pd.DataFrame or np.ndarray, shape=(n_samples, n_features)</span>
+<span class="sd">            The operation is applied to a copy of ``X``,</span>
+<span class="sd">            and the result set is returned.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;fit_cols_&quot;</span><span class="p">)</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">check_dataframe</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">)</span>
+
+        <span class="c1"># validate that fit cols in test set</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_cols_</span>
+        <span class="n">validate_test_set_columns</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
+        <span class="c1"># transform</span>
+        <span class="k">return</span> <span class="n">_cast_to_datetime</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">formats_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">allowed_types</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Taylor G Smith.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.19.2.dev1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

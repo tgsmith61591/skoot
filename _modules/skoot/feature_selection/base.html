@@ -148,6 +148,7 @@
 
 <span class="kn">from</span> <span class="nn">..base</span> <span class="k">import</span> <span class="n">BasePDTransformer</span>
 <span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="k">import</span> <span class="n">check_dataframe</span>
+<span class="kn">from</span> <span class="nn">..utils.dataframe</span> <span class="k">import</span> <span class="n">dataframe_or_array</span>
 
 <span class="kn">import</span> <span class="nn">warnings</span>
 
@@ -231,7 +232,7 @@
                               <span class="o">%</span> <span class="n">drop_columns</span><span class="p">,</span> <span class="ne">UserWarning</span><span class="p">)</span>
 
             <span class="n">dropped</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">drops</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">dropped</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_df</span> <span class="k">else</span> <span class="n">dropped</span><span class="o">.</span><span class="n">values</span></div></div>
+            <span class="k">return</span> <span class="n">dataframe_or_array</span><span class="p">(</span><span class="n">dropped</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_df</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

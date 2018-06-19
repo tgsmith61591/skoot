@@ -109,6 +109,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../classes.html#scalers-normalizers">Scalers/normalizers</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../classes.html#skewness-transformers">Skewness transformers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../classes.html#other-transformers">Other transformers</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.utils"><code class="docutils literal"><span class="pre">skoot.utils</span></code>: Common utility functions</a></li>
@@ -166,7 +167,7 @@
 <h1><a class="reference internal" href="../classes.html#module-skoot.preprocessing" title="skoot.preprocessing"><code class="xref py py-mod docutils literal"><span class="pre">skoot.preprocessing</span></code></a>.DummyEncoder<a class="headerlink" href="#skoot-preprocessing-dummyencoder" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="skoot.preprocessing.DummyEncoder">
-<em class="property">class </em><code class="descclassname">skoot.preprocessing.</code><code class="descname">DummyEncoder</code><span class="sig-paren">(</span><em>cols</em>, <em>as_df=True</em>, <em>sep='_'</em>, <em>drop_one_level=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/encode.html#DummyEncoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.DummyEncoder" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">skoot.preprocessing.</code><code class="descname">DummyEncoder</code><span class="sig-paren">(</span><em>cols</em>, <em>as_df=True</em>, <em>sep='_'</em>, <em>drop_one_level=True</em>, <em>handle_unknown='ignore'</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/encode.html#DummyEncoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.DummyEncoder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dummy encode categorical data.</p>
 <p>A custom one-hot encoding class that handles previously unseen
 levels and automatically drops one level from each categorical
@@ -195,9 +196,15 @@ Since most skoot transformers depend on explicitly-named
 and the level name.</p>
 </div></blockquote>
 <p><strong>drop_one_level</strong> : bool, optional (default=True)</p>
-<blockquote class="last">
+<blockquote>
 <div><p>Whether to drop one level for each categorical variable.
 This helps avoid the dummy variable trap.</p>
+</div></blockquote>
+<p><strong>handle_unknown</strong> : str or unicode, optional (default=’ignore’)</p>
+<blockquote class="last">
+<div><p>How to handle the unknown levels. “ignore” will not raise an error
+for unknown test set levels, but “error” will. “warn” will produce
+a warning.</p>
 </div></blockquote>
 </td>
 </tr>
@@ -241,13 +248,13 @@ This helps avoid the dummy variable trap.</p>
 <td>Set the parameters of this estimator.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#skoot.preprocessing.DummyEncoder.transform" title="skoot.preprocessing.DummyEncoder.transform"><code class="xref py py-obj docutils literal"><span class="pre">transform</span></code></a>(X)</td>
-<td>Apply the imputation to a dataframe.</td>
+<td>Apply the encoding to a dataframe.</td>
 </tr>
 </tbody>
 </table>
 <dl class="method">
 <dt id="skoot.preprocessing.DummyEncoder.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>cols</em>, <em>as_df=True</em>, <em>sep='_'</em>, <em>drop_one_level=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/encode.html#DummyEncoder.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.DummyEncoder.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>cols</em>, <em>as_df=True</em>, <em>sep='_'</em>, <em>drop_one_level=True</em>, <em>handle_unknown='ignore'</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/encode.html#DummyEncoder.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.DummyEncoder.__init__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -350,7 +357,7 @@ component of a nested object.</p>
 <dl class="method">
 <dt id="skoot.preprocessing.DummyEncoder.transform">
 <code class="descname">transform</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/encode.html#DummyEncoder.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.DummyEncoder.transform" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply the imputation to a dataframe.</p>
+<dd><p>Apply the encoding to a dataframe.</p>
 <p>This method will encode the features in the test frame with the
 levels discovered in the <code class="docutils literal"><span class="pre">fit</span></code> computation.</p>
 <table class="docutils field-list" frame="void" rules="none">

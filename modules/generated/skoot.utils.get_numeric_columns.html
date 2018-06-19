@@ -39,8 +39,8 @@
         <link rel="search" title="Search" href="../../search.html"/>
     <link rel="top" title="skoot 0.19.2.dev1 documentation" href="../../index.html"/>
         <link rel="up" title="API Reference" href="../classes.html"/>
-        <link rel="next" title="skoot.utils.is_iterable" href="skoot.utils.is_iterable.html"/>
-        <link rel="prev" title="skoot.preprocessing.YeoJohnsonTransformer" href="skoot.preprocessing.YeoJohnsonTransformer.html"/> 
+        <link rel="next" title="skoot.utils.safe_drop_samples" href="skoot.utils.safe_drop_samples.html"/>
+        <link rel="prev" title="skoot.utils.get_datetime_columns" href="skoot.utils.get_datetime_columns.html"/> 
 
   
   <script src="../../_static/js/modernizr.min.js"></script>
@@ -102,11 +102,18 @@
 <li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.model_validation"><code class="docutils literal"><span class="pre">skoot.model_validation</span></code>: Model validation &amp; monitoring</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.preprocessing"><code class="docutils literal"><span class="pre">skoot.preprocessing</span></code>: Pre-processing transformers</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../classes.html#module-skoot.utils"><code class="docutils literal"><span class="pre">skoot.utils</span></code>: Common utility functions</a><ul class="current">
-<li class="toctree-l3 current"><a class="reference internal" href="../classes.html#iterable-utilities">Iterable utilities</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../classes.html#dataframe-utilities">DataFrame utilities</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="skoot.utils.dataframe_or_array.html"><code class="docutils literal"><span class="pre">skoot.utils</span></code>.dataframe_or_array</a></li>
+<li class="toctree-l4"><a class="reference internal" href="skoot.utils.get_continuous_columns.html"><code class="docutils literal"><span class="pre">skoot.utils</span></code>.get_continuous_columns</a></li>
+<li class="toctree-l4"><a class="reference internal" href="skoot.utils.get_datetime_columns.html"><code class="docutils literal"><span class="pre">skoot.utils</span></code>.get_datetime_columns</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#"><code class="docutils literal"><span class="pre">skoot.utils</span></code>.get_numeric_columns</a></li>
-<li class="toctree-l4"><a class="reference internal" href="skoot.utils.is_iterable.html"><code class="docutils literal"><span class="pre">skoot.utils</span></code>.is_iterable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="skoot.utils.safe_drop_samples.html"><code class="docutils literal"><span class="pre">skoot.utils</span></code>.safe_drop_samples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="skoot.utils.safe_mask_samples.html"><code class="docutils literal"><span class="pre">skoot.utils</span></code>.safe_mask_samples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="skoot.utils.safe_vstack.html"><code class="docutils literal"><span class="pre">skoot.utils</span></code>.safe_vstack</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../classes.html#iterable-utilities">Iterable utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../classes.html#series-utilities">Series utilities</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../classes.html#validation-utilities">Validation utilities</a></li>
 </ul>
 </li>
@@ -192,10 +199,10 @@ DataFrame. A numeric column is defined as a column whose
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="skoot.utils.is_iterable.html" class="btn btn-neutral float-right" title="skoot.utils.is_iterable" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="skoot.utils.safe_drop_samples.html" class="btn btn-neutral float-right" title="skoot.utils.safe_drop_samples" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="skoot.preprocessing.YeoJohnsonTransformer.html" class="btn btn-neutral" title="skoot.preprocessing.YeoJohnsonTransformer" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="skoot.utils.get_datetime_columns.html" class="btn btn-neutral" title="skoot.utils.get_datetime_columns" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

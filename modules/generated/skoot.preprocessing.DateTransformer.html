@@ -1,0 +1,488 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>skoot.preprocessing.DateTransformer &mdash; skoot 0.19.2.dev1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../_static/css/style.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="skoot 0.19.2.dev1 documentation" href="../../index.html"/>
+        <link rel="up" title="API Reference" href="../classes.html"/>
+        <link rel="next" title="skoot.utils.dataframe_or_array" href="skoot.utils.dataframe_or_array.html"/>
+        <link rel="prev" title="skoot.preprocessing.YeoJohnsonTransformer" href="skoot.preprocessing.YeoJohnsonTransformer.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> skoot
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.19.2.dev1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../classes.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.base"><code class="docutils literal"><span class="pre">skoot.base</span></code>: Base metaclasses and utility functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot"><code class="docutils literal"><span class="pre">skoot.decorators</span></code>: Decorator utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.balance"><code class="docutils literal"><span class="pre">skoot.balance</span></code>: Class imbalance remedies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.datasets"><code class="docutils literal"><span class="pre">skoot.datasets</span></code>: Dataset loaders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.decomposition"><code class="docutils literal"><span class="pre">skoot.decomposition</span></code>: Various matrix decompositions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.exploration"><code class="docutils literal"><span class="pre">skoot.exploration</span></code>: Exploratory data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.feature_extraction"><code class="docutils literal"><span class="pre">skoot.feature_extraction</span></code>: Feature extraction methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.feature_selection"><code class="docutils literal"><span class="pre">skoot.feature_selection</span></code>: Feature selection methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.model_validation"><code class="docutils literal"><span class="pre">skoot.model_validation</span></code>: Model validation &amp; monitoring</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../classes.html#module-skoot.preprocessing"><code class="docutils literal"><span class="pre">skoot.preprocessing</span></code>: Pre-processing transformers</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../classes.html#continuous-feature-binning">Continuous feature binning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../classes.html#dataframe-schema-transformers">Dataframe schema transformers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../classes.html#encoding-transformers">Encoding transformers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../classes.html#scalers-normalizers">Scalers/normalizers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../classes.html#skewness-transformers">Skewness transformers</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../classes.html#other-transformers">Other transformers</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#"><code class="docutils literal"><span class="pre">skoot.preprocessing</span></code>.DateTransformer</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.utils"><code class="docutils literal"><span class="pre">skoot.utils</span></code>: Common utility functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide.html">User Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">skoot</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../classes.html">API Reference</a> &raquo;</li>
+      
+    <li><code class="docutils literal"><span class="pre">skoot.preprocessing</span></code>.DateTransformer</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../_sources/modules/generated/skoot.preprocessing.DateTransformer.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="skoot-preprocessing-datetransformer">
+<h1><a class="reference internal" href="../classes.html#module-skoot.preprocessing" title="skoot.preprocessing"><code class="xref py py-mod docutils literal"><span class="pre">skoot.preprocessing</span></code></a>.DateTransformer<a class="headerlink" href="#skoot-preprocessing-datetransformer" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="skoot.preprocessing.DateTransformer">
+<em class="property">class </em><code class="descclassname">skoot.preprocessing.</code><code class="descname">DateTransformer</code><span class="sig-paren">(</span><em>cols=None</em>, <em>date_format=None</em>, <em>allowed_types=('object'</em>, <em>'datetime64[ns]')</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/dates.html#DateTransformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.DateTransformer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cast features to datetime.</p>
+<p>Convert multiple features with potentially differing formats to datetime
+with specified formats or by inferring the formats.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>cols</strong> : array-like, shape=(n_features,), optional (default=None)</p>
+<blockquote>
+<div><p>The names of the columns on which to apply the transformation.
+Will apply to all columns if None specified</p>
+</div></blockquote>
+<p><strong>date_format</strong> : str, iterable or None, optional (default=None)</p>
+<blockquote>
+<div><p>The date format. If None, will infer. If a string, will be used to
+parse the datetime. If an iterable, should contain strings or None
+positionally corresponding to <code class="docutils literal"><span class="pre">cols</span></code> (or a dict mapping columns
+to formats).</p>
+</div></blockquote>
+<p><strong>allowed_types</strong> : iterable, optional (default=(“object”, “datetime64[ns]”))</p>
+<blockquote class="last">
+<div><p>Permitted Series types. This is used to prevent accidentally casting
+Series of unexpected types to DateTime. For instance, integer types
+can be cast to DateTime even though the behavior may be unexpected.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>The <code class="docutils literal"><span class="pre">fit</span></code> method here is only used for validation that the columns can
+be cast to datetime.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span> <span class="k">as</span> <span class="n">dt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">[</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;06/01/2018&quot;</span><span class="p">,</span> <span class="n">dt</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="s2">&quot;06-01-2018&quot;</span><span class="p">,</span> <span class="s2">&quot;%m-</span><span class="si">%d</span><span class="s2">-%Y&quot;</span><span class="p">)],</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;06/02/2018&quot;</span><span class="p">,</span> <span class="n">dt</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="s2">&quot;06-02-2018&quot;</span><span class="p">,</span> <span class="s2">&quot;%m-</span><span class="si">%d</span><span class="s2">-%Y&quot;</span><span class="p">)],</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;06/03/2018&quot;</span><span class="p">,</span> <span class="n">dt</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="s2">&quot;06-03-2018&quot;</span><span class="p">,</span> <span class="s2">&quot;%m-</span><span class="si">%d</span><span class="s2">-%Y&quot;</span><span class="p">)],</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dt</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="s2">&quot;06-04-2018&quot;</span><span class="p">,</span> <span class="s2">&quot;%m-</span><span class="si">%d</span><span class="s2">-%Y&quot;</span><span class="p">)],</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;06/05/2018&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">converter</span> <span class="o">=</span> <span class="n">DateTransformer</span><span class="p">(</span><span class="n">cols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">],</span>
+<span class="gp">... </span>                            <span class="n">date_format</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;%m/</span><span class="si">%d</span><span class="s2">/%Y&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">converter</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="go">   a          b          c</span>
+<span class="go">0  1 2018-06-01 2018-06-01</span>
+<span class="go">1  2 2018-06-02 2018-06-02</span>
+<span class="go">2  3 2018-06-03 2018-06-03</span>
+<span class="go">3  4        NaT 2018-06-04</span>
+<span class="go">4  5 2018-06-05        NaT</span>
+</pre></div>
+</div>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="6%" />
+<col width="94%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>DEFAULT_PERMITTED_DTYPES</td>
+<td>(tuple) This is a static attribute that controls what types can be cast. These are the default permitted pandas dtypes that are allowed. If a column is not one of these types, a ValueError will be raised. To cast an int to datetime, for instance, the <code class="docutils literal"><span class="pre">allowed_types</span></code> arg will need to include “int64”::  allowed_types=DateTransformer.DEFAULT_PERMITTED_DTYPES + (‘int64’,)</td>
+</tr>
+<tr class="row-even"><td><a href="#id2"><span class="problematic" id="id3">fit_cols_</span></a></td>
+<td>(list) The columns the transformer was fit on.</td>
+</tr>
+<tr class="row-odd"><td><a href="#id4"><span class="problematic" id="id5">formats_</span></a></td>
+<td>(dict) Maps column name to date format, in case of varying date formats passed in the <code class="docutils literal"><span class="pre">date_format</span></code> parameter.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#skoot.preprocessing.DateTransformer.fit" title="skoot.preprocessing.DateTransformer.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(X[,&nbsp;y])</td>
+<td>Fit the date transformer.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#skoot.preprocessing.DateTransformer.fit_transform" title="skoot.preprocessing.DateTransformer.fit_transform"><code class="xref py py-obj docutils literal"><span class="pre">fit_transform</span></code></a>(X[,&nbsp;y])</td>
+<td>Fit the estimator and apply the date transformation to a dataframe.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#skoot.preprocessing.DateTransformer.get_params" title="skoot.preprocessing.DateTransformer.get_params"><code class="xref py py-obj docutils literal"><span class="pre">get_params</span></code></a>([deep])</td>
+<td>Get parameters for this estimator.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#skoot.preprocessing.DateTransformer.set_params" title="skoot.preprocessing.DateTransformer.set_params"><code class="xref py py-obj docutils literal"><span class="pre">set_params</span></code></a>(**params)</td>
+<td>Set the parameters of this estimator.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#skoot.preprocessing.DateTransformer.transform" title="skoot.preprocessing.DateTransformer.transform"><code class="xref py py-obj docutils literal"><span class="pre">transform</span></code></a>(X)</td>
+<td>Apply the date transformation to a dataframe.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="skoot.preprocessing.DateTransformer.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>cols=None</em>, <em>date_format=None</em>, <em>allowed_types=('object'</em>, <em>'datetime64[ns]')</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/dates.html#DateTransformer.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.DateTransformer.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="skoot.preprocessing.DateTransformer.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/dates.html#DateTransformer.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.DateTransformer.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit the date transformer.</p>
+<p>This is a tricky class because the “fit” isn’t super necessary…
+But we use it as a validation stage to ensure the defined cols
+genuinely can be cast to datetime. That’s the only reason this all
+happens in the fit portion.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>X</strong> : pd.DataFrame, shape=(n_samples, n_features)</p>
+<blockquote>
+<div><p>The Pandas frame to fit. The frame will only
+be fit on the prescribed <code class="docutils literal"><span class="pre">cols</span></code> (see <code class="docutils literal"><span class="pre">__init__</span></code>) or
+all of them if <code class="docutils literal"><span class="pre">cols</span></code> is None.</p>
+</div></blockquote>
+<p><strong>y</strong> : array-like or None, shape=(n_samples,), optional (default=None)</p>
+<blockquote class="last">
+<div><p>Pass-through for <code class="docutils literal"><span class="pre">sklearn.pipeline.Pipeline</span></code>.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="skoot.preprocessing.DateTransformer.fit_transform">
+<code class="descname">fit_transform</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/dates.html#DateTransformer.fit_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.DateTransformer.fit_transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit the estimator and apply the date transformation
+to a dataframe.</p>
+<p>This is a tricky class because the “fit” isn’t super necessary…
+But we use it as a validation stage to ensure the defined cols
+genuinely can be cast to datetime. That’s the only reason this all
+happens in the fit portion.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>X</strong> : pd.DataFrame, shape=(n_samples, n_features)</p>
+<blockquote>
+<div><p>The Pandas frame to fit. The operation will
+be applied to a copy of the input data, and the result
+will be returned.</p>
+</div></blockquote>
+<p><strong>y</strong> : array-like or None, shape=(n_samples,), optional (default=None)</p>
+<blockquote>
+<div><p>Pass-through for <code class="docutils literal"><span class="pre">sklearn.pipeline.Pipeline</span></code>.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X</strong> : pd.DataFrame or np.ndarray, shape=(n_samples, n_features)</p>
+<blockquote class="last">
+<div><p>The operation is applied to a copy of <code class="docutils literal"><span class="pre">X</span></code>,
+and the result set is returned.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="skoot.preprocessing.DateTransformer.get_params">
+<code class="descname">get_params</code><span class="sig-paren">(</span><em>deep=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.DateTransformer.get_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get parameters for this estimator.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>deep</strong> : boolean, optional</p>
+<blockquote>
+<div><p>If True, will return the parameters for this estimator and
+contained subobjects that are estimators.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>params</strong> : mapping of string to any</p>
+<blockquote class="last">
+<div><p>Parameter names mapped to their values.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="skoot.preprocessing.DateTransformer.set_params">
+<code class="descname">set_params</code><span class="sig-paren">(</span><em>**params</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.DateTransformer.set_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the parameters of this estimator.</p>
+<p>The method works on simple estimators as well as on nested objects
+(such as pipelines). The latter have parameters of the form
+<code class="docutils literal"><span class="pre">&lt;component&gt;__&lt;parameter&gt;</span></code> so that it’s possible to update each
+component of a nested object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">self</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="skoot.preprocessing.DateTransformer.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/dates.html#DateTransformer.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.DateTransformer.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply the date transformation to a dataframe.</p>
+<p>This method will cast string features to datetimes as specified by
+the <code class="docutils literal"><span class="pre">date_format</span></code> arg.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>X</strong> : pd.DataFrame, shape=(n_samples, n_features)</p>
+<blockquote>
+<div><p>The Pandas frame to transform. The operation will
+be applied to a copy of the input data, and the result
+will be returned.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X</strong> : pd.DataFrame or np.ndarray, shape=(n_samples, n_features)</p>
+<blockquote class="last">
+<div><p>The operation is applied to a copy of <code class="docutils literal"><span class="pre">X</span></code>,
+and the result set is returned.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<div class="section" id="examples-using-skoot-preprocessing-datetransformer">
+<h2>Examples using <code class="docutils literal"><span class="pre">skoot.preprocessing.DateTransformer</span></code><a class="headerlink" href="#examples-using-skoot-preprocessing-datetransformer" title="Permalink to this headline">¶</a></h2>
+<div class="sphx-glr-thumbcontainer" tooltip="Demonstrates how to automatically transform string date-representation fields into datetime typ..."><div class="figure" id="id1">
+<img alt="../../_images/sphx_glr_ex_date_transformation_thumb.png" src="../../_images/sphx_glr_ex_date_transformation_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="../../auto_examples/preprocessing/ex_date_transformation.html#sphx-glr-auto-examples-preprocessing-ex-date-transformation-py"><span class="std std-ref">Date transformer</span></a></span></p>
+</div>
+</div><div class="clearer"></div></div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="skoot.utils.dataframe_or_array.html" class="btn btn-neutral float-right" title="skoot.utils.dataframe_or_array" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="skoot.preprocessing.YeoJohnsonTransformer.html" class="btn btn-neutral" title="skoot.preprocessing.YeoJohnsonTransformer" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Taylor G Smith.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.19.2.dev1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
