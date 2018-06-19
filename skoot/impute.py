@@ -13,6 +13,7 @@ from sklearn.utils.validation import check_is_fitted
 from .base import BasePDTransformer
 from .utils.validation import check_dataframe
 from .utils.iterables import is_iterable
+from .utils.dataframe import dataframe_or_array
 
 __all__ = [
     'BaggedRegressorImputer',
@@ -279,7 +280,7 @@ class SelectiveImputer(BasePDTransformer):
         for colname in cols:
             X.loc[mask[colname], colname] = stats[colname]
 
-        return X if self.as_df else X.values
+        return dataframe_or_array(X, self.as_df)
 
 
 class _BaseBaggedImputer(BasePDTransformer):
@@ -444,7 +445,7 @@ class _BaseBaggedImputer(BasePDTransformer):
             # impute!
             X.loc[test_mask, k] = preds
 
-        return X
+        return dataframe_or_array(X, self.as_df)
 
 
 class BaggedRegressorImputer(_BaseBaggedImputer):

@@ -17,6 +17,7 @@ doc/auto_examples
 build/
 dist/
 *.egg-info/
+.eggs/
 .cache/
 skoot/__config__.py
 *.so*

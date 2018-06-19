@@ -10,6 +10,7 @@ from abc import ABCMeta
 
 from ..base import BasePDTransformer
 from ..utils.validation import check_dataframe
+from ..utils.dataframe import dataframe_or_array
 
 import warnings
 
@@ -93,4 +94,4 @@ class BaseFeatureSelector(six.with_metaclass(ABCMeta, BasePDTransformer)):
                               % drop_columns, UserWarning)
 
             dropped = X.drop(drops, axis=1)
-            return dropped if self.as_df else dropped.values
+            return dataframe_or_array(dropped, self.as_df)
