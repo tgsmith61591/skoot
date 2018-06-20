@@ -47,9 +47,11 @@ def _factorize(X, cols, feature_names, sep):
         if right_side is None:  # first pass
             right_side = pd_features
         else:
+            # No need to reset index here since right_side will be 0, 1, .., N
             right_side = pd.concat([right_side, pd_features], axis=1)
 
-    # concat to the original df
+    # concat to the original df. we DO need to reset index of right_side here.
+    right_side.index = X.index
     X = pd.concat([X, right_side], axis=1)
     return X
 

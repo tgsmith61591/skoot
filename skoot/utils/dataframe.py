@@ -7,6 +7,7 @@ import numpy as np
 
 __all__ = [
     'dataframe_or_array',
+    'get_categorical_columns',
     'get_continuous_columns',
     'get_datetime_columns',
     'get_numeric_columns',
@@ -32,6 +33,20 @@ def dataframe_or_array(X, as_df):
     """
     assert isinstance(X, pd.DataFrame), "Expected X to be a DataFrame"
     return X if as_df else X.values
+
+
+def get_categorical_columns(X):
+    """Get all categorical features from a pandas DataFrame.
+
+    This function selects all categorical columns from a pandas
+    DataFrame that are within the ``object`` or ``category`` family.
+
+    Parameters
+    ----------
+    X : pd.DataFrame
+        The input dataframe.
+    """
+    return X.select_dtypes(include=['object', 'category'])
 
 
 def get_continuous_columns(X):
