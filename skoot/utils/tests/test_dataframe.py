@@ -8,7 +8,7 @@ from skoot.datasets import load_iris_df
 from skoot.utils.testing import assert_raises
 from skoot.utils.dataframe import (get_numeric_columns, safe_vstack,
                                    safe_drop_samples, safe_mask_samples,
-                                   dataframe_or_array)
+                                   dataframe_or_array, get_categorical_columns)
 
 from numpy.testing import assert_array_equal
 
@@ -98,3 +98,10 @@ def test_safe_mask():
     arr = safe_mask_samples(df.values, mask)
     assert arr.shape[0] == 2, arr
     assert_array_equal(arr, df.values[3:, :])
+
+
+def test_get_categorical():
+    irs_copy = iris.copy()
+    irs_copy['cat'] = ['a' if x == 0 else 'b' if x == 1 else 'c'
+                       for x in iris['e']]
+    assert get_categorical_columns(irs_copy).columns.tolist() == ['cat']

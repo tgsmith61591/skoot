@@ -197,6 +197,10 @@ class _SelectiveTransformerWrapper(six.with_metaclass(dsutils._WritableDoc,
             data=transform,
             columns=trans)
 
+        # set the index of right to be equal to that of the input so
+        # we can concat seamlessly
+        right.index = X.index
+
         # concat if needed
         x = pd.concat([X[other_nms], right], axis=1) if other_nms else right
         return dataframe_or_array(x, self.as_df)
