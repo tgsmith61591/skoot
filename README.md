@@ -17,7 +17,7 @@ __Note that skoot is the preferred
 alternative to the now deprecated [skutil](https://github.com/tgsmith61591/skutil) 
 library__
 
-## Two minutes to model-readineess
+## Two minutes to model-readiness
 
 Real world data is nasty. Most data scientists spend the majority of their time
 tackling data cleansing tasks. With skoot, we can automate away so much of the
