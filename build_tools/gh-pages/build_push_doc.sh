@@ -55,6 +55,7 @@ find . -not -name ".git/*" -type f -maxdepth 1 -delete
 # Remove the remaining directories. Some of these are artifacts of the LAST
 # gh-pages build, and others are remnants of the package itself
 declare -a leftover=(".cache/"
+                     ".idea/"
                      "build/"
                      "build_tools/"
                      "doc/"
