@@ -19,7 +19,7 @@ designed to introduce you to the package style and layout.
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Introduces the user to skoot and its layout.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example walks through the package layout and where various transformers/classes can be loc...">
 
 .. only:: html
 
@@ -36,6 +36,26 @@ designed to introduce you to the package style and layout.
    :hidden:
 
    /auto_examples/ex_getting_acquainted
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Sometimes you have a pre-processing stage that finds itself awkwardly positioned in the middle ...">
+
+.. only:: html
+
+    .. figure:: /auto_examples/images/thumb/sphx_glr_ex_anonymous_transformer_thumb.png
+
+        :ref:`sphx_glr_auto_examples_ex_anonymous_transformer.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/ex_anonymous_transformer
 .. raw:: html
 
     <div style='clear:both'></div>
@@ -281,6 +301,26 @@ features in your dataset for better modeling.
    :hidden:
 
    /auto_examples/preprocessing/ex_date_transformation
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Demonstrates how to use the DummyEncoder. For a more comprehensive explanation, take a look at ...">
+
+.. only:: html
+
+    .. figure:: /auto_examples/preprocessing/images/thumb/sphx_glr_ex_one_hot_thumb.png
+
+        :ref:`sphx_glr_auto_examples_preprocessing_ex_one_hot.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/preprocessing/ex_one_hot
 .. raw:: html
 
     <div style='clear:both'></div>

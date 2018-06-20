@@ -263,16 +263,16 @@ returned.</p>
 <col width="91%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a href="#id1"><span class="problematic" id="id2">scale_</span></a></td>
+<tr class="row-odd"><td><a href="#id2"><span class="problematic" id="id3">scale_</span></a></td>
 <td>(ndarray, shape (n_features,)) Per feature relative scaling of the data.  .. versionadded:: 0.17 <em>scale_</em> is recommended instead of deprecated <em>std_</em>.</td>
 </tr>
-<tr class="row-even"><td><a href="#id3"><span class="problematic" id="id4">mean_</span></a></td>
+<tr class="row-even"><td><a href="#id4"><span class="problematic" id="id5">mean_</span></a></td>
 <td>(array of floats with shape [n_features]) The mean value for each feature in the training set.</td>
 </tr>
-<tr class="row-odd"><td><a href="#id5"><span class="problematic" id="id6">var_</span></a></td>
+<tr class="row-odd"><td><a href="#id6"><span class="problematic" id="id7">var_</span></a></td>
 <td>(array of floats with shape [n_features]) The variance for each feature in the training set. Used to compute <cite>scale_</cite></td>
 </tr>
-<tr class="row-even"><td><a href="#id7"><span class="problematic" id="id8">n_samples_seen_</span></a></td>
+<tr class="row-even"><td><a href="#id8"><span class="problematic" id="id9">n_samples_seen_</span></a></td>
 <td>(int) The number of samples processed by the estimator. Will be reset on new calls to fit, but increments across <code class="docutils literal"><span class="pre">partial_fit</span></code> calls.</td>
 </tr>
 </tbody>
@@ -436,7 +436,14 @@ and the result set is returned.</p>
 
 </dd></dl>
 
-<div class="clearer"></div></div>
+<div class="section" id="examples-using-skoot-preprocessing-selectivestandardscaler">
+<h2>Examples using <code class="docutils literal"><span class="pre">skoot.preprocessing.SelectiveStandardScaler</span></code><a class="headerlink" href="#examples-using-skoot-preprocessing-selectivestandardscaler" title="Permalink to this headline">¶</a></h2>
+<div class="sphx-glr-thumbcontainer" tooltip="Sometimes you have a pre-processing stage that finds itself awkwardly positioned in the middle ..."><div class="figure" id="id1">
+<img alt="../../_images/sphx_glr_ex_anonymous_transformer_thumb.png" src="../../_images/sphx_glr_ex_anonymous_transformer_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="../../auto_examples/ex_anonymous_transformer.html#sphx-glr-auto-examples-ex-anonymous-transformer-py"><span class="std std-ref">Anonymous transformers in skoot</span></a></span></p>
+</div>
+</div><div class="clearer"></div></div>
+</div>
 
 
            </div>

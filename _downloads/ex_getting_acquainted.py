@@ -3,12 +3,6 @@
 Getting acquainted with skoot
 =============================
 
-Introduces the user to skoot and its layout.
-
-.. raw:: html
-
-   <br/>
-
 This example walks through the package layout and where various
 transformers/classes can be located, as well as displays some nuances
 between scikit-learn and skoot.

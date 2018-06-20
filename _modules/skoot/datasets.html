@@ -144,7 +144,10 @@
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="k">import</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">join</span>
+
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;load_adult_df&#39;</span><span class="p">,</span>
     <span class="s1">&#39;load_boston_df&#39;</span><span class="p">,</span>
     <span class="s1">&#39;load_breast_cancer_df&#39;</span><span class="p">,</span>
     <span class="s1">&#39;load_iris_df&#39;</span>
@@ -160,6 +163,61 @@
     <span class="k">if</span> <span class="n">include_tgt</span><span class="p">:</span>
         <span class="n">X</span><span class="p">[</span><span class="n">tgt_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">bunch</span><span class="o">.</span><span class="n">target</span>
     <span class="k">return</span> <span class="n">X</span>
+
+
+<span class="k">def</span> <span class="nf">load_adult_df</span><span class="p">(</span><span class="n">include_tgt</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tgt_name</span><span class="o">=</span><span class="s2">&quot;target&quot;</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Load and return the adult dataset (classification).</span>
+
+<span class="sd">    The adult dataset is a classic binary classification problem requiring</span>
+<span class="sd">    pre-processing prior to being model-ready.</span>
+
+<span class="sd">    =================   ============================</span>
+<span class="sd">    Classes                                        2</span>
+<span class="sd">    Samples per class       &lt;=50k: 24720; &gt;50k: 7841</span>
+<span class="sd">    Samples total                              32561</span>
+<span class="sd">    Dimensionality                                15</span>
+<span class="sd">    Features             real, positive, categorical</span>
+<span class="sd">    =================   ============================</span>
+
+<span class="sd">    Read more in the :ref:`User Guide &lt;datasets&gt;`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    include_tgt : bool, optional (default=True)</span>
+<span class="sd">        Whether to include the target</span>
+
+<span class="sd">    tgt_name : str, optional (default=&quot;target&quot;)</span>
+<span class="sd">        The name of the target feature</span>
+
+<span class="sd">    names : iterable or None</span>
+<span class="sd">        The column names for the dataframe. If not</span>
+<span class="sd">        defined, will default to the canonical feature names.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    X : pd.DataFrame, shape=(n_samples, n_features)</span>
+<span class="sd">        The loaded adult dataset</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] Ronny Kohavi and Barry Becker, &quot;Data Mining and Visualization&quot;</span>
+<span class="sd">           Silicon Graphics. https://archive.ics.uci.edu/ml/datasets/Adult</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># if names isn&#39;t defined, use the canonical names</span>
+    <span class="k">if</span> <span class="n">names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="s2">&quot;workclass&quot;</span><span class="p">,</span> <span class="s2">&quot;fnlwgt&quot;</span><span class="p">,</span> <span class="s2">&quot;education&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;education-num&quot;</span><span class="p">,</span> <span class="s2">&quot;marital-status&quot;</span><span class="p">,</span> <span class="s2">&quot;occupation&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;relationship&quot;</span><span class="p">,</span> <span class="s2">&quot;race&quot;</span><span class="p">,</span> <span class="s2">&quot;sex&quot;</span><span class="p">,</span> <span class="s2">&quot;capital-gain&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;capital-loss&quot;</span><span class="p">,</span> <span class="s2">&quot;hours-per-week&quot;</span><span class="p">,</span> <span class="s2">&quot;native-country&quot;</span><span class="p">]</span>
+
+    <span class="n">module_path</span> <span class="o">=</span> <span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">module_path</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;adult.csv&#39;</span><span class="p">),</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                     <span class="n">names</span><span class="o">=</span><span class="n">names</span> <span class="o">+</span> <span class="p">[</span><span class="n">tgt_name</span><span class="p">])</span>
+
+    <span class="c1"># if we want to drop the target, do so now</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">include_tgt</span><span class="p">:</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">tgt_name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span>
 
 
 <div class="viewcode-block" id="load_boston_df"><a class="viewcode-back" href="../../modules/generated/skoot.datasets.load_boston_df.html#skoot.datasets.load_boston_df">[docs]</a><span class="k">def</span> <span class="nf">load_boston_df</span><span class="p">(</span><span class="n">include_tgt</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tgt_name</span><span class="o">=</span><span class="s2">&quot;target&quot;</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>

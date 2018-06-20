@@ -185,9 +185,11 @@
         <span class="k">if</span> <span class="n">right_side</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># first pass</span>
             <span class="n">right_side</span> <span class="o">=</span> <span class="n">pd_features</span>
         <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># No need to reset index here since right_side will be 0, 1, .., N</span>
             <span class="n">right_side</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">right_side</span><span class="p">,</span> <span class="n">pd_features</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-    <span class="c1"># concat to the original df</span>
+    <span class="c1"># concat to the original df. we DO need to reset index of right_side here.</span>
+    <span class="n">right_side</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">index</span>
     <span class="n">X</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">X</span><span class="p">,</span> <span class="n">right_side</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">X</span>
 

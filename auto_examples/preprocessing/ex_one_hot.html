@@ -1,0 +1,364 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>One-hot encoding &mdash; skoot 0.19.2.dev1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../_static/css/style.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="skoot 0.19.2.dev1 documentation" href="../../index.html"/>
+        <link rel="up" title="Examples" href="../index.html"/>
+        <link rel="next" title="User Guide" href="../../user_guide.html"/>
+        <link rel="prev" title="Date transformer" href="ex_date_transformation.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> skoot
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.19.2.dev1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../modules/classes.html">API Reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../index.html#id1">General examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#class-balancing-examples">Class balancing examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#exploratory-data-analysis-examples">Exploratory data analysis examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#feature-extraction-examples">Feature extraction examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#model-validation-examples">Model validation examples</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#preprocessing-examples">Preprocessing examples</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ex_binning.html">Binning transformer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ex_date_transformation.html">Date transformer</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">One-hot encoding</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide.html">User Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">skoot</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">Examples</a> &raquo;</li>
+      
+    <li>One-hot encoding</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../_sources/auto_examples/preprocessing/ex_one_hot.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="one-hot-encoding">
+<span id="sphx-glr-auto-examples-preprocessing-ex-one-hot-py"></span><h1>One-hot encoding<a class="headerlink" href="#one-hot-encoding" title="Permalink to this headline">¶</a></h1>
+<p>Demonstrates how to use the DummyEncoder. For a more comprehensive explanation,
+take a look at the
+<a class="reference external" href="https://alkaline-ml.com/2018-06-18-skoot-intro">demo on alkaline-ml.com</a>.</p>
+<br/><p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-default"><div class="highlight"><pre><span></span>Test transformation:
+       age  fnlwgt  capital-gain  capital-loss  hours-per-week  workclass_?  \
+14160   27  160178             0             0              38          0.0
+27048   45   50567             0             0              40          0.0
+28868   29  185908             0             0              55          0.0
+5667    30  190040             0             0              40          0.0
+7827    29  189346          2202             0              50          0.0
+
+       workclass_Federal-gov  workclass_Local-gov  workclass_Never-worked  \
+14160                    0.0                  0.0                     0.0
+27048                    0.0                  0.0                     0.0
+28868                    0.0                  0.0                     0.0
+5667                     0.0                  0.0                     0.0
+7827                     0.0                  0.0                     0.0
+
+       workclass_Private           ...            native-country_Poland  \
+14160                1.0           ...                              0.0
+27048                0.0           ...                              0.0
+28868                1.0           ...                              0.0
+5667                 1.0           ...                              0.0
+7827                 0.0           ...                              0.0
+
+       native-country_Portugal  native-country_Puerto-Rico  \
+14160                      0.0                         0.0
+27048                      0.0                         0.0
+28868                      0.0                         0.0
+5667                       0.0                         0.0
+7827                       0.0                         0.0
+
+       native-country_Scotland  native-country_South  native-country_Taiwan  \
+14160                      0.0                   0.0                    0.0
+27048                      0.0                   0.0                    0.0
+28868                      0.0                   0.0                    0.0
+5667                       0.0                   0.0                    0.0
+7827                       0.0                   0.0                    0.0
+
+       native-country_Thailand  native-country_Trinadad&amp;Tobago  \
+14160                      0.0                             0.0
+27048                      0.0                             0.0
+28868                      0.0                             0.0
+5667                       0.0                             0.0
+7827                       0.0                             0.0
+
+       native-country_United-States  native-country_Vietnam
+14160                           1.0                     0.0
+27048                           1.0                     0.0
+28868                           1.0                     0.0
+5667                            1.0                     0.0
+7827                            1.0                     0.0
+
+[5 rows x 99 columns]
+
+Applied on a row with a new native-country:
+       age  fnlwgt  capital-gain  capital-loss  hours-per-week  workclass_?  \
+14160   27  160178             0             0              38          0.0
+
+       workclass_Federal-gov  workclass_Local-gov  workclass_Never-worked  \
+14160                    0.0                  0.0                     0.0
+
+       workclass_Private           ...            native-country_Poland  \
+14160                1.0           ...                              0.0
+
+       native-country_Portugal  native-country_Puerto-Rico  \
+14160                      0.0                         0.0
+
+       native-country_Scotland  native-country_South  native-country_Taiwan  \
+14160                      0.0                   0.0                    0.0
+
+       native-country_Thailand  native-country_Trinadad&amp;Tobago  \
+14160                      0.0                             0.0
+
+       native-country_United-States  native-country_Vietnam
+14160                           0.0                     0.0
+
+[1 rows x 99 columns]
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">print</span><span class="p">(</span><span class="n">__doc__</span><span class="p">)</span>
+
+<span class="c1"># Author: Taylor Smith &lt;taylor.smith@alkaline-ml.com&gt;</span>
+
+<span class="kn">from</span> <span class="nn">skoot.datasets</span> <span class="kn">import</span> <span class="n">load_adult_df</span>
+<span class="kn">from</span> <span class="nn">skoot.preprocessing</span> <span class="kn">import</span> <a href="../../modules/generated/skoot.preprocessing.DummyEncoder.html#skoot.preprocessing.DummyEncoder" title="View documentation for skoot.preprocessing.DummyEncoder"><span class="n">DummyEncoder</span></a>
+<span class="kn">from</span> <span class="nn">skoot.utils.dataframe</span> <span class="kn">import</span> <span class="n">get_categorical_columns</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+
+<span class="c1"># #############################################################################</span>
+<span class="c1"># load &amp; split the data</span>
+<span class="n">adult</span> <span class="o">=</span> <span class="n">load_adult_df</span><span class="p">(</span><span class="n">tgt_name</span><span class="o">=</span><span class="s2">&quot;target&quot;</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">adult</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;target&quot;</span><span class="p">)</span>
+
+<span class="c1"># we don&#39;t want this column</span>
+<span class="n">adult</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;education-num&quot;</span><span class="p">)</span>
+
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">adult</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+                                                    <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+
+<span class="c1"># #############################################################################</span>
+<span class="c1"># Fit a dummy encoder</span>
+<span class="n">obj_cols</span> <span class="o">=</span> <span class="n">get_categorical_columns</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+<span class="n">encoder</span> <span class="o">=</span> <a href="../../modules/generated/skoot.preprocessing.DummyEncoder.html#skoot.preprocessing.DummyEncoder" title="View documentation for skoot.preprocessing.DummyEncoder"><span class="n">DummyEncoder</span></a><span class="p">(</span><span class="n">cols</span><span class="o">=</span><span class="n">obj_cols</span><span class="p">,</span> <span class="n">handle_unknown</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+<span class="n">encoder</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="c1"># #############################################################################</span>
+<span class="c1"># Apply to the test set</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Test transformation:&quot;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">encoder</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+
+<span class="c1"># #############################################################################</span>
+<span class="c1"># Show we can work with levels we&#39;ve never seen before</span>
+<span class="n">test_row</span> <span class="o">=</span> <span class="n">X_test</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">test_row</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="s2">&quot;native-country&quot;</span><span class="p">,</span> <span class="s2">&quot;Atlantis&quot;</span><span class="p">)</span>
+<span class="n">trans</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">test_row</span><span class="p">]))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Applied on a row with a new native-country:&quot;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">trans</span><span class="p">)</span>
+
+<span class="n">nc_mask</span> <span class="o">=</span> <span class="n">trans</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;native-country&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">trans</span><span class="p">[</span><span class="n">trans</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">nc_mask</span><span class="p">]]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  0.581 seconds)</p>
+<div class="sphx-glr-footer container">
+<div class="sphx-glr-download container">
+<a class="reference download internal" href="../../_downloads/ex_one_hot.py" download=""><code class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">ex_one_hot.py</span></code></a></div>
+<div class="sphx-glr-download container">
+<a class="reference download internal" href="../../_downloads/ex_one_hot.ipynb" download=""><code class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">ex_one_hot.ipynb</span></code></a></div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.readthedocs.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../../user_guide.html" class="btn btn-neutral float-right" title="User Guide" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ex_date_transformation.html" class="btn btn-neutral" title="Date transformer" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Taylor G Smith.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.19.2.dev1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
