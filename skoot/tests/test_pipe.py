@@ -29,8 +29,13 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25,
 cv = KFold(n_splits=3, shuffle=True, random_state=42)
 
 # this function will be made into an anonymous transformer
-def subtract_one(X):
-    return X - 1.
+def subtract_k(X, k):
+    return X - float(k)
+
+
+# this function will be made into an anonymous transformer
+def add_k(X, k):
+    return X + float(k)
 
 
 def test_pipeline_basic():
@@ -64,7 +69,7 @@ def test_complex_grid_search():
         ('boxcox',         BoxCoxTransformer(suppress_warnings=True)),
         ('nzv',            NearZeroVarianceFilter()),
         ('pca',            SelectivePCA(n_components=0.9)),
-        ('custom',         make_transformer(subtract_one)),
+        ('custom',         make_transformer(subtract_k, k=1)),
         ('model',          RandomForestClassifier(n_jobs=1))
     ])
 
@@ -74,6 +79,8 @@ def test_complex_grid_search():
         'collinearity__method':       ['pearson', 'kendall', 'spearman'],
         'pca__n_components':          uniform(loc=.75, scale=.2),
         'pca__whiten':                [True, False],
+        'custom__k':                  [1, 2, 3],
+        'custom__func':               [subtract_k, add_k],
         'model__n_estimators':        randint(5, 10),
         'model__max_depth':           randint(2, 5),
         'model__min_samples_leaf':    randint(1, 5),

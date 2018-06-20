@@ -29,6 +29,16 @@ Base classes
 
     base.BasePDTransformer
 
+Helper functions
+----------------
+.. currentmodule:: skoot
+
+.. autosummary::
+    :toctree: generated/
+    :template: function.rst
+
+    base.make_transformer
+
 
 .. _decorator_ref:
 
