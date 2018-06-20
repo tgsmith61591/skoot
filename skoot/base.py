@@ -334,21 +334,7 @@ def make_transformer(func, **kwargs):
     >>> search = GridSearchCV(pipe, param_grid=hyper_params,
     ...                       scoring="accuracy")
     >>> search.fit(X, y)  # doctest: +ELLIPSIS, +NORMALIZE_WHITESPACE
-    GridSearchCV(cv=None, error_score='raise',
-           estimator=Pipeline(steps=[
-           ('pca', PCA(copy=True, iterated_power='auto',
-                       n_components=None, random_state=None,
-                       svd_solver='auto', tol=0.0, whiten=False)),
-           ('custom', _AnonymousPDTransformer(func=<function subtract_k at ...>,
-                                              k=2)),
-           ('clf', LogisticRegression(C=1.0, class_weight=None,
-                                      dual=F...lty='l2', random_state=42,
-                                      solver='liblinear', tol=0.0001,
-                                      verbose=0, warm_start=False))]),
-           fit_params={}, iid=True, n_jobs=1,
-           param_grid={'custom__k': [1, 2], 'pca__whiten': [True, False]},
-           pre_dispatch='2*n_jobs', refit=True, return_train_score=True,
-           scoring='accuracy', verbose=0)
+    GridSearchCV(...)
     """
     # first, if it's a lambda function, warn the user.
     lam = (lambda: None)
