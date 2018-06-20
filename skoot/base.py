@@ -20,6 +20,7 @@ from .utils.dataframe import dataframe_or_array
 # namespace import to avoid explicitly protected imports in global namespace
 from .utils import _docstr as dsutils
 
+import warnings
 import copy
 
 __all__ = [
@@ -206,3 +207,57 @@ class _SelectiveTransformerWrapper(six.with_metaclass(dsutils._WritableDoc,
         # (this is a closure)
         return list(cls._p_names) + \
                cls._cls._get_param_names()  # must have _cls!
+
+
+class _AnonymousPDTransformer(BasePDTransformer):
+    """General transformer wrapper used to make a commutative function
+    into a Pipeline-able function.
+
+    Parameters
+    ----------
+    func : callable
+        The commutative function used to transform the train or test set.
+    """
+    def __init__(self, func):
+        super(_AnonymousPDTransformer, self).__init__(
+            cols=None, as_df=True)
+
+        self.func = func
+
+    def transform(self, X):
+        """Apply the commutative function to the train or test set.
+
+        Parameters
+        ----------
+        X : pd.DataFrame, shape=(n_samples, n_features)
+            The Pandas frame to transform.
+        """
+        return self.func(X)
+
+
+def make_transformer(func):
+    """Make a function into a scikit-learn TransformerMixin.
+
+    Wraps a commutative function as an anonymous BasePDTransformer in order to
+    fit into a Pipeline. The returned transformer class methods adhere to the
+    standard BasePDTransformer ``fit`` and ``transform`` signatures.
+
+    This is useful when a transforming function that does not fit any
+    parameters is used to pre-process data at a point that might split a
+    pipeline.
+
+    Parameters
+    ----------
+    func : callable
+        The function that will be used to transform a dataset.
+    """
+    # first, if it's a lambda function, warn the user.
+    lam = lambda: None
+    if isinstance(func, type(lam)) and func.__name__ == lam.__name__:
+        warnings.warn("A lambda function was passed to the make_transformer "
+                      "function. While not explicitly unsupported, this will "
+                      "complicate transformer persistence. To persist "
+                      "dynamically-created transformers, use def-style "
+                      "functions.", UserWarning)
+
+    return _AnonymousPDTransformer(func)

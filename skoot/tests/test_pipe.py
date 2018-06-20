@@ -12,6 +12,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import train_test_split, KFold, RandomizedSearchCV
 
+from skoot.base import make_transformer
 from skoot.impute import SelectiveImputer
 from skoot.datasets import load_iris_df
 from skoot.decomposition import SelectiveTruncatedSVD, SelectivePCA
@@ -26,6 +27,10 @@ y = X.pop('species')
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25,
                                                     random_state=42)
 cv = KFold(n_splits=3, shuffle=True, random_state=42)
+
+# this function will be made into an anonymous transformer
+def subtract_one(X):
+    return X - 1.
 
 
 def test_pipeline_basic():
@@ -59,6 +64,7 @@ def test_complex_grid_search():
         ('boxcox',         BoxCoxTransformer(suppress_warnings=True)),
         ('nzv',            NearZeroVarianceFilter()),
         ('pca',            SelectivePCA(n_components=0.9)),
+        ('custom',         make_transformer(subtract_one)),
         ('model',          RandomForestClassifier(n_jobs=1))
     ])
 
