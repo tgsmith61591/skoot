@@ -4,7 +4,7 @@
 
 from .binning import *
 from .dates import *
-from .cerberus import *
+from .schema import *
 from .encode import *
 from .scale import *
 from .skewness import *

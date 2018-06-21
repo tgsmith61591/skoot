@@ -5,13 +5,11 @@
 from __future__ import absolute_import
 
 from sklearn.utils.validation import check_is_fitted
-from cerberus import Validator
+from sklearn.externals import six
 
 from ..base import BasePDTransformer
-from ..utils.validation import check_dataframe
+from ..utils.validation import check_dataframe, validate_test_set_columns
 from ..utils.dataframe import dataframe_or_array
-
-import pandas as pd
 
 __all__ = [
     'SchemaNormalizer'
@@ -21,9 +19,8 @@ __all__ = [
 class SchemaNormalizer(BasePDTransformer):
     r"""Enforce a schema on an input dataframe.
 
-    The SchemaNormalizer fits a cerberus Validator class on training data,
-    enforcing that schema across incoming test data. This ensures that new
-    test data matches the expected schema.
+    The SchemaNormalizer enforces a schema across incoming train and
+    test data. This ensures that all data matches the expected schema.
 
     Parameters
     ----------
@@ -32,7 +29,7 @@ class SchemaNormalizer(BasePDTransformer):
         instance the following schema will cast the iris dataset
         "petal widtch (cm)" column to integer::
 
-            >>> schema = {'petal width (cm)': {'coerce': int}}
+            >>> schema = {'petal width (cm)': int}
 
     as_df : bool, optional (default=True)
         Whether to return a Pandas ``DataFrame`` in the ``transform``
@@ -42,9 +39,10 @@ class SchemaNormalizer(BasePDTransformer):
 
     Attributes
     ----------
-    validator_ : cerberus.Validator
-        The cerberus validator object. Used to enforce schemas on
-        input test data.
+    fit_cols_ : list
+        The list of column names on which the transformer was fit. This
+        is used to validate the presence of the features in the test set
+        during the ``transform`` stage.
     """
 
     def __init__(self, schema, as_df=True):
@@ -69,7 +67,7 @@ class SchemaNormalizer(BasePDTransformer):
         y : array-like or None, shape=(n_samples,), optional (default=None)
             Pass-through for ``sklearn.pipeline.Pipeline``.
         """
-        self.validator_ = Validator(self.schema)
+        _, self.fit_cols_ = check_dataframe(X, cols=self.cols)
         return self
 
     def transform(self, X):
@@ -88,14 +86,15 @@ class SchemaNormalizer(BasePDTransformer):
             The operation is applied to a copy of ``X``,
             and the result set is returned.
         """
-        check_is_fitted(self, "validator_")
+        check_is_fitted(self, "fit_cols_")
         X, _ = check_dataframe(X, cols=self.cols)
 
-        # make the document, normalize
-        v = self.validator_
-        X = pd.DataFrame.from_records([
-            v.normalized(record)
-            for record in X.to_dict(orient='records')
-        ])
+        # validate that fit cols in test set
+        cols = self.fit_cols_
+        validate_test_set_columns(cols, X.columns)
+
+        # normalize
+        for k, v in six.iteritems(self.schema):
+            X[k] = X[k].astype(v)
 
         return dataframe_or_array(X, self.as_df)

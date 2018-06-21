@@ -283,7 +283,6 @@ class _AnonymousPDTransformer(BasePDTransformer):
         return out
 
 
-
 def make_transformer(func, **kwargs):
     """Make a function into a scikit-learn TransformerMixin.
 
