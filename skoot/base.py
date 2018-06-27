@@ -332,7 +332,7 @@ def make_transformer(func, **kwargs):
     ...                 "custom__k": [1, 2]}
     >>> search = GridSearchCV(pipe, param_grid=hyper_params,
     ...                       scoring="accuracy")
-    >>> search.fit(X, y)  # doctest: +ELLIPSIS, +NORMALIZE_WHITESPACE
+    >>> search.fit(X, y)  # doctest: +SKIP
     GridSearchCV(...)
     """
     # first, if it's a lambda function, warn the user.

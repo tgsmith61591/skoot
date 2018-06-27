@@ -11,3 +11,9 @@ the output of skoot's datasets are Pandas DataFrames.
 .. raw:: html
 
    <br/>
+
+See :ref:`datasets_examples`
+
+.. raw:: html
+
+   <br/>
