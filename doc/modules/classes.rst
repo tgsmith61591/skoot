@@ -179,6 +179,7 @@ Feature extraction estimators
 
     feature_extraction.DateFactorizer
     feature_extraction.InteractionTermTransformer
+    feature_extraction.TimeBetweenEvents
 
 
 .. _feature_selection_ref:
