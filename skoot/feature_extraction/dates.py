@@ -322,6 +322,8 @@ class TimeBetweenEvents(BasePDTransformer):
     ...     [5, None, strp("06-04-2018", "%m-%d-%Y")]
     ... ]
     >>> df = pd.DataFrame.from_records(data, columns=['a', 'b', 'c'])
+    >>> tbe = TimeBetweenEvents(cols=['b', 'c'], units='hours')
+    >>> tbe.fit_transform(df)
        a          b          c  b_c_delta
     0  1 2018-06-01 2018-06-02      -24.0
     1  2 2018-06-02 2018-06-03      -24.0
