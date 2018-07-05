@@ -14,7 +14,7 @@ __all__ = [
 ]
 
 
-def timed_instance_method(attribute_name):
+def timed_instance_method(attribute_name=None):
     """Function timer decorator.
 
     This function is used to decorate instance-based methods in
@@ -24,9 +24,10 @@ def timed_instance_method(attribute_name):
 
     Parameters
     ----------
-    attribute_name : str or unicode
+    attribute_name : str or unicode, optional (default=None)
         The name of the attribute under which to save the runtime of the
-        decorated method. This is bound to the instance class.
+        decorated method. This is bound to the instance class. If None,
+        will be set to "<method_name>_time_".
     """
     def method_wrapper(method):
         @wraps(method)
@@ -40,12 +41,16 @@ def timed_instance_method(attribute_name):
                                 "appear to be an instance method (%r)"
                                 % (method.__name__, self))
 
+            # Set attribute name if needed
+            attr_name = "%s_time_" % method.__name__ \
+                if attribute_name is None else attribute_name
+
             start_time = time.time()
             result = method(self, *args, **kwargs)
 
             # Bind the run time to the 'im_self' parameter of the method, which
             # points to the instance of the class
-            setattr(self, attribute_name, time.time() - start_time)
+            setattr(self, attr_name, time.time() - start_time)
             return result
         return wrapper
     return method_wrapper
