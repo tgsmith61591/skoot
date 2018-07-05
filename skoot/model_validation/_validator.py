@@ -12,6 +12,7 @@ from __future__ import absolute_import
 from ..base import BasePDTransformer
 from ..utils.validation import check_dataframe, type_or_iterable_to_col_mapping
 from ..utils.dataframe import get_continuous_columns, dataframe_or_array
+from ..utils.metaestimators import timed_instance_method
 from ..exceptions import ValidationWarning
 
 from sklearn.externals import six
@@ -162,6 +163,7 @@ class CustomValidator(_BaseValidator):
 
         self.func = func
 
+    @timed_instance_method(attribute_name="fit_time_")
     def fit(self, X, y=None):
         """Fit the transformer.
 
@@ -284,6 +286,7 @@ class DistHypothesisValidator(_BaseValidator):
         self.alpha = alpha
         self.categorical_strategy = categorical_strategy
 
+    @timed_instance_method(attribute_name="fit_time_")
     def fit(self, X, y=None):
         """Fit the transformer.
 
@@ -358,8 +361,9 @@ class DistHypothesisValidator(_BaseValidator):
                 new_lvls = ~np.in1d(prst_levels,
                                     exp_levels)  # type: np.ndarray
                 valid = not new_lvls.any()  # dont want new lvls, new = invalid
+                abs_mask = abs_diff <= self.alpha  # type: np.ndarray
 
-                return valid and (abs_diff <= self.alpha).all()
+                return valid and abs_mask.all()
 
             # if we add more strategies, here's where they'll go...
             return True

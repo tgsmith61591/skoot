@@ -13,6 +13,7 @@ from ..base import BasePDTransformer
 from ..utils.validation import (check_dataframe, validate_multiple_cols,
                                 validate_test_set_columns)
 from ..utils.dataframe import dataframe_or_array
+from ..utils.metaestimators import timed_instance_method
 
 __all__ = [
     'InteractionTermTransformer'
@@ -90,6 +91,7 @@ class InteractionTermTransformer(BasePDTransformer):
         self.interaction_function = interaction_function
         self.name_suffix = name_suffix
 
+    @timed_instance_method(attribute_name="fit_time_")
     def fit(self, X, y=None):
         """Fit the interaction term transformer.
 

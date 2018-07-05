@@ -27,15 +27,15 @@ adult = load_adult_df(tgt_name="target")
 y = adult.pop("target")
 
 # we don't want this column
-adult.pop("education-num")
+_ = adult.pop("education-num")
 
 X_train, X_test, y_train, y_test = train_test_split(adult, y, random_state=42,
                                                     test_size=0.2)
 
 # #############################################################################
 # Fit a dummy encoder
-obj_cols = get_categorical_columns(X_train)
-encoder = DummyEncoder(cols=obj_cols, handle_unknown='ignore')
+obj_cols = get_categorical_columns(X_train).columns
+encoder = DummyEncoder(cols=obj_cols, handle_unknown='ignore', n_jobs=4)
 encoder.fit(X_train, y_train)
 
 # #############################################################################

@@ -11,6 +11,7 @@ from .base import BaseFeatureSelector
 from ..decomposition import QRDecomposition
 from ..utils.validation import check_dataframe, validate_multiple_cols
 from ..utils.iterables import flatten_all
+from ..utils.metaestimators import timed_instance_method
 
 __all__ = [
     'LinearCombinationFilter'
@@ -71,6 +72,7 @@ class LinearCombinationFilter(BaseFeatureSelector):
         super(LinearCombinationFilter, self).__init__(
             cols=cols, as_df=as_df)
 
+    @timed_instance_method(attribute_name="fit_time_")
     def fit(self, X, y=None):
         """Fit the transformer.
 

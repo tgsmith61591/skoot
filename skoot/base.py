@@ -16,6 +16,7 @@ from .utils.validation import check_dataframe, validate_test_set_columns
 from .utils.iterables import is_iterable
 from .utils.compat import xrange
 from .utils.dataframe import dataframe_or_array
+from .utils.metaestimators import timed_instance_method
 
 # namespace import to avoid explicitly protected imports in global namespace
 from .utils import _docstr as dsutils
@@ -58,6 +59,7 @@ class BasePDTransformer(six.with_metaclass(ABCMeta, BaseEstimator,
         self.cols = copy.deepcopy(cols)  # do not let be mutable!
         self.as_df = as_df
 
+    @timed_instance_method(attribute_name="fit_time_")
     def fit(self, X, y=None):
         """Fit the transformer.
 
@@ -118,6 +120,7 @@ class _SelectiveTransformerWrapper(six.with_metaclass(dsutils._WritableDoc,
 
         self.trans_col_name = trans_col_name
 
+    @timed_instance_method(attribute_name="fit_time_")
     def fit(self, X, y=None, **fit_kwargs):
         """Fit the wrapped transformer.
 
@@ -319,8 +322,8 @@ def make_transformer(func, **kwargs):
     >>> from sklearn.linear_model import LogisticRegression
     >>> X, y = load_iris(return_X_y=True)
     >>>
-    >>> def subtract_k(X, k):
-    ...     return X - float(k)
+    >>> def subtract_k(x, k):
+    ...     return x - float(k)
     >>>
     >>> pipe = Pipeline([
     ...     ('pca', PCA()),

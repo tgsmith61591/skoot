@@ -9,6 +9,7 @@ from ..utils.validation import check_dataframe, validate_test_set_columns
 from ..utils.iterables import ensure_iterable
 from ..utils.series import is_datetime_type
 from ..utils.dataframe import dataframe_or_array
+from ..utils.metaestimators import timed_instance_method
 
 from sklearn.utils.validation import check_is_fitted
 from itertools import combinations
@@ -127,6 +128,7 @@ class DateFactorizer(BasePDTransformer):
         self.sep = sep
         self.features = features
 
+    # Don't decorate this one, since it calls fit_transform, which is decorated
     def fit(self, X, y=None):
         """Fit the date factorizer.
 
@@ -148,6 +150,7 @@ class DateFactorizer(BasePDTransformer):
         self.fit_transform(X, y)
         return self
 
+    @timed_instance_method(attribute_name="fit_time_")
     def fit_transform(self, X, y=None, **kwargs):
         """Fit the estimator and apply the date factorization to a dataframe.
 
@@ -381,6 +384,7 @@ class TimeDeltaFeatures(BasePDTransformer):
         self.absolute_difference = absolute_difference
         self.name_suffix = name_suffix
 
+    # Don't decorate this one, since it calls fit_transform, which is decorated
     def fit(self, X, y=None):
         """Fit the time-between transformer.
 
@@ -402,6 +406,7 @@ class TimeDeltaFeatures(BasePDTransformer):
         self.fit_transform(X, y)
         return self
 
+    @timed_instance_method(attribute_name="fit_time_")
     def fit_transform(self, X, y=None, **kwargs):
         """Fit the estimator and apply the date factorization to a dataframe.
 

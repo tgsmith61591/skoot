@@ -21,6 +21,7 @@ from ..decorators import suppress_warnings as suppress
 from ..utils.validation import (check_dataframe, validate_multiple_rows,
                                 validate_test_set_columns)
 from ..utils.dataframe import dataframe_or_array
+from ..utils.metaestimators import timed_instance_method
 
 __all__ = [
     'BoxCoxTransformer',
@@ -359,6 +360,7 @@ class BoxCoxTransformer(_BaseSkewnessTransformer):
         self.min_value = min_value
         self.suppress_warnings = suppress_warnings
 
+    @timed_instance_method(attribute_name="fit_time_")
     def fit(self, X, y=None):
         """Fit the transformer.
 
@@ -466,6 +468,7 @@ class YeoJohnsonTransformer(_BaseSkewnessTransformer):
 
         self.brack = brack
 
+    @timed_instance_method(attribute_name="fit_time_")
     def fit(self, X, y=None):
         """Fit the transformer.
 
