@@ -358,6 +358,26 @@ Iterable utilities
     utils.flatten_all
     utils.is_iterable
 
+Metaestimator classes/decorators
+--------------------------------
+.. currentmodule:: skoot
+
+.. autosummary::
+    :toctree: generated/
+    :template: function.rst
+
+    utils.timed_instance_method
+
+Profiling utilities
+-------------------
+.. currentmodule:: skoot
+
+.. autosummary::
+    :toctree: generated/
+    :template: function.rst
+
+    utils.profile_estimator
+
 Series utilities
 ------------------
 .. currentmodule:: skoot
