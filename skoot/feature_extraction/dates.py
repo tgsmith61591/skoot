@@ -18,7 +18,7 @@ import pandas as pd
 
 __all__ = [
     "DateFactorizer",
-    "TimeBetweenEvents"
+    "TimeDeltaFeatures"
 ]
 
 
@@ -271,11 +271,20 @@ def _time_between(X, cols, units, absolute, astype, suffix, sep):
     return X
 
 
-class TimeBetweenEvents(BasePDTransformer):
-    """Compute time between timestamp events.
+class TimeDeltaFeatures(BasePDTransformer):
+    """Compute the time lapse between timestamp events.
 
-    A transformer to compute time between provided events. Time deltas can
-    be reported in various units, and can be constrained to be non-negative.
+    A transformer to compute time deltas between different date features.
+    This can be useful, for instance, when the target is temporally sensitive
+    to the lapse in time between certain events.
+
+    This class will combinatorially calculate the deltas between features,
+    expanding the dimensionality by :math:`{N \choose 2}`, where :math:`N` is
+    the number of features included in ``cols``. Note that prescribed column
+    order *does* matter in this transformer, as deltas are computed from left
+    to right::
+
+        ['a', 'b', 'c'] -> ['a_b_delta', 'a_c_delta', 'b_c_delta']
 
     Parameters
     ----------
@@ -294,7 +303,15 @@ class TimeBetweenEvents(BasePDTransformer):
         ('seconds', 'minutes', 'hours', 'days').
 
     sep : str or unicode (optional, default="_")
-        The separator between date names.
+        The separator between the new feature names. The names will be in the
+        form of::
+
+            <left><sep><right><sep><suffix>
+
+        For examples, for columns 'a' and 'b', ``sep="_"`` and
+        ``name_suffix="delta"``, the new column name would be::
+
+            a_b_delta
 
     astype : type, optional (default=float)
         The type to which to coerce the time deltas.
@@ -306,35 +323,56 @@ class TimeBetweenEvents(BasePDTransformer):
         combinatorially)
 
     name_suffix : str, optional (default='delta')
-        The suffix to add to the new feature name in the form of
-        <feature_x>_<feature_y>_<suffix>
+        The suffix to add to the new feature name in the form of::
+
+            <feature_x>_<feature_y>_<suffix>
+
+        See ``sep`` for more details about how new column names are formed.
+
+    Notes
+    -----
+    * Unlike the :class:`DateFactorizer` class, this transformer does not
+      remove the original date features after extracting the new features.
+    * Column deltas are computed from left to right. This means that the order
+      in which columns are defined in ``cols`` *does* matter.
 
     Examples
     --------
     >>> import pandas as pd
     >>> from datetime import datetime as dt
-    >>> strp = dt.strptime
+    >>> stp = dt.strptime
     >>> data = [
-    ...     [1, strp("06-01-2018", "%m-%d-%Y"), strp("06-02-2018", "%m-%d-%Y")],
-    ...     [2, strp("06-02-2018", "%m-%d-%Y"), strp("06-03-2018", "%m-%d-%Y")],
-    ...     [3, strp("06-03-2018", "%m-%d-%Y"), strp("06-04-2018", "%m-%d-%Y")],
-    ...     [4, strp("06-04-2018", "%m-%d-%Y"), strp("06-05-2018", "%m-%d-%Y")],
-    ...     [5, None, strp("06-04-2018", "%m-%d-%Y")]
+    ...     [1, stp("06-01-2018", "%m-%d-%Y"), stp("06-02-2018", "%m-%d-%Y")],
+    ...     [2, stp("06-02-2018", "%m-%d-%Y"), stp("06-03-2018", "%m-%d-%Y")],
+    ...     [3, stp("06-03-2018", "%m-%d-%Y"), stp("06-04-2018", "%m-%d-%Y")],
+    ...     [4, stp("06-04-2018", "%m-%d-%Y"), stp("06-05-2018", "%m-%d-%Y")],
+    ...     [5, None, stp("06-04-2018", "%m-%d-%Y")]
     ... ]
     >>> df = pd.DataFrame.from_records(data, columns=['a', 'b', 'c'])
-    >>> tbe = TimeBetweenEvents(cols=['b', 'c'], units='hours')
-    >>> tbe.fit_transform(df)
+    >>> tdf = TimeDeltaFeatures(cols=['b', 'c'], units='hours')
+    >>> tdf.fit_transform(df)
        a          b          c  b_c_delta
     0  1 2018-06-01 2018-06-02      -24.0
     1  2 2018-06-02 2018-06-03      -24.0
     2  3 2018-06-03 2018-06-04      -24.0
     3  4 2018-06-04 2018-06-05      -24.0
     4  5        NaT 2018-06-04        NaN
+
+    Notice that column order makes a difference. If 'c' is defined before 'b',
+    the delta is positive:
+
+    >>> TimeDeltaFeatures(cols=['c', 'b'], units='hours').fit_transform(df)
+       a          b          c  c_b_delta
+    0  1 2018-06-01 2018-06-02       24.0
+    1  2 2018-06-02 2018-06-03       24.0
+    2  3 2018-06-03 2018-06-04       24.0
+    3  4 2018-06-04 2018-06-05       24.0
+    4  5        NaT 2018-06-04        NaN
     """
     def __init__(self, cols=None, as_df=True, units='days', sep="_",
                  astype=float, absolute_difference=False, name_suffix="delta"):
 
-        super(TimeBetweenEvents, self).__init__(
+        super(TimeDeltaFeatures, self).__init__(
             cols=cols, as_df=as_df)
 
         self.units = units
@@ -344,7 +382,7 @@ class TimeBetweenEvents(BasePDTransformer):
         self.name_suffix = name_suffix
 
     def fit(self, X, y=None):
-        """Fit the time between transformer.
+        """Fit the time-between transformer.
 
         This is a tricky class because the "fit" isn't super necessary...
         But we use it as a validation stage to ensure the defined cols

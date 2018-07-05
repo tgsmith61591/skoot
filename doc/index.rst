@@ -36,8 +36,10 @@ persistence model.
 If you have a common data preparation or transformation task you feel could be
 written into a transformer, please consider :ref:`contrib`!
 
-Two minutes to model-readiness
-------------------------------
+|
+
+Example: Two minutes to model-readiness
+---------------------------------------
 
 Real world data is nasty. Most data scientists spend the majority of their time
 tackling data cleansing tasks. With skoot, we can automate away so much of the
@@ -46,6 +48,8 @@ bespoke hacking solutions that consume data scientists' time.
 In this example, we'll examine a common dataset (the
 `adult dataset <https://archive.ics.uci.edu/ml/datasets/Adult>`_ from the UCI
 machine learning repo) that requires significant pre-processing.
+
+|
 
 .. code-block:: python
 
@@ -95,6 +99,7 @@ machine learning repo) that requires significant pre-processing.
    print("Test accuracy: %.3f" % accuracy_score(y_test, preds))
 
 
+Voíla! The entire pre-processing and modeling process is achievable in a single pipeline.
 
 .. toctree::
    :maxdepth: 2
