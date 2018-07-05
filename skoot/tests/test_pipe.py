@@ -26,7 +26,7 @@ X = load_iris_df()
 y = X.pop('species')
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25,
                                                     random_state=42)
-cv = KFold(n_splits=3, shuffle=True, random_state=42)
+cv = KFold(n_splits=2, shuffle=True, random_state=42)
 
 # this function will be made into an anonymous transformer
 def subtract_k(X, k):

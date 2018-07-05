@@ -14,6 +14,7 @@ import numpy as np
 from ..base import BasePDTransformer
 from ..utils.validation import check_dataframe, validate_test_set_columns
 from ..utils.dataframe import dataframe_or_array
+from ..utils.metaestimators import timed_instance_method
 
 import warnings
 
@@ -132,6 +133,7 @@ class DummyEncoder(BasePDTransformer):
         self.handle_unknown = handle_unknown
         self.n_jobs = n_jobs
 
+    @timed_instance_method
     def fit(self, X, y=None):
         """Fit the dummy encoder.
 
