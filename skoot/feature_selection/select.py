@@ -9,6 +9,7 @@ import pandas as pd
 
 from .base import BaseFeatureSelector
 from ..utils.validation import check_dataframe, validate_multiple_cols
+from ..utils.metaestimators import timed_instance_method
 
 __all__ = [
     'FeatureFilter',
@@ -81,6 +82,7 @@ class SparseFeatureFilter(BaseFeatureSelector):
 
         self.threshold = threshold
 
+    @timed_instance_method(attribute_name="fit_time_")
     def fit(self, X, y=None):
         """Fit the transformer.
 

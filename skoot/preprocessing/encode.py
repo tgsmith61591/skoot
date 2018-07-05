@@ -133,7 +133,7 @@ class DummyEncoder(BasePDTransformer):
         self.handle_unknown = handle_unknown
         self.n_jobs = n_jobs
 
-    @timed_instance_method
+    @timed_instance_method(attribute_name="fit_time_")
     def fit(self, X, y=None):
         """Fit the dummy encoder.
 

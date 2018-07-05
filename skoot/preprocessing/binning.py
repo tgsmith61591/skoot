@@ -17,6 +17,7 @@ from ..utils.iterables import chunk
 from ..utils.dataframe import dataframe_or_array
 from ..utils.validation import (check_dataframe, validate_test_set_columns,
                                 type_or_iterable_to_col_mapping)
+from ..utils.metaestimators import timed_instance_method
 
 __all__ = [
     'BinningTransformer'
@@ -255,6 +256,7 @@ class BinningTransformer(BasePDTransformer):
         self.return_bin_label = return_bin_label
         self.overwrite = overwrite
 
+    @timed_instance_method(attribute_name="fit_time_")
     def fit(self, X, y=None):
         """Fit the transformer.
 

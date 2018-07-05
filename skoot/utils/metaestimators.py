@@ -30,27 +30,22 @@ def timed_instance_method(attribute_name):
     """
     def method_wrapper(method):
         @wraps(method)
-        def wrapper(*args, **kwargs):
-            # The method must contain the "im_self" parameter. This means that
-            # it's bound as an instance method. If it's not present, we'll have
-            # to raise an ValueError since this was only designed for instance
-            # methods in transformer classes. Note we cannot check this outside
-            # of this inner function, since otherwise it will be evaluated at
-            # definition time and not runtime (so at class def, not
-            # instance def)
-            if not hasattr(method, "im_self"):
-                raise ValueError("'timed_instance_method' can only be used "
-                                 "on instance methods, not staticmethods or "
-                                 "standalone functions. Method %s does not "
-                                 "appear to be an instance method (%r)"
-                                 % (method.__name__, dir(method)))
+        def wrapper(self, *args, **kwargs):
+            # Need to make sure the 'self' param is actually an instance
+            # method and not some other first arg
+            if not hasattr(self, "__class__"):
+                raise TypeError("'timed_instance_method' can only be used "
+                                "on instance methods, not staticmethods or "
+                                "standalone functions. Method %s does not "
+                                "appear to be an instance method (%r)"
+                                % (method.__name__, self))
 
             start_time = time.time()
-            result = method(*args, **kwargs)
+            result = method(self, *args, **kwargs)
 
             # Bind the run time to the 'im_self' parameter of the method, which
             # points to the instance of the class
-            setattr(method.im_self, attribute_name, time.time() - start_time)
+            setattr(self, attribute_name, time.time() - start_time)
             return result
         return wrapper
     return method_wrapper

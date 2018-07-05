@@ -10,6 +10,7 @@ from sklearn.externals import six
 from ..base import BasePDTransformer
 from ..utils.validation import check_dataframe, validate_test_set_columns
 from ..utils.dataframe import dataframe_or_array
+from ..utils.metaestimators import timed_instance_method
 
 __all__ = [
     'SchemaNormalizer'
@@ -52,6 +53,7 @@ class SchemaNormalizer(BasePDTransformer):
 
         self.schema = schema
 
+    @timed_instance_method(attribute_name="fit_time_")
     def fit(self, X, y=None):
         """Fit the transformer.
 

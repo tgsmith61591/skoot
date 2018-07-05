@@ -28,6 +28,9 @@ def test_dummy_encoder():
     assert len(encoder.le_) == 1
     assert encoder.fit_cols_ == ['species']
 
+    # Prove we have the "timed" attribute
+    assert hasattr(encoder, "fit_time_")
+
     # transform and assert
     trans = encoder.transform(iris)
     assert trans is not iris
