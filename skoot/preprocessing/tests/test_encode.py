@@ -41,16 +41,26 @@ def test_le_encode_ignore():
     le.fit(vec1)
 
     # test where all present
-    trans = _le_transform(vec1, le, "error")
+    col, trans, clz = _le_transform(col="C", vec=vec1, le=le,
+                                    handle="error", sep="_")
+
+    assert col == "C", col
     assert_array_equal(trans, [0, 1, 2, 3])
+    assert clz == ["C_a", "C_b", "C_c", "C_d"], clz
 
     # now test where we have a new level and we ignore
     vec2 = np.array(["a", "b", "c", "d", "e", "f"])
-    trans2 = _le_transform(vec2, le, "ignore")
+    col2, trans2, cls2 = _le_transform(
+        col="C2", vec=vec2, le=le,
+        handle="ignore", sep="_")
+
+    assert col2 == "C2", col2
     assert_array_equal(trans2, [0, 1, 2, 3, 4, 4])
+    assert cls2 == ["C2_a", "C2_b", "C2_c", "C2_d"], cls2
 
     # test where we have a new level and we do NOT ignore
-    assert_raises(ValueError, _le_transform, vec2, le, "error")
+    assert_raises(ValueError, _le_transform,
+                  col="C", vec=vec2, le=le, handle="error", sep="_")
 
 
 def test_dummy_encoder_ignore():
