@@ -34,7 +34,9 @@ def under_sample_balance(X, y, balance_ratio=0.2, random_state=None,
     Parameters
     ----------
     X : array-like, shape (n_samples, n_features)
-        Training vectors within the matrix of predictors.
+        The training array. Samples from this array that correspond to the
+        majority class will be omitted until the minority class is represented
+        at the ``balance_ratio``.
 
     y : array-like, shape (n_samples,)
         Training labels corresponding to the samples in ``X``.
@@ -48,6 +50,28 @@ def under_sample_balance(X, y, balance_ratio=0.2, random_state=None,
 
     shuffle : bool, optional (default=True)
         Whether to shuffle the output.
+
+    Notes
+    -----
+    You should only use the under sampling method when you have lots of data
+    and can afford to lose some training samples. Moreover, using this in
+    conjunction with a high variance modeling method can pose a higher risk of
+    over-fitting, since they typically require more data.
+
+    Examples
+    --------
+    >>> from sklearn.datasets import make_classification
+    >>> X, y = make_classification(n_samples=1000, random_state=42,
+    ...                            n_classes=2, weights=[0.99, 0.01])
+    >>> X_bal, y_bal = under_sample_balance(X, y, balance_ratio=0.2,
+    ...                                     random_state=42)
+    >>> ratio = round((y_bal == 1).sum() / float((y_bal == 0).sum()), 1)
+    >>> assert ratio == 0.2, ratio
+
+    Note that the number of samples in the data is now lower than it
+    initially was:
+
+    >>> assert X_bal.shape[0] < 1000
     """
     random_state = check_random_state(random_state)
 

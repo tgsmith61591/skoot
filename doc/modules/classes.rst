@@ -29,6 +29,16 @@ Base classes
 
     base.BasePDTransformer
 
+Helper functions
+----------------
+.. currentmodule:: skoot
+
+.. autosummary::
+    :toctree: generated/
+    :template: function.rst
+
+    base.make_transformer
+
 
 .. _decorator_ref:
 
@@ -94,6 +104,7 @@ Dataset loading functions
     :toctree: generated/
     :template: function.rst
 
+    datasets.load_adult_df
     datasets.load_boston_df
     datasets.load_breast_cancer_df
     datasets.load_iris_df
@@ -169,6 +180,7 @@ Feature extraction estimators
 
     feature_extraction.DateFactorizer
     feature_extraction.InteractionTermTransformer
+    feature_extraction.TimeDeltaFeatures
 
 
 .. _feature_selection_ref:
@@ -219,16 +231,6 @@ Model validators & monitoring classes
 
     model_validation.CustomValidator
     model_validation.DistHypothesisValidator
-
-Pipelines with built-in monitoring at each stage
-------------------------------------------------
-.. currentmodule:: skoot
-
-.. autosummary::
-    :toctree: generated/
-    :template: function.rst
-
-    model_validation.make_validated_pipeline
 
 
 .. _preprocessing_ref:
@@ -346,6 +348,26 @@ Iterable utilities
     utils.ensure_iterable
     utils.flatten_all
     utils.is_iterable
+
+Metaestimator classes/decorators
+--------------------------------
+.. currentmodule:: skoot
+
+.. autosummary::
+    :toctree: generated/
+    :template: function.rst
+
+    utils.timed_instance_method
+
+Profiling utilities
+-------------------
+.. currentmodule:: skoot
+
+.. autosummary::
+    :toctree: generated/
+    :template: function.rst
+
+    utils.profile_estimator
 
 Series utilities
 ------------------

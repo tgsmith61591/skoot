@@ -16,6 +16,7 @@ from .utils.validation import check_dataframe, validate_test_set_columns
 from .utils.iterables import is_iterable
 from .utils.compat import xrange
 from .utils.dataframe import dataframe_or_array
+from .utils.metaestimators import timed_instance_method
 
 # namespace import to avoid explicitly protected imports in global namespace
 from .utils import _docstr as dsutils
@@ -58,6 +59,7 @@ class BasePDTransformer(six.with_metaclass(ABCMeta, BaseEstimator,
         self.cols = copy.deepcopy(cols)  # do not let be mutable!
         self.as_df = as_df
 
+    @timed_instance_method(attribute_name="fit_time_")
     def fit(self, X, y=None):
         """Fit the transformer.
 
@@ -118,6 +120,7 @@ class _SelectiveTransformerWrapper(six.with_metaclass(dsutils._WritableDoc,
 
         self.trans_col_name = trans_col_name
 
+    @timed_instance_method(attribute_name="fit_time_")
     def fit(self, X, y=None, **fit_kwargs):
         """Fit the wrapped transformer.
 
@@ -222,11 +225,26 @@ class _AnonymousPDTransformer(BasePDTransformer):
     func : callable
         The commutative function used to transform the train or test set.
     """
-    def __init__(self, func):
+    def __init__(self, **kwargs):
         super(_AnonymousPDTransformer, self).__init__(
             cols=None, as_df=True)
 
-        self.func = func
+        # There should never NOT be a "func" key since this is handled
+        # internally. Only time that could happen is if someone tries to
+        # do this on their own.. Live with the KeyError if it breaks since
+        # the silly developer screwed it up!
+        self.func = kwargs["func"]
+
+        # Assign the kwargs such that we can tune hyper parameters in
+        # the anonymous transformer.
+        param_names = []
+        for k, v in six.iteritems(kwargs):
+            # two things: save the parameter name, and assign the value
+            # as an internal attribute
+            param_names.append(k)
+            setattr(self, k, v)
+
+        self._param_names = param_names
 
     def transform(self, X):
         """Apply the commutative function to the train or test set.
@@ -236,10 +254,39 @@ class _AnonymousPDTransformer(BasePDTransformer):
         X : pd.DataFrame, shape=(n_samples, n_features)
             The Pandas frame to transform.
         """
-        return self.func(X)
+        # construct the kwargs, but remember that we do not want "func"!!!
+        kwargs = {k: getattr(self, k)
+                  for k in self._param_names
+                  if k != "func"}
+        return self.func(X, **kwargs)
+
+    def get_params(self, deep=True):
+        """Get parameters for this estimator.
+
+        Parameters
+        ----------
+        deep : boolean, optional
+            If True, will return the parameters for this estimator and
+            contained sub-objects that are estimators.
+
+        Returns
+        -------
+        params : mapping of string to any
+            Parameter names mapped to their values.
+        """
+        out = dict()
+
+        # unlike sklearn default we can use the stored param names
+        for key in self._param_names:
+            value = getattr(self, key, None)  # should always be present...
+            if deep and hasattr(value, 'get_params'):
+                deep_items = value.get_params().items()
+                out.update((key + '__' + k, val) for k, val in deep_items)
+            out[key] = value
+        return out
 
 
-def make_transformer(func):
+def make_transformer(func, **kwargs):
     """Make a function into a scikit-learn TransformerMixin.
 
     Wraps a commutative function as an anonymous BasePDTransformer in order to
@@ -253,10 +300,46 @@ def make_transformer(func):
     Parameters
     ----------
     func : callable
-        The function that will be used to transform a dataset.
+        The function that will be used to transform a dataset. Note that for
+        certain scikit-learn operations or for model persistence, this will
+        need to be pickled. Therefore, using a closure or lambda expression
+        could cause downstream issues that are not immediately apparent.
+        This function will raise a warning if it's determined that a lambda
+        expression is passed as ``func``, but not all corner cases can be
+        caught. Be cautious.
+
+    **kwargs : keyword args or dict, optional
+        A dictionary of keyword args that will be passed to the transformer
+        class' ``transform`` function (``func``) and enable the anonymous
+        transformer to be tuned via grid search similar to other transformers.
+
+    Examples
+    --------
+    >>> from sklearn.datasets import load_iris
+    >>> from sklearn.pipeline import Pipeline
+    >>> from sklearn.decomposition import PCA
+    >>> from sklearn.model_selection import GridSearchCV
+    >>> from sklearn.linear_model import LogisticRegression
+    >>> X, y = load_iris(return_X_y=True)
+    >>>
+    >>> def subtract_k(x, k):
+    ...     return x - float(k)
+    >>>
+    >>> pipe = Pipeline([
+    ...     ('pca', PCA()),
+    ...     ('custom', make_transformer(subtract_k, k=2)),
+    ...     ('clf', LogisticRegression(random_state=42))
+    ... ])
+    >>>
+    >>> hyper_params = {"pca__whiten": [True, False],
+    ...                 "custom__k": [1, 2]}
+    >>> search = GridSearchCV(pipe, param_grid=hyper_params,
+    ...                       scoring="accuracy")
+    >>> search.fit(X, y)  # doctest: +SKIP
+    GridSearchCV(...)
     """
     # first, if it's a lambda function, warn the user.
-    lam = lambda: None
+    lam = (lambda: None)
     if isinstance(func, type(lam)) and func.__name__ == lam.__name__:
         warnings.warn("A lambda function was passed to the make_transformer "
                       "function. While not explicitly unsupported, this will "
@@ -264,4 +347,6 @@ def make_transformer(func):
                       "dynamically-created transformers, use def-style "
                       "functions.", UserWarning)
 
-    return _AnonymousPDTransformer(func)
+    # Note func needs to be passed as a keyword for it to be read in as a
+    # "kwarg" argument
+    return _AnonymousPDTransformer(func=func, **kwargs)

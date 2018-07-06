@@ -41,7 +41,7 @@ run_tests() {
     $TEST_CMD skoot
 
     # go back again
-    cd $OLDPWD
+    cd ..
 }
 
 if [[ "$SKIP_TESTS" != "true" ]]; then

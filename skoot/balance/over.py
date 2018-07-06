@@ -32,7 +32,8 @@ def over_sample_balance(X, y, balance_ratio=0.2, random_state=None,
     Parameters
     ----------
     X : array-like, shape (n_samples, n_features)
-        Training vectors within the matrix of predictors.
+        The training array. Samples from this array will be resampled with
+        replacement for the minority class.
 
     y : array-like, shape (n_samples,)
         Training labels corresponding to the samples in ``X``.
@@ -46,6 +47,20 @@ def over_sample_balance(X, y, balance_ratio=0.2, random_state=None,
 
     shuffle : bool, optional (default=True)
         Whether to shuffle the output.
+
+    Examples
+    --------
+    >>> from sklearn.datasets import make_classification
+    >>> X, y = make_classification(n_samples=1000, random_state=42,
+    ...                            n_classes=2, weights=[0.99, 0.01])
+    >>> X_bal, y_bal = over_sample_balance(X, y, balance_ratio=0.2,
+    ...                                    random_state=42)
+    >>> ratio = round((y_bal == 1).sum() / float((y_bal == 0).sum()), 1)
+    >>> assert ratio == 0.2, ratio
+
+    Note that the count of samples is now greater than it initially was:
+
+    >>> assert X_bal.shape[0] > 1000
     """
     random_state = check_random_state(random_state)
 

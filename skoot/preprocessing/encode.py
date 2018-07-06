@@ -6,6 +6,7 @@ from __future__ import division, print_function, absolute_import
 
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 from sklearn.utils.validation import check_is_fitted
+from sklearn.externals.joblib import Parallel, delayed
 
 import pandas as pd
 import numpy as np
@@ -13,6 +14,7 @@ import numpy as np
 from ..base import BasePDTransformer
 from ..utils.validation import check_dataframe, validate_test_set_columns
 from ..utils.dataframe import dataframe_or_array
+from ..utils.metaestimators import timed_instance_method
 
 import warnings
 
@@ -21,7 +23,7 @@ __all__ = [
 ]
 
 
-def _le_transform(vec, le, handle):
+def _le_transform(col, vec, le, handle, sep):
     # if "ignore" and there are unknown labels in the array,
     # we need to handle it...
     missing_mask = ~np.in1d(vec, le.classes_)  # type: np.ndarray
@@ -48,7 +50,19 @@ def _le_transform(vec, le, handle):
     else:
         vec_trans = le.transform(vec)  # Union[str, int] -> int
 
-    return vec_trans
+    # get the column names (levels) so we can predict the
+    # order of the output cols
+    le_clz = le.classes_.tolist()
+    classes = ["%s%s%s" % (col, sep, clz) for clz in le_clz]
+    return col, vec_trans, classes
+
+
+def _fit_transform_one_encoder(col, vec):
+    # Fit/transform a label encoder. This is run in parallel
+    # using the joblib library
+    le = LabelEncoder()
+    trans = le.fit_transform(vec)
+    return col, le, trans
 
 
 class DummyEncoder(BasePDTransformer):
@@ -85,6 +99,15 @@ class DummyEncoder(BasePDTransformer):
         for unknown test set levels, but "error" will. "warn" will produce
         a warning.
 
+    n_jobs : int, 1 by default
+       The number of jobs to use for the encoding. This works by
+       fitting each incremental LabelEncoder in parallel.
+
+       If -1 all CPUs are used. If 1 is given, no parallel computing code
+       is used at all, which is useful for debugging. For n_jobs below -1,
+       (n_cpus + 1 + n_jobs) are used. Thus for n_jobs = -2, all CPUs but
+       one are used.
+
     Attributes
     ----------
     ohe_ : OneHotEncoder
@@ -100,7 +123,7 @@ class DummyEncoder(BasePDTransformer):
         during the ``transform`` stage.
     """
     def __init__(self, cols, as_df=True, sep='_', drop_one_level=True,
-                 handle_unknown="ignore"):
+                 handle_unknown="ignore", n_jobs=1):
 
         super(DummyEncoder, self).__init__(
             cols=cols, as_df=as_df)
@@ -108,7 +131,9 @@ class DummyEncoder(BasePDTransformer):
         self.sep = sep
         self.drop_one_level = drop_one_level
         self.handle_unknown = handle_unknown
+        self.n_jobs = n_jobs
 
+    @timed_instance_method(attribute_name="fit_time_")
     def fit(self, X, y=None):
         """Fit the dummy encoder.
 
@@ -126,17 +151,17 @@ class DummyEncoder(BasePDTransformer):
         X, cols = check_dataframe(X, cols=self.cols,
                                   assert_all_finite=False)
 
-        # begin fit
-        # for each column, fit a label encoder
-        lab_encoders = {}
-        for col in cols:
-            # get the vec, fit the label encoder
-            vec = X[col].values
-            le = LabelEncoder()
-            lab_encoders[col] = le.fit(vec)
+        # for each column, fit a label encoder, get the transformation
+        encoded = list(Parallel(n_jobs=self.n_jobs)(
+            delayed(_fit_transform_one_encoder)(col, X[col].values)
+            for col in cols))
 
-            # transform the column, re-assign
-            X[col] = le.transform(vec)
+        # quickly run over the encoded, set the columns in the dataframe
+        # pre-OHE fit and then create a dict of the encoders
+        lab_encoders = {}
+        for col, le, trans in encoded:
+            X[col] = trans
+            lab_encoders[col] = le
 
         # fit a single OHE on the transformed columns.
         handle = "ignore" if self.handle_unknown in ("warn", "ignore") \
@@ -183,25 +208,22 @@ class DummyEncoder(BasePDTransformer):
         lenc = self.le_
         sep = self.sep
         drop = self.drop_one_level
+
+        # Do transformations in parallel
+        transformations = list(Parallel(n_jobs=self.n_jobs)(
+            delayed(_le_transform)(
+                col=col, vec=X[col].values, le=lenc[col],
+                handle=self.handle_unknown, sep=sep)
+            for col in cols))
+
         col_order = []
         drops = []
-
-        for col in cols:
-            # get the vec, transform via the label encoder
-            vec = X[col].values
-            le = lenc[col]
-
-            vec_trans = _le_transform(vec, le, self.handle_unknown)
+        for col, vec_trans, classes in transformations:
             X[col] = vec_trans
-
-            # get the column names (levels) so we can predict the
-            # order of the output cols
-            le_clz = le.classes_.tolist()
-            classes = ["%s%s%s" % (col, sep, clz) for clz in le_clz]
             col_order.extend(classes)
 
             # if we want to drop one, just drop the last
-            if drop and len(le_clz) > 1:
+            if drop and len(classes) > 1:
                 drops.append(classes[-1])
 
         # now we can get the transformed OHE
@@ -218,6 +240,11 @@ class DummyEncoder(BasePDTransformer):
         # drop the original columns from X
         X = X.drop(cols, axis=1)
 
-        # concat the new columns
+        # We might have dropped ALL columns from X. And if that's the case, we
+        # can just return the encoded columns
+        if not X.columns.tolist():
+            return dataframe_or_array(ohe_trans, self.as_df)
+
+        # otherwise concat the new columns
         X = pd.concat([X, ohe_trans], axis=1)  # type: pd.DataFrame
         return dataframe_or_array(X, self.as_df)

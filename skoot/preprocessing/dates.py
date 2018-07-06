@@ -10,6 +10,7 @@ from sklearn.utils.validation import check_is_fitted
 from ..base import BasePDTransformer
 from ..utils.validation import type_or_iterable_to_col_mapping
 from ..utils.validation import check_dataframe, validate_test_set_columns
+from ..utils.metaestimators import timed_instance_method
 from ..utils.compat import NoneType
 from ..utils.series import is_datetime_type
 
@@ -129,6 +130,7 @@ class DateTransformer(BasePDTransformer):
         self.date_format = date_format
         self.allowed_types = allowed_types
 
+    # Don't decorate 'fit' since it calls fit_transform
     def fit(self, X, y=None):
         """Fit the date transformer.
 
@@ -150,6 +152,7 @@ class DateTransformer(BasePDTransformer):
         self.fit_transform(X, y)
         return self
 
+    @timed_instance_method(attribute_name="fit_time_")
     def fit_transform(self, X, y=None, **kwargs):
         """Fit the estimator and apply the date transformation
         to a dataframe.

@@ -9,9 +9,19 @@ either augmenting or down-sampling the dataset. As with most skoot methods,
 each of these functions works on either Numpy array objects or Pandas
 DataFrames.
 
-.. raw:: html
+|
 
-   <br/>
+As of version 0.19, there are three methods of balancing data:
+
+* `Under-sampling (the majority class) <./generated/skoot.balance.over_sample_balance.html#skoot-balance-under-sample-balance>`_
+* `Over-sampling (the minority class) <./generated/skoot.balance.over_sample_balance.html#skoot-balance-over-sample-balance>`_
+* `SMOTE <./generated/skoot.balance.over_sample_balance.html#skoot-balance-smote-balance>`_
+
+These balancing functions are *not* transformers, since balancing should never
+be applied to test data. They are simply functions that should be applied to
+training data prior to fitting a model.
+
+|
 
 See :ref:`balance_examples`
 

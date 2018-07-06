@@ -6,7 +6,6 @@ from skoot.model_validation import DistHypothesisValidator, CustomValidator
 from skoot.utils.testing import assert_raises
 
 import numpy as np
-import pandas as pd
 
 
 X = np.random.rand(100, 5)
