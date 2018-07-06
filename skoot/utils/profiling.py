@@ -53,8 +53,7 @@ def profile_estimator(estimator):
     >>> pipe = Pipeline([('scl', SelectiveStandardScaler()),
     ...                  ('yj', YeoJohnsonTransformer()),
     ...                  ('mcf', MultiCorrFilter())
-    ... ])
-    >>> pipe.fit(iris)
+    ... ]).fit(iris)
     >>> profile_estimator(pipe)  # doctest: +SKIP
     [('scl', (('fit_time_', 0.0016548633575439453),)),
      ('yj', (('fit_time_', 0.0282437801361084),))]
