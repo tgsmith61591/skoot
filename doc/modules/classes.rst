@@ -104,6 +104,7 @@ Dataset loading functions
     :toctree: generated/
     :template: function.rst
 
+    datasets.load_adult_df
     datasets.load_boston_df
     datasets.load_breast_cancer_df
     datasets.load_iris_df

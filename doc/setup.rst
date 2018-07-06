@@ -31,8 +31,8 @@ new dependencies:
 
 .. _building_on_unix:
 
-Linux/Unix machines (Mac OS)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Building on Linux/Unix machines (Mac OS)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Building on a unix machine is easier than building on :ref:`building_on_windows`.
 All you need is ``gcc``, ``g++`` and ``gfortran``. These can be downloaded via
@@ -73,8 +73,8 @@ To install the egg in your site-packages:
 
 .. _building_on_windows:
 
-Windows
-~~~~~~~
+Building on Windows
+~~~~~~~~~~~~~~~~~~~
 
 tl;dr: **don't do it**. It's painful... but it can be done. Like with
 :ref:`building_on_unix`, you'll need a Fortran compiler. You can either use
@@ -95,3 +95,67 @@ You can also install from a wheel, e.g.:
     $ pip install dist/skoot-...-win32.whl
 
 |
+
+.. _testing:
+
+Testing
+-------
+
+The following are some guidelines for creating and running unit test cases.
+
+|
+
+Creating test cases
+~~~~~~~~~~~~~~~~~~~
+
+Skoot uses ``nose`` or ``pytest`` to unit test. The pattern for these frameworks
+is that each submodules should contain a "tests" directory and individual scripts prefixed with
+"test" for each script in the submodule::
+
+
+    some_submodule/
+        |
+        |_ tests/
+            |_ test_script_a.py
+            |_ ...
+        |_ __init__.py
+        |_ script_a.py
+        |_ ...
+
+
+Each unit test function within the test script should be prefixed with "test":
+
+.. code-block:: python
+
+    # test_script_a.py
+    def test_some_function_in_script_a():
+        assert something()
+
+**Note** that no ``__main__`` section is required for pytest or nose. The frameworks
+themselves will find testing functions and evaluate them. This means some care has to
+be taken when naming your functions. Any function that contains the word "test" is
+liable to be evaluated by the testing framework. To avoid this, use this trick:
+
+.. code-block:: python
+
+    def some_benign_function_that_contains_word_test(**kwargs):
+        return do_something(**kwargs)
+
+    # Avoid conflict with nose/pytest:
+    some_benign_function_that_contains_word_test.__test__ = False
+
+Running unit tests
+~~~~~~~~~~~~~~~~~~
+
+Running the unit tests is exceedingly simple.
+After you've built the package in ``develop`` mode, you can run the unit tests via pytest:
+
+.. code-block:: bash
+
+    $ pytest
+
+And with coverage, if you have the ``coverage`` package:
+
+.. code-block:: bash
+
+    $ pytest --cov

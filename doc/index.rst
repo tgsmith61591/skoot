@@ -7,34 +7,22 @@
 Skoot: Accelerate your data science workflow
 ============================================
 
+.. raw:: html
+
+   <!-- Block section -->
+   <script src="_static/js/jquery.min.js"></script>
+
+   <a href="https://travis-ci.org/tgsmith61591/skoot"><img alt="Travis status" src="https://travis-ci.org/tgsmith61591/skoot.svg?branch=master" /></a>
+   <a href="https://ci.appveyor.com/project/tgsmith61591/skoot"><img alt="Appveyor status" src="https://ci.appveyor.com/api/projects/status/7h91wcoaqwa3sc29?svg=true" /></a>
+   <a href="https://codecov.io/gh/tgsmith61591/skoot"><img alt="Coverage" src="https://codecov.io/gh/tgsmith61591/skoot/branch/master/graph/badge.svg" /></a>
+   <a href="https://github.com/tgsmith61591/skoot"><img id="nutrition" alt="gluten free" src="https://img.shields.io/badge/gluten_free-100%25-brightgreen.svg" /></a>
+
 Skoot's aim is to expedite and automate away many of the common pain points
 data scientists experience as they work through their exploratory data analysis
 & data cleansing/preparation stages. It does so by wrapping and augmenting
 useful functions and transformers in scikit-learn, adapting them for use with
 Pandas, as well as by providing its own custom transformer classes to solve
 common problems that typically demand bespoke solutions.
-
-.. raw:: html
-
-   <br/>
-
-Skoot is designed to provide as much flexibility as possible while offering
-implementations to common challenges, such as categorical & model-based
-imputation transformers, transformers to rectify skewness (i.e., box-cox &
-Yeo-Johnson transformations), as well as many wrappers to scikit-learn
-transformers that enable applications to selected columns only. Every
-transformer in skoot is designed for maximum flexibility and to minimize
-impact on existing pipelines. Each transformer has been tested to function in
-the scope of scikit-learn pipelines and grid searches, and offers the same
-persistence model.
-
-
-.. raw:: html
-
-   <br/>
-
-If you have a common data preparation or transformation task you feel could be
-written into a transformer, please consider :ref:`contrib`!
 
 |
 
@@ -45,9 +33,12 @@ Real world data is nasty. Most data scientists spend the majority of their time
 tackling data cleansing tasks. With skoot, we can automate away so much of the
 bespoke hacking solutions that consume data scientists' time.
 
+|
+
 In this example, we'll examine a common dataset (the
 `adult dataset <https://archive.ics.uci.edu/ml/datasets/Adult>`_ from the UCI
-machine learning repo) that requires significant pre-processing.
+machine learning repo) that requires significant pre-processing, and show how
+Skoot enables us to quickly clean up data and prepare it for modeling.
 
 |
 
@@ -101,6 +92,14 @@ machine learning repo) that requires significant pre-processing.
 
 Voíla! The entire pre-processing and modeling process is achievable in a single pipeline.
 
+.. raw:: html
+
+   <br/>
+
+
+If you have a common data preparation or transformation task you feel could be
+written into a transformer, please consider :ref:`contrib`!
+
 .. toctree::
    :maxdepth: 2
    :hidden:
@@ -114,8 +113,18 @@ Voíla! The entire pre-processing and modeling process is achievable in a single
 
    <br/>
 
-Indices and tables
-==================
+Quick refs, indices and tables
+==============================
+
+Helpful quickstart sections:
+
+* :ref:`about`
+* :ref:`setup`
+* :ref:`building_on_unix`
+* :ref:`building_on_windows`
+* :ref:`testing`
+* :ref:`contrib`
+* :ref:`api_ref`
 
 To search for specific sections or class documentation, visit the index.
 
