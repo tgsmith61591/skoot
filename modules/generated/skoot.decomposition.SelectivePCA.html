@@ -34,6 +34,8 @@
   
 
   
+        <link rel="author" title="About these documents"
+              href="../../about.html"/>
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
@@ -351,22 +353,22 @@ Per-Gunnar Martinsson, Vladimir Rokhlin and Mark Tygert</cite></p>
 <col width="93%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a href="#id1"><span class="problematic" id="id2">components_</span></a></td>
+<tr class="row-odd"><td><a href="#id2"><span class="problematic" id="id3">components_</span></a></td>
 <td>(array, [n_components, n_features]) Principal axes in feature space, representing the directions of maximum variance in the data. The components are sorted by <code class="docutils literal"><span class="pre">explained_variance_</span></code>.</td>
 </tr>
-<tr class="row-even"><td><a href="#id3"><span class="problematic" id="id4">explained_variance_</span></a></td>
+<tr class="row-even"><td><a href="#id4"><span class="problematic" id="id5">explained_variance_</span></a></td>
 <td>(array, [n_components]) The amount of variance explained by each of the selected components.  .. versionadded:: 0.18</td>
 </tr>
-<tr class="row-odd"><td><a href="#id5"><span class="problematic" id="id6">explained_variance_ratio_</span></a></td>
+<tr class="row-odd"><td><a href="#id6"><span class="problematic" id="id7">explained_variance_ratio_</span></a></td>
 <td>(array, [n_components]) Percentage of variance explained by each of the selected components.  If <code class="docutils literal"><span class="pre">n_components</span></code> is not set then all components are stored and the sum of explained variances is equal to 1.0.</td>
 </tr>
-<tr class="row-even"><td><a href="#id7"><span class="problematic" id="id8">mean_</span></a></td>
+<tr class="row-even"><td><a href="#id8"><span class="problematic" id="id9">mean_</span></a></td>
 <td>(array, [n_features]) Per-feature empirical mean, estimated from the training set.  Equal to <cite>X.mean(axis=1)</cite>.</td>
 </tr>
-<tr class="row-odd"><td><a href="#id9"><span class="problematic" id="id10">n_components_</span></a></td>
+<tr class="row-odd"><td><a href="#id10"><span class="problematic" id="id11">n_components_</span></a></td>
 <td>(int) The estimated number of components. When n_components is set to ‘mle’ or a number between 0 and 1 (with svd_solver == ‘full’) this number is estimated from input data. Otherwise it equals the parameter n_components, or n_features if n_components is None.</td>
 </tr>
-<tr class="row-even"><td><a href="#id11"><span class="problematic" id="id12">noise_variance_</span></a></td>
+<tr class="row-even"><td><a href="#id12"><span class="problematic" id="id13">noise_variance_</span></a></td>
 <td>(float) The estimated noise covariance following the Probabilistic PCA model from Tipping and Bishop 1999. See “Pattern Recognition and Machine Learning” by C. Bishop, 12.2.1 p. 574 or <a class="reference external" href="http://www.miketipping.com/papers/met-mppca.pdf">http://www.miketipping.com/papers/met-mppca.pdf</a>. It is required to computed the estimated data covariance and score samples.</td>
 </tr>
 </tbody>
@@ -378,7 +380,7 @@ Per-Gunnar Martinsson, Vladimir Rokhlin and Mark Tygert</cite></p>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#skoot.decomposition.SelectivePCA.fit" title="skoot.decomposition.SelectivePCA.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(X[,&nbsp;y])</td>
+<tr class="row-odd"><td><a class="reference internal" href="#skoot.decomposition.SelectivePCA.fit" title="skoot.decomposition.SelectivePCA.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(*args,&nbsp;**kwargs)</td>
 <td>Fit the wrapped transformer.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#skoot.decomposition.SelectivePCA.fit_transform" title="skoot.decomposition.SelectivePCA.fit_transform"><code class="xref py py-obj docutils literal"><span class="pre">fit_transform</span></code></a>(X[,&nbsp;y])</td>
@@ -402,7 +404,7 @@ Per-Gunnar Martinsson, Vladimir Rokhlin and Mark Tygert</cite></p>
 
 <dl class="method">
 <dt id="skoot.decomposition.SelectivePCA.fit">
-<code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em>, <em>**fit_kwargs</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.decomposition.SelectivePCA.fit" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fit</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.decomposition.SelectivePCA.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit the wrapped transformer.</p>
 <p>This method will fit the wrapped sklearn transformer on the
 selected columns, leaving other columns alone.</p>
@@ -530,7 +532,14 @@ and the result set is returned.</p>
 
 </dd></dl>
 
-<div class="clearer"></div></div>
+<div class="section" id="examples-using-skoot-decomposition-selectivepca">
+<h2>Examples using <code class="docutils literal"><span class="pre">skoot.decomposition.SelectivePCA</span></code><a class="headerlink" href="#examples-using-skoot-decomposition-selectivepca" title="Permalink to this headline">¶</a></h2>
+<div class="sphx-glr-thumbcontainer" tooltip="Skoot provides a convenient mechanism for profiling estimators and determining whether they&#x27;re ..."><div class="figure" id="id1">
+<img alt="../../_images/sphx_glr_ex_profiling_thumb.png" src="../../_images/sphx_glr_ex_profiling_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="../../auto_examples/utils/ex_profiling.html#sphx-glr-auto-examples-utils-ex-profiling-py"><span class="std std-ref">Profiling estimators</span></a></span></p>
+</div>
+</div><div class="clearer"></div></div>
+</div>
 
 
            </div>

@@ -34,6 +34,8 @@
   
 
   
+        <link rel="author" title="About these documents"
+              href="../about.html"/>
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
@@ -95,6 +97,10 @@
 <li class="toctree-l4"><a class="reference internal" href="generated/skoot.base.BasePDTransformer.html"><code class="docutils literal"><span class="pre">skoot.base</span></code>.BasePDTransformer</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#helper-functions">Helper functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.base.make_transformer.html"><code class="docutils literal"><span class="pre">skoot.base</span></code>.make_transformer</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-skoot"><code class="docutils literal"><span class="pre">skoot.decorators</span></code>: Decorator utilities</a><ul>
@@ -116,6 +122,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-skoot.datasets"><code class="docutils literal"><span class="pre">skoot.datasets</span></code>: Dataset loaders</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#dataset-loading-functions">Dataset loading functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.datasets.load_adult_df.html"><code class="docutils literal"><span class="pre">skoot.datasets</span></code>.load_adult_df</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/skoot.datasets.load_boston_df.html"><code class="docutils literal"><span class="pre">skoot.datasets</span></code>.load_boston_df</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/skoot.datasets.load_breast_cancer_df.html"><code class="docutils literal"><span class="pre">skoot.datasets</span></code>.load_breast_cancer_df</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/skoot.datasets.load_iris_df.html"><code class="docutils literal"><span class="pre">skoot.datasets</span></code>.load_iris_df</a></li>
@@ -146,6 +153,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#feature-extraction-estimators">Feature extraction estimators</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="generated/skoot.feature_extraction.DateFactorizer.html"><code class="docutils literal"><span class="pre">skoot.feature_extraction</span></code>.DateFactorizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/skoot.feature_extraction.InteractionTermTransformer.html"><code class="docutils literal"><span class="pre">skoot.feature_extraction</span></code>.InteractionTermTransformer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.feature_extraction.TimeDeltaFeatures.html"><code class="docutils literal"><span class="pre">skoot.feature_extraction</span></code>.TimeDeltaFeatures</a></li>
 </ul>
 </li>
 </ul>
@@ -166,10 +174,6 @@
 <li class="toctree-l3"><a class="reference internal" href="#model-validators-monitoring-classes">Model validators &amp; monitoring classes</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="generated/skoot.model_validation.CustomValidator.html"><code class="docutils literal"><span class="pre">skoot.model_validation</span></code>.CustomValidator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/skoot.model_validation.DistHypothesisValidator.html"><code class="docutils literal"><span class="pre">skoot.model_validation</span></code>.DistHypothesisValidator</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#pipelines-with-built-in-monitoring-at-each-stage">Pipelines with built-in monitoring at each stage</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="generated/skoot.model_validation.make_validated_pipeline.html"><code class="docutils literal"><span class="pre">skoot.model_validation</span></code>.make_validated_pipeline</a></li>
 </ul>
 </li>
 </ul>
@@ -221,6 +225,14 @@
 <li class="toctree-l4"><a class="reference internal" href="generated/skoot.utils.ensure_iterable.html"><code class="docutils literal"><span class="pre">skoot.utils</span></code>.ensure_iterable</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/skoot.utils.flatten_all.html"><code class="docutils literal"><span class="pre">skoot.utils</span></code>.flatten_all</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/skoot.utils.is_iterable.html"><code class="docutils literal"><span class="pre">skoot.utils</span></code>.is_iterable</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#metaestimator-classes-decorators">Metaestimator classes/decorators</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.utils.timed_instance_method.html"><code class="docutils literal"><span class="pre">skoot.utils</span></code>.timed_instance_method</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#profiling-utilities">Profiling utilities</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/skoot.utils.profile_estimator.html"><code class="docutils literal"><span class="pre">skoot.utils</span></code>.profile_estimator</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#series-utilities">Series utilities</a><ul>
@@ -307,6 +319,20 @@ uses.</p>
 </tbody>
 </table>
 </div>
+<div class="section" id="helper-functions">
+<h3>Helper functions<a class="headerlink" href="#helper-functions" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.base.make_transformer.html#skoot.base.make_transformer" title="skoot.base.make_transformer"><code class="xref py py-obj docutils literal"><span class="pre">base.make_transformer</span></code></a>(func,&nbsp;**kwargs)</td>
+<td>Make a function into a scikit-learn TransformerMixin.</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <div class="section" id="module-skoot">
 <span id="skoot-decorators-decorator-utilities"></span><span id="decorator-ref"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">skoot.decorators</span></code>: Decorator utilities<a class="headerlink" href="#module-skoot" title="Permalink to this headline">¶</a></h2>
@@ -364,13 +390,16 @@ uses.</p>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.datasets.load_boston_df.html#skoot.datasets.load_boston_df" title="skoot.datasets.load_boston_df"><code class="xref py py-obj docutils literal"><span class="pre">datasets.load_boston_df</span></code></a>([include_tgt,&nbsp;…])</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.datasets.load_adult_df.html#skoot.datasets.load_adult_df" title="skoot.datasets.load_adult_df"><code class="xref py py-obj docutils literal"><span class="pre">datasets.load_adult_df</span></code></a>([include_tgt,&nbsp;…])</td>
+<td>Load and return the adult dataset (classification).</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/skoot.datasets.load_boston_df.html#skoot.datasets.load_boston_df" title="skoot.datasets.load_boston_df"><code class="xref py py-obj docutils literal"><span class="pre">datasets.load_boston_df</span></code></a>([include_tgt,&nbsp;…])</td>
 <td>Get the Boston housing dataset.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/skoot.datasets.load_breast_cancer_df.html#skoot.datasets.load_breast_cancer_df" title="skoot.datasets.load_breast_cancer_df"><code class="xref py py-obj docutils literal"><span class="pre">datasets.load_breast_cancer_df</span></code></a>([…])</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.datasets.load_breast_cancer_df.html#skoot.datasets.load_breast_cancer_df" title="skoot.datasets.load_breast_cancer_df"><code class="xref py py-obj docutils literal"><span class="pre">datasets.load_breast_cancer_df</span></code></a>([…])</td>
 <td>Get the breast cancer dataset.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.datasets.load_iris_df.html#skoot.datasets.load_iris_df" title="skoot.datasets.load_iris_df"><code class="xref py py-obj docutils literal"><span class="pre">datasets.load_iris_df</span></code></a>([include_tgt,&nbsp;…])</td>
+<tr class="row-even"><td><a class="reference internal" href="generated/skoot.datasets.load_iris_df.html#skoot.datasets.load_iris_df" title="skoot.datasets.load_iris_df"><code class="xref py py-obj docutils literal"><span class="pre">datasets.load_iris_df</span></code></a>([include_tgt,&nbsp;…])</td>
 <td>Get the iris dataset.</td>
 </tr>
 </tbody>
@@ -445,6 +474,9 @@ uses.</p>
 <tr class="row-even"><td><a class="reference internal" href="generated/skoot.feature_extraction.InteractionTermTransformer.html#skoot.feature_extraction.InteractionTermTransformer" title="skoot.feature_extraction.InteractionTermTransformer"><code class="xref py py-obj docutils literal"><span class="pre">feature_extraction.InteractionTermTransformer</span></code></a>([…])</td>
 <td>Create interaction terms between predictors.</td>
 </tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.feature_extraction.TimeDeltaFeatures.html#skoot.feature_extraction.TimeDeltaFeatures" title="skoot.feature_extraction.TimeDeltaFeatures"><code class="xref py py-obj docutils literal"><span class="pre">feature_extraction.TimeDeltaFeatures</span></code></a>([cols,&nbsp;…])</td>
+<td>Compute the time lapse between timestamp events.</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -498,20 +530,6 @@ uses.</p>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="generated/skoot.model_validation.DistHypothesisValidator.html#skoot.model_validation.DistHypothesisValidator" title="skoot.model_validation.DistHypothesisValidator"><code class="xref py py-obj docutils literal"><span class="pre">model_validation.DistHypothesisValidator</span></code></a>([…])</td>
 <td>Validate test distributions using various hypothesis tests.</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section" id="pipelines-with-built-in-monitoring-at-each-stage">
-<h3>Pipelines with built-in monitoring at each stage<a class="headerlink" href="#pipelines-with-built-in-monitoring-at-each-stage" title="Permalink to this headline">¶</a></h3>
-<table border="1" class="longtable docutils">
-<colgroup>
-<col width="10%" />
-<col width="90%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.model_validation.make_validated_pipeline.html#skoot.model_validation.make_validated_pipeline" title="skoot.model_validation.make_validated_pipeline"><code class="xref py py-obj docutils literal"><span class="pre">model_validation.make_validated_pipeline</span></code></a>(…)</td>
-<td>Construct a pipeline from the given estimators, inserting validation steps between each.</td>
 </tr>
 </tbody>
 </table>
@@ -671,6 +689,34 @@ uses.</p>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="generated/skoot.utils.is_iterable.html#skoot.utils.is_iterable" title="skoot.utils.is_iterable"><code class="xref py py-obj docutils literal"><span class="pre">utils.is_iterable</span></code></a>(x)</td>
 <td>Determine whether an element is iterable.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="metaestimator-classes-decorators">
+<h3>Metaestimator classes/decorators<a class="headerlink" href="#metaestimator-classes-decorators" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.utils.timed_instance_method.html#skoot.utils.timed_instance_method" title="skoot.utils.timed_instance_method"><code class="xref py py-obj docutils literal"><span class="pre">utils.timed_instance_method</span></code></a>([attribute_name])</td>
+<td>Function timer decorator.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="profiling-utilities">
+<h3>Profiling utilities<a class="headerlink" href="#profiling-utilities" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/skoot.utils.profile_estimator.html#skoot.utils.profile_estimator" title="skoot.utils.profile_estimator"><code class="xref py py-obj docutils literal"><span class="pre">utils.profile_estimator</span></code></a>(estimator)</td>
+<td>Profile the timed functions of an estimator.</td>
 </tr>
 </tbody>
 </table>

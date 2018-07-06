@@ -34,11 +34,13 @@
   
 
   
+        <link rel="author" title="About these documents"
+              href="../../../about.html"/>
         <link rel="index" title="Index"
               href="../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="skoot 0.19.2.dev1 documentation" href="../../../index.html"/>
-        <link rel="up" title="skoot.model_validation" href="../model_validation.html"/> 
+        <link rel="up" title="Module code" href="../../index.html"/> 
 
   
   <script src="../../../_static/js/modernizr.min.js"></script>
@@ -123,8 +125,6 @@
       
           <li><a href="../../index.html">Module code</a> &raquo;</li>
       
-          <li><a href="../model_validation.html">skoot.model_validation</a> &raquo;</li>
-      
     <li>skoot.model_validation._validator</li>
       <li class="wy-breadcrumbs-aside">
         
@@ -152,6 +152,7 @@
 <span class="kn">from</span> <span class="nn">..base</span> <span class="k">import</span> <span class="n">BasePDTransformer</span>
 <span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="k">import</span> <span class="n">check_dataframe</span><span class="p">,</span> <span class="n">type_or_iterable_to_col_mapping</span>
 <span class="kn">from</span> <span class="nn">..utils.dataframe</span> <span class="k">import</span> <span class="n">get_continuous_columns</span><span class="p">,</span> <span class="n">dataframe_or_array</span>
+<span class="kn">from</span> <span class="nn">..utils.metaestimators</span> <span class="k">import</span> <span class="n">timed_instance_method</span>
 <span class="kn">from</span> <span class="nn">..exceptions</span> <span class="k">import</span> <span class="n">ValidationWarning</span>
 
 <span class="kn">from</span> <span class="nn">sklearn.externals</span> <span class="k">import</span> <span class="n">six</span>
@@ -302,7 +303,8 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">func</span> <span class="o">=</span> <span class="n">func</span></div>
 
-<div class="viewcode-block" id="CustomValidator.fit"><a class="viewcode-back" href="../../../modules/generated/skoot.model_validation.CustomValidator.html#skoot.model_validation.CustomValidator.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="CustomValidator.fit"><a class="viewcode-back" href="../../../modules/generated/skoot.model_validation.CustomValidator.html#skoot.model_validation.CustomValidator.fit">[docs]</a>    <span class="nd">@timed_instance_method</span><span class="p">(</span><span class="n">attribute_name</span><span class="o">=</span><span class="s2">&quot;fit_time_&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Fit the transformer.</span>
 
 <span class="sd">        Parameters</span>
@@ -424,7 +426,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">categorical_strategy</span> <span class="o">=</span> <span class="n">categorical_strategy</span></div>
 
-<div class="viewcode-block" id="DistHypothesisValidator.fit"><a class="viewcode-back" href="../../../modules/generated/skoot.model_validation.DistHypothesisValidator.html#skoot.model_validation.DistHypothesisValidator.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="DistHypothesisValidator.fit"><a class="viewcode-back" href="../../../modules/generated/skoot.model_validation.DistHypothesisValidator.html#skoot.model_validation.DistHypothesisValidator.fit">[docs]</a>    <span class="nd">@timed_instance_method</span><span class="p">(</span><span class="n">attribute_name</span><span class="o">=</span><span class="s2">&quot;fit_time_&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Fit the transformer.</span>
 
 <span class="sd">        Parameters</span>
@@ -498,8 +501,9 @@
                 <span class="n">new_lvls</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">in1d</span><span class="p">(</span><span class="n">prst_levels</span><span class="p">,</span>
                                     <span class="n">exp_levels</span><span class="p">)</span>  <span class="c1"># type: np.ndarray</span>
                 <span class="n">valid</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">new_lvls</span><span class="o">.</span><span class="n">any</span><span class="p">()</span>  <span class="c1"># dont want new lvls, new = invalid</span>
+                <span class="n">abs_mask</span> <span class="o">=</span> <span class="n">abs_diff</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span>  <span class="c1"># type: np.ndarray</span>
 
-                <span class="k">return</span> <span class="n">valid</span> <span class="ow">and</span> <span class="p">(</span><span class="n">abs_diff</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+                <span class="k">return</span> <span class="n">valid</span> <span class="ow">and</span> <span class="n">abs_mask</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
 
             <span class="c1"># if we add more strategies, here&#39;s where they&#39;ll go...</span>
             <span class="k">return</span> <span class="kc">True</span></div>

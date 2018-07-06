@@ -18,6 +18,7 @@ contribute you'll need to be able to build from source.
 
 .. toctree::
 
+   about.rst
    setup.rst
    contributing.rst
 

@@ -34,6 +34,8 @@
   
 
   
+        <link rel="author" title="About these documents"
+              href="../../about.html"/>
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
@@ -263,16 +265,16 @@ returned.</p>
 <col width="91%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a href="#id2"><span class="problematic" id="id3">scale_</span></a></td>
+<tr class="row-odd"><td><a href="#id3"><span class="problematic" id="id4">scale_</span></a></td>
 <td>(ndarray, shape (n_features,)) Per feature relative scaling of the data.  .. versionadded:: 0.17 <em>scale_</em> is recommended instead of deprecated <em>std_</em>.</td>
 </tr>
-<tr class="row-even"><td><a href="#id4"><span class="problematic" id="id5">mean_</span></a></td>
+<tr class="row-even"><td><a href="#id5"><span class="problematic" id="id6">mean_</span></a></td>
 <td>(array of floats with shape [n_features]) The mean value for each feature in the training set.</td>
 </tr>
-<tr class="row-odd"><td><a href="#id6"><span class="problematic" id="id7">var_</span></a></td>
+<tr class="row-odd"><td><a href="#id7"><span class="problematic" id="id8">var_</span></a></td>
 <td>(array of floats with shape [n_features]) The variance for each feature in the training set. Used to compute <cite>scale_</cite></td>
 </tr>
-<tr class="row-even"><td><a href="#id8"><span class="problematic" id="id9">n_samples_seen_</span></a></td>
+<tr class="row-even"><td><a href="#id9"><span class="problematic" id="id10">n_samples_seen_</span></a></td>
 <td>(int) The number of samples processed by the estimator. Will be reset on new calls to fit, but increments across <code class="docutils literal"><span class="pre">partial_fit</span></code> calls.</td>
 </tr>
 </tbody>
@@ -284,7 +286,7 @@ returned.</p>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#skoot.preprocessing.SelectiveStandardScaler.fit" title="skoot.preprocessing.SelectiveStandardScaler.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(X[,&nbsp;y])</td>
+<tr class="row-odd"><td><a class="reference internal" href="#skoot.preprocessing.SelectiveStandardScaler.fit" title="skoot.preprocessing.SelectiveStandardScaler.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(*args,&nbsp;**kwargs)</td>
 <td>Fit the wrapped transformer.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#skoot.preprocessing.SelectiveStandardScaler.fit_transform" title="skoot.preprocessing.SelectiveStandardScaler.fit_transform"><code class="xref py py-obj docutils literal"><span class="pre">fit_transform</span></code></a>(X[,&nbsp;y])</td>
@@ -308,7 +310,7 @@ returned.</p>
 
 <dl class="method">
 <dt id="skoot.preprocessing.SelectiveStandardScaler.fit">
-<code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em>, <em>**fit_kwargs</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.SelectiveStandardScaler.fit" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fit</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.SelectiveStandardScaler.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit the wrapped transformer.</p>
 <p>This method will fit the wrapped sklearn transformer on the
 selected columns, leaving other columns alone.</p>
@@ -441,6 +443,10 @@ and the result set is returned.</p>
 <div class="sphx-glr-thumbcontainer" tooltip="Sometimes you have a pre-processing stage that finds itself awkwardly positioned in the middle ..."><div class="figure" id="id1">
 <img alt="../../_images/sphx_glr_ex_anonymous_transformer_thumb.png" src="../../_images/sphx_glr_ex_anonymous_transformer_thumb.png" />
 <p class="caption"><span class="caption-text"><a class="reference internal" href="../../auto_examples/ex_anonymous_transformer.html#sphx-glr-auto-examples-ex-anonymous-transformer-py"><span class="std std-ref">Anonymous transformers in skoot</span></a></span></p>
+</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Skoot provides a convenient mechanism for profiling estimators and determining whether they&#x27;re ..."><div class="figure" id="id2">
+<img alt="../../_images/sphx_glr_ex_profiling_thumb.png" src="../../_images/sphx_glr_ex_profiling_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="../../auto_examples/utils/ex_profiling.html#sphx-glr-auto-examples-utils-ex-profiling-py"><span class="std std-ref">Profiling estimators</span></a></span></p>
 </div>
 </div><div class="clearer"></div></div>
 </div>

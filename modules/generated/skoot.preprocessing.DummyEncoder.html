@@ -34,6 +34,8 @@
   
 
   
+        <link rel="author" title="About these documents"
+              href="../../about.html"/>
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
@@ -167,7 +169,7 @@
 <h1><a class="reference internal" href="../classes.html#module-skoot.preprocessing" title="skoot.preprocessing"><code class="xref py py-mod docutils literal"><span class="pre">skoot.preprocessing</span></code></a>.DummyEncoder<a class="headerlink" href="#skoot-preprocessing-dummyencoder" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="skoot.preprocessing.DummyEncoder">
-<em class="property">class </em><code class="descclassname">skoot.preprocessing.</code><code class="descname">DummyEncoder</code><span class="sig-paren">(</span><em>cols</em>, <em>as_df=True</em>, <em>sep='_'</em>, <em>drop_one_level=True</em>, <em>handle_unknown='ignore'</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/encode.html#DummyEncoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.DummyEncoder" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">skoot.preprocessing.</code><code class="descname">DummyEncoder</code><span class="sig-paren">(</span><em>cols</em>, <em>as_df=True</em>, <em>sep='_'</em>, <em>drop_one_level=True</em>, <em>handle_unknown='ignore'</em>, <em>n_jobs=1</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/encode.html#DummyEncoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.DummyEncoder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dummy encode categorical data.</p>
 <p>A custom one-hot encoding class that handles previously unseen
 levels and automatically drops one level from each categorical
@@ -201,10 +203,19 @@ and the level name.</p>
 This helps avoid the dummy variable trap.</p>
 </div></blockquote>
 <p><strong>handle_unknown</strong> : str or unicode, optional (default=’ignore’)</p>
-<blockquote class="last">
+<blockquote>
 <div><p>How to handle the unknown levels. “ignore” will not raise an error
 for unknown test set levels, but “error” will. “warn” will produce
 a warning.</p>
+</div></blockquote>
+<p><strong>n_jobs</strong> : int, 1 by default</p>
+<blockquote class="last">
+<div><p>The number of jobs to use for the encoding. This works by
+fitting each incremental LabelEncoder in parallel.</p>
+<p>If -1 all CPUs are used. If 1 is given, no parallel computing code
+is used at all, which is useful for debugging. For n_jobs below -1,
+(n_cpus + 1 + n_jobs) are used. Thus for n_jobs = -2, all CPUs but
+one are used.</p>
 </div></blockquote>
 </td>
 </tr>
@@ -235,7 +246,7 @@ a warning.</p>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#skoot.preprocessing.DummyEncoder.fit" title="skoot.preprocessing.DummyEncoder.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(X[,&nbsp;y])</td>
+<tr class="row-odd"><td><a class="reference internal" href="#skoot.preprocessing.DummyEncoder.fit" title="skoot.preprocessing.DummyEncoder.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(*args,&nbsp;**kwargs)</td>
 <td>Fit the dummy encoder.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#skoot.preprocessing.DummyEncoder.fit_transform" title="skoot.preprocessing.DummyEncoder.fit_transform"><code class="xref py py-obj docutils literal"><span class="pre">fit_transform</span></code></a>(X[,&nbsp;y])</td>
@@ -254,12 +265,12 @@ a warning.</p>
 </table>
 <dl class="method">
 <dt id="skoot.preprocessing.DummyEncoder.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>cols</em>, <em>as_df=True</em>, <em>sep='_'</em>, <em>drop_one_level=True</em>, <em>handle_unknown='ignore'</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/encode.html#DummyEncoder.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.DummyEncoder.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>cols</em>, <em>as_df=True</em>, <em>sep='_'</em>, <em>drop_one_level=True</em>, <em>handle_unknown='ignore'</em>, <em>n_jobs=1</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/encode.html#DummyEncoder.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.DummyEncoder.__init__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="skoot.preprocessing.DummyEncoder.fit">
-<code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/encode.html#DummyEncoder.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.DummyEncoder.fit" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fit</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/encode.html#DummyEncoder.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.DummyEncoder.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit the dummy encoder.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

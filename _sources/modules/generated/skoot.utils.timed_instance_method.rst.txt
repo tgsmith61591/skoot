@@ -1,0 +1,12 @@
+:mod:`skoot.utils`.timed_instance_method
+=====================================================
+
+.. currentmodule:: skoot.utils
+
+.. autofunction:: timed_instance_method
+
+.. include:: skoot.utils.timed_instance_method.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

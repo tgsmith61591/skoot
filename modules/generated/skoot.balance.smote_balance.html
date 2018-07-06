@@ -34,6 +34,8 @@
   
 
   
+        <link rel="author" title="About these documents"
+              href="../../about.html"/>
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
@@ -184,7 +186,8 @@ or the mean. This strategy can be set using the <code class="docutils literal"><
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>X</strong> : array-like, shape (n_samples, n_features)</p>
 <blockquote>
-<div><p>Training vectors within the matrix of predictors.</p>
+<div><p>The training array. Samples from the minority class(es) in this array
+will be interpolated until they are represented at <code class="docutils literal"><span class="pre">balance_ratio</span></code>.</p>
 </div></blockquote>
 <p><strong>y</strong> : array-like, shape (n_samples,)</p>
 <blockquote>
@@ -308,14 +311,27 @@ Affects only <code class="docutils literal"><span class="pre">kneighbors</span><
 </tbody>
 </table>
 <p class="rubric">References</p>
-<table class="docutils citation" frame="void" id="r10" rules="none">
+<table class="docutils citation" frame="void" id="r11" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id1">[R10]</a></td><td>N. Chawla, K. Bowyer, L. Hall, W. Kegelmeyer,
+<tr><td class="label"><a class="fn-backref" href="#id1">[R11]</a></td><td>N. Chawla, K. Bowyer, L. Hall, W. Kegelmeyer,
 “SMOTE: Synthetic Minority Over-sampling Technique”
 <a class="reference external" href="https://www.jair.org/media/953/live-953-2037-jair.pdf">https://www.jair.org/media/953/live-953-2037-jair.pdf</a></td></tr>
 </tbody>
 </table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="k">import</span> <span class="n">make_classification</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_classification</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+<span class="gp">... </span>                           <span class="n">n_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="p">[</span><span class="mf">0.99</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X_bal</span><span class="p">,</span> <span class="n">y_bal</span> <span class="o">=</span> <span class="n">smote_balance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">balance_ratio</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ratio</span> <span class="o">=</span> <span class="nb">round</span><span class="p">((</span><span class="n">y_bal</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="nb">float</span><span class="p">((</span><span class="n">y_bal</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">ratio</span> <span class="o">==</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">ratio</span>
+</pre></div>
+</div>
+<p>Note that the count of samples is now greater than it initially was:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">X_bal</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1000</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <div class="section" id="examples-using-skoot-balance-smote-balance">

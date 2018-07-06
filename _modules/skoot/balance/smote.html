@@ -34,6 +34,8 @@
   
 
   
+        <link rel="author" title="About these documents"
+              href="../../../about.html"/>
         <link rel="index" title="Index"
               href="../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../search.html"/>
@@ -287,7 +289,8 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    X : array-like, shape (n_samples, n_features)</span>
-<span class="sd">        Training vectors within the matrix of predictors.</span>
+<span class="sd">        The training array. Samples from the minority class(es) in this array</span>
+<span class="sd">        will be interpolated until they are represented at ``balance_ratio``.</span>
 
 <span class="sd">    y : array-like, shape (n_samples,)</span>
 <span class="sd">        Training labels corresponding to the samples in ``X``.</span>
@@ -387,6 +390,19 @@
 
 <span class="sd">    random_state : int or None, optional (default=None)</span>
 <span class="sd">        The seed to construct the random state to generate random selections.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from sklearn.datasets import make_classification</span>
+<span class="sd">    &gt;&gt;&gt; X, y = make_classification(n_samples=1000, random_state=42,</span>
+<span class="sd">    ...                            n_classes=2, weights=[0.99, 0.01])</span>
+<span class="sd">    &gt;&gt;&gt; X_bal, y_bal = smote_balance(X, y, balance_ratio=0.2, random_state=42)</span>
+<span class="sd">    &gt;&gt;&gt; ratio = round((y_bal == 1).sum() / float((y_bal == 0).sum()), 1)</span>
+<span class="sd">    &gt;&gt;&gt; assert ratio == 0.2, ratio</span>
+
+<span class="sd">    Note that the count of samples is now greater than it initially was:</span>
+
+<span class="sd">    &gt;&gt;&gt; assert X_bal.shape[0] &gt; 1000</span>
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>

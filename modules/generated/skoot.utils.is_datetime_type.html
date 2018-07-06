@@ -34,13 +34,15 @@
   
 
   
+        <link rel="author" title="About these documents"
+              href="../../about.html"/>
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
     <link rel="top" title="skoot 0.19.2.dev1 documentation" href="../../index.html"/>
         <link rel="up" title="API Reference" href="../classes.html"/>
         <link rel="next" title="skoot.utils.check_dataframe" href="skoot.utils.check_dataframe.html"/>
-        <link rel="prev" title="skoot.utils.is_iterable" href="skoot.utils.is_iterable.html"/> 
+        <link rel="prev" title="skoot.utils.profile_estimator" href="skoot.utils.profile_estimator.html"/> 
 
   
   <script src="../../_static/js/modernizr.min.js"></script>
@@ -104,6 +106,8 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../classes.html#module-skoot.utils"><code class="docutils literal"><span class="pre">skoot.utils</span></code>: Common utility functions</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../classes.html#dataframe-utilities">DataFrame utilities</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../classes.html#iterable-utilities">Iterable utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../classes.html#metaestimator-classes-decorators">Metaestimator classes/decorators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../classes.html#profiling-utilities">Profiling utilities</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="../classes.html#series-utilities">Series utilities</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#"><code class="docutils literal"><span class="pre">skoot.utils</span></code>.is_datetime_type</a></li>
 </ul>
@@ -180,10 +184,10 @@ a method is added by the Pandas developers.</p>
 </tbody>
 </table>
 <p class="rubric">References</p>
-<table class="docutils citation" frame="void" id="r18" rules="none">
+<table class="docutils citation" frame="void" id="r20" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id1">[R18]</a></td><td>Pandas Issue 8814, “API: preferred way to check if column/Series
+<tr><td class="label"><a class="fn-backref" href="#id1">[R20]</a></td><td>Pandas Issue 8814, “API: preferred way to check if column/Series
 has Categorical dtype” (or any dtype for that matter)
 <a class="reference external" href="https://github.com/pandas-dev/pandas/issues/8814">https://github.com/pandas-dev/pandas/issues/8814</a></td></tr>
 </tbody>
@@ -202,7 +206,7 @@ has Categorical dtype” (or any dtype for that matter)
         <a href="skoot.utils.check_dataframe.html" class="btn btn-neutral float-right" title="skoot.utils.check_dataframe" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="skoot.utils.is_iterable.html" class="btn btn-neutral" title="skoot.utils.is_iterable" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="skoot.utils.profile_estimator.html" class="btn btn-neutral" title="skoot.utils.profile_estimator" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

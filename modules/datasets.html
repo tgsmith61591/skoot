@@ -34,6 +34,8 @@
   
 
   
+        <link rel="author" title="About these documents"
+              href="../about.html"/>
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
@@ -159,6 +161,24 @@
 <p>The datasets module, much like <code class="docutils literal"><span class="pre">sklearn.datasets</span></code>, contains loadable
 toy datasets for use in prototyping algorithms and transformers. Unlike sklearn,
 the output of skoot’s datasets are Pandas DataFrames.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>The general interface for loading an example dataframe is shared between loaders:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># There are several dataset loaders: adult, iris, boston, breast_cancer</span>
+<span class="kn">from</span> <span class="nn">skoot.datasets</span> <span class="kn">import</span> <span class="n">load_adult_df</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">load_adult_df</span><span class="p">(</span><span class="n">include_tgt</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">tgt_name</span><span class="o">=</span><span class="s2">&quot;target&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See the following references for examples on how to use the datasets module, or
+specific documentation around each loader function:</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul class="simple">
+<li><a class="reference internal" href="classes.html#datasets-ref"><span class="std std-ref">skoot.datasets: Dataset loaders</span></a></li>
+<li><a class="reference internal" href="../auto_examples/index.html#datasets-examples"><span class="std std-ref">Datasets examples</span></a></li>
+</ul>
 <br/></div>
 
 

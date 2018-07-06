@@ -34,6 +34,8 @@
   
 
   
+        <link rel="author" title="About these documents"
+              href="../../about.html"/>
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
@@ -167,11 +169,10 @@
 <h1><a class="reference internal" href="../classes.html#module-skoot.preprocessing" title="skoot.preprocessing"><code class="xref py py-mod docutils literal"><span class="pre">skoot.preprocessing</span></code></a>.SchemaNormalizer<a class="headerlink" href="#skoot-preprocessing-schemanormalizer" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="skoot.preprocessing.SchemaNormalizer">
-<em class="property">class </em><code class="descclassname">skoot.preprocessing.</code><code class="descname">SchemaNormalizer</code><span class="sig-paren">(</span><em>schema</em>, <em>as_df=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/cerberus.html#SchemaNormalizer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.SchemaNormalizer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">skoot.preprocessing.</code><code class="descname">SchemaNormalizer</code><span class="sig-paren">(</span><em>schema</em>, <em>as_df=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/schema.html#SchemaNormalizer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.SchemaNormalizer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enforce a schema on an input dataframe.</p>
-<p>The SchemaNormalizer fits a cerberus Validator class on training data,
-enforcing that schema across incoming test data. This ensures that new
-test data matches the expected schema.</p>
+<p>The SchemaNormalizer enforces a schema across incoming train and
+test data. This ensures that all data matches the expected schema.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -181,7 +182,7 @@ test data matches the expected schema.</p>
 <div><p>The schema. This dictionary maps column names to actions. For
 instance the following schema will cast the iris dataset
 “petal widtch (cm)” column to integer:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">schema</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;petal width (cm)&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;coerce&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">}}</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">schema</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;petal width (cm)&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">}</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -199,12 +200,12 @@ Since most skoot transformers depend on explicitly-named
 <p class="rubric">Attributes</p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col width="5%" />
+<col width="95%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a href="#id1"><span class="problematic" id="id2">validator_</span></a></td>
-<td>(cerberus.Validator) The cerberus validator object. Used to enforce schemas on input test data.</td>
+<tr class="row-odd"><td><a href="#id1"><span class="problematic" id="id2">fit_cols_</span></a></td>
+<td>(list) The list of column names on which the transformer was fit. This is used to validate the presence of the features in the test set during the <code class="docutils literal"><span class="pre">transform</span></code> stage.</td>
 </tr>
 </tbody>
 </table>
@@ -215,7 +216,7 @@ Since most skoot transformers depend on explicitly-named
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#skoot.preprocessing.SchemaNormalizer.fit" title="skoot.preprocessing.SchemaNormalizer.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(X[,&nbsp;y])</td>
+<tr class="row-odd"><td><a class="reference internal" href="#skoot.preprocessing.SchemaNormalizer.fit" title="skoot.preprocessing.SchemaNormalizer.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(*args,&nbsp;**kwargs)</td>
 <td>Fit the transformer.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#skoot.preprocessing.SchemaNormalizer.fit_transform" title="skoot.preprocessing.SchemaNormalizer.fit_transform"><code class="xref py py-obj docutils literal"><span class="pre">fit_transform</span></code></a>(X[,&nbsp;y])</td>
@@ -234,12 +235,12 @@ Since most skoot transformers depend on explicitly-named
 </table>
 <dl class="method">
 <dt id="skoot.preprocessing.SchemaNormalizer.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>schema</em>, <em>as_df=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/cerberus.html#SchemaNormalizer.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.SchemaNormalizer.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>schema</em>, <em>as_df=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/schema.html#SchemaNormalizer.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.SchemaNormalizer.__init__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="skoot.preprocessing.SchemaNormalizer.fit">
-<code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/cerberus.html#SchemaNormalizer.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.SchemaNormalizer.fit" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fit</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/schema.html#SchemaNormalizer.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.SchemaNormalizer.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit the transformer.</p>
 <p>Default behavior is not to fit any parameters and return self.
 This is useful for transformers which do not require
@@ -337,7 +338,7 @@ component of a nested object.</p>
 
 <dl class="method">
 <dt id="skoot.preprocessing.SchemaNormalizer.transform">
-<code class="descname">transform</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/cerberus.html#SchemaNormalizer.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.SchemaNormalizer.transform" title="Permalink to this definition">¶</a></dt>
+<code class="descname">transform</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/schema.html#SchemaNormalizer.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.SchemaNormalizer.transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply the schema normalization.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

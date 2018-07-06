@@ -34,6 +34,8 @@
   
 
   
+        <link rel="author" title="About these documents"
+              href="../../about.html"/>
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
@@ -101,6 +103,7 @@
 <li class="toctree-l3 current"><a class="reference internal" href="../classes.html#feature-extraction-estimators">Feature extraction estimators</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#"><code class="docutils literal"><span class="pre">skoot.feature_extraction</span></code>.DateFactorizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="skoot.feature_extraction.InteractionTermTransformer.html"><code class="docutils literal"><span class="pre">skoot.feature_extraction</span></code>.InteractionTermTransformer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="skoot.feature_extraction.TimeDeltaFeatures.html"><code class="docutils literal"><span class="pre">skoot.feature_extraction</span></code>.TimeDeltaFeatures</a></li>
 </ul>
 </li>
 </ul>
@@ -209,6 +212,7 @@ and will raise an AttributeError if an invalid feature is passed.</p>
 <p class="rubric">Examples</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span> <span class="k">as</span> <span class="n">dt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">strp</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">strptime</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">[</span>
 <span class="gp">... </span>    <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">dt</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="s2">&quot;06-01-2018&quot;</span><span class="p">,</span> <span class="s2">&quot;%m-</span><span class="si">%d</span><span class="s2">-%Y&quot;</span><span class="p">)],</span>
 <span class="gp">... </span>    <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="n">dt</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="s2">&quot;06-02-2018&quot;</span><span class="p">,</span> <span class="s2">&quot;%m-</span><span class="si">%d</span><span class="s2">-%Y&quot;</span><span class="p">)],</span>
@@ -248,7 +252,7 @@ and will raise an AttributeError if an invalid feature is passed.</p>
 <tr class="row-odd"><td><a class="reference internal" href="#skoot.feature_extraction.DateFactorizer.fit" title="skoot.feature_extraction.DateFactorizer.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(X[,&nbsp;y])</td>
 <td>Fit the date factorizer.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#skoot.feature_extraction.DateFactorizer.fit_transform" title="skoot.feature_extraction.DateFactorizer.fit_transform"><code class="xref py py-obj docutils literal"><span class="pre">fit_transform</span></code></a>(X[,&nbsp;y])</td>
+<tr class="row-even"><td><a class="reference internal" href="#skoot.feature_extraction.DateFactorizer.fit_transform" title="skoot.feature_extraction.DateFactorizer.fit_transform"><code class="xref py py-obj docutils literal"><span class="pre">fit_transform</span></code></a>(*args,&nbsp;**kwargs)</td>
 <td>Fit the estimator and apply the date factorization to a dataframe.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#skoot.feature_extraction.DateFactorizer.get_params" title="skoot.feature_extraction.DateFactorizer.get_params"><code class="xref py py-obj docutils literal"><span class="pre">get_params</span></code></a>([deep])</td>
@@ -297,7 +301,7 @@ all of them if <code class="docutils literal"><span class="pre">cols</span></cod
 
 <dl class="method">
 <dt id="skoot.feature_extraction.DateFactorizer.fit_transform">
-<code class="descname">fit_transform</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/feature_extraction/dates.html#DateFactorizer.fit_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.feature_extraction.DateFactorizer.fit_transform" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fit_transform</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/feature_extraction/dates.html#DateFactorizer.fit_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.feature_extraction.DateFactorizer.fit_transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit the estimator and apply the date factorization to a dataframe.</p>
 <p>This is a tricky class because the “fit” isn’t super necessary…
 But we use it as a validation stage to ensure the defined cols

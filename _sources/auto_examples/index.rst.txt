@@ -137,6 +137,43 @@ your imbalanced classification datasets.
 
     <div style='clear:both'></div>
 
+.. _datasets_examples:
+
+Datasets examples
+-----------------
+
+Examples for how to use the :mod:`skoot.datasets` module to load pre-bundled
+datasets for modeling in skoot.
+
+.. raw:: html
+
+   <br/>
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to use the ``datasets`` module to load pre-bundled datasets for m...">
+
+.. only:: html
+
+    .. figure:: /auto_examples/datasets/images/thumb/sphx_glr_ex_datasets_thumb.png
+
+        :ref:`sphx_glr_auto_examples_datasets_ex_datasets.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/datasets/ex_datasets
+.. raw:: html
+
+    <div style='clear:both'></div>
+
 .. _exploration_examples:
 
 Exploratory data analysis examples
@@ -321,6 +358,43 @@ features in your dataset for better modeling.
    :hidden:
 
    /auto_examples/preprocessing/ex_one_hot
+.. raw:: html
+
+    <div style='clear:both'></div>
+
+.. _utils_examples:
+
+Utilities examples
+------------------
+
+Examples for how to use the :mod:`skoot.utils` module to enhance your
+modeling, write better transformers, and profile your estimators.
+
+.. raw:: html
+
+   <br/>
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Skoot provides a convenient mechanism for profiling estimators and determining whether they&#x27;re ...">
+
+.. only:: html
+
+    .. figure:: /auto_examples/utils/images/thumb/sphx_glr_ex_profiling_thumb.png
+
+        :ref:`sphx_glr_auto_examples_utils_ex_profiling.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/utils/ex_profiling
 .. raw:: html
 
     <div style='clear:both'></div>

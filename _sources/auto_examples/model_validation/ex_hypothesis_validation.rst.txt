@@ -24,11 +24,6 @@ and validation.
 
     Feature 1 does not match expectation as set by DistHypothesisValidator
 
-    Internal make_pipeline with embedded validation:
-    Pipeline(steps=[('standardscaler', StandardScaler(copy=True, with_mean=True, with_std=True)), ('disthypothesisvalidator-1', DistHypothesisValidator(action='warn', alpha=0.05, as_df=True,
-                categorical_strategy='ratio', cols=None)), ('logisticregression', LogisticRegression(C=1.0, class_weight=None,...idator(action='warn', alpha=0.05, as_df=True,
-                categorical_strategy='ratio', cols=None))])
-
 
 
 
@@ -47,7 +42,6 @@ and validation.
     from sklearn.linear_model import LogisticRegression
     from sklearn.pipeline import make_pipeline
     from skoot.model_validation import DistHypothesisValidator
-    from skoot.model_validation import make_validated_pipeline
     import warnings
 
     # #############################################################################
@@ -84,18 +78,8 @@ and validation.
         pipe.predict(X_test)
         print(w[0].message)
 
-    # #############################################################################
-    # Demonstrate internal make_pipeline variant
 
-    # You can build a similar validated pipeline given your estimators by
-    # using the internal make_validated_pipeline function:
-    pipe2 = make_validated_pipeline(StandardScaler(with_mean=True, with_std=True),
-                                    LogisticRegression(random_state=seed))
-
-    print("\nInternal make_pipeline with embedded validation:")
-    print(pipe2)
-
-**Total running time of the script:** ( 0 minutes  0.047 seconds)
+**Total running time of the script:** ( 0 minutes  0.045 seconds)
 
 
 

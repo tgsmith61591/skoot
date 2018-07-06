@@ -34,6 +34,8 @@
   
 
   
+        <link rel="author" title="About these documents"
+              href="../../about.html"/>
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
@@ -250,7 +252,7 @@ be cast to datetime.</p>
 <tr class="row-odd"><td><a class="reference internal" href="#skoot.preprocessing.DateTransformer.fit" title="skoot.preprocessing.DateTransformer.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(X[,&nbsp;y])</td>
 <td>Fit the date transformer.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#skoot.preprocessing.DateTransformer.fit_transform" title="skoot.preprocessing.DateTransformer.fit_transform"><code class="xref py py-obj docutils literal"><span class="pre">fit_transform</span></code></a>(X[,&nbsp;y])</td>
+<tr class="row-even"><td><a class="reference internal" href="#skoot.preprocessing.DateTransformer.fit_transform" title="skoot.preprocessing.DateTransformer.fit_transform"><code class="xref py py-obj docutils literal"><span class="pre">fit_transform</span></code></a>(*args,&nbsp;**kwargs)</td>
 <td>Fit the estimator and apply the date transformation to a dataframe.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#skoot.preprocessing.DateTransformer.get_params" title="skoot.preprocessing.DateTransformer.get_params"><code class="xref py py-obj docutils literal"><span class="pre">get_params</span></code></a>([deep])</td>
@@ -299,7 +301,7 @@ all of them if <code class="docutils literal"><span class="pre">cols</span></cod
 
 <dl class="method">
 <dt id="skoot.preprocessing.DateTransformer.fit_transform">
-<code class="descname">fit_transform</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/dates.html#DateTransformer.fit_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.DateTransformer.fit_transform" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fit_transform</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/dates.html#DateTransformer.fit_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.DateTransformer.fit_transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit the estimator and apply the date transformation
 to a dataframe.</p>
 <p>This is a tricky class because the “fit” isn’t super necessary…

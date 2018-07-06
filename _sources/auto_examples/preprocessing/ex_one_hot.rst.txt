@@ -123,15 +123,15 @@ take a look at the
     y = adult.pop("target")
 
     # we don't want this column
-    adult.pop("education-num")
+    _ = adult.pop("education-num")
 
     X_train, X_test, y_train, y_test = train_test_split(adult, y, random_state=42,
                                                         test_size=0.2)
 
     # #############################################################################
     # Fit a dummy encoder
-    obj_cols = get_categorical_columns(X_train)
-    encoder = DummyEncoder(cols=obj_cols, handle_unknown='ignore')
+    obj_cols = get_categorical_columns(X_train).columns
+    encoder = DummyEncoder(cols=obj_cols, handle_unknown='ignore', n_jobs=4)
     encoder.fit(X_train, y_train)
 
     # #############################################################################
@@ -150,7 +150,7 @@ take a look at the
     nc_mask = trans.columns.str.contains("native-country")
     assert trans[trans.columns[nc_mask]].sum().sum() == 0
 
-**Total running time of the script:** ( 0 minutes  0.581 seconds)
+**Total running time of the script:** ( 0 minutes  0.949 seconds)
 
 
 

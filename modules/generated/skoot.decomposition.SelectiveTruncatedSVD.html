@@ -34,6 +34,8 @@
   
 
   
+        <link rel="author" title="About these documents"
+              href="../../about.html"/>
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
@@ -281,13 +283,13 @@ Halko, et al., 2009 (arXiv:909) http://arxiv.org/pdf/0909.4061</p>
 <col width="81%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a href="#id1"><span class="problematic" id="id2">components_</span></a></td>
+<tr class="row-odd"><td><a href="#id2"><span class="problematic" id="id3">components_</span></a></td>
 <td>(array, shape (n_components, n_features))</td>
 </tr>
-<tr class="row-even"><td><a href="#id3"><span class="problematic" id="id4">explained_variance_ratio_</span></a></td>
+<tr class="row-even"><td><a href="#id4"><span class="problematic" id="id5">explained_variance_ratio_</span></a></td>
 <td>(array, [n_components]) Percentage of variance explained by each of the selected components.</td>
 </tr>
-<tr class="row-odd"><td><a href="#id5"><span class="problematic" id="id6">explained_variance_</span></a></td>
+<tr class="row-odd"><td><a href="#id6"><span class="problematic" id="id7">explained_variance_</span></a></td>
 <td>(array, [n_components]) The variance of the training samples transformed by a projection to each component.</td>
 </tr>
 </tbody>
@@ -299,7 +301,7 @@ Halko, et al., 2009 (arXiv:909) http://arxiv.org/pdf/0909.4061</p>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#skoot.decomposition.SelectiveTruncatedSVD.fit" title="skoot.decomposition.SelectiveTruncatedSVD.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(X[,&nbsp;y])</td>
+<tr class="row-odd"><td><a class="reference internal" href="#skoot.decomposition.SelectiveTruncatedSVD.fit" title="skoot.decomposition.SelectiveTruncatedSVD.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(*args,&nbsp;**kwargs)</td>
 <td>Fit the wrapped transformer.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#skoot.decomposition.SelectiveTruncatedSVD.fit_transform" title="skoot.decomposition.SelectiveTruncatedSVD.fit_transform"><code class="xref py py-obj docutils literal"><span class="pre">fit_transform</span></code></a>(X[,&nbsp;y])</td>
@@ -323,7 +325,7 @@ Halko, et al., 2009 (arXiv:909) http://arxiv.org/pdf/0909.4061</p>
 
 <dl class="method">
 <dt id="skoot.decomposition.SelectiveTruncatedSVD.fit">
-<code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em>, <em>**fit_kwargs</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.decomposition.SelectiveTruncatedSVD.fit" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fit</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.decomposition.SelectiveTruncatedSVD.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit the wrapped transformer.</p>
 <p>This method will fit the wrapped sklearn transformer on the
 selected columns, leaving other columns alone.</p>
@@ -451,7 +453,14 @@ and the result set is returned.</p>
 
 </dd></dl>
 
-<div class="clearer"></div></div>
+<div class="section" id="examples-using-skoot-decomposition-selectivetruncatedsvd">
+<h2>Examples using <code class="docutils literal"><span class="pre">skoot.decomposition.SelectiveTruncatedSVD</span></code><a class="headerlink" href="#examples-using-skoot-decomposition-selectivetruncatedsvd" title="Permalink to this headline">¶</a></h2>
+<div class="sphx-glr-thumbcontainer" tooltip="Skoot provides a convenient mechanism for profiling estimators and determining whether they&#x27;re ..."><div class="figure" id="id1">
+<img alt="../../_images/sphx_glr_ex_profiling_thumb.png" src="../../_images/sphx_glr_ex_profiling_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="../../auto_examples/utils/ex_profiling.html#sphx-glr-auto-examples-utils-ex-profiling-py"><span class="std std-ref">Profiling estimators</span></a></span></p>
+</div>
+</div><div class="clearer"></div></div>
+</div>
 
 
            </div>

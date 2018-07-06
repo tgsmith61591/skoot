@@ -34,12 +34,14 @@
   
 
   
+        <link rel="author" title="About these documents"
+              href="../../about.html"/>
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
     <link rel="top" title="skoot 0.19.2.dev1 documentation" href="../../index.html"/>
         <link rel="up" title="API Reference" href="../classes.html"/>
-        <link rel="next" title="skoot.decorators.overrides" href="skoot.decorators.overrides.html"/>
+        <link rel="next" title="skoot.base.make_transformer" href="skoot.base.make_transformer.html"/>
         <link rel="prev" title="API Reference" href="../classes.html"/> 
 
   
@@ -96,6 +98,7 @@
 <li class="toctree-l4 current"><a class="current reference internal" href="#"><code class="docutils literal"><span class="pre">skoot.base</span></code>.BasePDTransformer</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../classes.html#helper-functions">Helper functions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot"><code class="docutils literal"><span class="pre">skoot.decorators</span></code>: Decorator utilities</a></li>
@@ -207,7 +210,7 @@ default.</p>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#skoot.base.BasePDTransformer.fit" title="skoot.base.BasePDTransformer.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(X[,&nbsp;y])</td>
+<tr class="row-odd"><td><a class="reference internal" href="#skoot.base.BasePDTransformer.fit" title="skoot.base.BasePDTransformer.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(*args,&nbsp;**kwargs)</td>
 <td>Fit the transformer.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#skoot.base.BasePDTransformer.fit_transform" title="skoot.base.BasePDTransformer.fit_transform"><code class="xref py py-obj docutils literal"><span class="pre">fit_transform</span></code></a>(X[,&nbsp;y])</td>
@@ -228,7 +231,7 @@ default.</p>
 
 <dl class="method">
 <dt id="skoot.base.BasePDTransformer.fit">
-<code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/base.html#BasePDTransformer.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.base.BasePDTransformer.fit" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fit</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/base.html#BasePDTransformer.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.base.BasePDTransformer.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit the transformer.</p>
 <p>Default behavior is not to fit any parameters and return self.
 This is useful for transformers which do not require
@@ -335,7 +338,7 @@ component of a nested object.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="skoot.decorators.overrides.html" class="btn btn-neutral float-right" title="skoot.decorators.overrides" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="skoot.base.make_transformer.html" class="btn btn-neutral float-right" title="skoot.base.make_transformer" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="../classes.html" class="btn btn-neutral" title="API Reference" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>

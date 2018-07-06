@@ -34,6 +34,8 @@
   
 
   
+        <link rel="author" title="About these documents"
+              href="about.html"/>
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
@@ -137,31 +139,104 @@
             
   <div class="section" id="skoot-accelerate-your-data-science-workflow">
 <h1>Skoot: Accelerate your data science workflow<a class="headerlink" href="#skoot-accelerate-your-data-science-workflow" title="Permalink to this headline">¶</a></h1>
-<p>Skoot’s aim is to expedite and automate away many of the common pain points
+<!-- Block section -->
+<script src="_static/js/jquery.min.js"></script>
+
+<a href="https://travis-ci.org/tgsmith61591/skoot"><img alt="Travis status" src="https://travis-ci.org/tgsmith61591/skoot.svg?branch=master" /></a>
+<a href="https://ci.appveyor.com/project/tgsmith61591/skoot"><img alt="Appveyor status" src="https://ci.appveyor.com/api/projects/status/7h91wcoaqwa3sc29?svg=true" /></a>
+<a href="https://codecov.io/gh/tgsmith61591/skoot"><img alt="Coverage" src="https://codecov.io/gh/tgsmith61591/skoot/branch/master/graph/badge.svg" /></a>
+<a href="https://github.com/tgsmith61591/skoot"><img id="nutrition" alt="gluten free" src="https://img.shields.io/badge/gluten_free-100%25-brightgreen.svg" /></a><p>Skoot’s aim is to expedite and automate away many of the common pain points
 data scientists experience as they work through their exploratory data analysis
 &amp; data cleansing/preparation stages. It does so by wrapping and augmenting
 useful functions and transformers in scikit-learn, adapting them for use with
 Pandas, as well as by providing its own custom transformer classes to solve
 common problems that typically demand bespoke solutions.</p>
-<br/><p>Skoot is designed to provide as much flexibility as possible while offering
-implementations to common challenges, such as categorical &amp; model-based
-imputation transformers, transformers to rectify skewness (i.e., box-cox &amp;
-Yeo-Johnson transformations), as well as many wrappers to scikit-learn
-transformers that enable applications to selected columns only. Every
-transformer in skoot is designed for maximum flexibility and to minimize
-impact on existing pipelines. Each transformer has been tested to function in
-the scope of scikit-learn pipelines and grid searches, and offers the same
-persistence model.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="section" id="example-two-minutes-to-model-readiness">
+<h2>Example: Two minutes to model-readiness<a class="headerlink" href="#example-two-minutes-to-model-readiness" title="Permalink to this headline">¶</a></h2>
+<p>Real world data is nasty. Most data scientists spend the majority of their time
+tackling data cleansing tasks. With skoot, we can automate away so much of the
+bespoke hacking solutions that consume data scientists’ time.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>In this example, we’ll examine a common dataset (the
+<a class="reference external" href="https://archive.ics.uci.edu/ml/datasets/Adult">adult dataset</a> from the UCI
+machine learning repo) that requires significant pre-processing, and show how
+Skoot enables us to quickly clean up data and prepare it for modeling.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">skoot.datasets</span> <span class="kn">import</span> <span class="n">load_adult_df</span>
+<span class="kn">from</span> <span class="nn">skoot.feature_selection</span> <span class="kn">import</span> <span class="n">FeatureFilter</span>
+<span class="kn">from</span> <span class="nn">skoot.decomposition</span> <span class="kn">import</span> <span class="n">SelectivePCA</span>
+<span class="kn">from</span> <span class="nn">skoot.preprocessing</span> <span class="kn">import</span> <span class="n">DummyEncoder</span>
+<span class="kn">from</span> <span class="nn">skoot.utils.dataframe</span> <span class="kn">import</span> <span class="n">get_numeric_columns</span>
+<span class="kn">from</span> <span class="nn">skoot.utils.dataframe</span> <span class="kn">import</span> <span class="n">get_categorical_columns</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <span class="n">Pipeline</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span>
+
+<span class="c1"># load the dataset with the skoot-native loader &amp; split it</span>
+<span class="n">adult</span> <span class="o">=</span> <span class="n">load_adult_df</span><span class="p">(</span><span class="n">tgt_name</span><span class="o">=</span><span class="s2">&quot;target&quot;</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">adult</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;target&quot;</span><span class="p">)</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">adult</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+
+<span class="c1"># get numeric and categorical feature names</span>
+<span class="n">num_cols</span> <span class="o">=</span> <span class="n">get_numeric_columns</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span><span class="o">.</span><span class="n">columns</span>
+<span class="n">obj_cols</span> <span class="o">=</span> <span class="n">get_categorical_columns</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span><span class="o">.</span><span class="n">columns</span>
+
+<span class="c1"># remove the education-num from the num_cols since we&#39;re going to remove it</span>
+<span class="n">num_cols</span> <span class="o">=</span> <span class="n">num_cols</span><span class="p">[</span><span class="o">~</span><span class="p">(</span><span class="n">num_cols</span> <span class="o">==</span> <span class="s2">&quot;education-num&quot;</span><span class="p">)]</span>
+
+<span class="c1"># build a pipeline</span>
+<span class="n">pipe</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([</span>
+    <span class="c1"># drop out the ordinal level that&#39;s otherwise equal to &quot;education&quot;</span>
+    <span class="p">(</span><span class="s2">&quot;dropper&quot;</span><span class="p">,</span> <span class="n">FeatureFilter</span><span class="p">(</span><span class="n">cols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;education-num&quot;</span><span class="p">])),</span>
+
+    <span class="c1"># decompose the numeric features with PCA</span>
+    <span class="p">(</span><span class="s2">&quot;pca&quot;</span><span class="p">,</span> <span class="n">SelectivePCA</span><span class="p">(</span><span class="n">cols</span><span class="o">=</span><span class="n">num_cols</span><span class="p">)),</span>
+
+    <span class="c1"># dummy encode the categorical features</span>
+    <span class="p">(</span><span class="s2">&quot;dummy&quot;</span><span class="p">,</span> <span class="n">DummyEncoder</span><span class="p">(</span><span class="n">cols</span><span class="o">=</span><span class="n">obj_cols</span><span class="p">,</span> <span class="n">handle_unknown</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">)),</span>
+
+    <span class="c1"># and a simple classifier class</span>
+    <span class="p">(</span><span class="s2">&quot;clf&quot;</span><span class="p">,</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">))</span>
+<span class="p">])</span>
+
+<span class="n">pipe</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="c1"># produce predictions</span>
+<span class="n">preds</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Test accuracy: </span><span class="si">%.3f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">preds</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Voíla! The entire pre-processing and modeling process is achievable in a single pipeline.</p>
 <br/><p>If you have a common data preparation or transformation task you feel could be
 written into a transformer, please consider <a class="reference internal" href="contributing.html#contrib"><span class="std std-ref">Contributing to Skoot</span></a>!</p>
 <div class="toctree-wrapper compound">
 </div>
-<br/><div class="section" id="indices-and-tables">
-<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h2>
+<br/><div class="section" id="quick-refs-indices-and-tables">
+<h3>Quick refs, indices and tables<a class="headerlink" href="#quick-refs-indices-and-tables" title="Permalink to this headline">¶</a></h3>
+<p>Helpful quickstart sections:</p>
+<ul class="simple">
+<li><a class="reference internal" href="about.html#about"><span class="std std-ref">About the project</span></a></li>
+<li><a class="reference internal" href="setup.html#setup"><span class="std std-ref">Setup</span></a></li>
+<li><a class="reference internal" href="setup.html#building-on-unix"><span class="std std-ref">Building on Linux/Unix machines (Mac OS)</span></a></li>
+<li><a class="reference internal" href="setup.html#building-on-windows"><span class="std std-ref">Building on Windows</span></a></li>
+<li><a class="reference internal" href="setup.html#testing"><span class="std std-ref">Testing</span></a></li>
+<li><a class="reference internal" href="contributing.html#contrib"><span class="std std-ref">Contributing to Skoot</span></a></li>
+<li><a class="reference internal" href="modules/classes.html#api-ref"><span class="std std-ref">API Reference</span></a></li>
+</ul>
 <p>To search for specific sections or class documentation, visit the index.</p>
 <ul class="simple">
 <li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
 </ul>
+</div>
 </div>
 </div>
 

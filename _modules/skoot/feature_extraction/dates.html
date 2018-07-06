@@ -34,6 +34,8 @@
   
 
   
+        <link rel="author" title="About these documents"
+              href="../../../about.html"/>
         <link rel="index" title="Index"
               href="../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../search.html"/>
@@ -147,14 +149,17 @@
 <span class="kn">from</span> <span class="nn">..utils.iterables</span> <span class="k">import</span> <span class="n">ensure_iterable</span>
 <span class="kn">from</span> <span class="nn">..utils.series</span> <span class="k">import</span> <span class="n">is_datetime_type</span>
 <span class="kn">from</span> <span class="nn">..utils.dataframe</span> <span class="k">import</span> <span class="n">dataframe_or_array</span>
+<span class="kn">from</span> <span class="nn">..utils.metaestimators</span> <span class="k">import</span> <span class="n">timed_instance_method</span>
 
 <span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="k">import</span> <span class="n">check_is_fitted</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">combinations</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;DateFactorizer&quot;</span>
+    <span class="s2">&quot;DateFactorizer&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;TimeDeltaFeatures&quot;</span>
 <span class="p">]</span>
 
 
@@ -232,6 +237,7 @@
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
 <span class="sd">    &gt;&gt;&gt; from datetime import datetime as dt</span>
+<span class="sd">    &gt;&gt;&gt; strp = dt.strptime</span>
 <span class="sd">    &gt;&gt;&gt; data = [</span>
 <span class="sd">    ...     [1, dt.strptime(&quot;06-01-2018&quot;, &quot;%m-%d-%Y&quot;)],</span>
 <span class="sd">    ...     [2, dt.strptime(&quot;06-02-2018&quot;, &quot;%m-%d-%Y&quot;)],</span>
@@ -262,6 +268,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">sep</span> <span class="o">=</span> <span class="n">sep</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="n">features</span></div>
 
+    <span class="c1"># Don&#39;t decorate this one, since it calls fit_transform, which is decorated</span>
 <div class="viewcode-block" id="DateFactorizer.fit"><a class="viewcode-back" href="../../../modules/generated/skoot.feature_extraction.DateFactorizer.html#skoot.feature_extraction.DateFactorizer.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Fit the date factorizer.</span>
 
@@ -283,7 +290,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="DateFactorizer.fit_transform"><a class="viewcode-back" href="../../../modules/generated/skoot.feature_extraction.DateFactorizer.html#skoot.feature_extraction.DateFactorizer.fit_transform">[docs]</a>    <span class="k">def</span> <span class="nf">fit_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="DateFactorizer.fit_transform"><a class="viewcode-back" href="../../../modules/generated/skoot.feature_extraction.DateFactorizer.html#skoot.feature_extraction.DateFactorizer.fit_transform">[docs]</a>    <span class="nd">@timed_instance_method</span><span class="p">(</span><span class="n">attribute_name</span><span class="o">=</span><span class="s2">&quot;fit_time_&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">fit_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Fit the estimator and apply the date factorization to a dataframe.</span>
 
 <span class="sd">        This is a tricky class because the &quot;fit&quot; isn&#39;t super necessary...</span>
@@ -354,6 +362,261 @@
         <span class="c1"># remove the original columns if necessary</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">drop_original</span><span class="p">:</span>
             <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">dataframe_or_array</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_df</span><span class="p">)</span></div></div>
+
+
+<span class="k">def</span> <span class="nf">_time_between</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">units</span><span class="p">,</span> <span class="n">absolute</span><span class="p">,</span> <span class="n">astype</span><span class="p">,</span> <span class="n">suffix</span><span class="p">,</span> <span class="n">sep</span><span class="p">):</span>
+    <span class="n">right_side</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># Do one pass to make sure they&#39;re all date times first (O(N))</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">:</span>
+        <span class="n">series</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+
+        <span class="c1"># Some of the columns passed may not be datetimes, which is</span>
+        <span class="c1"># required for this transformer. We will just raise here for that...</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_datetime_type</span><span class="p">(</span><span class="n">series</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The TimeBetweenEvents transformer requires &quot;</span>
+                             <span class="s2">&quot;passed columns to be DateTime types. Consider &quot;</span>
+                             <span class="s2">&quot;using the skoot.preprocessing.DateTransformer &quot;</span>
+                             <span class="s2">&quot;first.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Confirm the units</span>
+    <span class="n">to_unit</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;seconds&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">d</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="n">s</span><span class="p">,</span>  <span class="c1"># already have seconds</span>
+               <span class="s1">&#39;minutes&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">d</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="n">s</span> <span class="o">/</span> <span class="mi">60</span><span class="p">,</span>
+               <span class="s1">&#39;hours&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">d</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="n">s</span> <span class="o">/</span> <span class="mi">3600</span><span class="p">,</span>
+               <span class="s1">&#39;days&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">d</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="n">d</span><span class="p">}[</span><span class="n">units</span><span class="p">]</span>  <span class="c1"># can fail with KeyError</span>
+
+    <span class="c1"># Now do the combinatorial pass</span>
+    <span class="k">for</span> <span class="n">col_a</span><span class="p">,</span> <span class="n">col_b</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="c1"># Subtract right from left, and then get the absolute, if needed</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">col_a</span><span class="p">]</span> <span class="o">-</span> <span class="n">X</span><span class="p">[</span><span class="n">col_b</span><span class="p">])</span>
+        <span class="n">days</span><span class="p">,</span> <span class="n">seconds</span> <span class="o">=</span> <span class="n">delta</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">days</span><span class="p">,</span> <span class="n">delta</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="n">to_unit</span><span class="p">(</span><span class="n">days</span><span class="p">,</span> <span class="n">seconds</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">astype</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">absolute</span><span class="p">:</span>
+            <span class="n">diff</span> <span class="o">=</span> <span class="n">diff</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span>
+
+        <span class="c1"># Set the name and make it a dataframe</span>
+        <span class="n">diff</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s%s%s</span><span class="s2">_</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">col_a</span><span class="p">,</span> <span class="n">sep</span><span class="p">,</span> <span class="n">col_b</span><span class="p">,</span> <span class="n">suffix</span><span class="p">)</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span>
+
+        <span class="c1"># Our single feature has just become a matrix. We&#39;ll make it into</span>
+        <span class="c1"># a pandas frame that keeps getting concatenated together</span>
+        <span class="k">if</span> <span class="n">right_side</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># first pass</span>
+            <span class="n">right_side</span> <span class="o">=</span> <span class="n">diff</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># No need to reset index here since right_side will be 0, 1, .., N</span>
+            <span class="n">right_side</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">right_side</span><span class="p">,</span> <span class="n">diff</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># concat to the original df. we DO need to reset index of right_side here.</span>
+    <span class="n">right_side</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">index</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">X</span><span class="p">,</span> <span class="n">right_side</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">X</span>
+
+
+<div class="viewcode-block" id="TimeDeltaFeatures"><a class="viewcode-back" href="../../../modules/generated/skoot.feature_extraction.TimeDeltaFeatures.html#skoot.feature_extraction.TimeDeltaFeatures">[docs]</a><span class="k">class</span> <span class="nc">TimeDeltaFeatures</span><span class="p">(</span><span class="n">BasePDTransformer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute the time lapse between timestamp events.</span>
+
+<span class="sd">    A transformer to compute time deltas between different date features.</span>
+<span class="sd">    This can be useful, for instance, when the target is temporally sensitive</span>
+<span class="sd">    to the lapse in time between certain events.</span>
+
+<span class="sd">    This class will combinatorially calculate the deltas between features,</span>
+<span class="sd">    expanding the dimensionality by :math:`{N \choose 2}`, where :math:`N` is</span>
+<span class="sd">    the number of features included in ``cols``. Note that prescribed column</span>
+<span class="sd">    order *does* matter in this transformer, as deltas are computed from left</span>
+<span class="sd">    to right::</span>
+
+<span class="sd">        [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;] -&gt; [&#39;a_b_delta&#39;, &#39;a_c_delta&#39;, &#39;b_c_delta&#39;]</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cols : array-like, shape=(n_features,), optional (default=None)</span>
+<span class="sd">        The names of the columns on which to apply the transformation.</span>
+<span class="sd">        Will apply to all columns if None specified. Note that in this class,</span>
+<span class="sd">        the columns applied-to must be DateTime types or this will raise a</span>
+<span class="sd">        ValueError.</span>
+
+<span class="sd">    as_df : bool, optional (default=True)</span>
+<span class="sd">        Whether to return a Pandas ``DataFrame`` in the ``transform``</span>
+<span class="sd">        method. If False, will return a Numpy ``ndarray`` instead.</span>
+
+<span class="sd">    units : str or unicode, optional (default=&#39;days&#39;)</span>
+<span class="sd">        The unit of time to compute between events. One of</span>
+<span class="sd">        (&#39;seconds&#39;, &#39;minutes&#39;, &#39;hours&#39;, &#39;days&#39;).</span>
+
+<span class="sd">    sep : str or unicode (optional, default=&quot;_&quot;)</span>
+<span class="sd">        The separator between the new feature names. The names will be in the</span>
+<span class="sd">        form of::</span>
+
+<span class="sd">            &lt;left&gt;&lt;sep&gt;&lt;right&gt;&lt;sep&gt;&lt;suffix&gt;</span>
+
+<span class="sd">        For examples, for columns &#39;a&#39; and &#39;b&#39;, ``sep=&quot;_&quot;`` and</span>
+<span class="sd">        ``name_suffix=&quot;delta&quot;``, the new column name would be::</span>
+
+<span class="sd">            a_b_delta</span>
+
+<span class="sd">    astype : type, optional (default=float)</span>
+<span class="sd">        The type to which to coerce the time deltas.</span>
+
+<span class="sd">    absolute_difference : bool, optional (default=False)</span>
+<span class="sd">        Whether to compute the absolute difference between dates. If False,</span>
+<span class="sd">        the order of ``cols`` will matter, as that defines the subtractive</span>
+<span class="sd">        order. (right-most columns will be subtracted from the left</span>
+<span class="sd">        combinatorially)</span>
+
+<span class="sd">    name_suffix : str, optional (default=&#39;delta&#39;)</span>
+<span class="sd">        The suffix to add to the new feature name in the form of::</span>
+
+<span class="sd">            &lt;feature_x&gt;_&lt;feature_y&gt;_&lt;suffix&gt;</span>
+
+<span class="sd">        See ``sep`` for more details about how new column names are formed.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    * Unlike the :class:`DateFactorizer` class, this transformer does not</span>
+<span class="sd">      remove the original date features after extracting the new features.</span>
+<span class="sd">    * Column deltas are computed from left to right. This means that the order</span>
+<span class="sd">      in which columns are defined in ``cols`` *does* matter.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; from datetime import datetime as dt</span>
+<span class="sd">    &gt;&gt;&gt; stp = dt.strptime</span>
+<span class="sd">    &gt;&gt;&gt; data = [</span>
+<span class="sd">    ...     [1, stp(&quot;06-01-2018&quot;, &quot;%m-%d-%Y&quot;), stp(&quot;06-02-2018&quot;, &quot;%m-%d-%Y&quot;)],</span>
+<span class="sd">    ...     [2, stp(&quot;06-02-2018&quot;, &quot;%m-%d-%Y&quot;), stp(&quot;06-03-2018&quot;, &quot;%m-%d-%Y&quot;)],</span>
+<span class="sd">    ...     [3, stp(&quot;06-03-2018&quot;, &quot;%m-%d-%Y&quot;), stp(&quot;06-04-2018&quot;, &quot;%m-%d-%Y&quot;)],</span>
+<span class="sd">    ...     [4, stp(&quot;06-04-2018&quot;, &quot;%m-%d-%Y&quot;), stp(&quot;06-05-2018&quot;, &quot;%m-%d-%Y&quot;)],</span>
+<span class="sd">    ...     [5, None, stp(&quot;06-04-2018&quot;, &quot;%m-%d-%Y&quot;)]</span>
+<span class="sd">    ... ]</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame.from_records(data, columns=[&#39;a&#39;, &#39;b&#39;, &#39;c&#39;])</span>
+<span class="sd">    &gt;&gt;&gt; tdf = TimeDeltaFeatures(cols=[&#39;b&#39;, &#39;c&#39;], units=&#39;hours&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; tdf.fit_transform(df)</span>
+<span class="sd">       a          b          c  b_c_delta</span>
+<span class="sd">    0  1 2018-06-01 2018-06-02      -24.0</span>
+<span class="sd">    1  2 2018-06-02 2018-06-03      -24.0</span>
+<span class="sd">    2  3 2018-06-03 2018-06-04      -24.0</span>
+<span class="sd">    3  4 2018-06-04 2018-06-05      -24.0</span>
+<span class="sd">    4  5        NaT 2018-06-04        NaN</span>
+
+<span class="sd">    Notice that column order makes a difference. If &#39;c&#39; is defined before &#39;b&#39;,</span>
+<span class="sd">    the delta is positive:</span>
+
+<span class="sd">    &gt;&gt;&gt; TimeDeltaFeatures(cols=[&#39;c&#39;, &#39;b&#39;], units=&#39;hours&#39;).fit_transform(df)</span>
+<span class="sd">       a          b          c  c_b_delta</span>
+<span class="sd">    0  1 2018-06-01 2018-06-02       24.0</span>
+<span class="sd">    1  2 2018-06-02 2018-06-03       24.0</span>
+<span class="sd">    2  3 2018-06-03 2018-06-04       24.0</span>
+<span class="sd">    3  4 2018-06-04 2018-06-05       24.0</span>
+<span class="sd">    4  5        NaT 2018-06-04        NaN</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="TimeDeltaFeatures.__init__"><a class="viewcode-back" href="../../../modules/generated/skoot.feature_extraction.TimeDeltaFeatures.html#skoot.feature_extraction.TimeDeltaFeatures.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;days&#39;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;_&quot;</span><span class="p">,</span>
+                 <span class="n">astype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">absolute_difference</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name_suffix</span><span class="o">=</span><span class="s2">&quot;delta&quot;</span><span class="p">):</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">TimeDeltaFeatures</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span>
+            <span class="n">cols</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="n">as_df</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="n">units</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sep</span> <span class="o">=</span> <span class="n">sep</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">astype</span> <span class="o">=</span> <span class="n">astype</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">absolute_difference</span> <span class="o">=</span> <span class="n">absolute_difference</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name_suffix</span> <span class="o">=</span> <span class="n">name_suffix</span></div>
+
+    <span class="c1"># Don&#39;t decorate this one, since it calls fit_transform, which is decorated</span>
+<div class="viewcode-block" id="TimeDeltaFeatures.fit"><a class="viewcode-back" href="../../../modules/generated/skoot.feature_extraction.TimeDeltaFeatures.html#skoot.feature_extraction.TimeDeltaFeatures.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fit the time-between transformer.</span>
+
+<span class="sd">        This is a tricky class because the &quot;fit&quot; isn&#39;t super necessary...</span>
+<span class="sd">        But we use it as a validation stage to ensure the defined cols</span>
+<span class="sd">        genuinely are datetime columns. That&#39;s the only reason this all</span>
+<span class="sd">        happens in the fit portion.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : pd.DataFrame, shape=(n_samples, n_features)</span>
+<span class="sd">            The Pandas frame to fit. The frame will only</span>
+<span class="sd">            be fit on the prescribed ``cols`` (see ``__init__``) or</span>
+<span class="sd">            all of them if ``cols`` is None.</span>
+
+<span class="sd">        y : array-like or None, shape=(n_samples,), optional (default=None)</span>
+<span class="sd">            Pass-through for ``sklearn.pipeline.Pipeline``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="TimeDeltaFeatures.fit_transform"><a class="viewcode-back" href="../../../modules/generated/skoot.feature_extraction.TimeDeltaFeatures.html#skoot.feature_extraction.TimeDeltaFeatures.fit_transform">[docs]</a>    <span class="nd">@timed_instance_method</span><span class="p">(</span><span class="n">attribute_name</span><span class="o">=</span><span class="s2">&quot;fit_time_&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">fit_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fit the estimator and apply the date factorization to a dataframe.</span>
+
+<span class="sd">        This is a tricky class because the &quot;fit&quot; isn&#39;t super necessary...</span>
+<span class="sd">        But we use it as a validation stage to ensure the defined cols</span>
+<span class="sd">        genuinely are datetime types. That&#39;s the only reason this all</span>
+<span class="sd">        happens in the fit portion.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : pd.DataFrame, shape=(n_samples, n_features)</span>
+<span class="sd">            The Pandas frame to fit. The operation will</span>
+<span class="sd">            be applied to a copy of the input data, and the result</span>
+<span class="sd">            will be returned.</span>
+
+<span class="sd">        y : array-like or None, shape=(n_samples,), optional (default=None)</span>
+<span class="sd">            Pass-through for ``sklearn.pipeline.Pipeline``.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        X : pd.DataFrame or np.ndarray, shape=(n_samples, n_features)</span>
+<span class="sd">            The operation is applied to a copy of ``X``,</span>
+<span class="sd">            and the result set is returned.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">cols</span> <span class="o">=</span> <span class="n">check_dataframe</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">,</span> <span class="n">assert_all_finite</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># For each column, compute the time between</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">_time_between</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">units</span><span class="p">,</span>
+                          <span class="n">absolute</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">absolute_difference</span><span class="p">,</span>
+                          <span class="n">astype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">astype</span><span class="p">,</span>
+                          <span class="n">suffix</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name_suffix</span><span class="p">,</span>
+                          <span class="n">sep</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sep</span><span class="p">)</span>  <span class="c1"># type: pd.DataFrame</span>
+
+        <span class="c1"># set the self params</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit_cols_</span> <span class="o">=</span> <span class="n">cols</span>
+        <span class="k">return</span> <span class="n">dataframe_or_array</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_df</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TimeDeltaFeatures.transform"><a class="viewcode-back" href="../../../modules/generated/skoot.feature_extraction.TimeDeltaFeatures.html#skoot.feature_extraction.TimeDeltaFeatures.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Apply the date transformation to a dataframe.</span>
+
+<span class="sd">        This method will compute the deltas between provided datetime</span>
+<span class="sd">        features.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : pd.DataFrame, shape=(n_samples, n_features)</span>
+<span class="sd">            The Pandas frame to transform. The operation will</span>
+<span class="sd">            be applied to a copy of the input data, and the result</span>
+<span class="sd">            will be returned.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        X : pd.DataFrame or np.ndarray, shape=(n_samples, n_features)</span>
+<span class="sd">            The operation is applied to a copy of ``X``,</span>
+<span class="sd">            and the result set is returned.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;fit_cols_&quot;</span><span class="p">)</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">check_dataframe</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">)</span>
+
+        <span class="c1"># validate that fit cols in test set</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_cols_</span>
+        <span class="n">validate_test_set_columns</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
+        <span class="c1"># compute the factorized features and unify with the original DF</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">_time_between</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">units</span><span class="p">,</span>
+                          <span class="n">absolute</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">absolute_difference</span><span class="p">,</span>
+                          <span class="n">astype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">astype</span><span class="p">,</span>
+                          <span class="n">suffix</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name_suffix</span><span class="p">,</span>
+                          <span class="n">sep</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sep</span><span class="p">)</span>  <span class="c1"># type: pd.DataFrame</span>
+
         <span class="k">return</span> <span class="n">dataframe_or_array</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_df</span><span class="p">)</span></div></div>
 </pre></div>
 

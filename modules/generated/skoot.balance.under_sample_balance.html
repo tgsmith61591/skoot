@@ -34,12 +34,14 @@
   
 
   
+        <link rel="author" title="About these documents"
+              href="../../about.html"/>
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
     <link rel="top" title="skoot 0.19.2.dev1 documentation" href="../../index.html"/>
         <link rel="up" title="API Reference" href="../classes.html"/>
-        <link rel="next" title="skoot.datasets.load_boston_df" href="skoot.datasets.load_boston_df.html"/>
+        <link rel="next" title="skoot.datasets.load_adult_df" href="skoot.datasets.load_adult_df.html"/>
         <link rel="prev" title="skoot.balance.smote_balance" href="skoot.balance.smote_balance.html"/> 
 
   
@@ -180,7 +182,9 @@ present at the prescribed ratio.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>X</strong> : array-like, shape (n_samples, n_features)</p>
 <blockquote>
-<div><p>Training vectors within the matrix of predictors.</p>
+<div><p>The training array. Samples from this array that correspond to the
+majority class will be omitted until the minority class is represented
+at the <code class="docutils literal"><span class="pre">balance_ratio</span></code>.</p>
 </div></blockquote>
 <p><strong>y</strong> : array-like, shape (n_samples,)</p>
 <blockquote>
@@ -203,6 +207,26 @@ representation, where 0 &lt; <code class="docutils literal"><span class="pre">ra
 </tr>
 </tbody>
 </table>
+<p class="rubric">Notes</p>
+<p>You should only use the under sampling method when you have lots of data
+and can afford to lose some training samples. Moreover, using this in
+conjunction with a high variance modeling method can pose a higher risk of
+over-fitting, since they typically require more data.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="k">import</span> <span class="n">make_classification</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_classification</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+<span class="gp">... </span>                           <span class="n">n_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="p">[</span><span class="mf">0.99</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X_bal</span><span class="p">,</span> <span class="n">y_bal</span> <span class="o">=</span> <span class="n">under_sample_balance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">balance_ratio</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+<span class="gp">... </span>                                    <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ratio</span> <span class="o">=</span> <span class="nb">round</span><span class="p">((</span><span class="n">y_bal</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="nb">float</span><span class="p">((</span><span class="n">y_bal</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">ratio</span> <span class="o">==</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">ratio</span>
+</pre></div>
+</div>
+<p>Note that the number of samples in the data is now lower than it
+initially was:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">X_bal</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">1000</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <div class="section" id="examples-using-skoot-balance-under-sample-balance">
@@ -221,7 +245,7 @@ representation, where 0 &lt; <code class="docutils literal"><span class="pre">ra
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="skoot.datasets.load_boston_df.html" class="btn btn-neutral float-right" title="skoot.datasets.load_boston_df" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="skoot.datasets.load_adult_df.html" class="btn btn-neutral float-right" title="skoot.datasets.load_adult_df" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="skoot.balance.smote_balance.html" class="btn btn-neutral" title="skoot.balance.smote_balance" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>

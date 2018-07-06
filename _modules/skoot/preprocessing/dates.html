@@ -34,6 +34,8 @@
   
 
   
+        <link rel="author" title="About these documents"
+              href="../../../about.html"/>
         <link rel="index" title="Index"
               href="../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../search.html"/>
@@ -148,6 +150,7 @@
 <span class="kn">from</span> <span class="nn">..base</span> <span class="k">import</span> <span class="n">BasePDTransformer</span>
 <span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="k">import</span> <span class="n">type_or_iterable_to_col_mapping</span>
 <span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="k">import</span> <span class="n">check_dataframe</span><span class="p">,</span> <span class="n">validate_test_set_columns</span>
+<span class="kn">from</span> <span class="nn">..utils.metaestimators</span> <span class="k">import</span> <span class="n">timed_instance_method</span>
 <span class="kn">from</span> <span class="nn">..utils.compat</span> <span class="k">import</span> <span class="n">NoneType</span>
 <span class="kn">from</span> <span class="nn">..utils.series</span> <span class="k">import</span> <span class="n">is_datetime_type</span>
 
@@ -267,6 +270,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">date_format</span> <span class="o">=</span> <span class="n">date_format</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">allowed_types</span> <span class="o">=</span> <span class="n">allowed_types</span></div>
 
+    <span class="c1"># Don&#39;t decorate &#39;fit&#39; since it calls fit_transform</span>
 <div class="viewcode-block" id="DateTransformer.fit"><a class="viewcode-back" href="../../../modules/generated/skoot.preprocessing.DateTransformer.html#skoot.preprocessing.DateTransformer.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Fit the date transformer.</span>
 
@@ -288,7 +292,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="DateTransformer.fit_transform"><a class="viewcode-back" href="../../../modules/generated/skoot.preprocessing.DateTransformer.html#skoot.preprocessing.DateTransformer.fit_transform">[docs]</a>    <span class="k">def</span> <span class="nf">fit_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="DateTransformer.fit_transform"><a class="viewcode-back" href="../../../modules/generated/skoot.preprocessing.DateTransformer.html#skoot.preprocessing.DateTransformer.fit_transform">[docs]</a>    <span class="nd">@timed_instance_method</span><span class="p">(</span><span class="n">attribute_name</span><span class="o">=</span><span class="s2">&quot;fit_time_&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">fit_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Fit the estimator and apply the date transformation</span>
 <span class="sd">        to a dataframe.</span>
 

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>skoot.preprocessing.cerberus &mdash; skoot 0.19.2.dev1 documentation</title>
+  <title>skoot.preprocessing.schema &mdash; skoot 0.19.2.dev1 documentation</title>
   
 
   
@@ -34,6 +34,8 @@
   
 
   
+        <link rel="author" title="About these documents"
+              href="../../../about.html"/>
         <link rel="index" title="Index"
               href="../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../search.html"/>
@@ -123,7 +125,7 @@
       
           <li><a href="../../index.html">Module code</a> &raquo;</li>
       
-    <li>skoot.preprocessing.cerberus</li>
+    <li>skoot.preprocessing.schema</li>
       <li class="wy-breadcrumbs-aside">
         
           
@@ -135,7 +137,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for skoot.preprocessing.cerberus</h1><div class="highlight"><pre>
+  <h1>Source code for skoot.preprocessing.schema</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="c1">#</span>
 <span class="c1"># Author: Taylor Smith &lt;taylor.smith@alkaline-ml.com&gt;</span>
@@ -143,13 +145,12 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
 
 <span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="k">import</span> <span class="n">check_is_fitted</span>
-<span class="kn">from</span> <span class="nn">cerberus</span> <span class="k">import</span> <span class="n">Validator</span>
+<span class="kn">from</span> <span class="nn">sklearn.externals</span> <span class="k">import</span> <span class="n">six</span>
 
 <span class="kn">from</span> <span class="nn">..base</span> <span class="k">import</span> <span class="n">BasePDTransformer</span>
-<span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="k">import</span> <span class="n">check_dataframe</span>
+<span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="k">import</span> <span class="n">check_dataframe</span><span class="p">,</span> <span class="n">validate_test_set_columns</span>
 <span class="kn">from</span> <span class="nn">..utils.dataframe</span> <span class="k">import</span> <span class="n">dataframe_or_array</span>
-
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">..utils.metaestimators</span> <span class="k">import</span> <span class="n">timed_instance_method</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s1">&#39;SchemaNormalizer&#39;</span>
@@ -159,9 +160,8 @@
 <div class="viewcode-block" id="SchemaNormalizer"><a class="viewcode-back" href="../../../modules/generated/skoot.preprocessing.SchemaNormalizer.html#skoot.preprocessing.SchemaNormalizer">[docs]</a><span class="k">class</span> <span class="nc">SchemaNormalizer</span><span class="p">(</span><span class="n">BasePDTransformer</span><span class="p">):</span>
     <span class="sd">r&quot;&quot;&quot;Enforce a schema on an input dataframe.</span>
 
-<span class="sd">    The SchemaNormalizer fits a cerberus Validator class on training data,</span>
-<span class="sd">    enforcing that schema across incoming test data. This ensures that new</span>
-<span class="sd">    test data matches the expected schema.</span>
+<span class="sd">    The SchemaNormalizer enforces a schema across incoming train and</span>
+<span class="sd">    test data. This ensures that all data matches the expected schema.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -170,7 +170,7 @@
 <span class="sd">        instance the following schema will cast the iris dataset</span>
 <span class="sd">        &quot;petal widtch (cm)&quot; column to integer::</span>
 
-<span class="sd">            &gt;&gt;&gt; schema = {&#39;petal width (cm)&#39;: {&#39;coerce&#39;: int}}</span>
+<span class="sd">            &gt;&gt;&gt; schema = {&#39;petal width (cm)&#39;: int}</span>
 
 <span class="sd">    as_df : bool, optional (default=True)</span>
 <span class="sd">        Whether to return a Pandas ``DataFrame`` in the ``transform``</span>
@@ -180,9 +180,10 @@
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    validator_ : cerberus.Validator</span>
-<span class="sd">        The cerberus validator object. Used to enforce schemas on</span>
-<span class="sd">        input test data.</span>
+<span class="sd">    fit_cols_ : list</span>
+<span class="sd">        The list of column names on which the transformer was fit. This</span>
+<span class="sd">        is used to validate the presence of the features in the test set</span>
+<span class="sd">        during the ``transform`` stage.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="SchemaNormalizer.__init__"><a class="viewcode-back" href="../../../modules/generated/skoot.preprocessing.SchemaNormalizer.html#skoot.preprocessing.SchemaNormalizer.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
@@ -192,7 +193,8 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">schema</span> <span class="o">=</span> <span class="n">schema</span></div>
 
-<div class="viewcode-block" id="SchemaNormalizer.fit"><a class="viewcode-back" href="../../../modules/generated/skoot.preprocessing.SchemaNormalizer.html#skoot.preprocessing.SchemaNormalizer.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="SchemaNormalizer.fit"><a class="viewcode-back" href="../../../modules/generated/skoot.preprocessing.SchemaNormalizer.html#skoot.preprocessing.SchemaNormalizer.fit">[docs]</a>    <span class="nd">@timed_instance_method</span><span class="p">(</span><span class="n">attribute_name</span><span class="o">=</span><span class="s2">&quot;fit_time_&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Fit the transformer.</span>
 
 <span class="sd">        Default behavior is not to fit any parameters and return self.</span>
@@ -207,7 +209,7 @@
 <span class="sd">        y : array-like or None, shape=(n_samples,), optional (default=None)</span>
 <span class="sd">            Pass-through for ``sklearn.pipeline.Pipeline``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">validator_</span> <span class="o">=</span> <span class="n">Validator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">schema</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_cols_</span> <span class="o">=</span> <span class="n">check_dataframe</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="SchemaNormalizer.transform"><a class="viewcode-back" href="../../../modules/generated/skoot.preprocessing.SchemaNormalizer.html#skoot.preprocessing.SchemaNormalizer.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
@@ -226,15 +228,16 @@
 <span class="sd">            The operation is applied to a copy of ``X``,</span>
 <span class="sd">            and the result set is returned.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;validator_&quot;</span><span class="p">)</span>
+        <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;fit_cols_&quot;</span><span class="p">)</span>
         <span class="n">X</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">check_dataframe</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">)</span>
 
-        <span class="c1"># make the document, normalize</span>
-        <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">validator_</span>
-        <span class="n">X</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">([</span>
-            <span class="n">v</span><span class="o">.</span><span class="n">normalized</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">X</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s1">&#39;records&#39;</span><span class="p">)</span>
-        <span class="p">])</span>
+        <span class="c1"># validate that fit cols in test set</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_cols_</span>
+        <span class="n">validate_test_set_columns</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
+        <span class="c1"># normalize</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">schema</span><span class="p">):</span>
+            <span class="n">X</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">dataframe_or_array</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_df</span><span class="p">)</span></div></div>
 </pre></div>

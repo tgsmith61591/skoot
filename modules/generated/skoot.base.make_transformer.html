@@ -1,0 +1,305 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>skoot.base.make_transformer &mdash; skoot 0.19.2.dev1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../_static/css/style.css" type="text/css" />
+  
+
+  
+        <link rel="author" title="About these documents"
+              href="../../about.html"/>
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="skoot 0.19.2.dev1 documentation" href="../../index.html"/>
+        <link rel="up" title="API Reference" href="../classes.html"/>
+        <link rel="next" title="skoot.decorators.overrides" href="skoot.decorators.overrides.html"/>
+        <link rel="prev" title="skoot.base.BasePDTransformer" href="skoot.base.BasePDTransformer.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> skoot
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.19.2.dev1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../classes.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../classes.html#module-skoot.base"><code class="docutils literal"><span class="pre">skoot.base</span></code>: Base metaclasses and utility functions</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../classes.html#base-classes">Base classes</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../classes.html#helper-functions">Helper functions</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#"><code class="docutils literal"><span class="pre">skoot.base</span></code>.make_transformer</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot"><code class="docutils literal"><span class="pre">skoot.decorators</span></code>: Decorator utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.balance"><code class="docutils literal"><span class="pre">skoot.balance</span></code>: Class imbalance remedies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.datasets"><code class="docutils literal"><span class="pre">skoot.datasets</span></code>: Dataset loaders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.decomposition"><code class="docutils literal"><span class="pre">skoot.decomposition</span></code>: Various matrix decompositions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.exploration"><code class="docutils literal"><span class="pre">skoot.exploration</span></code>: Exploratory data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.feature_extraction"><code class="docutils literal"><span class="pre">skoot.feature_extraction</span></code>: Feature extraction methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.feature_selection"><code class="docutils literal"><span class="pre">skoot.feature_selection</span></code>: Feature selection methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.model_validation"><code class="docutils literal"><span class="pre">skoot.model_validation</span></code>: Model validation &amp; monitoring</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.preprocessing"><code class="docutils literal"><span class="pre">skoot.preprocessing</span></code>: Pre-processing transformers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.utils"><code class="docutils literal"><span class="pre">skoot.utils</span></code>: Common utility functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide.html">User Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">skoot</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../classes.html">API Reference</a> &raquo;</li>
+      
+    <li><code class="docutils literal"><span class="pre">skoot.base</span></code>.make_transformer</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../_sources/modules/generated/skoot.base.make_transformer.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="skoot-base-make-transformer">
+<h1><a class="reference internal" href="../classes.html#module-skoot.base" title="skoot.base"><code class="xref py py-mod docutils literal"><span class="pre">skoot.base</span></code></a>.make_transformer<a class="headerlink" href="#skoot-base-make-transformer" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="skoot.base.make_transformer">
+<code class="descclassname">skoot.base.</code><code class="descname">make_transformer</code><span class="sig-paren">(</span><em>func</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/base.html#make_transformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.base.make_transformer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a function into a scikit-learn TransformerMixin.</p>
+<p>Wraps a commutative function as an anonymous BasePDTransformer in order to
+fit into a Pipeline. The returned transformer class methods adhere to the
+standard BasePDTransformer <code class="docutils literal"><span class="pre">fit</span></code> and <code class="docutils literal"><span class="pre">transform</span></code> signatures.</p>
+<p>This is useful when a transforming function that does not fit any
+parameters is used to pre-process data at a point that might split a
+pipeline.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>func</strong> : callable</p>
+<blockquote>
+<div><p>The function that will be used to transform a dataset. Note that for
+certain scikit-learn operations or for model persistence, this will
+need to be pickled. Therefore, using a closure or lambda expression
+could cause downstream issues that are not immediately apparent.
+This function will raise a warning if it’s determined that a lambda
+expression is passed as <code class="docutils literal"><span class="pre">func</span></code>, but not all corner cases can be
+caught. Be cautious.</p>
+</div></blockquote>
+<p><strong>**kwargs</strong> : keyword args or dict, optional</p>
+<blockquote class="last">
+<div><p>A dictionary of keyword args that will be passed to the transformer
+class’ <code class="docutils literal"><span class="pre">transform</span></code> function (<code class="docutils literal"><span class="pre">func</span></code>) and enable the anonymous
+transformer to be tuned via grid search similar to other transformers.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="k">import</span> <span class="n">load_iris</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="k">import</span> <span class="n">Pipeline</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="k">import</span> <span class="n">PCA</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="k">import</span> <span class="n">GridSearchCV</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="k">import</span> <span class="n">LogisticRegression</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">load_iris</span><span class="p">(</span><span class="n">return_X_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">subtract_k</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span> <span class="o">-</span> <span class="nb">float</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pipe</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([</span>
+<span class="gp">... </span>    <span class="p">(</span><span class="s1">&#39;pca&#39;</span><span class="p">,</span> <span class="n">PCA</span><span class="p">()),</span>
+<span class="gp">... </span>    <span class="p">(</span><span class="s1">&#39;custom&#39;</span><span class="p">,</span> <span class="n">make_transformer</span><span class="p">(</span><span class="n">subtract_k</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">2</span><span class="p">)),</span>
+<span class="gp">... </span>    <span class="p">(</span><span class="s1">&#39;clf&#39;</span><span class="p">,</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">))</span>
+<span class="gp">... </span><span class="p">])</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hyper_params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;pca__whiten&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">],</span>
+<span class="gp">... </span>                <span class="s2">&quot;custom__k&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">search</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">pipe</span><span class="p">,</span> <span class="n">param_grid</span><span class="o">=</span><span class="n">hyper_params</span><span class="p">,</span>
+<span class="gp">... </span>                      <span class="n">scoring</span><span class="o">=</span><span class="s2">&quot;accuracy&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">search</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>  
+<span class="go">GridSearchCV(...)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<div class="section" id="examples-using-skoot-base-make-transformer">
+<h2>Examples using <code class="docutils literal"><span class="pre">skoot.base.make_transformer</span></code><a class="headerlink" href="#examples-using-skoot-base-make-transformer" title="Permalink to this headline">¶</a></h2>
+<div class="sphx-glr-thumbcontainer" tooltip="Sometimes you have a pre-processing stage that finds itself awkwardly positioned in the middle ..."><div class="figure" id="id1">
+<img alt="../../_images/sphx_glr_ex_anonymous_transformer_thumb.png" src="../../_images/sphx_glr_ex_anonymous_transformer_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="../../auto_examples/ex_anonymous_transformer.html#sphx-glr-auto-examples-ex-anonymous-transformer-py"><span class="std std-ref">Anonymous transformers in skoot</span></a></span></p>
+</div>
+</div><div class="clearer"></div></div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="skoot.decorators.overrides.html" class="btn btn-neutral float-right" title="skoot.decorators.overrides" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="skoot.base.BasePDTransformer.html" class="btn btn-neutral" title="skoot.base.BasePDTransformer" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Taylor G Smith.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.19.2.dev1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

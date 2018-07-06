@@ -34,6 +34,8 @@
   
 
   
+        <link rel="author" title="About these documents"
+              href="../../../about.html"/>
         <link rel="index" title="Index"
               href="../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../search.html"/>
@@ -147,6 +149,7 @@
 
 <span class="kn">from</span> <span class="nn">.base</span> <span class="k">import</span> <span class="n">BaseFeatureSelector</span>
 <span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="k">import</span> <span class="n">check_dataframe</span><span class="p">,</span> <span class="n">validate_multiple_cols</span>
+<span class="kn">from</span> <span class="nn">..utils.metaestimators</span> <span class="k">import</span> <span class="n">timed_instance_method</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s1">&#39;FeatureFilter&#39;</span><span class="p">,</span>
@@ -219,7 +222,8 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span> <span class="o">=</span> <span class="n">threshold</span></div>
 
-<div class="viewcode-block" id="SparseFeatureFilter.fit"><a class="viewcode-back" href="../../../modules/generated/skoot.feature_selection.SparseFeatureFilter.html#skoot.feature_selection.SparseFeatureFilter.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="SparseFeatureFilter.fit"><a class="viewcode-back" href="../../../modules/generated/skoot.feature_selection.SparseFeatureFilter.html#skoot.feature_selection.SparseFeatureFilter.fit">[docs]</a>    <span class="nd">@timed_instance_method</span><span class="p">(</span><span class="n">attribute_name</span><span class="o">=</span><span class="s2">&quot;fit_time_&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Fit the transformer.</span>
 
 <span class="sd">        Parameters</span>

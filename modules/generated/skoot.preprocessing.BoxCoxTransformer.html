@@ -34,6 +34,8 @@
   
 
   
+        <link rel="author" title="About these documents"
+              href="../../about.html"/>
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
@@ -239,10 +241,10 @@ Default is False.</p>
 <col width="95%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a href="#id1"><span class="problematic" id="id2">lambda_</span></a></td>
+<tr class="row-odd"><td><a href="#id2"><span class="problematic" id="id3">lambda_</span></a></td>
 <td>(list) The lambda values corresponding to each feature</td>
 </tr>
-<tr class="row-even"><td><a href="#id3"><span class="problematic" id="id4">fit_cols_</span></a></td>
+<tr class="row-even"><td><a href="#id4"><span class="problematic" id="id5">fit_cols_</span></a></td>
 <td>(list) The list of column names on which the transformer was fit. This is used to validate the presence of the features in the test set during the <code class="docutils literal"><span class="pre">transform</span></code> stage.</td>
 </tr>
 </tbody>
@@ -254,7 +256,7 @@ Default is False.</p>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#skoot.preprocessing.BoxCoxTransformer.fit" title="skoot.preprocessing.BoxCoxTransformer.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(X[,&nbsp;y])</td>
+<tr class="row-odd"><td><a class="reference internal" href="#skoot.preprocessing.BoxCoxTransformer.fit" title="skoot.preprocessing.BoxCoxTransformer.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(*args,&nbsp;**kwargs)</td>
 <td>Fit the transformer.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#skoot.preprocessing.BoxCoxTransformer.fit_transform" title="skoot.preprocessing.BoxCoxTransformer.fit_transform"><code class="xref py py-obj docutils literal"><span class="pre">fit_transform</span></code></a>(X[,&nbsp;y])</td>
@@ -278,7 +280,7 @@ Default is False.</p>
 
 <dl class="method">
 <dt id="skoot.preprocessing.BoxCoxTransformer.fit">
-<code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/skewness.html#BoxCoxTransformer.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.BoxCoxTransformer.fit" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fit</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/skewness.html#BoxCoxTransformer.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.BoxCoxTransformer.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit the transformer.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -402,7 +404,14 @@ and the result set is returned.</p>
 
 </dd></dl>
 
-<div class="clearer"></div></div>
+<div class="section" id="examples-using-skoot-preprocessing-boxcoxtransformer">
+<h2>Examples using <code class="docutils literal"><span class="pre">skoot.preprocessing.BoxCoxTransformer</span></code><a class="headerlink" href="#examples-using-skoot-preprocessing-boxcoxtransformer" title="Permalink to this headline">¶</a></h2>
+<div class="sphx-glr-thumbcontainer" tooltip="Skoot provides a convenient mechanism for profiling estimators and determining whether they&#x27;re ..."><div class="figure" id="id1">
+<img alt="../../_images/sphx_glr_ex_profiling_thumb.png" src="../../_images/sphx_glr_ex_profiling_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="../../auto_examples/utils/ex_profiling.html#sphx-glr-auto-examples-utils-ex-profiling-py"><span class="std std-ref">Profiling estimators</span></a></span></p>
+</div>
+</div><div class="clearer"></div></div>
+</div>
 
 
            </div>

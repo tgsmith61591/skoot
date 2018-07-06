@@ -111,7 +111,7 @@ on the fly that will fit into your modeling pipeline seamlessly.
     print("Absolute scaled values: ")
     print(pipe.transform(X_test))
 
-**Total running time of the script:** ( 0 minutes  0.017 seconds)
+**Total running time of the script:** ( 0 minutes  0.025 seconds)
 
 
 

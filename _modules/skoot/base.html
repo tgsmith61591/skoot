@@ -34,6 +34,8 @@
   
 
   
+        <link rel="author" title="About these documents"
+              href="../../about.html"/>
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
@@ -154,6 +156,7 @@
 <span class="kn">from</span> <span class="nn">.utils.iterables</span> <span class="k">import</span> <span class="n">is_iterable</span>
 <span class="kn">from</span> <span class="nn">.utils.compat</span> <span class="k">import</span> <span class="n">xrange</span>
 <span class="kn">from</span> <span class="nn">.utils.dataframe</span> <span class="k">import</span> <span class="n">dataframe_or_array</span>
+<span class="kn">from</span> <span class="nn">.utils.metaestimators</span> <span class="k">import</span> <span class="n">timed_instance_method</span>
 
 <span class="c1"># namespace import to avoid explicitly protected imports in global namespace</span>
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">_docstr</span> <span class="k">as</span> <span class="n">dsutils</span>
@@ -196,7 +199,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">cols</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span>  <span class="c1"># do not let be mutable!</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">as_df</span> <span class="o">=</span> <span class="n">as_df</span></div>
 
-<div class="viewcode-block" id="BasePDTransformer.fit"><a class="viewcode-back" href="../../modules/generated/skoot.base.BasePDTransformer.html#skoot.base.BasePDTransformer.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="BasePDTransformer.fit"><a class="viewcode-back" href="../../modules/generated/skoot.base.BasePDTransformer.html#skoot.base.BasePDTransformer.fit">[docs]</a>    <span class="nd">@timed_instance_method</span><span class="p">(</span><span class="n">attribute_name</span><span class="o">=</span><span class="s2">&quot;fit_time_&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Fit the transformer.</span>
 
 <span class="sd">        Default behavior is not to fit any parameters and return self.</span>
@@ -256,6 +260,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">trans_col_name</span> <span class="o">=</span> <span class="n">trans_col_name</span>
 
+    <span class="nd">@timed_instance_method</span><span class="p">(</span><span class="n">attribute_name</span><span class="o">=</span><span class="s2">&quot;fit_time_&quot;</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Fit the wrapped transformer.</span>
 
@@ -360,11 +365,26 @@
 <span class="sd">    func : callable</span>
 <span class="sd">        The commutative function used to transform the train or test set.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">_AnonymousPDTransformer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span>
             <span class="n">cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">func</span> <span class="o">=</span> <span class="n">func</span>
+        <span class="c1"># There should never NOT be a &quot;func&quot; key since this is handled</span>
+        <span class="c1"># internally. Only time that could happen is if someone tries to</span>
+        <span class="c1"># do this on their own.. Live with the KeyError if it breaks since</span>
+        <span class="c1"># the silly developer screwed it up!</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">func</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;func&quot;</span><span class="p">]</span>
+
+        <span class="c1"># Assign the kwargs such that we can tune hyper parameters in</span>
+        <span class="c1"># the anonymous transformer.</span>
+        <span class="n">param_names</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="c1"># two things: save the parameter name, and assign the value</span>
+            <span class="c1"># as an internal attribute</span>
+            <span class="n">param_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_param_names</span> <span class="o">=</span> <span class="n">param_names</span>
 
     <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Apply the commutative function to the train or test set.</span>
@@ -374,10 +394,39 @@
 <span class="sd">        X : pd.DataFrame, shape=(n_samples, n_features)</span>
 <span class="sd">            The Pandas frame to transform.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="c1"># construct the kwargs, but remember that we do not want &quot;func&quot;!!!</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+                  <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_param_names</span>
+                  <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s2">&quot;func&quot;</span><span class="p">}</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get parameters for this estimator.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        deep : boolean, optional</span>
+<span class="sd">            If True, will return the parameters for this estimator and</span>
+<span class="sd">            contained sub-objects that are estimators.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        params : mapping of string to any</span>
+<span class="sd">            Parameter names mapped to their values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+        <span class="c1"># unlike sklearn default we can use the stored param names</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_param_names</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>  <span class="c1"># should always be present...</span>
+            <span class="k">if</span> <span class="n">deep</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s1">&#39;get_params&#39;</span><span class="p">):</span>
+                <span class="n">deep_items</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">get_params</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="n">out</span><span class="o">.</span><span class="n">update</span><span class="p">((</span><span class="n">key</span> <span class="o">+</span> <span class="s1">&#39;__&#39;</span> <span class="o">+</span> <span class="n">k</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">deep_items</span><span class="p">)</span>
+            <span class="n">out</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">return</span> <span class="n">out</span>
 
 
-<span class="k">def</span> <span class="nf">make_transformer</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+<div class="viewcode-block" id="make_transformer"><a class="viewcode-back" href="../../modules/generated/skoot.base.make_transformer.html#skoot.base.make_transformer">[docs]</a><span class="k">def</span> <span class="nf">make_transformer</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Make a function into a scikit-learn TransformerMixin.</span>
 
 <span class="sd">    Wraps a commutative function as an anonymous BasePDTransformer in order to</span>
@@ -391,10 +440,46 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    func : callable</span>
-<span class="sd">        The function that will be used to transform a dataset.</span>
+<span class="sd">        The function that will be used to transform a dataset. Note that for</span>
+<span class="sd">        certain scikit-learn operations or for model persistence, this will</span>
+<span class="sd">        need to be pickled. Therefore, using a closure or lambda expression</span>
+<span class="sd">        could cause downstream issues that are not immediately apparent.</span>
+<span class="sd">        This function will raise a warning if it&#39;s determined that a lambda</span>
+<span class="sd">        expression is passed as ``func``, but not all corner cases can be</span>
+<span class="sd">        caught. Be cautious.</span>
+
+<span class="sd">    **kwargs : keyword args or dict, optional</span>
+<span class="sd">        A dictionary of keyword args that will be passed to the transformer</span>
+<span class="sd">        class&#39; ``transform`` function (``func``) and enable the anonymous</span>
+<span class="sd">        transformer to be tuned via grid search similar to other transformers.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from sklearn.datasets import load_iris</span>
+<span class="sd">    &gt;&gt;&gt; from sklearn.pipeline import Pipeline</span>
+<span class="sd">    &gt;&gt;&gt; from sklearn.decomposition import PCA</span>
+<span class="sd">    &gt;&gt;&gt; from sklearn.model_selection import GridSearchCV</span>
+<span class="sd">    &gt;&gt;&gt; from sklearn.linear_model import LogisticRegression</span>
+<span class="sd">    &gt;&gt;&gt; X, y = load_iris(return_X_y=True)</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; def subtract_k(x, k):</span>
+<span class="sd">    ...     return x - float(k)</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; pipe = Pipeline([</span>
+<span class="sd">    ...     (&#39;pca&#39;, PCA()),</span>
+<span class="sd">    ...     (&#39;custom&#39;, make_transformer(subtract_k, k=2)),</span>
+<span class="sd">    ...     (&#39;clf&#39;, LogisticRegression(random_state=42))</span>
+<span class="sd">    ... ])</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; hyper_params = {&quot;pca__whiten&quot;: [True, False],</span>
+<span class="sd">    ...                 &quot;custom__k&quot;: [1, 2]}</span>
+<span class="sd">    &gt;&gt;&gt; search = GridSearchCV(pipe, param_grid=hyper_params,</span>
+<span class="sd">    ...                       scoring=&quot;accuracy&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; search.fit(X, y)  # doctest: +SKIP</span>
+<span class="sd">    GridSearchCV(...)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># first, if it&#39;s a lambda function, warn the user.</span>
-    <span class="n">lam</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="kc">None</span>
+    <span class="n">lam</span> <span class="o">=</span> <span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="kc">None</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">lam</span><span class="p">))</span> <span class="ow">and</span> <span class="n">func</span><span class="o">.</span><span class="n">__name__</span> <span class="o">==</span> <span class="n">lam</span><span class="o">.</span><span class="n">__name__</span><span class="p">:</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;A lambda function was passed to the make_transformer &quot;</span>
                       <span class="s2">&quot;function. While not explicitly unsupported, this will &quot;</span>
@@ -402,7 +487,9 @@
                       <span class="s2">&quot;dynamically-created transformers, use def-style &quot;</span>
                       <span class="s2">&quot;functions.&quot;</span><span class="p">,</span> <span class="ne">UserWarning</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">_AnonymousPDTransformer</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+    <span class="c1"># Note func needs to be passed as a keyword for it to be read in as a</span>
+    <span class="c1"># &quot;kwarg&quot; argument</span>
+    <span class="k">return</span> <span class="n">_AnonymousPDTransformer</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">func</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

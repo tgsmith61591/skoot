@@ -98,7 +98,8 @@ rules may hinder the speed with which your contribution is merged:
 
    You may need to see the :ref:`setup` section for instructions on how
    to build the package. For instructions on how to test (using nose or pytest)
-   see `Numpy's testing instructions <https://github.com/numpy/numpy/blob/master/doc/TESTS.rst.txt>`_.
+   see `Numpy's testing instructions <https://github.com/numpy/numpy/blob/master/doc/TESTS.rst.txt>`_
+   and the :ref:`testing` section.
 
 Filing bugs
 -----------

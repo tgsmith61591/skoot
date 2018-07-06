@@ -34,12 +34,14 @@
   
 
   
+        <link rel="author" title="About these documents"
+              href="../../about.html"/>
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
     <link rel="top" title="skoot 0.19.2.dev1 documentation" href="../../index.html"/>
         <link rel="up" title="API Reference" href="../classes.html"/>
-        <link rel="next" title="skoot.feature_selection.BaseFeatureSelector" href="skoot.feature_selection.BaseFeatureSelector.html"/>
+        <link rel="next" title="skoot.feature_extraction.TimeDeltaFeatures" href="skoot.feature_extraction.TimeDeltaFeatures.html"/>
         <link rel="prev" title="skoot.feature_extraction.DateFactorizer" href="skoot.feature_extraction.DateFactorizer.html"/> 
 
   
@@ -101,6 +103,7 @@
 <li class="toctree-l3 current"><a class="reference internal" href="../classes.html#feature-extraction-estimators">Feature extraction estimators</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="skoot.feature_extraction.DateFactorizer.html"><code class="docutils literal"><span class="pre">skoot.feature_extraction</span></code>.DateFactorizer</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#"><code class="docutils literal"><span class="pre">skoot.feature_extraction</span></code>.InteractionTermTransformer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="skoot.feature_extraction.TimeDeltaFeatures.html"><code class="docutils literal"><span class="pre">skoot.feature_extraction</span></code>.TimeDeltaFeatures</a></li>
 </ul>
 </li>
 </ul>
@@ -244,7 +247,7 @@ dataset using the default <code class="docutils literal"><span class="pre">_mul<
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#skoot.feature_extraction.InteractionTermTransformer.fit" title="skoot.feature_extraction.InteractionTermTransformer.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(X[,&nbsp;y])</td>
+<tr class="row-odd"><td><a class="reference internal" href="#skoot.feature_extraction.InteractionTermTransformer.fit" title="skoot.feature_extraction.InteractionTermTransformer.fit"><code class="xref py py-obj docutils literal"><span class="pre">fit</span></code></a>(*args,&nbsp;**kwargs)</td>
 <td>Fit the interaction term transformer.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#skoot.feature_extraction.InteractionTermTransformer.fit_transform" title="skoot.feature_extraction.InteractionTermTransformer.fit_transform"><code class="xref py py-obj docutils literal"><span class="pre">fit_transform</span></code></a>(X[,&nbsp;y])</td>
@@ -268,7 +271,7 @@ dataset using the default <code class="docutils literal"><span class="pre">_mul<
 
 <dl class="method">
 <dt id="skoot.feature_extraction.InteractionTermTransformer.fit">
-<code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/feature_extraction/interact.html#InteractionTermTransformer.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.feature_extraction.InteractionTermTransformer.fit" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fit</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/feature_extraction/interact.html#InteractionTermTransformer.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.feature_extraction.InteractionTermTransformer.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit the interaction term transformer.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -401,7 +404,7 @@ and the result set is returned.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="skoot.feature_selection.BaseFeatureSelector.html" class="btn btn-neutral float-right" title="skoot.feature_selection.BaseFeatureSelector" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="skoot.feature_extraction.TimeDeltaFeatures.html" class="btn btn-neutral float-right" title="skoot.feature_extraction.TimeDeltaFeatures" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="skoot.feature_extraction.DateFactorizer.html" class="btn btn-neutral" title="skoot.feature_extraction.DateFactorizer" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>

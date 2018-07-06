@@ -34,13 +34,15 @@
   
 
   
+        <link rel="author" title="About these documents"
+              href="about.html"/>
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="skoot 0.19.2.dev1 documentation" href="index.html"/>
         <link rel="up" title="User Guide" href="user_guide.html"/>
         <link rel="next" title="Contributing to Skoot" href="contributing.html"/>
-        <link rel="prev" title="User Guide" href="user_guide.html"/> 
+        <link rel="prev" title="About the project" href="about.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -94,8 +96,10 @@
 <li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="user_guide.html">User Guide</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="user_guide.html#getting-started">Getting started</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="about.html">About the project</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Setup</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#building-from-source">Building from source</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#testing">Testing</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="contributing.html">Contributing to Skoot</a></li>
@@ -175,9 +179,9 @@ new dependencies:</p>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-<div class="section" id="linux-unix-machines-mac-os">
-<span id="building-on-unix"></span><h3>Linux/Unix machines (Mac OS)<a class="headerlink" href="#linux-unix-machines-mac-os" title="Permalink to this headline">¶</a></h3>
-<p>Building on a unix machine is easier than building on <a class="reference internal" href="#building-on-windows"><span class="std std-ref">Windows</span></a>.
+<div class="section" id="building-on-linux-unix-machines-mac-os">
+<span id="building-on-unix"></span><h3>Building on Linux/Unix machines (Mac OS)<a class="headerlink" href="#building-on-linux-unix-machines-mac-os" title="Permalink to this headline">¶</a></h3>
+<p>Building on a unix machine is easier than building on <a class="reference internal" href="#building-on-windows"><span class="std std-ref">Building on Windows</span></a>.
 All you need is <code class="docutils literal"><span class="pre">gcc</span></code>, <code class="docutils literal"><span class="pre">g++</span></code> and <code class="docutils literal"><span class="pre">gfortran</span></code>. These can be downloaded via
 several methods:</p>
 <p><strong>Mac OS</strong>:</p>
@@ -209,10 +213,10 @@ development mode (to be able to run tests):</p>
 <div class="line"><br /></div>
 </div>
 </div>
-<div class="section" id="windows">
-<span id="building-on-windows"></span><h3>Windows<a class="headerlink" href="#windows" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="building-on-windows">
+<span id="id2"></span><h3>Building on Windows<a class="headerlink" href="#building-on-windows" title="Permalink to this headline">¶</a></h3>
 <p>tl;dr: <strong>don’t do it</strong>. It’s painful… but it can be done. Like with
-<a class="reference internal" href="#building-on-unix"><span class="std std-ref">Linux/Unix machines (Mac OS)</span></a>, you’ll need a Fortran compiler. You can either use
+<a class="reference internal" href="#building-on-unix"><span class="std std-ref">Building on Linux/Unix machines (Mac OS)</span></a>, you’ll need a Fortran compiler. You can either use
 <code class="docutils literal"><span class="pre">gfortran</span></code>, <code class="docutils literal"><span class="pre">mingw</span></code> or <code class="docutils literal"><span class="pre">MSVC</span></code>. After you have a Fortran compiler, you
 can build the package. To build in development mode (to be able to run tests),
 you can use the same command as with Linux:</p>
@@ -230,6 +234,58 @@ $ pip install dist/skoot-...-win32.whl
 </div>
 </div>
 </div>
+<div class="section" id="testing">
+<span id="id3"></span><h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
+<p>The following are some guidelines for creating and running unit test cases.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="section" id="creating-test-cases">
+<h3>Creating test cases<a class="headerlink" href="#creating-test-cases" title="Permalink to this headline">¶</a></h3>
+<p>Skoot uses <code class="docutils literal"><span class="pre">nose</span></code> or <code class="docutils literal"><span class="pre">pytest</span></code> to unit test. The pattern for these frameworks
+is that each submodules should contain a “tests” directory and individual scripts prefixed with
+“test” for each script in the submodule:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">some_submodule</span><span class="o">/</span>
+    <span class="o">|</span>
+    <span class="o">|</span><span class="n">_</span> <span class="n">tests</span><span class="o">/</span>
+        <span class="o">|</span><span class="n">_</span> <span class="n">test_script_a</span><span class="o">.</span><span class="n">py</span>
+        <span class="o">|</span><span class="n">_</span> <span class="o">...</span>
+    <span class="o">|</span><span class="n">_</span> <span class="n">__init__</span><span class="o">.</span><span class="n">py</span>
+    <span class="o">|</span><span class="n">_</span> <span class="n">script_a</span><span class="o">.</span><span class="n">py</span>
+    <span class="o">|</span><span class="n">_</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>Each unit test function within the test script should be prefixed with “test”:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># test_script_a.py</span>
+<span class="k">def</span> <span class="nf">test_some_function_in_script_a</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">something</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><strong>Note</strong> that no <code class="docutils literal"><span class="pre">__main__</span></code> section is required for pytest or nose. The frameworks
+themselves will find testing functions and evaluate them. This means some care has to
+be taken when naming your functions. Any function that contains the word “test” is
+liable to be evaluated by the testing framework. To avoid this, use this trick:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">some_benign_function_that_contains_word_test</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">do_something</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="c1"># Avoid conflict with nose/pytest:</span>
+<span class="n">some_benign_function_that_contains_word_test</span><span class="o">.</span><span class="n">__test__</span> <span class="o">=</span> <span class="bp">False</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="running-unit-tests">
+<h3>Running unit tests<a class="headerlink" href="#running-unit-tests" title="Permalink to this headline">¶</a></h3>
+<p>Running the unit tests is exceedingly simple.
+After you’ve built the package in <code class="docutils literal"><span class="pre">develop</span></code> mode, you can run the unit tests via pytest:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ pytest
+</pre></div>
+</div>
+<p>And with coverage, if you have the <code class="docutils literal"><span class="pre">coverage</span></code> package:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ pytest --cov
+</pre></div>
+</div>
+</div>
+</div>
 </div>
 
 
@@ -242,7 +298,7 @@ $ pip install dist/skoot-...-win32.whl
         <a href="contributing.html" class="btn btn-neutral float-right" title="Contributing to Skoot" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="user_guide.html" class="btn btn-neutral" title="User Guide" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="about.html" class="btn btn-neutral" title="About the project" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

@@ -34,6 +34,8 @@
   
 
   
+        <link rel="author" title="About these documents"
+              href="../../about.html"/>
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
@@ -165,7 +167,7 @@
     <span class="k">return</span> <span class="n">X</span>
 
 
-<span class="k">def</span> <span class="nf">load_adult_df</span><span class="p">(</span><span class="n">include_tgt</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tgt_name</span><span class="o">=</span><span class="s2">&quot;target&quot;</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="load_adult_df"><a class="viewcode-back" href="../../modules/generated/skoot.datasets.load_adult_df.html#skoot.datasets.load_adult_df">[docs]</a><span class="k">def</span> <span class="nf">load_adult_df</span><span class="p">(</span><span class="n">include_tgt</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tgt_name</span><span class="o">=</span><span class="s2">&quot;target&quot;</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Load and return the adult dataset (classification).</span>
 
 <span class="sd">    The adult dataset is a classic binary classification problem requiring</span>
@@ -217,7 +219,7 @@
     <span class="c1"># if we want to drop the target, do so now</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">include_tgt</span><span class="p">:</span>
         <span class="n">df</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">tgt_name</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">df</span>
+    <span class="k">return</span> <span class="n">df</span></div>
 
 
 <div class="viewcode-block" id="load_boston_df"><a class="viewcode-back" href="../../modules/generated/skoot.datasets.load_boston_df.html#skoot.datasets.load_boston_df">[docs]</a><span class="k">def</span> <span class="nf">load_boston_df</span><span class="p">(</span><span class="n">include_tgt</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tgt_name</span><span class="o">=</span><span class="s2">&quot;target&quot;</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>

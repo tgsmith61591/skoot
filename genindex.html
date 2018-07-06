@@ -35,6 +35,8 @@
   
 
   
+        <link rel="author" title="About these documents"
+              href="about.html"/>
         <link rel="index" title="Index"
               href="#"/>
         <link rel="search" title="Search" href="search.html"/>
@@ -149,6 +151,7 @@
  | <a href="#M"><strong>M</strong></a>
  | <a href="#N"><strong>N</strong></a>
  | <a href="#O"><strong>O</strong></a>
+ | <a href="#P"><strong>P</strong></a>
  | <a href="#Q"><strong>Q</strong></a>
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
@@ -178,6 +181,8 @@
         <li><a href="modules/generated/skoot.feature_extraction.DateFactorizer.html#skoot.feature_extraction.DateFactorizer.__init__">(skoot.feature_extraction.DateFactorizer method)</a>
 </li>
         <li><a href="modules/generated/skoot.feature_extraction.InteractionTermTransformer.html#skoot.feature_extraction.InteractionTermTransformer.__init__">(skoot.feature_extraction.InteractionTermTransformer method)</a>
+</li>
+        <li><a href="modules/generated/skoot.feature_extraction.TimeDeltaFeatures.html#skoot.feature_extraction.TimeDeltaFeatures.__init__">(skoot.feature_extraction.TimeDeltaFeatures method)</a>
 </li>
         <li><a href="modules/generated/skoot.feature_selection.BaseFeatureSelector.html#skoot.feature_selection.BaseFeatureSelector.__init__">(skoot.feature_selection.BaseFeatureSelector method)</a>
 </li>
@@ -297,6 +302,8 @@
 </li>
         <li><a href="modules/generated/skoot.feature_extraction.InteractionTermTransformer.html#skoot.feature_extraction.InteractionTermTransformer.fit">(skoot.feature_extraction.InteractionTermTransformer method)</a>
 </li>
+        <li><a href="modules/generated/skoot.feature_extraction.TimeDeltaFeatures.html#skoot.feature_extraction.TimeDeltaFeatures.fit">(skoot.feature_extraction.TimeDeltaFeatures method)</a>
+</li>
         <li><a href="modules/generated/skoot.feature_selection.BaseFeatureSelector.html#skoot.feature_selection.BaseFeatureSelector.fit">(skoot.feature_selection.BaseFeatureSelector method)</a>
 </li>
         <li><a href="modules/generated/skoot.feature_selection.LinearCombinationFilter.html#skoot.feature_selection.LinearCombinationFilter.fit">(skoot.feature_selection.LinearCombinationFilter method)</a>
@@ -350,6 +357,8 @@
         <li><a href="modules/generated/skoot.feature_extraction.DateFactorizer.html#skoot.feature_extraction.DateFactorizer.fit_transform">(skoot.feature_extraction.DateFactorizer method)</a>
 </li>
         <li><a href="modules/generated/skoot.feature_extraction.InteractionTermTransformer.html#skoot.feature_extraction.InteractionTermTransformer.fit_transform">(skoot.feature_extraction.InteractionTermTransformer method)</a>
+</li>
+        <li><a href="modules/generated/skoot.feature_extraction.TimeDeltaFeatures.html#skoot.feature_extraction.TimeDeltaFeatures.fit_transform">(skoot.feature_extraction.TimeDeltaFeatures method)</a>
 </li>
         <li><a href="modules/generated/skoot.feature_selection.BaseFeatureSelector.html#skoot.feature_selection.BaseFeatureSelector.fit_transform">(skoot.feature_selection.BaseFeatureSelector method)</a>
 </li>
@@ -419,6 +428,8 @@
 </li>
         <li><a href="modules/generated/skoot.feature_extraction.InteractionTermTransformer.html#skoot.feature_extraction.InteractionTermTransformer.get_params">(skoot.feature_extraction.InteractionTermTransformer method)</a>
 </li>
+        <li><a href="modules/generated/skoot.feature_extraction.TimeDeltaFeatures.html#skoot.feature_extraction.TimeDeltaFeatures.get_params">(skoot.feature_extraction.TimeDeltaFeatures method)</a>
+</li>
         <li><a href="modules/generated/skoot.feature_selection.BaseFeatureSelector.html#skoot.feature_selection.BaseFeatureSelector.get_params">(skoot.feature_selection.BaseFeatureSelector method)</a>
 </li>
         <li><a href="modules/generated/skoot.feature_selection.FeatureFilter.html#skoot.feature_selection.FeatureFilter.get_params">(skoot.feature_selection.FeatureFilter method)</a>
@@ -486,10 +497,12 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/generated/skoot.feature_selection.LinearCombinationFilter.html#skoot.feature_selection.LinearCombinationFilter">LinearCombinationFilter (class in skoot.feature_selection)</a>
 </li>
-      <li><a href="modules/generated/skoot.datasets.load_boston_df.html#skoot.datasets.load_boston_df">load_boston_df() (in module skoot.datasets)</a>
+      <li><a href="modules/generated/skoot.datasets.load_adult_df.html#skoot.datasets.load_adult_df">load_adult_df() (in module skoot.datasets)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/generated/skoot.datasets.load_boston_df.html#skoot.datasets.load_boston_df">load_boston_df() (in module skoot.datasets)</a>
+</li>
       <li><a href="modules/generated/skoot.datasets.load_breast_cancer_df.html#skoot.datasets.load_breast_cancer_df">load_breast_cancer_df() (in module skoot.datasets)</a>
 </li>
       <li><a href="modules/generated/skoot.datasets.load_iris_df.html#skoot.datasets.load_iris_df">load_iris_df() (in module skoot.datasets)</a>
@@ -500,7 +513,7 @@
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="modules/generated/skoot.model_validation.make_validated_pipeline.html#skoot.model_validation.make_validated_pipeline">make_validated_pipeline() (in module skoot.model_validation)</a>
+      <li><a href="modules/generated/skoot.base.make_transformer.html#skoot.base.make_transformer">make_transformer() (in module skoot.base)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -525,6 +538,14 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/generated/skoot.decorators.overrides.html#skoot.decorators.overrides">overrides() (in module skoot.decorators)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="P">P</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/generated/skoot.utils.profile_estimator.html#skoot.utils.profile_estimator">profile_estimator() (in module skoot.utils)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -582,6 +603,8 @@
         <li><a href="modules/generated/skoot.feature_extraction.DateFactorizer.html#skoot.feature_extraction.DateFactorizer.set_params">(skoot.feature_extraction.DateFactorizer method)</a>
 </li>
         <li><a href="modules/generated/skoot.feature_extraction.InteractionTermTransformer.html#skoot.feature_extraction.InteractionTermTransformer.set_params">(skoot.feature_extraction.InteractionTermTransformer method)</a>
+</li>
+        <li><a href="modules/generated/skoot.feature_extraction.TimeDeltaFeatures.html#skoot.feature_extraction.TimeDeltaFeatures.set_params">(skoot.feature_extraction.TimeDeltaFeatures method)</a>
 </li>
         <li><a href="modules/generated/skoot.feature_selection.BaseFeatureSelector.html#skoot.feature_selection.BaseFeatureSelector.set_params">(skoot.feature_selection.BaseFeatureSelector method)</a>
 </li>
@@ -658,6 +681,10 @@
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/generated/skoot.utils.timed_instance_method.html#skoot.utils.timed_instance_method">timed_instance_method() (in module skoot.utils)</a>
+</li>
+      <li><a href="modules/generated/skoot.feature_extraction.TimeDeltaFeatures.html#skoot.feature_extraction.TimeDeltaFeatures">TimeDeltaFeatures (class in skoot.feature_extraction)</a>
+</li>
       <li><a href="modules/generated/skoot.decomposition.SelectiveIncrementalPCA.html#skoot.decomposition.SelectiveIncrementalPCA.transform">transform() (skoot.decomposition.SelectiveIncrementalPCA method)</a>
 
       <ul>
@@ -672,6 +699,8 @@
         <li><a href="modules/generated/skoot.feature_extraction.DateFactorizer.html#skoot.feature_extraction.DateFactorizer.transform">(skoot.feature_extraction.DateFactorizer method)</a>
 </li>
         <li><a href="modules/generated/skoot.feature_extraction.InteractionTermTransformer.html#skoot.feature_extraction.InteractionTermTransformer.transform">(skoot.feature_extraction.InteractionTermTransformer method)</a>
+</li>
+        <li><a href="modules/generated/skoot.feature_extraction.TimeDeltaFeatures.html#skoot.feature_extraction.TimeDeltaFeatures.transform">(skoot.feature_extraction.TimeDeltaFeatures method)</a>
 </li>
         <li><a href="modules/generated/skoot.feature_selection.BaseFeatureSelector.html#skoot.feature_selection.BaseFeatureSelector.transform">(skoot.feature_selection.BaseFeatureSelector method)</a>
 </li>

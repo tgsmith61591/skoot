@@ -34,6 +34,8 @@
   
 
   
+        <link rel="author" title="About these documents"
+              href="../about.html"/>
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
@@ -98,10 +100,12 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#class-balancing-examples">Class balancing examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#datasets-examples">Datasets examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#exploratory-data-analysis-examples">Exploratory data analysis examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#feature-extraction-examples">Feature extraction examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#model-validation-examples">Model validation examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#preprocessing-examples">Preprocessing examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#utilities-examples">Utilities examples</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../user_guide.html">User Guide</a></li>
@@ -214,7 +218,7 @@ on the fly that will fit into your modeling pipeline seamlessly.</p>
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
 <span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <span class="n">Pipeline</span>
 <span class="kn">from</span> <span class="nn">skoot.preprocessing</span> <span class="kn">import</span> <a href="../modules/generated/skoot.preprocessing.SelectiveStandardScaler.html#skoot.preprocessing.SelectiveStandardScaler" title="View documentation for skoot.preprocessing.SelectiveStandardScaler"><span class="n">SelectiveStandardScaler</span></a>
-<span class="kn">from</span> <span class="nn">skoot.base</span> <span class="kn">import</span> <span class="n">make_transformer</span>
+<span class="kn">from</span> <span class="nn">skoot.base</span> <span class="kn">import</span> <a href="../modules/generated/skoot.base.make_transformer.html#skoot.base.make_transformer" title="View documentation for skoot.base.make_transformer"><span class="n">make_transformer</span></a>
 <span class="kn">from</span> <span class="nn">skoot.datasets</span> <span class="kn">import</span> <a href="../modules/generated/skoot.datasets.load_iris_df.html#skoot.datasets.load_iris_df" title="View documentation for skoot.datasets.load_iris_df"><span class="n">load_iris_df</span></a>
 
 <span class="n">X</span> <span class="o">=</span> <a href="../modules/generated/skoot.datasets.load_iris_df.html#skoot.datasets.load_iris_df" title="View documentation for skoot.datasets.load_iris_df"><span class="n">load_iris_df</span></a><span class="p">(</span><span class="n">tgt_name</span><span class="o">=</span><span class="s2">&quot;target&quot;</span><span class="p">)</span>
@@ -235,7 +239,7 @@ on the fly that will fit into your modeling pipeline seamlessly.</p>
 
 <span class="n">pipe</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([</span>
     <span class="p">(</span><span class="s2">&quot;scale&quot;</span><span class="p">,</span> <a href="../modules/generated/skoot.preprocessing.SelectiveStandardScaler.html#skoot.preprocessing.SelectiveStandardScaler" title="View documentation for skoot.preprocessing.SelectiveStandardScaler"><span class="n">SelectiveStandardScaler</span></a><span class="p">()),</span>
-    <span class="p">(</span><span class="s2">&quot;abs&quot;</span><span class="p">,</span> <span class="n">make_transformer</span><span class="p">(</span><span class="n">make_abs</span><span class="p">))</span>
+    <span class="p">(</span><span class="s2">&quot;abs&quot;</span><span class="p">,</span> <a href="../modules/generated/skoot.base.make_transformer.html#skoot.base.make_transformer" title="View documentation for skoot.base.make_transformer"><span class="n">make_transformer</span></a><span class="p">(</span><span class="n">make_abs</span><span class="p">))</span>
 <span class="p">])</span>
 
 <span class="n">pipe</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
@@ -243,7 +247,7 @@ on the fly that will fit into your modeling pipeline seamlessly.</p>
 <span class="k">print</span><span class="p">(</span><span class="n">pipe</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">))</span>
 </pre></div>
 </div>
-<p><strong>Total running time of the script:</strong> ( 0 minutes  0.017 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  0.025 seconds)</p>
 <div class="sphx-glr-footer container">
 <div class="sphx-glr-download container">
 <a class="reference download internal" href="../_downloads/ex_anonymous_transformer.py" download=""><code class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">ex_anonymous_transformer.py</span></code></a></div>

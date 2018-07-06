@@ -34,12 +34,14 @@
   
 
   
+        <link rel="author" title="About these documents"
+              href="../../about.html"/>
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
     <link rel="top" title="skoot 0.19.2.dev1 documentation" href="../../index.html"/>
         <link rel="up" title="Examples" href="../index.html"/>
-        <link rel="next" title="User Guide" href="../../user_guide.html"/>
+        <link rel="next" title="Profiling estimators" href="../utils/ex_profiling.html"/>
         <link rel="prev" title="Date transformer" href="ex_date_transformation.html"/> 
 
   
@@ -94,6 +96,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">Examples</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../index.html#id1">General examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../index.html#class-balancing-examples">Class balancing examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#datasets-examples">Datasets examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../index.html#exploratory-data-analysis-examples">Exploratory data analysis examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../index.html#feature-extraction-examples">Feature extraction examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../index.html#model-validation-examples">Model validation examples</a></li>
@@ -103,6 +106,7 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">One-hot encoding</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#utilities-examples">Utilities examples</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../user_guide.html">User Guide</a></li>
@@ -242,7 +246,7 @@ Applied on a row with a new native-country:
 
 <span class="c1"># Author: Taylor Smith &lt;taylor.smith@alkaline-ml.com&gt;</span>
 
-<span class="kn">from</span> <span class="nn">skoot.datasets</span> <span class="kn">import</span> <span class="n">load_adult_df</span>
+<span class="kn">from</span> <span class="nn">skoot.datasets</span> <span class="kn">import</span> <a href="../../modules/generated/skoot.datasets.load_adult_df.html#skoot.datasets.load_adult_df" title="View documentation for skoot.datasets.load_adult_df"><span class="n">load_adult_df</span></a>
 <span class="kn">from</span> <span class="nn">skoot.preprocessing</span> <span class="kn">import</span> <a href="../../modules/generated/skoot.preprocessing.DummyEncoder.html#skoot.preprocessing.DummyEncoder" title="View documentation for skoot.preprocessing.DummyEncoder"><span class="n">DummyEncoder</span></a>
 <span class="kn">from</span> <span class="nn">skoot.utils.dataframe</span> <span class="kn">import</span> <span class="n">get_categorical_columns</span>
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
@@ -250,19 +254,19 @@ Applied on a row with a new native-country:
 
 <span class="c1"># #############################################################################</span>
 <span class="c1"># load &amp; split the data</span>
-<span class="n">adult</span> <span class="o">=</span> <span class="n">load_adult_df</span><span class="p">(</span><span class="n">tgt_name</span><span class="o">=</span><span class="s2">&quot;target&quot;</span><span class="p">)</span>
+<span class="n">adult</span> <span class="o">=</span> <a href="../../modules/generated/skoot.datasets.load_adult_df.html#skoot.datasets.load_adult_df" title="View documentation for skoot.datasets.load_adult_df"><span class="n">load_adult_df</span></a><span class="p">(</span><span class="n">tgt_name</span><span class="o">=</span><span class="s2">&quot;target&quot;</span><span class="p">)</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">adult</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;target&quot;</span><span class="p">)</span>
 
 <span class="c1"># we don&#39;t want this column</span>
-<span class="n">adult</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;education-num&quot;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">adult</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;education-num&quot;</span><span class="p">)</span>
 
 <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">adult</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
                                                     <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
 
 <span class="c1"># #############################################################################</span>
 <span class="c1"># Fit a dummy encoder</span>
-<span class="n">obj_cols</span> <span class="o">=</span> <span class="n">get_categorical_columns</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
-<span class="n">encoder</span> <span class="o">=</span> <a href="../../modules/generated/skoot.preprocessing.DummyEncoder.html#skoot.preprocessing.DummyEncoder" title="View documentation for skoot.preprocessing.DummyEncoder"><span class="n">DummyEncoder</span></a><span class="p">(</span><span class="n">cols</span><span class="o">=</span><span class="n">obj_cols</span><span class="p">,</span> <span class="n">handle_unknown</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+<span class="n">obj_cols</span> <span class="o">=</span> <span class="n">get_categorical_columns</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span><span class="o">.</span><span class="n">columns</span>
+<span class="n">encoder</span> <span class="o">=</span> <a href="../../modules/generated/skoot.preprocessing.DummyEncoder.html#skoot.preprocessing.DummyEncoder" title="View documentation for skoot.preprocessing.DummyEncoder"><span class="n">DummyEncoder</span></a><span class="p">(</span><span class="n">cols</span><span class="o">=</span><span class="n">obj_cols</span><span class="p">,</span> <span class="n">handle_unknown</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 <span class="n">encoder</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 
 <span class="c1"># #############################################################################</span>
@@ -282,7 +286,7 @@ Applied on a row with a new native-country:
 <span class="k">assert</span> <span class="n">trans</span><span class="p">[</span><span class="n">trans</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">nc_mask</span><span class="p">]]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span>
 </pre></div>
 </div>
-<p><strong>Total running time of the script:</strong> ( 0 minutes  0.581 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  0.949 seconds)</p>
 <div class="sphx-glr-footer container">
 <div class="sphx-glr-download container">
 <a class="reference download internal" href="../../_downloads/ex_one_hot.py" download=""><code class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">ex_one_hot.py</span></code></a></div>
@@ -299,7 +303,7 @@ Applied on a row with a new native-country:
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../../user_guide.html" class="btn btn-neutral float-right" title="User Guide" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../utils/ex_profiling.html" class="btn btn-neutral float-right" title="Profiling estimators" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="ex_date_transformation.html" class="btn btn-neutral" title="Date transformer" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
