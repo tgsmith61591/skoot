@@ -231,16 +231,6 @@ Model validators & monitoring classes
     model_validation.CustomValidator
     model_validation.DistHypothesisValidator
 
-Pipelines with built-in monitoring at each stage
-------------------------------------------------
-.. currentmodule:: skoot
-
-.. autosummary::
-    :toctree: generated/
-    :template: function.rst
-
-    model_validation.make_validated_pipeline
-
 
 .. _preprocessing_ref:
 

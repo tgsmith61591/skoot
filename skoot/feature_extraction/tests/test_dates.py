@@ -24,9 +24,12 @@ df = pd.DataFrame.from_records(data, columns=["a", "b"])
 
 
 def test_factorize():
-    trans = DateFactorizer(
-        cols=['b'], features=("year", "month")).fit_transform(df)
+    fact = DateFactorizer(cols=['b'], features=("year", "month"))
+    trans = fact.fit_transform(df)
     assert trans.columns.tolist() == ['a', 'b_year', 'b_month']
+
+    # Assert that the transform function works independent of fit_transform
+    assert trans.equals(fact.transform(df))
 
 
 def test_non_date_factorize():
@@ -65,6 +68,9 @@ def test_time_deltas():
     assert trans.columns.tolist() == ['a', 'b', 'c', 'b_c_delta'], \
         trans.columns
     assert_array_equal(trans.b_c_delta.values, [-1, -1, -1, -1, np.nan])
+
+    # Assert that the transform function works independent of fit_transform
+    assert trans.equals(tbe.transform(df2))
 
     # Hours
     tbe = TimeDeltaFeatures(cols=['b', 'c'], units='hours')

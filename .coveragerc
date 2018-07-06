@@ -4,6 +4,7 @@ include = */skoot/*
 omit =
     */skoot/__check_build/*
     */skoot/__config__.py
+    */skoot/__init__.py
     */skoot/_build_utils/*
     */skoot/_lib/*
     */skoot/setup.py
