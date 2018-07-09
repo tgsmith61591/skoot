@@ -7,6 +7,7 @@
 from __future__ import absolute_import
 
 from sklearn.externals import six
+from sklearn.externals.joblib import Parallel, delayed
 from sklearn.utils.validation import check_is_fitted
 
 import numpy as np
@@ -139,7 +140,18 @@ class _Bins(object):
         return bins
 
 
-# TODO: add n_jobs parameter
+# Executed in parallel:
+def _make_bin(binner, vec, c, n):
+    # Parallelize the bin operation over columns
+    return c, binner(vec, n)
+
+
+# Executed in parallel:
+def _assign_bin(binner, vec, c, return_label):
+    # Parallelize bin assignment
+    return c, binner.assign(vec, return_label)
+
+
 class BinningTransformer(BasePDTransformer):
     r"""Bin continuous variables.
 
@@ -201,6 +213,15 @@ class BinningTransformer(BasePDTransformer):
         False, the output columns will be appended to the right side of
         the frame with "_binned" appended.
 
+    n_jobs : int, 1 by default
+       The number of jobs to use for the encoding. This works by
+       fitting each incremental LabelEncoder in parallel.
+
+       If -1 all CPUs are used. If 1 is given, no parallel computing code
+       is used at all, which is useful for debugging. For n_jobs below -1,
+       (n_cpus + 1 + n_jobs) are used. Thus for n_jobs = -2, all CPUs but
+       one are used.
+
     Notes
     -----
     If a feature has fewer than ``n_bins`` unique values, it will raise a
@@ -246,7 +267,7 @@ class BinningTransformer(BasePDTransformer):
            http://biostat.mc.vanderbilt.edu/wiki/Main/CatContinuous
     """
     def __init__(self, cols=None, as_df=True, n_bins=10, strategy="uniform",
-                 return_bin_label=True, overwrite=True):
+                 return_bin_label=True, overwrite=True, n_jobs=1):
 
         super(BinningTransformer, self).__init__(
             cols=cols, as_df=as_df)
@@ -255,6 +276,7 @@ class BinningTransformer(BasePDTransformer):
         self.strategy = strategy
         self.return_bin_label = return_bin_label
         self.overwrite = overwrite
+        self.n_jobs = n_jobs
 
     @timed_instance_method(attribute_name="fit_time_")
     def fit(self, X, y=None):
@@ -293,9 +315,9 @@ class BinningTransformer(BasePDTransformer):
                              % (str(list(_STRATEGIES.keys())), strategy))
 
         # compute the bins for each feature
-        bins = {}
-        for c, n in six.iteritems(n_bins):
-            bins[c] = binner(X[c].values, n)
+        bins = dict(Parallel(n_jobs=self.n_jobs)(
+            delayed(_make_bin)(binner, vec=X[c].values, c=c, n=n)
+            for c, n in six.iteritems(n_bins)))
 
         # set the instance attribute
         self.bins_ = bins
@@ -333,20 +355,20 @@ class BinningTransformer(BasePDTransformer):
 
         # now apply the binning. Rather that use iteritems, iterate the cols
         # themselves so we get the order prescribed by the user
-        for col in cols:
+        bin_assignments = dict(Parallel(n_jobs=self.n_jobs)(
+            delayed(_assign_bin)(
+                bins[col], vec=X[col].values, c=col,
+                return_label=self.return_bin_label)
+            for col in cols))
 
-            # get the bin
-            bin_ = bins[col]  # O(1) lookup
-
-            # get the feature from the frame as an array
-            v = X[col].values  # type: np.ndarray
-            binned = bin_.assign(v, self.return_bin_label)  # via _Bins class
-
+        # Simple pass of O(N) to assign to dataframes. Lightweight, no
+        # actual computations here. That all happened in parallel
+        for c, binned in six.iteritems(bin_assignments):
             # if we overwrite, it's easy
             if self.overwrite:
-                X[col] = binned
+                X[c] = binned
             # otherwise create a new feature
             else:
-                X["%s_binned" % col] = binned
+                X["%s_binned" % c] = binned
 
         return dataframe_or_array(X, self.as_df)

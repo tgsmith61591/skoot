@@ -42,7 +42,8 @@ def test_binning_complex():
     binner = BinningTransformer(cols=["a", "b"], n_bins=[2, 3],
                                 strategy="uniform",
                                 return_bin_label=False,
-                                overwrite=True)
+                                overwrite=True,
+                                n_jobs=2)
 
     binner.fit(iris)
     trans = binner.transform(iris)
