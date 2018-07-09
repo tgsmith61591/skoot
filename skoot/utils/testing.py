@@ -6,7 +6,7 @@ from __future__ import absolute_import
 
 from sklearn.base import clone
 from sklearn.externals import joblib
-from numpy.testing import assert_array_equal
+from numpy.testing import assert_array_almost_equal
 
 import pandas as pd
 import numpy as np
@@ -21,6 +21,9 @@ __all__ = [
 
 
 def _assert_equal(a, b):
+    if a.dtype != b.dtype:
+        raise AssertionError("dtypes do not match!")
+
     # Assert the values are equal. This is tricky since we might have values
     # in columns that are string, datetime, or other complex, non-float
     # dtype. We should only resort to the numpy assert_array_equal where all
@@ -33,7 +36,7 @@ def _assert_equal(a, b):
 
     # Else it's float and can use the easy way
     else:
-        assert_array_equal(a, b)
+        assert_array_almost_equal(a, b, decimal=6)
 
 
 def assert_persistable(estimator, location, X, y=None, **fit_kwargs):
