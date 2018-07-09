@@ -139,6 +139,7 @@ class _Bins(object):
         return bins
 
 
+# TODO: add n_jobs parameter
 class BinningTransformer(BasePDTransformer):
     r"""Bin continuous variables.
 
@@ -164,11 +165,10 @@ class BinningTransformer(BasePDTransformer):
 
     Parameters
     ----------
-    cols : array-like, shape=(n_features,)
+    cols : array-like, shape=(n_features,), optional (default=None)
         The names of the columns on which to apply the transformation.
-        Unlike other BasePDTransformer instances, this is not optional,
-        since binning the entire frame could prove extremely expensive
-        if accidentally applied to continuous data.
+        Optional. If None, will be applied to all features (which could
+        prove to be expensive)
 
     as_df : bool, optional (default=True)
         Whether to return a Pandas ``DataFrame`` in the ``transform``
@@ -210,23 +210,23 @@ class BinningTransformer(BasePDTransformer):
     --------
     Bin two features in iris:
 
-        >>> from skoot.datasets import load_iris_df
-        >>> iris = load_iris_df(include_tgt=False, names=['a', 'b', 'c', 'd'])
-        >>> binner = BinningTransformer(cols=["a", "b"], strategy="uniform")
-        >>> trans = binner.fit_transform(iris)
-        >>> trans.head()
-                      a             b    c    d
-        0  (5.10, 5.50]  (3.40, 3.60]  1.4  0.2
-        1  (4.70, 5.10]  (3.00, 3.20]  1.4  0.2
-        2  (4.70, 5.10]  (3.20, 3.40]  1.3  0.2
-        3  (-Inf, 4.70]  (3.00, 3.20]  1.5  0.2
-        4  (4.70, 5.10]  (3.60, 3.80]  1.4  0.2
-        >>> trans.dtypes
-        a     object
-        b     object
-        c    float64
-        d    float64
-        dtype: object
+    >>> from skoot.datasets import load_iris_df
+    >>> iris = load_iris_df(include_tgt=False, names=['a', 'b', 'c', 'd'])
+    >>> binner = BinningTransformer(cols=["a", "b"], strategy="uniform")
+    >>> trans = binner.fit_transform(iris)
+    >>> trans.head()
+                  a             b    c    d
+    0  (5.10, 5.50]  (3.40, 3.60]  1.4  0.2
+    1  (4.70, 5.10]  (3.00, 3.20]  1.4  0.2
+    2  (4.70, 5.10]  (3.20, 3.40]  1.3  0.2
+    3  (-Inf, 4.70]  (3.00, 3.20]  1.5  0.2
+    4  (4.70, 5.10]  (3.60, 3.80]  1.4  0.2
+    >>> trans.dtypes
+    a     object
+    b     object
+    c    float64
+    d    float64
+    dtype: object
 
     Attributes
     ----------
@@ -245,7 +245,7 @@ class BinningTransformer(BasePDTransformer):
     .. [1] "Problems Caused by Categorizing Continuous Variables"
            http://biostat.mc.vanderbilt.edu/wiki/Main/CatContinuous
     """
-    def __init__(self, cols, as_df=True, n_bins=10, strategy="uniform",
+    def __init__(self, cols=None, as_df=True, n_bins=10, strategy="uniform",
                  return_bin_label=True, overwrite=True):
 
         super(BinningTransformer, self).__init__(

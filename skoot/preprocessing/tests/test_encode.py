@@ -7,7 +7,7 @@ from __future__ import absolute_import
 from skoot.preprocessing import DummyEncoder
 from skoot.preprocessing.encode import _le_transform
 from skoot.datasets import load_iris_df
-from skoot.utils.testing import assert_raises
+from skoot.utils.testing import assert_raises, assert_transformer_asdf
 
 from sklearn.preprocessing import LabelEncoder
 
@@ -82,3 +82,7 @@ def test_dummy_encoder_ignore():
     # show the sum of the "species" columns is zero
     species_cols = trans[trans.columns[trans.columns.str.contains("species")]]
     assert species_cols.sum().sum() == 0
+
+
+def test_dummy_asdf():
+    assert_transformer_asdf(DummyEncoder(cols=iris.columns.tolist()), iris)

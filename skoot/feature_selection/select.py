@@ -19,6 +19,7 @@ __all__ = [
 ]
 
 
+# TODO: add functionality for a dummy column indicating present value?
 class SparseFeatureFilter(BaseFeatureSelector):
     """Drop overly sparse features.
 
@@ -47,8 +48,6 @@ class SparseFeatureFilter(BaseFeatureSelector):
 
     Examples
     --------
-    An example of the sparse feature filter:
-
     >>> import numpy as np
     >>> import pandas as pd
     >>>
@@ -74,6 +73,12 @@ class SparseFeatureFilter(BaseFeatureSelector):
         Assigned after calling ``fit``. These are the features that
         are designated as "bad" and will be dropped in the ``transform``
         method.
+
+    Notes
+    -----
+    Sometimes the presence of a value in an overly sparse column can be highly
+    informative. If you're using the sparse filter, consider creating a new
+    (dummy) feature indicating whether there was a value present.
     """
     def __init__(self, cols=None, threshold=0.5, as_df=True):
 

@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 
 from skoot.datasets import load_iris_df
-from skoot.utils.testing import assert_raises
+from skoot.utils.testing import assert_raises, assert_transformer_asdf
 from skoot.feature_selection import (FeatureFilter, SparseFeatureFilter,
                                      MultiCorrFilter, NearZeroVarianceFilter)
 
@@ -71,6 +71,10 @@ def test_nzv_bad_freq_cut():
     assert_raises(ValueError, nzv_str.fit, X)
 
 
+def test_nzf_asdf():
+    assert_transformer_asdf(NearZeroVarianceFilter(), iris)
+
+
 def test_mcf_iris_high_thresh():
     mcf = MultiCorrFilter(threshold=0.85)
     trans = mcf.fit_transform(iris)
@@ -102,6 +106,10 @@ def test_mcf_non_finite():
     assert_raises(ValueError, mcf.fit, sparse)
 
 
+def test_mcf_asdf():
+    assert_transformer_asdf(MultiCorrFilter(), iris)
+
+
 def test_feature_filter_none():
     dpr = FeatureFilter(cols=None)
 
@@ -127,6 +135,10 @@ def test_feature_filter_some():
     assert trans.equals(iris[['c', 'd']])
 
 
+def test_filter_asdf():
+    assert_transformer_asdf(FeatureFilter(), iris)
+
+
 def test_sparse_filter():
     sps_filter = SparseFeatureFilter(threshold=0.5)
     trans = sps_filter.fit_transform(sparse)
@@ -145,3 +157,7 @@ def test_sparse_filter_dense_data():
 
     # assert on values
     assert_array_almost_equal(sps_filter.sparsity_, np.zeros(4))
+
+
+def test_sparse_asdf():
+    assert_transformer_asdf(SparseFeatureFilter(), iris)

@@ -10,7 +10,7 @@ import pandas as pd
 import numpy as np
 
 from skoot.feature_extraction import InteractionTermTransformer
-from skoot.utils.testing import assert_raises
+from skoot.utils.testing import assert_raises, assert_transformer_asdf
 
 x_dict = {
     'a': [0, 0, 0, 1],
@@ -41,6 +41,10 @@ def test_interaction_default():
         [0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
         [1, 1, 1, 0, 1, 1, 0, 1, 0, 0]
     ]))
+
+
+def test_interaction_asdf():
+    assert_transformer_asdf(InteractionTermTransformer(), X_pd)
 
 
 def test_interaction_custom():
