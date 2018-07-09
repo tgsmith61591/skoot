@@ -12,6 +12,7 @@ import pandas as pd
 from skoot.preprocessing import BoxCoxTransformer, YeoJohnsonTransformer
 from skoot.preprocessing.skewness import _yj_transform_y
 from skoot.datasets import load_iris_df
+from skoot.utils.testing import assert_transformer_asdf
 
 y = np.arange(5).astype(np.float) - 2.  # [-2, -1, 0, 1, 2]
 X = load_iris_df()
@@ -90,3 +91,11 @@ def test_yj_fit_transform():
     x *= signs
 
     YeoJohnsonTransformer().fit(x)
+
+
+def test_bc_asdf():
+    assert_transformer_asdf(BoxCoxTransformer(), X)
+
+
+def test_yj_asdf():
+    assert_transformer_asdf(YeoJohnsonTransformer(), X)

@@ -24,8 +24,8 @@ def profile_estimator(estimator):
     """Profile the timed functions of an estimator.
 
     Get a list of runtimes for estimators that have used the
-    ``timed_instance_method`` decorator. **Note** that this will only
-    work if the attribute names provided for profiling end with "_time_".
+    ``timed_instance_method`` decorator. This is useful for diagnosing
+    bottlenecks in a pipeline.
 
     Parameters
     ----------
@@ -57,6 +57,13 @@ def profile_estimator(estimator):
     >>> profile_estimator(pipe)  # doctest: +SKIP
     [('scl', (('fit_time_', 0.0016548633575439453),)),
      ('yj', (('fit_time_', 0.0282437801361084),))]
+
+    Notes
+    -----
+    This will only work if the attribute names provided for profiling
+    end with "_time_". All skoot estimators, for instance, save the attribute
+    for the ``fit`` method as "fit_time_", but a custom transformer that uses
+    a different suffix may not be captured in the profiling process.
     """
     if isinstance(estimator, Pipeline):
         method_times = []

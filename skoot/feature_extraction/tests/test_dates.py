@@ -2,7 +2,7 @@
 
 from __future__ import absolute_import
 
-from skoot.utils.testing import assert_raises
+from skoot.utils.testing import assert_raises, assert_transformer_asdf
 from skoot.feature_extraction import DateFactorizer, TimeDeltaFeatures
 
 from datetime import datetime as dt
@@ -21,6 +21,16 @@ data = [
 ]
 
 df = pd.DataFrame.from_records(data, columns=["a", "b"])
+
+data2 = [
+    [1, strp("06-01-2018", "%m-%d-%Y"), strp("06-02-2018", "%m-%d-%Y")],
+    [2, strp("06-02-2018", "%m-%d-%Y"), strp("06-03-2018", "%m-%d-%Y")],
+    [3, strp("06-03-2018", "%m-%d-%Y"), strp("06-04-2018", "%m-%d-%Y")],
+    [4, strp("06-04-2018", "%m-%d-%Y"), strp("06-05-2018", "%m-%d-%Y")],
+    [5, None, strp("06-04-2018", "%m-%d-%Y")]
+]
+
+df2 = pd.DataFrame.from_records(data2, columns=['a', 'b', 'c'])
 
 
 def test_factorize():
@@ -52,16 +62,6 @@ def test_factorize_attribute_error():
 
 
 def test_time_deltas():
-    data2 = [
-        [1, strp("06-01-2018", "%m-%d-%Y"), strp("06-02-2018", "%m-%d-%Y")],
-        [2, strp("06-02-2018", "%m-%d-%Y"), strp("06-03-2018", "%m-%d-%Y")],
-        [3, strp("06-03-2018", "%m-%d-%Y"), strp("06-04-2018", "%m-%d-%Y")],
-        [4, strp("06-04-2018", "%m-%d-%Y"), strp("06-05-2018", "%m-%d-%Y")],
-        [5, None, strp("06-04-2018", "%m-%d-%Y")]
-    ]
-
-    df2 = pd.DataFrame.from_records(data2, columns=['a', 'b', 'c'])
-
     # Days
     tbe = TimeDeltaFeatures(cols=['b', 'c'], units='days')
     trans = tbe.fit_transform(df2)
@@ -88,3 +88,13 @@ def test_time_deltas():
     trans = tbe.fit_transform(df2)
     assert_array_equal(trans.b_c_delta.values,
                        [-86400, -86400, -86400, -86400, np.nan])
+
+
+# Test the as_df functionality
+def test_date_factorizer_asdf():
+    assert_transformer_asdf(DateFactorizer(cols=['b']), df)
+
+
+# Test the as_df functionality
+def test_time_deltas_asdf():
+    assert_transformer_asdf(TimeDeltaFeatures(cols=['b', 'c']), df2)

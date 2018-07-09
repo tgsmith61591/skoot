@@ -10,7 +10,7 @@ import pandas as pd
 from skoot.decomposition import QRDecomposition
 from skoot.feature_selection import LinearCombinationFilter
 from skoot.feature_selection.combos import _enum_lc
-from skoot.utils.testing import assert_raises
+from skoot.utils.testing import assert_raises, assert_transformer_asdf
 
 from numpy.testing import assert_array_equal
 from sklearn.datasets import load_iris
@@ -203,3 +203,7 @@ def test_enum_lc():
     assert not _enum_lc(QRDecomposition(iris.data))
 
     assert_array_equal(_enum_lc(QRDecomposition(y))[0], np.array([2, 1]))
+
+
+def test_combos_asdf():
+    assert_transformer_asdf(LinearCombinationFilter(), X)

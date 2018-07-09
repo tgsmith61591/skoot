@@ -23,6 +23,7 @@ __all__ = [
 ]
 
 
+# Computed in parallel
 def _le_transform(col, vec, le, handle, sep):
     # if "ignore" and there are unknown labels in the array,
     # we need to handle it...
@@ -43,20 +44,29 @@ def _le_transform(col, vec, le, handle, sep):
         vec_trans[~missing_mask] = \
             le.transform(vec[~missing_mask])
 
-        # where the labels are NOT present, set them to n_classes + 1
+        # FIXME
+        # Where the labels are NOT present, set them to n_classes + 1.
+        # (is there a better dummy class for this? We know, for instance,
+        # the labels are constrained to be positive, so we could theoretically
+        # use -1, however we also know the OHE does not discriminate, and any
+        # unknown levels are treated similarly, so it shouldn't matter, right?
+        # In a sense, we're setting k+1 to be a class indicating "other")
         vec_trans[missing_mask] = le.classes_.shape[0]
 
     # Otherwise take our chances that they're all there
     else:
         vec_trans = le.transform(vec)  # Union[str, int] -> int
 
-    # get the column names (levels) so we can predict the
-    # order of the output cols
+    # Get the column names (levels) so we can transform in the
+    # same order of the output cols. Note that we do not need to consider
+    # new levels here, since the OHE will ignore them in its transformation
+    # step
     le_clz = le.classes_.tolist()
     classes = ["%s%s%s" % (col, sep, clz) for clz in le_clz]
     return col, vec_trans, classes
 
 
+# Computed in parallel
 def _fit_transform_one_encoder(col, vec):
     # Fit/transform a label encoder. This is run in parallel
     # using the joblib library
@@ -68,9 +78,9 @@ def _fit_transform_one_encoder(col, vec):
 class DummyEncoder(BasePDTransformer):
     """Dummy encode categorical data.
 
-    A custom one-hot encoding class that handles previously unseen
-    levels and automatically drops one level from each categorical
-    feature to avoid the dummy variable trap.
+    A custom one-hot encoding class that is capable of handling previously
+    unseen levels and automatically dropping one level from each categorical
+    feature in order to avoid the dummy variable trap.
 
     Parameters
     ----------
@@ -156,18 +166,22 @@ class DummyEncoder(BasePDTransformer):
             delayed(_fit_transform_one_encoder)(col, X[col].values)
             for col in cols))
 
-        # quickly run over the encoded, set the columns in the dataframe
-        # pre-OHE fit and then create a dict of the encoders
+        # Quickly run over the encoded, set the columns in the dataframe
+        # pre-OHE fit and then create a dict of the encoders. This is a
+        # cheap pass of N over the columns, where we simply assign columns
+        # or values in a dict to the pre-computed values
         lab_encoders = {}
         for col, le, trans in encoded:
             X[col] = trans
             lab_encoders[col] = le
 
-        # fit a single OHE on the transformed columns.
+        # Fit a single OHE on the transformed columns. Note that the sklearn
+        # OHE class does not discriminate in "warn" or "ignore", so we just
+        # pass "ignore" since we already warned above.
         handle = "ignore" if self.handle_unknown in ("warn", "ignore") \
             else "error"
         ohe = OneHotEncoder(
-            sparse=False,
+            sparse=False,  # TODO: Is there a way to do this with Pandas?
             handle_unknown=handle).fit(X[cols])
 
         # assign fit params
@@ -216,6 +230,11 @@ class DummyEncoder(BasePDTransformer):
                 handle=self.handle_unknown, sep=sep)
             for col in cols))
 
+        # This is another pass of O(N), but it's not performing any incremental
+        # transformations of any sort. It just traverses the list of affected
+        # columns, extending the column order list and tracking the columns to
+        # drop. All of the heavy lifting for the transformations was handled
+        # in parallel above.
         col_order = []
         drops = []
         for col, vec_trans, classes in transformations:
