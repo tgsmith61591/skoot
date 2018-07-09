@@ -4,6 +4,8 @@ from __future__ import absolute_import
 
 from skoot.utils.testing import assert_raises, assert_persistable
 
+import os
+
 
 def func_that_raises():
     raise ValueError("Boo!")
@@ -32,5 +34,12 @@ def test_alternative_exception():
 
 
 def test_fails_on_existing_location():
-    assert_raises(OSError, assert_persistable, None,
-                  location="requirements.txt", X=None, y=None)
+    loc = "exists.pkl"
+    try:
+        with open(loc, 'w') as tmp:
+            tmp.write("Just creating a file so it raises")
+        assert_raises(OSError, assert_persistable, None,
+                      location=loc, X=None, y=None)
+
+    finally:
+        os.unlink(loc)
