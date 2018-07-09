@@ -7,7 +7,7 @@ from __future__ import print_function, absolute_import, division
 from numpy.testing import assert_array_almost_equal
 
 from skoot.datasets import load_iris_df
-from skoot.utils.testing import assert_transformer_asdf
+from skoot.utils.testing import assert_transformer_asdf, assert_persistable
 from skoot.decomposition import (SelectivePCA, SelectiveTruncatedSVD,
                                  SelectiveNMF, SelectiveKernelPCA,
                                  SelectiveIncrementalPCA)
@@ -122,3 +122,10 @@ def test_ipca():
 # Test the as_df functionality
 def test_selective_ipca_asdf():
     assert_transformer_asdf(SelectiveIncrementalPCA(), X)
+
+
+def test_all_persistable():
+    for est in (SelectivePCA, SelectiveTruncatedSVD,
+                SelectiveNMF, SelectiveKernelPCA,
+                SelectiveIncrementalPCA):
+        assert_persistable(est(), location="location.pkl", X=X)

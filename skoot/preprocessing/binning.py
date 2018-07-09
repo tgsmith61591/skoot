@@ -363,7 +363,8 @@ class BinningTransformer(BasePDTransformer):
 
         # Simple pass of O(N) to assign to dataframes. Lightweight, no
         # actual computations here. That all happened in parallel
-        for c, binned in six.iteritems(bin_assignments):
+        for c in cols:
+            binned = bin_assignments[c]
             # if we overwrite, it's easy
             if self.overwrite:
                 X[c] = binned

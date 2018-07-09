@@ -20,6 +20,11 @@ __all__ = [
 ]
 
 
+# Just here so that we don't try to pickle a lambda later
+def _mult(a, b):
+    return a * b
+
+
 class InteractionTermTransformer(BasePDTransformer):
     """Create interaction terms between predictors.
 
@@ -43,8 +48,9 @@ class InteractionTermTransformer(BasePDTransformer):
         ``DataFrame`` features, the ``as_df`` parameter is True by default.
 
     interaction_function : callable, optional (default=None)
-        A callable for interactions. Default None will
-        result in multiplication of two Series objects
+        A callable for interactions. Default None will result in
+        multiplication of two Series objects. Use caution when passing
+        a ``lambda`` expression, since they cannot be persisted via pickle!
 
     name_suffix : str, optional (default='I')
         The suffix to add to the new feature name in the form of
@@ -112,8 +118,7 @@ class InteractionTermTransformer(BasePDTransformer):
 
         # if not provided default to multiplication
         self.fun_ = self.interaction_function \
-            if self.interaction_function is not None else \
-            (lambda a, b: a * b)
+            if self.interaction_function is not None else _mult
 
         # need to store the transform columns since they may differ in the
         # transform call

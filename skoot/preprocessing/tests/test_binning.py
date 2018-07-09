@@ -4,7 +4,8 @@ from __future__ import absolute_import
 
 from skoot.preprocessing import BinningTransformer
 from skoot.datasets import load_iris_df
-from skoot.utils.testing import assert_raises, assert_transformer_asdf
+from skoot.utils.testing import (assert_raises, assert_transformer_asdf,
+                                 assert_persistable)
 
 import numpy as np
 from numpy.testing import assert_array_equal
@@ -106,3 +107,7 @@ def test_binning_corners():
 
 def test_binning_asdf():
     assert_transformer_asdf(BinningTransformer(), iris)
+
+
+def test_binning_persistable():
+    assert_persistable(BinningTransformer(), "location.pkl", iris)

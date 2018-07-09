@@ -8,7 +8,8 @@ import numpy as np
 import pandas as pd
 
 from skoot.datasets import load_iris_df
-from skoot.utils.testing import assert_raises, assert_transformer_asdf
+from skoot.utils.testing import (assert_raises, assert_transformer_asdf,
+                                 assert_persistable)
 from skoot.feature_selection import (FeatureFilter, SparseFeatureFilter,
                                      MultiCorrFilter, NearZeroVarianceFilter)
 
@@ -161,3 +162,9 @@ def test_sparse_filter_dense_data():
 
 def test_sparse_asdf():
     assert_transformer_asdf(SparseFeatureFilter(), iris)
+
+
+def test_all_persistable():
+    for est in (FeatureFilter, SparseFeatureFilter,
+                MultiCorrFilter, NearZeroVarianceFilter):
+        assert_persistable(est(), location="loc.pkl", X=iris)

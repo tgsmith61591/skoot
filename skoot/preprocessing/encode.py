@@ -181,7 +181,7 @@ class DummyEncoder(BasePDTransformer):
         handle = "ignore" if self.handle_unknown in ("warn", "ignore") \
             else "error"
         ohe = OneHotEncoder(
-            sparse=False,  # TODO: Is there a way to do this with Pandas?
+            sparse=False,  # TODO: Is there a way to sparsify with Pandas?
             handle_unknown=handle).fit(X[cols])
 
         # assign fit params

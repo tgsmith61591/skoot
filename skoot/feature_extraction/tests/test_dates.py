@@ -2,8 +2,9 @@
 
 from __future__ import absolute_import
 
-from skoot.utils.testing import assert_raises, assert_transformer_asdf
 from skoot.feature_extraction import DateFactorizer, TimeDeltaFeatures
+from skoot.utils.testing import (assert_raises, assert_transformer_asdf,
+                                 assert_persistable)
 
 from datetime import datetime as dt
 import pandas as pd
@@ -98,3 +99,12 @@ def test_date_factorizer_asdf():
 # Test the as_df functionality
 def test_time_deltas_asdf():
     assert_transformer_asdf(TimeDeltaFeatures(cols=['b', 'c']), df2)
+
+
+def test_date_factorizer_persistable():
+    assert_persistable(DateFactorizer(cols=['b']), location="loc.pkl", X=df)
+
+
+def test_time_deltas_persistable():
+    assert_persistable(TimeDeltaFeatures(cols=['b', 'c']),
+                       location='loc.pkl', X=df2)

@@ -10,7 +10,8 @@ import pandas as pd
 import numpy as np
 
 from skoot.feature_extraction import InteractionTermTransformer
-from skoot.utils.testing import assert_raises, assert_transformer_asdf
+from skoot.utils.testing import (assert_raises, assert_transformer_asdf,
+                                 assert_persistable)
 
 x_dict = {
     'a': [0, 0, 0, 1],
@@ -89,3 +90,8 @@ def test_interaction_corners():
     # test diff columns on test set to force value error
     X_test = X_pd.drop(['a'], axis=1)
     assert_raises(ValueError, trans.transform, X_test)
+
+
+def test_interaction_persistable():
+    assert_persistable(InteractionTermTransformer(cols=['a', 'b']),
+                       location='loc.pkl', X=X_pd)

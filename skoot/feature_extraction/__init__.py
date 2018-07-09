@@ -4,5 +4,6 @@
 
 from .dates import *
 from .interact import *
+from .spatial import *
 
 __all__ = [s for s in dir() if not s.startswith('_')]

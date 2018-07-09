@@ -20,6 +20,8 @@ from skoot.preprocessing import (BoxCoxTransformer, SelectiveStandardScaler,
                                  SelectiveMaxAbsScaler)
 from skoot.feature_selection import (MultiCorrFilter, NearZeroVarianceFilter,
                                      FeatureFilter)
+from skoot.utils.testing import assert_persistable
+from skoot.utils.profiling import profile_estimator
 
 # Def data for testing
 X = load_iris_df()
@@ -97,3 +99,9 @@ def test_complex_grid_search():
 
     # fit the search
     search.fit(X_train, y_train)
+
+    # Show we can profile the best estimator
+    profile_estimator(search.best_estimator_)
+
+    # Assert that it's persistable
+    assert_persistable(pipe, "location.pkl", X_train, y_train)

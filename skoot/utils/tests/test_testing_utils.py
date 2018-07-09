@@ -2,7 +2,7 @@
 
 from __future__ import absolute_import
 
-from skoot.utils.testing import assert_raises
+from skoot.utils.testing import assert_raises, assert_persistable
 
 
 def func_that_raises():
@@ -29,3 +29,8 @@ def test_alternative_exception():
 
     assert_raises(TypeError, func_that_raises_type_error)
     assert_raises(TypeError, func_that_asserts_incorrectly)
+
+
+def test_fails_on_existing_location():
+    assert_raises(OSError, assert_persistable, None,
+                  location="requirements.txt", X=None, y=None)
