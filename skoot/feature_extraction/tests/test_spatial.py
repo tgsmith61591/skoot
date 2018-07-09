@@ -2,8 +2,10 @@
 
 from __future__ import absolute_import
 
-from skoot.feature_extraction.spatial import haversine_distance
-from skoot.utils.testing import assert_raises
+from skoot.utils.testing import (assert_raises, assert_transformer_asdf,
+                                 assert_persistable)
+from skoot.feature_extraction.spatial import (haversine_distance,
+                                              HaversineFeatures)
 
 
 def test_bad_units():
@@ -13,4 +15,16 @@ def test_bad_units():
 
 # TODO:
 def test_haversine():
+    pass
+
+
+def test_haversine_transformer():
+    pass
+
+
+def test_haversine_asdf():
+    pass
+
+
+def test_haversine_persistable():
     pass

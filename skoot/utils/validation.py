@@ -314,10 +314,10 @@ def validate_test_set_columns(fit_columns, test_columns):
 
     Parameters
     ----------
-    fit_columns : list
+    fit_columns : list or iterable
         The column names the estimator was fit on.
 
-    test_columns : list
+    test_columns : list or iterable
         The column names the test set contains.
     """
     present_cols = set(test_columns)  # O(1) lookup
