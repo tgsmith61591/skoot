@@ -9,7 +9,7 @@ from __future__ import absolute_import
 from sklearn.utils.validation import check_is_fitted
 from itertools import combinations
 
-from ..base import BasePDTransformer
+from .base import BaseCompoundFeatureDeriver
 from ..utils.validation import (check_dataframe, validate_multiple_cols,
                                 validate_test_set_columns)
 from ..utils.dataframe import dataframe_or_array
@@ -25,7 +25,7 @@ def _mult(a, b):
     return a * b
 
 
-class InteractionTermTransformer(BasePDTransformer):
+class InteractionTermTransformer(BaseCompoundFeatureDeriver):
     """Create interaction terms between predictors.
 
     This class will compute interaction terms between selected columns.
@@ -51,6 +51,17 @@ class InteractionTermTransformer(BasePDTransformer):
         A callable for interactions. Default None will result in
         multiplication of two Series objects. Use caution when passing
         a ``lambda`` expression, since they cannot be persisted via pickle!
+
+    sep : str or unicode (optional, default="_")
+        The separator between the new feature names. The names will be in the
+        form of::
+
+            <left><sep><right><sep><suffix>
+
+        For examples, for columns 'a' and 'b', ``sep="_"`` and
+        ``name_suffix="delta"``, the new column name would be::
+
+            a_b_delta
 
     name_suffix : str, optional (default='I')
         The suffix to add to the new feature name in the form of
@@ -89,13 +100,13 @@ class InteractionTermTransformer(BasePDTransformer):
     Name: sepal length (cm)_sepal width (cm)_I, dtype: float64
     """
     def __init__(self, cols=None, as_df=True, interaction_function=None,
-                 name_suffix='I'):
+                 sep="_", name_suffix='I'):
 
         super(InteractionTermTransformer, self).__init__(
-            cols=cols, as_df=as_df)
+            cols=cols, as_df=as_df,
+            sep=sep, name_suffix=name_suffix)
 
         self.interaction_function = interaction_function
-        self.name_suffix = name_suffix
 
     @timed_instance_method(attribute_name="fit_time_")
     def fit(self, X, y=None):
@@ -160,7 +171,7 @@ class InteractionTermTransformer(BasePDTransformer):
         # combinations to iterate and map out
         features = [(t, X[t]) for t in transform_cols]  # (name, feature)
         for (name_a, feat_a), (name_b, feat_b) in combinations(features, 2):
-            new_nm = '%s_%s_%s' % (name_a, name_b, suff)
+            new_nm = '%s%s%s%s%s' % (name_a, self.sep, name_b, self.sep, suff)
 
             # assign the new column to X
             X[new_nm] = fun(feat_a, feat_b)
