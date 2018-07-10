@@ -26,7 +26,8 @@ def haversine_distance(lat1, lon1, lat2, lon2, units='mi'):
     """Compute the Haversine distance between two points.
 
     Calculates the Great Circle distance between two lat/lon points.
-    Can be applied to scalars or array-like types (np.ndarray or pd.Series).
+    Can be applied to scalars or array-like types (np.ndarray or pd.Series),
+    and can compute distance in either KM ('km') or miles ('mi').
 
     Parameters
     -----------
@@ -52,7 +53,7 @@ def haversine_distance(lat1, lon1, lat2, lon2, units='mi'):
         raise ValueError("'units' must be one of %r. Got %s"
                          % (list(_units.keys()), units))
 
-    lat1, lon1, lat2, lon2 = map(np.radians, (lat1, lon1, lat2, lon2))
+    lat1, lon1, lat2, lon2 = map(np.radians, [lat1, lon1, lat2, lon2])
     dlon = lon2 - lon1
     dlat = lat2 - lat1
 
@@ -131,11 +132,12 @@ class HaversineFeatures(BaseCompoundFeatureDeriver):
 
             a_b_delta
 
-    name_suffix : str, optional (default='delta')
+    name_suffix : str or None, optional (default=None)
         The suffix to add to the new feature name in the form of::
 
             <feature_x>_<feature_y>_<suffix>
 
+        If None, will be equal to ``units`` (i.e., 'km' or 'mi').
         See ``sep`` for more details about how new column names are formed.
 
     units : str or unicode, optional (default='mi')
@@ -144,9 +146,23 @@ class HaversineFeatures(BaseCompoundFeatureDeriver):
     drop_original : bool, optional (default=True)
         Whether to drop the original features from the dataframe prior to
         returning from the ``transform`` method.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> X = pd.DataFrame.from_records([
+    ...     [10001, 30.2672, -97.7431, 32.7767, -96.7970],
+    ...     [10011, 40.8781, -87.6298, 40.7128, -74.0060]
+    ... ], columns=['id', 'from_lat', 'from_lon', 'to_lat', 'to_lon'])
+    >>> est = HaversineFeatures(cols=[('from_lat', 'from_lon'),
+    ...                               ('to_lat', 'to_lon')])
+    >>> est.fit_transform(X)
+          id  (from_lat,from_lon)_(to_lat,to_lon)_dist
+    0  10001                                182.132066
+    1  10011                                712.034570
     """
     def __init__(self, cols, as_df=True, n_jobs=1, sep="_",
-                 name_suffix="dist", units='mi', drop_original=True):
+                 name_suffix=None, units='mi', drop_original=True):
 
         super(HaversineFeatures, self).__init__(
             cols=cols, as_df=as_df,
@@ -215,17 +231,19 @@ class HaversineFeatures(BaseCompoundFeatureDeriver):
         dists = list(Parallel(n_jobs=self.n_jobs)(
             delayed(_haversine)(pair_1=(lat1, lon1),
                                 pair_2=(lat2, lon2),
-                                lat1=lat1, lon1=lon1,
-                                lat2=lat2, lon2=lon2,
+                                lat1=X[lat1], lon1=X[lon1],
+                                lat2=X[lat2], lon2=X[lon2],
                                 units=self.units)
             for (lat1, lon1), (lat2, lon2) in combinations(cols, 2)))
 
         # Assign to the dataframe
         sep = self.sep
+        suff = (lambda v: v if v else self.units)(self.name_suffix)
         for ((lat_1, lon_1), (lat_2, lon_2)), dist in dists:
-            X["%s-%s%s%s-%s%s%s"
-              % (lat_1, lon_1, sep, lat_2, lon_2,
-                 sep, self.name_suffix)] = dist
+            nm = "(%s,%s)%s(%s,%s)%s%s" \
+                 % (lat_1, lon_1, sep, lat_2,
+                    lon_2, sep, suff)
+            X[nm] = dist
 
         # Drop if needed
         if self.drop_original:
