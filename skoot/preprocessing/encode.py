@@ -44,8 +44,7 @@ def _le_transform(col, vec, le, handle, sep):
         vec_trans[~missing_mask] = \
             le.transform(vec[~missing_mask])
 
-        # FIXME
-        # Where the labels are NOT present, set them to n_classes + 1.
+        # XXX: Where the labels are NOT present, set them to n_classes + 1.
         # (is there a better dummy class for this? We know, for instance,
         # the labels are constrained to be positive, so we could theoretically
         # use -1, however we also know the OHE does not discriminate, and any

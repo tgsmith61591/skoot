@@ -157,9 +157,9 @@ class HaversineFeatures(BaseCompoundFeatureDeriver):
     >>> est = HaversineFeatures(cols=[('from_lat', 'from_lon'),
     ...                               ('to_lat', 'to_lon')])
     >>> est.fit_transform(X)
-          id  (from_lat,from_lon)_(to_lat,to_lon)_dist
-    0  10001                                182.132066
-    1  10011                                712.034570
+          id  (from_lat,from_lon)_(to_lat,to_lon)_mi
+    0  10001                              182.132066
+    1  10011                              712.034570
     """
     def __init__(self, cols, as_df=True, n_jobs=1, sep="_",
                  name_suffix=None, units='mi', drop_original=True):
