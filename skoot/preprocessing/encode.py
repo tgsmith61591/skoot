@@ -13,7 +13,7 @@ import numpy as np
 
 from ..base import BasePDTransformer
 from ..utils.validation import check_dataframe, validate_test_set_columns
-from ..utils.dataframe import dataframe_or_array
+from ..utils.dataframe import dataframe_or_array, get_continuous_columns
 from ..utils.metaestimators import timed_instance_method
 
 import warnings
@@ -35,7 +35,7 @@ def _le_transform(col, vec, le, handle, sep):
         # if we want to warn, do so now
         if handle == "warn":
             warnings.warn("Previously unseen level(s) found in data! %r"
-                          % le.classes_[missing_mask])
+                          % set(vec[missing_mask].tolist()))
 
         # initialize vec_trans as zeros
         vec_trans = np.zeros(vec.shape[0]).astype(int)
@@ -84,11 +84,11 @@ class DummyEncoder(BasePDTransformer):
 
     Parameters
     ----------
-    cols : array-like, shape=(n_features,)
+    cols : array-like, shape=(n_features,), optional (default=None)
         The names of the columns on which to apply the transformation.
-        Unlike other BasePDTransformer instances, this is not optional,
-        since dummy-encoding the entire frame could prove extremely expensive
-        if accidentally applied to continuous data.
+        Unlike other BasePDTransformer instances, this should not be left
+        as the default None, since dummying the entire frame could prove
+        very expensive.
 
     as_df : bool, optional (default=True)
         Whether to return a Pandas ``DataFrame`` in the ``transform``
@@ -132,7 +132,7 @@ class DummyEncoder(BasePDTransformer):
         is used to validate the presence of the features in the test set
         during the ``transform`` stage.
     """
-    def __init__(self, cols, as_df=True, sep='_', drop_one_level=True,
+    def __init__(self, cols=None, as_df=True, sep='_', drop_one_level=True,
                  handle_unknown="ignore", n_jobs=1):
 
         super(DummyEncoder, self).__init__(
@@ -160,6 +160,16 @@ class DummyEncoder(BasePDTransformer):
         # validate the input, and get a copy of it
         X, cols = check_dataframe(X, cols=self.cols,
                                   assert_all_finite=False)
+
+        # Warn if the columns were passed as default and any of the dtypes
+        # in the frame are numeric
+        if self.cols is None and \
+                len(get_continuous_columns(X).columns.tolist()) > 0:
+            warnings.warn("Continuous features detected in DummyEncoder. "
+                          "This can increase runtime and dimensionality "
+                          "drastically. This warning only appears when "
+                          "`cols` is left as the default None, and there are "
+                          "continuous features present.")
 
         # for each column, fit a label encoder, get the transformation
         encoded = list(Parallel(n_jobs=self.n_jobs)(

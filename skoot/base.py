@@ -56,8 +56,14 @@ class BasePDTransformer(six.with_metaclass(ABCMeta, BaseEstimator,
     """.format(_cols_doc=dsutils._cols_doc, _as_df_doc=dsutils._as_df_doc)
 
     def __init__(self, cols=None, as_df=True):
-        self.cols = copy.deepcopy(cols)  # do not let be mutable!
         self.as_df = as_df
+
+        # This raises warnings in sklearn < 0.20, since we're technically
+        # amending parameters in the constructor. There's no good way to
+        # prevent this (it's only warned about in the "clone" function)
+        # but we need to deepcopy, otherwise we run the risk of a mutable
+        # structure being passed here
+        self.cols = copy.deepcopy(cols)  # do not let be mutable!
 
     @timed_instance_method(attribute_name="fit_time_")
     def fit(self, X, y=None):

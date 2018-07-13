@@ -13,6 +13,8 @@ import numpy as np
 
 import os
 
+from ..decorators import suppress_warnings
+
 __all__ = [
     'assert_persistable',
     'assert_raises',
@@ -37,6 +39,11 @@ def _assert_equal(a, b):
     # Else it's float and can use the easy way
     else:
         assert_array_almost_equal(a, b, decimal=6)
+
+
+@suppress_warnings
+def _suppressed_clone(estimator):
+    return clone(estimator)
 
 
 def assert_persistable(estimator, location, X, y=None, **fit_kwargs):
@@ -67,7 +74,7 @@ def assert_persistable(estimator, location, X, y=None, **fit_kwargs):
         raise OSError("Pickle location already exists: %s" % location)
 
     # Clone it
-    est = clone(estimator)
+    est = _suppressed_clone(estimator)
     try:
         # Fit and persist
         est.fit(X, y, **fit_kwargs)
@@ -157,7 +164,7 @@ def assert_transformer_asdf(estimator, X, y=None, **fit_kwargs):
         Any keyword args to pass to the estimator's ``fit`` method.
     """
     # Clone it so as not to impact the estimator in place
-    est = clone(estimator)
+    est = _suppressed_clone(estimator)
 
     # First assert where as_df=False
     est.as_df = False
