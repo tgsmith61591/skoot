@@ -7,6 +7,7 @@ from __future__ import print_function, absolute_import, division
 from numpy.testing import assert_array_almost_equal
 
 from skoot.datasets import load_iris_df
+from skoot.utils.testing import assert_transformer_asdf, assert_persistable
 from skoot.decomposition import (SelectivePCA, SelectiveTruncatedSVD,
                                  SelectiveNMF, SelectiveKernelPCA,
                                  SelectiveIncrementalPCA)
@@ -49,6 +50,11 @@ def test_selective_pca():
     assert not transformer.whiten  # not specified, but default value
 
 
+# Test the as_df functionality
+def test_selective_pca_asdf():
+    assert_transformer_asdf(SelectivePCA(), X)
+
+
 def test_selective_tsvd():
     original = X
 
@@ -74,12 +80,22 @@ def test_selective_tsvd():
     assert transformer.cols is not cols
 
 
+# Test the as_df functionality
+def test_selective_tsvd_asdf():
+    assert_transformer_asdf(SelectiveTruncatedSVD(), X)
+
+
 def test_nmf():
     # just assert it fits/transforms
     nmf = SelectiveNMF(trans_col_name="Trans")
     trans = nmf.fit_transform(X)
     assert not X.equals(trans)
     assert "Trans1" in trans.columns
+
+
+# Test the as_df functionality
+def test_selective_nmf_asdf():
+    assert_transformer_asdf(SelectiveNMF(), X)
 
 
 def test_kpca():
@@ -90,9 +106,26 @@ def test_kpca():
     assert "Trans1" in trans.columns
 
 
+# Test the as_df functionality
+def test_selective_kpca_asdf():
+    assert_transformer_asdf(SelectiveKernelPCA(), X)
+
+
 def test_ipca():
     # just assert it fits/transforms
     ipca = SelectiveIncrementalPCA(trans_col_name="Trans")
     trans = ipca.fit_transform(X)
     assert not X.equals(trans)
     assert "Trans1" in trans.columns
+
+
+# Test the as_df functionality
+def test_selective_ipca_asdf():
+    assert_transformer_asdf(SelectiveIncrementalPCA(), X)
+
+
+def test_all_persistable():
+    for est in (SelectivePCA, SelectiveTruncatedSVD,
+                SelectiveNMF, SelectiveKernelPCA,
+                SelectiveIncrementalPCA):
+        assert_persistable(est(), location="location.pkl", X=X)

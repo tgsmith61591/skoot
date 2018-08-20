@@ -4,7 +4,8 @@ from __future__ import absolute_import
 
 from skoot.preprocessing import BinningTransformer
 from skoot.datasets import load_iris_df
-from skoot.utils.testing import assert_raises
+from skoot.utils.testing import (assert_raises, assert_transformer_asdf,
+                                 assert_persistable)
 
 import numpy as np
 from numpy.testing import assert_array_equal
@@ -42,7 +43,8 @@ def test_binning_complex():
     binner = BinningTransformer(cols=["a", "b"], n_bins=[2, 3],
                                 strategy="uniform",
                                 return_bin_label=False,
-                                overwrite=True)
+                                overwrite=True,
+                                n_jobs=2)
 
     binner.fit(iris)
     trans = binner.transform(iris)
@@ -80,7 +82,7 @@ def test_binning_pctile():
 
 def test_binning_corners():
 
-    # assertion function to assert fails
+    # assertion function to assert fails. 'f' for code golf...
     def f(binner, exc):
         assert_raises(exc, binner.fit, iris)
 
@@ -101,3 +103,11 @@ def test_binning_corners():
 
     # this one will fail since strategy is illegal
     f(BinningTransformer(cols=["a"], n_bins=3, strategy="illegal"), ValueError)
+
+
+def test_binning_asdf():
+    assert_transformer_asdf(BinningTransformer(), iris)
+
+
+def test_binning_persistable():
+    assert_persistable(BinningTransformer(), "location.pkl", iris)

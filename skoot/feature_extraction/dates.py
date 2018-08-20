@@ -4,6 +4,7 @@
 
 from __future__ import absolute_import
 
+from .base import BaseCompoundFeatureDeriver
 from ..base import BasePDTransformer
 from ..utils.validation import check_dataframe, validate_test_set_columns
 from ..utils.iterables import ensure_iterable
@@ -183,7 +184,7 @@ class DateFactorizer(BasePDTransformer):
 
         # remove the original columns if necessary
         if self.drop_original:
-            X = X.drop(cols, axis=1)
+            X.drop(cols, axis=1, inplace=True)
 
         # set the self params
         self.fit_cols_ = cols
@@ -274,7 +275,7 @@ def _time_between(X, cols, units, absolute, astype, suffix, sep):
     return X
 
 
-class TimeDeltaFeatures(BasePDTransformer):
+class TimeDeltaFeatures(BaseCompoundFeatureDeriver):
     """Compute the time lapse between timestamp events.
 
     A transformer to compute time deltas between different date features.
@@ -376,13 +377,12 @@ class TimeDeltaFeatures(BasePDTransformer):
                  astype=float, absolute_difference=False, name_suffix="delta"):
 
         super(TimeDeltaFeatures, self).__init__(
-            cols=cols, as_df=as_df)
+            cols=cols, as_df=as_df,
+            sep=sep, name_suffix=name_suffix)
 
         self.units = units
-        self.sep = sep
         self.astype = astype
         self.absolute_difference = absolute_difference
-        self.name_suffix = name_suffix
 
     # Don't decorate this one, since it calls fit_transform, which is decorated
     def fit(self, X, y=None):

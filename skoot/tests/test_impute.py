@@ -5,7 +5,8 @@ from __future__ import absolute_import
 import numpy as np
 import pandas as pd
 
-from skoot.utils.testing import assert_raises
+from skoot.utils.testing import (assert_raises, assert_persistable,
+                                 assert_transformer_asdf)
 from skoot.impute import (SelectiveImputer, _get_callable, _get_present_values,
                           _mean, _median, _most_frequent,
                           BaggedClassifierImputer, BaggedRegressorImputer)
@@ -21,6 +22,29 @@ X = pd.DataFrame.from_records(
 
 Y = X.copy()  # type: pd.DataFrame
 Y['label'] = [1, 2, nan]
+
+
+def test_regressor_imputers_persistable():
+    for est in (SelectiveImputer, BaggedRegressorImputer):
+        assert_persistable(est(), "location.pkl", X)
+
+
+def test_classifier_imputers_persistable():
+    for est in (BaggedClassifierImputer,):
+        assert_persistable(
+            est(cols=['label'], random_state=42),
+            "location.pkl", Y)
+
+
+def test_regressor_imputers_asdf():
+    for est in (SelectiveImputer, BaggedRegressorImputer):
+        assert_transformer_asdf(est(), X)
+
+
+def test_classifier_imputers_asdf():
+    for est in (BaggedClassifierImputer,):
+        assert_transformer_asdf(
+            est(cols=['label'], random_state=42), Y)
 
 
 def test_get_valid_callable_from_string():

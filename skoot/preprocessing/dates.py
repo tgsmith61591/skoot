@@ -56,7 +56,9 @@ class DateTransformer(BasePDTransformer):
     """Cast features to datetime.
 
     Convert multiple features with potentially differing formats to datetime
-    with specified formats or by inferring the formats.
+    with specified formats or by inferring the formats. Note that unlike most
+    other Skoot transformers, this one requires that the output be a DataFrame
+    (note the lack of the ``as_df`` constructor arg).
 
     Parameters
     ----------

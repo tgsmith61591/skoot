@@ -13,7 +13,7 @@ import numpy as np
 
 from ..base import BasePDTransformer
 from ..utils.validation import check_dataframe, validate_test_set_columns
-from ..utils.dataframe import dataframe_or_array
+from ..utils.dataframe import dataframe_or_array, get_continuous_columns
 from ..utils.metaestimators import timed_instance_method
 
 import warnings
@@ -23,6 +23,7 @@ __all__ = [
 ]
 
 
+# Computed in parallel
 def _le_transform(col, vec, le, handle, sep):
     # if "ignore" and there are unknown labels in the array,
     # we need to handle it...
@@ -34,7 +35,7 @@ def _le_transform(col, vec, le, handle, sep):
         # if we want to warn, do so now
         if handle == "warn":
             warnings.warn("Previously unseen level(s) found in data! %r"
-                          % le.classes_[missing_mask])
+                          % set(vec[missing_mask].tolist()))
 
         # initialize vec_trans as zeros
         vec_trans = np.zeros(vec.shape[0]).astype(int)
@@ -43,20 +44,28 @@ def _le_transform(col, vec, le, handle, sep):
         vec_trans[~missing_mask] = \
             le.transform(vec[~missing_mask])
 
-        # where the labels are NOT present, set them to n_classes + 1
+        # XXX: Where the labels are NOT present, set them to n_classes + 1.
+        # (is there a better dummy class for this? We know, for instance,
+        # the labels are constrained to be positive, so we could theoretically
+        # use -1, however we also know the OHE does not discriminate, and any
+        # unknown levels are treated similarly, so it shouldn't matter, right?
+        # In a sense, we're setting k+1 to be a class indicating "other")
         vec_trans[missing_mask] = le.classes_.shape[0]
 
     # Otherwise take our chances that they're all there
     else:
         vec_trans = le.transform(vec)  # Union[str, int] -> int
 
-    # get the column names (levels) so we can predict the
-    # order of the output cols
+    # Get the column names (levels) so we can transform in the
+    # same order of the output cols. Note that we do not need to consider
+    # new levels here, since the OHE will ignore them in its transformation
+    # step
     le_clz = le.classes_.tolist()
     classes = ["%s%s%s" % (col, sep, clz) for clz in le_clz]
     return col, vec_trans, classes
 
 
+# Computed in parallel
 def _fit_transform_one_encoder(col, vec):
     # Fit/transform a label encoder. This is run in parallel
     # using the joblib library
@@ -68,17 +77,17 @@ def _fit_transform_one_encoder(col, vec):
 class DummyEncoder(BasePDTransformer):
     """Dummy encode categorical data.
 
-    A custom one-hot encoding class that handles previously unseen
-    levels and automatically drops one level from each categorical
-    feature to avoid the dummy variable trap.
+    A custom one-hot encoding class that is capable of handling previously
+    unseen levels and automatically dropping one level from each categorical
+    feature in order to avoid the dummy variable trap.
 
     Parameters
     ----------
-    cols : array-like, shape=(n_features,)
+    cols : array-like, shape=(n_features,), optional (default=None)
         The names of the columns on which to apply the transformation.
-        Unlike other BasePDTransformer instances, this is not optional,
-        since dummy-encoding the entire frame could prove extremely expensive
-        if accidentally applied to continuous data.
+        Unlike other BasePDTransformer instances, this should not be left
+        as the default None, since dummying the entire frame could prove
+        very expensive.
 
     as_df : bool, optional (default=True)
         Whether to return a Pandas ``DataFrame`` in the ``transform``
@@ -122,7 +131,7 @@ class DummyEncoder(BasePDTransformer):
         is used to validate the presence of the features in the test set
         during the ``transform`` stage.
     """
-    def __init__(self, cols, as_df=True, sep='_', drop_one_level=True,
+    def __init__(self, cols=None, as_df=True, sep='_', drop_one_level=True,
                  handle_unknown="ignore", n_jobs=1):
 
         super(DummyEncoder, self).__init__(
@@ -151,23 +160,37 @@ class DummyEncoder(BasePDTransformer):
         X, cols = check_dataframe(X, cols=self.cols,
                                   assert_all_finite=False)
 
+        # Warn if the columns were passed as default and any of the dtypes
+        # in the frame are numeric
+        if self.cols is None and \
+                len(get_continuous_columns(X).columns.tolist()) > 0:
+            warnings.warn("Continuous features detected in DummyEncoder. "
+                          "This can increase runtime and dimensionality "
+                          "drastically. This warning only appears when "
+                          "`cols` is left as the default None, and there are "
+                          "continuous features present.")
+
         # for each column, fit a label encoder, get the transformation
         encoded = list(Parallel(n_jobs=self.n_jobs)(
             delayed(_fit_transform_one_encoder)(col, X[col].values)
             for col in cols))
 
-        # quickly run over the encoded, set the columns in the dataframe
-        # pre-OHE fit and then create a dict of the encoders
+        # Quickly run over the encoded, set the columns in the dataframe
+        # pre-OHE fit and then create a dict of the encoders. This is a
+        # cheap pass of N over the columns, where we simply assign columns
+        # or values in a dict to the pre-computed values
         lab_encoders = {}
         for col, le, trans in encoded:
             X[col] = trans
             lab_encoders[col] = le
 
-        # fit a single OHE on the transformed columns.
+        # Fit a single OHE on the transformed columns. Note that the sklearn
+        # OHE class does not discriminate in "warn" or "ignore", so we just
+        # pass "ignore" since we already warned above.
         handle = "ignore" if self.handle_unknown in ("warn", "ignore") \
             else "error"
         ohe = OneHotEncoder(
-            sparse=False,
+            sparse=False,  # TODO: Is there a way to sparsify with Pandas?
             handle_unknown=handle).fit(X[cols])
 
         # assign fit params
@@ -216,6 +239,11 @@ class DummyEncoder(BasePDTransformer):
                 handle=self.handle_unknown, sep=sep)
             for col in cols))
 
+        # This is another pass of O(N), but it's not performing any incremental
+        # transformations of any sort. It just traverses the list of affected
+        # columns, extending the column order list and tracking the columns to
+        # drop. All of the heavy lifting for the transformations was handled
+        # in parallel above.
         col_order = []
         drops = []
         for col, vec_trans, classes in transformations:

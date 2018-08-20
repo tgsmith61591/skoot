@@ -45,8 +45,9 @@ def _bc_est_lam(y, min_value, dtype, suppress_warnings):
     # ensure is array, floor at min_value
     y = np.maximum(np.asarray(y).astype(dtype), min_value)
 
-    # Use scipy's log-likelihood estimator (we might get warnings here...
-    # should we suppress???)
+    # Use scipy's log-likelihood estimator (suppress the inner optimization
+    # routine otherwise it gets pretty annoyingly verbose)
+    @suppress
     def _boxcox_inner():
         return boxcox(y, lmbda=None)
 
@@ -68,7 +69,14 @@ def _yj_est_lam(y, brack, dtype=np.float32):
             # Function to minimize
             return -_yj_llf(data, lmb)
 
-        return optimize.brent(_eval_mle, brack=brck, args=(i,))
+        # Suppress the invalid scalar warnings we might get in the
+        # optimization routine.
+        @suppress
+        def brent_optimize():
+            return optimize.brent(_eval_mle, brack=brck, args=(i,))
+
+        # suppressed version:
+        return brent_optimize()
 
     return _mle_opt(y, brack)  # _mle(x, brack)
 

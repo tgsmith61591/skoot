@@ -7,8 +7,10 @@ from __future__ import absolute_import
 from sklearn.preprocessing import StandardScaler, RobustScaler
 
 from skoot.datasets import load_iris_df
+from skoot.utils.testing import assert_transformer_asdf, assert_persistable
 from skoot.preprocessing import (SelectiveStandardScaler,
-                                 SelectiveRobustScaler, SelectiveMinMaxScaler,
+                                 SelectiveRobustScaler,
+                                 SelectiveMinMaxScaler,
                                  SelectiveMaxAbsScaler)
 
 from numpy.testing import assert_array_almost_equal
@@ -54,3 +56,27 @@ def test_selective_scale_robust():
 
     assert_array_almost_equal(rb_scale.fit_transform(X),
                               trans.transform(X).values)
+
+
+def test_standard_scaler_asdf():
+    assert_transformer_asdf(SelectiveStandardScaler(), X)
+
+
+def test_robust_scaler_asdf():
+    assert_transformer_asdf(SelectiveRobustScaler(), X)
+
+
+def test_minmax_scaler_asdf():
+    assert_transformer_asdf(SelectiveMinMaxScaler(), X)
+
+
+def test_maxabs_scaler_asdf():
+    assert_transformer_asdf(SelectiveMaxAbsScaler(), X)
+
+
+def test_all_persistable():
+    for est in (SelectiveStandardScaler,
+                SelectiveRobustScaler,
+                SelectiveMinMaxScaler,
+                SelectiveMaxAbsScaler):
+        assert_persistable(est(), "location.pkl", X)

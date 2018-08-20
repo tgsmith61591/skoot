@@ -131,7 +131,7 @@ html_static_path = ['_static']
 #
 # html_sidebars = {}
 
-# html_logo = 'img/skooter.png'
+html_logo = 'img/skoot.png'
 
 # -- Options for HTMLHelp output ---------------------------------------------
 

@@ -9,7 +9,6 @@ from sklearn.externals import six
 
 from ..base import BasePDTransformer
 from ..utils.validation import check_dataframe, validate_test_set_columns
-from ..utils.dataframe import dataframe_or_array
 from ..utils.metaestimators import timed_instance_method
 
 __all__ = [
@@ -22,6 +21,9 @@ class SchemaNormalizer(BasePDTransformer):
 
     The SchemaNormalizer enforces a schema across incoming train and
     test data. This ensures that all data matches the expected schema.
+    Note that unlike most other Skoot transformers, this one requires
+    that the output be a DataFrame (note the lack of the ``as_df``
+    constructor arg).
 
     Parameters
     ----------
@@ -32,12 +34,6 @@ class SchemaNormalizer(BasePDTransformer):
 
             >>> schema = {'petal width (cm)': int}
 
-    as_df : bool, optional (default=True)
-        Whether to return a Pandas ``DataFrame`` in the ``transform``
-        method. If False, will return a Numpy ``ndarray`` instead.
-        Since most skoot transformers depend on explicitly-named
-        ``DataFrame`` features, the ``as_df`` parameter is True by default.
-
     Attributes
     ----------
     fit_cols_ : list
@@ -46,10 +42,11 @@ class SchemaNormalizer(BasePDTransformer):
         during the ``transform`` stage.
     """
 
-    def __init__(self, schema, as_df=True):
+    def __init__(self, schema):
 
         super(SchemaNormalizer, self).__init__(
-            as_df=as_df, cols=None)
+            as_df=True,  # Does not really matter, it always returns one
+            cols=None)
 
         self.schema = schema
 
@@ -99,4 +96,4 @@ class SchemaNormalizer(BasePDTransformer):
         for k, v in six.iteritems(self.schema):
             X[k] = X[k].astype(v)
 
-        return dataframe_or_array(X, self.as_df)
+        return X  # DataFrame
