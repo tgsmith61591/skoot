@@ -4,6 +4,8 @@
 API Reference
 =============
 
+.. include:: ../includes/api_css.rst
+
 This is the class and function reference for skoot. Please refer to
 the :ref:`full user guide <user_guide>` for further details, as the class and
 function raw specifications may not be enough to give full guidelines on their
