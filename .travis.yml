@@ -26,38 +26,6 @@ env:
 
 matrix:
   include:
-    # This environment tests the oldest supported anaconda env.
-    - os: linux
-      dist: trusty
-      services:
-        - docker
-      env: DISTRIB="conda" PYTHON_VERSION="2.7" CYTHON_VERSION="0.23.5"
-           COVERAGE=true SCIKIT_LEARN_VERSION="0.18" DEPLOY=true CACHEC=true
-           DOCKER_IMAGE="quay.io/pypa/manylinux1_x86_64"
-           DOCKER_CONTAINER_NAME="skootcontainer" SCIPY_VERSION="0.19.0"
-           PANDAS_VERSION="0.18"
-
-    # This environment tests against Linux with CPython 2.7.x built
-    # with UCS-4 encoding (and otherwise same as above)
-    - os: linux
-      dist: trusty
-      services:
-        - docker
-      env: DISTRIB="conda" PYTHON_VERSION="2.7" CYTHON_VERSION="0.23.5"
-           COVERAGE=true SCIKIT_LEARN_VERSION="0.18" DEPLOY=true CACHEC=true
-           DOCKER_IMAGE="quay.io/pypa/manylinux1_x86_64"
-           DOCKER_CONTAINER_NAME="skootcontainer" UCS_SETTING="ucs4"
-           SCIPY_VERSION="0.19.0" PANDAS_VERSION="0.18"
-
-    # This environment tests the same conditions as above, but tests against
-    # MAC OS X
-    - os: osx
-      language: generic
-      env: DISTRIB="conda" PYTHON_VERSION="2.7" CYTHON_VERSION="0.23.5"
-           COVERAGE=true SCIKIT_LEARN_VERSION="0.18" DEPLOY=true
-           CACHEC=false SCIPY_VERSION="0.19.0"
-           PANDAS_VERSION="0.18"
-
     # This environment tests Python 3.5 support on linux
     - os: linux
       dist: trusty
@@ -69,6 +37,16 @@ matrix:
            CACHEC=true DOCKER_IMAGE="quay.io/pypa/manylinux1_x86_64"
            DOCKER_CONTAINER_NAME="skootcontainer" PANDAS_VERSION="0.19"
 
+    # This environment tests on Python 3.6 for Linux
+    - os: linux
+      dist: trusty
+      services:
+      - docker
+      env: DISTRIB="conda" PYTHON_VERSION="3.6.1" INSTALL_MKL="true"
+        SCIPY_VERSION="0.19.0" CYTHON_VERSION="0.25.2"
+        COVERAGE=true SCIKIT_LEARN_VERSION="0.20" DEPLOY=true CACHEC=true
+        PANDAS_VERSION="0.19" TEST_DOCSTRINGS="true"
+
     # This environment tests Python 3.5 support on MAC OS X
     - os: osx
       language: generic
@@ -77,14 +55,13 @@ matrix:
            COVERAGE=true SCIKIT_LEARN_VERSION="0.18" DEPLOY=true CACHEC=false
            PANDAS_VERSION="0.19"
 
-    # This environment tests the newest supported Anaconda release (4.x) and
-    # runs on linux
-    - os: linux
-      dist: trusty
-      env: DISTRIB="conda" PYTHON_VERSION="3.6.1" INSTALL_MKL="true"
-           SCIPY_VERSION="0.19.0" CYTHON_VERSION="0.25.2"
-           COVERAGE=true SCIKIT_LEARN_VERSION="0.18" DEPLOY=false CACHEC=true
-           PANDAS_VERSION="0.19" TEST_DOCSTRINGS="true"
+    # This environment tests Python 3.6 support on MAC OS X
+    - os: osx
+      language: generic
+      env: DISTRIB="conda" PYTHON_VERSION="3.6"
+        SCIPY_VERSION="0.19.0" CYTHON_VERSION="0.25.2"
+        COVERAGE=true SCIKIT_LEARN_VERSION="0.19" DEPLOY=true CACHEC=false
+        PANDAS_VERSION="0.19"
 
 install: source build_tools/travis/install.sh
 before_script: bash build_tools/travis/before_script.sh

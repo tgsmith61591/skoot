@@ -65,12 +65,10 @@ def test_bc_fit_transform():
     trans = bc.fit_transform(X)
 
     assert isinstance(trans, pd.DataFrame)
-    assert_array_almost_equal(bc.lambda_,
-                              np.array([
-                                  -0.14475082666963388,
-                                  0.26165380763371671
-                              ]),
-                              decimal=3)  # who knows how far they'll be off..
+    assert np.allclose(bc.lambda_,
+                       [-0.14475082666963388,
+                        0.26165380763371671],
+                       rtol=0.1)  # how far will they be off?...
 
 
 def test_yj_fit_transform():

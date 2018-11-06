@@ -77,7 +77,7 @@ def test_selective_tsvd():
     # test the columns are stored appropriately
     assert isinstance(transformer.cols, list)
     assert transformer.cols == cols
-    assert transformer.cols is not cols
+    # assert transformer.cols is not cols  # No longer true after v0.20+
 
 
 # Test the as_df functionality

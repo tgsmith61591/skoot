@@ -33,6 +33,7 @@ skoot/decomposition/_dqrslmodule.c
 
 # Coverage
 .coverage
+.coverage.*
 
 # pickled objects from demos
 *.pkl
