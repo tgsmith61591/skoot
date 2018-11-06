@@ -16,7 +16,24 @@ from skoot.preprocessing import (SelectiveStandardScaler,
 from numpy.testing import assert_array_almost_equal
 import numpy as np
 
+from pkg_resources import parse_version
+import sklearn
+
 X = load_iris_df(include_tgt=False)
+
+# Sklearn 0.20+ changed the iris dataset, so we have to account for that when
+# asserting on the means or standard deviations...
+if parse_version(sklearn.__version__) >= parse_version("0.20.0"):
+    expected_means = np.array([-2.77555756e-16,
+                               3.05733333e+00,
+                               3.75800000e+00,
+                               1.19933333e+00])
+
+    expected_std = np.array([1., 0.43441097, 1.75940407, 0.75969263])
+
+else:
+    expected_means = np.array([5.84333333, 3.05733333, 3.758, 1.19933333])
+    expected_std = np.array([0.82530129, 0.43441097, 1.75940407, 0.75969263])
 
 
 def test_selective_scale():
@@ -41,17 +58,8 @@ def test_selective_scale():
     new_std = np.array(
         np.std(transformed, axis=0).tolist())
 
-    assert_array_almost_equal(new_means,
-                              np.array([-2.77555756e-16,
-                                        3.05733333e+00,
-                                        3.75800000e+00,
-                                        1.19933333e+00]))
-
-    assert_array_almost_equal(new_std,
-                              np.array([1.,
-                                        0.43441097,
-                                        1.75940407,
-                                        0.75969263]))
+    assert_array_almost_equal(new_means, expected_means)
+    assert_array_almost_equal(new_std, expected_std)
 
 
 def test_selective_scale_robust():

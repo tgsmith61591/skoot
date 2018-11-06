@@ -213,8 +213,7 @@ def do_setup():
                     # this will only work for releases that have the right tag
                     download_url='https://github.com/%s/%s/archive/v%s.tar.gz'
                                  % (MAINTAINER_GIT, DISTNAME, VERSION),
-                    python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, '
-                                    '!=3.3.*, !=3.4.*, <4',
+                    python_requires='>=3.5, <4',
                     platforms=["Windows", "Linux", "Unix", "Mac OS-X"],
                     cmdclass=cmdclass,
                     setup_requires=REQUIREMENTS,
