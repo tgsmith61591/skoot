@@ -37,7 +37,10 @@ test-requirements:
 	$(PYTHON) -m pip install pytest pytest-cov flake8
 
 test-lint: test-requirements
-	$(PYTHON) -m flake8 skoot --filename='*.py' --ignore E803,F401,F403,W293,W504
+	# Remove the numpy-generated __config__ file
+	rm skoot/__config__.py || echo "No config file"
+	$(PYTHON) -m flake8 skoot --filename='*.py' \
+	--ignore E803,F401,F403,W293,W504,W605
 
 test-unit: test-requirements
 	$(PYTHON) -m pytest -v --durations=20 --cov-config .coveragerc --cov skoot

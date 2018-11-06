@@ -45,7 +45,7 @@ class BaseFeatureSelector(six.with_metaclass(ABCMeta, BasePDTransformer)):
 
     as_df : bool, optional (default=True)
         Whether to return a Pandas ``DataFrame`` in the ``transform``
-        method. If False, will return a Numpy ``ndarray`` instead. 
+        method. If False, will return a Numpy ``ndarray`` instead.
         Since most skoot transformers depend on explicitly-named
         ``DataFrame`` features, the ``as_df`` parameter is True by default.
     """

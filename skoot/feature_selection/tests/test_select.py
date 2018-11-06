@@ -99,7 +99,7 @@ def test_mcf_iris_medium_thresh():
     # assert on the correlations
     assert np.allclose(
         mcf.mean_abs_correlations_,
-        np.array([0.69976926,  0.47160736,  0.81375684,  0.78431371]),
+        np.array([0.69976926, 0.47160736, 0.81375684, 0.78431371]),
         atol=1e-2)
 
 

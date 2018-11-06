@@ -13,11 +13,11 @@ def test_load_adult():
 
     adult = load_adult_df(include_tgt=True)
     assert adult.columns.tolist() == \
-           ["age", "workclass", "fnlwgt", "education",
-            "education-num", "marital-status", "occupation",
-            "relationship", "race", "sex", "capital-gain",
-            "capital-loss", "hours-per-week", "native-country",
-            "target"]
+        ["age", "workclass", "fnlwgt", "education",
+         "education-num", "marital-status", "occupation",
+         "relationship", "race", "sex", "capital-gain",
+         "capital-loss", "hours-per-week", "native-country",
+         "target"]
 
 
 def test_load_iris():

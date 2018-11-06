@@ -6,8 +6,8 @@
 
 from __future__ import absolute_import
 
-from sklearn.preprocessing import (StandardScaler, RobustScaler, MaxAbsScaler,
-                                   MinMaxScaler)
+from sklearn.preprocessing import StandardScaler, RobustScaler, \
+    MaxAbsScaler, MinMaxScaler
 
 from ..base import _SelectiveTransformerWrapper
 
@@ -27,13 +27,16 @@ __all__ = [
 class SelectiveStandardScaler(_SelectiveTransformerWrapper):
     pass
 
+
 @dsutils.wraps_estimator(RobustScaler, remove_sections=['Notes'])
 class SelectiveRobustScaler(_SelectiveTransformerWrapper):
     pass
 
+
 @dsutils.wraps_estimator(MaxAbsScaler, remove_sections=['Notes'])
 class SelectiveMaxAbsScaler(_SelectiveTransformerWrapper):
     pass
+
 
 @dsutils.wraps_estimator(MinMaxScaler, remove_sections=['Notes'])
 class SelectiveMinMaxScaler(_SelectiveTransformerWrapper):

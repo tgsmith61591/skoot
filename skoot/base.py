@@ -45,7 +45,7 @@ class BasePDTransformer(six.with_metaclass(ABCMeta, BaseEstimator,
     Examples
     --------
     The following is an example of how to subclass a BasePDTransformer:
-
+    
         >>> from skoot.base import BasePDTransformer
         >>> class A(BasePDTransformer):
         ...     def __init__(self, cols=None, as_df=None):
@@ -217,7 +217,7 @@ class _SelectiveTransformerWrapper(six.with_metaclass(dsutils._WritableDoc,
         # so we can get constructor args for grid search
         # (this is a closure)
         return list(cls._p_names) + \
-               cls._cls._get_param_names()  # must have _cls!
+            cls._cls._get_param_names()  # must have _cls!
 
 
 class _AnonymousPDTransformer(BasePDTransformer):

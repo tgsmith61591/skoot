@@ -376,17 +376,16 @@ class _BaseBaggedImputer(BasePDTransformer):
 
             # fit the regressor
             models[k] = self.imputer_class(
-                    base_estimator=self.base_estimator,
-                    n_estimators=self.n_estimators,
-                    max_samples=self.max_samples,
-                    max_features=self.max_features,
-                    bootstrap=self.bootstrap,
-                    bootstrap_features=self.bootstrap_features,
-                    n_jobs=self.n_jobs,
-                    random_state=self.random_state,
-                    verbose=self.verbose, oob_score=False,
-                    warm_start=False, **fit_params)\
-                .fit(train, train_y)
+                base_estimator=self.base_estimator,
+                n_estimators=self.n_estimators,
+                max_samples=self.max_samples,
+                max_features=self.max_features,
+                bootstrap=self.bootstrap,
+                bootstrap_features=self.bootstrap_features,
+                n_jobs=self.n_jobs,
+                random_state=self.random_state,
+                verbose=self.verbose, oob_score=False,
+                warm_start=False, **fit_params).fit(train, train_y)
 
         # assign fit params
         self.models_ = models

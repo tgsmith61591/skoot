@@ -42,7 +42,7 @@ class SparseFeatureFilter(BaseFeatureSelector):
 
     as_df : bool, optional (default=True)
         Whether to return a Pandas ``DataFrame`` in the ``transform``
-        method. If False, will return a Numpy ``ndarray`` instead. 
+        method. If False, will return a Numpy ``ndarray`` instead.
         Since most skutil transformers depend on explicitly-named
         ``DataFrame`` features, the ``as_df`` parameter is True by default.
 
@@ -141,7 +141,7 @@ class FeatureFilter(BaseFeatureSelector):
 
     as_df : bool, optional (default=True)
         Whether to return a Pandas ``DataFrame`` in the ``transform``
-        method. If False, will return a Numpy ``ndarray`` instead. 
+        method. If False, will return a Numpy ``ndarray`` instead.
         Since most skoot transformers depend on explicitly-named
         ``DataFrame`` features, the ``as_df`` parameter is True by default.
 
@@ -210,7 +210,7 @@ class MultiCorrFilter(BaseFeatureSelector):
 
     as_df : bool, optional (default=True)
         Whether to return a Pandas ``DataFrame`` in the ``transform``
-        method. If False, will return a Numpy ``ndarray`` instead. 
+        method. If False, will return a Numpy ``ndarray`` instead.
         Since most skoot transformers depend on explicitly-named
         ``DataFrame`` features, the ``as_df`` parameter is True by default.
 
@@ -376,7 +376,7 @@ class NearZeroVarianceFilter(BaseFeatureSelector):
 
     as_df : bool, optional (default=True)
         Whether to return a Pandas ``DataFrame`` in the ``transform``
-        method. If False, will return a Numpy ``ndarray`` instead. 
+        method. If False, will return a Numpy ``ndarray`` instead.
         Since most skutil transformers depend on explicitly-named
         ``DataFrame`` features, the ``as_df`` parameter is True by default.
 
@@ -429,13 +429,13 @@ class NearZeroVarianceFilter(BaseFeatureSelector):
 
     References
     ----------
-    .. [1] Kuhn, M. & Johnson, K. "Applied Predictive 
+    .. [1] Kuhn, M. & Johnson, K. "Applied Predictive
            Modeling" (2013). New York, NY: Springer.
 
     .. [2] Caret (R package) nearZeroVariance R code
            https://bit.ly/2J0ozbM
     """
-    def __init__(self, cols=None, freq_cut=95./5., as_df=True):
+    def __init__(self, cols=None, freq_cut=95. / 5., as_df=True):
 
         super(NearZeroVarianceFilter, self).__init__(
             cols=cols, as_df=as_df)

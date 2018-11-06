@@ -5,20 +5,20 @@ from __future__ import absolute_import
 import numpy as np
 import pandas as pd
 
-from skoot.utils.testing import (assert_raises, assert_persistable,
-                                 assert_transformer_asdf)
-from skoot.impute import (SelectiveImputer, _get_callable, _get_present_values,
-                          _mean, _median, _most_frequent,
-                          BaggedClassifierImputer, BaggedRegressorImputer)
+from skoot.utils.testing import assert_raises, assert_persistable, \
+    assert_transformer_asdf
+from skoot.impute import SelectiveImputer, _get_callable, \
+    _get_present_values, _mean, _median, _most_frequent, \
+    BaggedClassifierImputer, BaggedRegressorImputer
 
 from numpy.testing import assert_array_equal, assert_array_almost_equal
 
 nan = np.nan
 X = pd.DataFrame.from_records(
-        data=np.array([[1.0,  nan,  3.1],
-                       [nan,  2.3,  nan],
-                       [2.1,  2.1,  3.1]]),
-        columns=['a','b','c'])
+    data=np.array([[1.0, nan, 3.1],
+                   [nan, 2.3, nan],
+                   [2.1, 2.1, 3.1]]),
+    columns=['a', 'b', 'c'])
 
 Y = X.copy()  # type: pd.DataFrame
 Y['label'] = [1, 2, nan]

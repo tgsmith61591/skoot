@@ -4,7 +4,7 @@
 
 from __future__ import absolute_import
 
-from sklearn.preprocessing import StandardScaler, RobustScaler
+from sklearn.preprocessing import RobustScaler
 
 from skoot.datasets import load_iris_df
 from skoot.utils.testing import assert_transformer_asdf, assert_persistable
@@ -24,29 +24,34 @@ def test_selective_scale():
     cols = [original.columns[0]]  # Only perform on first...
 
     # original_means = np.mean(X, axis=0)
-    #  array([ 5.84333333,  3.054     ,  3.75866667,  1.19866667])
+    #  array([5.84333333, 3.05733333, 3.758     , 1.19933333])
 
     # original_std = np.std(X, axis=0)
-    #  array([ 0.82530129,  0.43214658,  1.75852918,  0.76061262])
+    #  array([0.82530129, 0.43441097, 1.75940407, 0.75969263])
 
     transformer = SelectiveStandardScaler(
         cols=cols, trans_col_name=[cols[0]]).fit(original)
     transformed = transformer.transform(original)[original.columns]
 
-    # expected: array([ 0.  ,  3.054     ,  3.75866667,  1.19866667])
+    # expected: array([ 0.  ,  3.057     ,  3.75866667,  1.19866667])
     new_means = np.array(
         np.mean(transformed, axis=0).tolist())
 
-    # expected: array([ 1.  ,  0.43214658,  1.75852918,  0.76061262])
+    # expected: array([1.        , 0.43441097, 1.75940407, 0.75969263])
     new_std = np.array(
         np.std(transformed, axis=0).tolist())
 
     assert_array_almost_equal(new_means,
-                              np.array([0., 3.054, 3.75866667, 1.19866667]))
+                              np.array([-2.77555756e-16,
+                                        3.05733333e+00,
+                                        3.75800000e+00,
+                                        1.19933333e+00]))
 
     assert_array_almost_equal(new_std,
-                              np.array([1., 0.43214658,
-                                        1.75852918, 0.76061262]))
+                              np.array([1.,
+                                        0.43441097,
+                                        1.75940407,
+                                        0.75969263]))
 
 
 def test_selective_scale_robust():

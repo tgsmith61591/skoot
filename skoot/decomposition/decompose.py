@@ -33,50 +33,50 @@ __all__ = [
 # Selective decomposition classes
 @dsutils.wraps_estimator(IncrementalPCA,
                          add_sections=[(
-                                 'See also', ['SelectiveKernelPCA',
-                                              'SelectiveNMF',
-                                              'SelectivePCA',
-                                              'SelectiveTruncatedSVD'], True)])
+                             'See also', ['SelectiveKernelPCA',
+                                          'SelectiveNMF',
+                                          'SelectivePCA',
+                                          'SelectiveTruncatedSVD'], True)])
 class SelectiveIncrementalPCA(_SelectiveTransformerWrapper):
     pass
 
 
 @dsutils.wraps_estimator(KernelPCA,
                          add_sections=[(
-                                 'See also', ['SelectiveIncrementalPCA',
-                                              'SelectiveNMF',
-                                              'SelectivePCA',
-                                              'SelectiveTruncatedSVD'], True)])
+                             'See also', ['SelectiveIncrementalPCA',
+                                          'SelectiveNMF',
+                                          'SelectivePCA',
+                                          'SelectiveTruncatedSVD'], True)])
 class SelectiveKernelPCA(_SelectiveTransformerWrapper):
     pass
 
 
 @dsutils.wraps_estimator(NMF,
                          add_sections=[(
-                                 'See also', ['SelectiveIncrementalPCA',
-                                              'SelectiveKernalPCA',
-                                              'SelectivePCA',
-                                              'SelectiveTruncatedSVD'], True)])
+                             'See also', ['SelectiveIncrementalPCA',
+                                          'SelectiveKernalPCA',
+                                          'SelectivePCA',
+                                          'SelectiveTruncatedSVD'], True)])
 class SelectiveNMF(_SelectiveTransformerWrapper):
     pass
 
 
 @dsutils.wraps_estimator(PCA,
                          add_sections=[(
-                                 'See also', ['SelectiveIncrementalPCA',
-                                              'SelectiveKernalPCA',
-                                              'SelectiveNMF',
-                                              'SelectiveTruncatedSVD'], True)])
+                             'See also', ['SelectiveIncrementalPCA',
+                                          'SelectiveKernalPCA',
+                                          'SelectiveNMF',
+                                          'SelectiveTruncatedSVD'], True)])
 class SelectivePCA(_SelectiveTransformerWrapper):
     pass
 
 
 @dsutils.wraps_estimator(TruncatedSVD,
                          add_sections=[(
-                                 'See also', ['SelectiveIncrementalPCA',
-                                              'SelectiveKernalPCA',
-                                              'SelectiveNMF',
-                                              'SelectivePCA'], True)])
+                             'See also', ['SelectiveIncrementalPCA',
+                                          'SelectiveKernalPCA',
+                                          'SelectiveNMF',
+                                          'SelectivePCA'], True)])
 class SelectiveTruncatedSVD(_SelectiveTransformerWrapper):
     pass
 
@@ -179,8 +179,8 @@ class QRDecomposition(object):
         #   ix = np.arange(n)
 
         # set up the structures to alter
-        coef, info = (np.zeros((k, ny), dtype=np.double, order='F'),
-                      np.zeros(1, dtype=np.int, order='F'))
+        coef, _ = (np.zeros((k, ny), dtype=np.double, order='F'),  # noqa: F841
+                   np.zeros(1, dtype=np.int, order='F'))
 
         # call the fortran module IN PLACE
         _call_dqrcf(qr, n, k, qraux, X, ny, coef)
