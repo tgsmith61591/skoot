@@ -32,8 +32,8 @@ if parse_version(sklearn.__version__) >= parse_version("0.20.0"):
     expected_std = np.array([1., 0.43441097, 1.75940407, 0.75969263])
 
 else:
-    expected_means = np.array([5.84333333, 3.05733333, 3.758, 1.19933333])
-    expected_std = np.array([0.82530129, 0.43441097, 1.75940407, 0.75969263])
+    expected_means = np.array([0., 3.054, 3.75866667, 1.19866667])
+    expected_std = np.array([1., 0.43214658, 1.75852918, 0.76061262])
 
 
 def test_selective_scale():
@@ -50,11 +50,11 @@ def test_selective_scale():
         cols=cols, trans_col_name=[cols[0]]).fit(original)
     transformed = transformer.transform(original)[original.columns]
 
-    # expected: array([ 0.  ,  3.057     ,  3.75866667,  1.19866667])
+    # expected: array([ 0.,  3.057 ,  3.75866667,  1.19866667])
     new_means = np.array(
         np.mean(transformed, axis=0).tolist())
 
-    # expected: array([1.        , 0.43441097, 1.75940407, 0.75969263])
+    # expected: array([1. , 0.43441097, 1.75940407, 0.75969263])
     new_std = np.array(
         np.std(transformed, axis=0).tolist())
 

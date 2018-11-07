@@ -59,38 +59,30 @@ def summarize(X):
     Examples
     --------
     >>> import skoot
-    >>> from skoot.datasets import load_iris_df
-    >>> X = load_iris_df()
-    >>> skoot.summarize(X)  # doctest: +ELLIPSIS, +NORMALIZE_WHITESPACE
-                   sepal length (cm)  sepal width (cm)  petal length (cm) ...
-    Mean                    5.843333          3.054000           3.758667
-    Median                  5.800000          3.000000           4.350000
-    Max                     7.900000          4.400000           6.900000
-    Min                     4.300000          2.000000           1.000000
-    Variance                0.685694          0.188004           3.113179
-    Skewness                0.311753          0.330703          -0.271712
-    Kurtosis               -0.573568          0.241443          -1.395359
-    Least Freq.                  NaN               NaN                NaN
-    Most Freq.                   NaN               NaN                NaN
-    Class Balance                NaN               NaN                NaN
-    Num Levels                   NaN               NaN                NaN
-    Arity                        NaN               NaN                NaN
-    Missing                 0.000000          0.000000           0.000000
-    <BLANKLINE>
-                   petal width (cm)    species
-    Mean                   1.198667        NaN
-    Median                 1.300000        NaN
-    Max                    2.500000        NaN
-    Min                    0.100000        NaN
-    Variance               0.582414        NaN
-    Skewness              -0.103944        NaN
-    Kurtosis              -1.335246        NaN
-    Least Freq.                 NaN  (2, 1, 0)
-    Most Freq.                  NaN  (2, 1, 0)
-    Class Balance               NaN          1
-    Num Levels                  NaN          3
-    Arity                       NaN       0.02
-    Missing                0.000000          0
+    >>> import pandas as pd
+    >>> import numpy as np
+    >>> from sklearn.datasets import make_classification
+    >>> X, y = make_classification(n_samples=1000, n_features=20,
+    ...                            n_informative=12, random_state=1)
+    >>> X = pd.DataFrame.from_records(X[:, :5],
+    ...                               columns=['a', 'b', 'c', 'd', 'e'])
+    >>> # Make one into a binary column
+    >>> X['d'] = (np.random.RandomState(1).rand(X.shape[0]) > 0.9).astype(int)
+    >>> skoot.summarize(X)
+                          a         b         c         d         e
+    Mean          -1.036419 -0.382853 -0.007993       NaN  0.394417
+    Median        -0.968732 -0.382114 -0.047757       NaN  0.283779
+    Max            4.559433  9.863773  2.991107       NaN  7.344063
+    Min           -6.147430 -8.301872 -2.679137       NaN -5.866428
+    Variance       3.324646  5.832246  0.985764       NaN  3.938836
+    Skewness      -0.059496  0.148757  0.121908       NaN  0.021251
+    Kurtosis       0.069795 -0.040619 -0.098477       NaN -0.187570
+    Least Freq.         NaN       NaN       NaN      (1,)       NaN
+    Most Freq.          NaN       NaN       NaN      (0,)       NaN
+    Class Balance       NaN       NaN       NaN  0.113586       NaN
+    Num Levels          NaN       NaN       NaN         2       NaN
+    Arity               NaN       NaN       NaN     0.002       NaN
+    Missing        0.000000  0.000000  0.000000         0  0.000000
 
     References
     ----------
