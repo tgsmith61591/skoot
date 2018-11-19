@@ -76,15 +76,18 @@ install:
      %CMD_IN_ENV%
      python -c "import sys,platform,struct;
      print(sys.platform, platform.machine(), struct.calcsize('P') * 8, )"
+
   # Install the BLAS library
   #  - install "openblas.lib" to PYTHON\lib
   #  - install OpenBLAS.dll to MINGW\bin
   - ps: |
       $PYTHON_ARCH = $env:PYTHON_ARCH
       $PYTHON = $env:PYTHON
-      If ($PYTHON_ARCH -eq 32) {
+      If ($PYTHON_ARCH -eq "32") {
+          echo "32-bit architecture"
           $OPENBLAS = $env:OPENBLAS_32
       } Else {
+          echo "64-bit architecture"
           $OPENBLAS = $env:OPENBLAS_64
       }
       $clnt = new-object System.Net.WebClient
@@ -109,12 +112,21 @@ install:
       ls $destination
 
   # Upgrade to the latest pip.
-  - '%CMD_IN_ENV% python -m pip install -U pip setuptools wheel six cython pytest cerberus twine patsy'
-  - '%CMD_IN_ENV% python -m pip install -U --timeout 5 --retries 2 -r build_tools/appveyor/requirements.txt'
+  - python -m pip install -U pip setuptools wheel six pytest twine patsy
+
+  # Install build requirements
+  - pip install Cython --install-option="--no-cython-compile"
+
+  # Install the remaining requirements
+  - python -m pip install -U --timeout 5 --retries 2 -r build_tools/appveyor/requirements.txt
 
   # Replace numpy distutils with a version that can build with msvc + mingw-gfortran
   - ps: |
       $NumpyDir = $((python -c 'import os; import numpy; print(os.path.dirname(numpy.__file__))') | Out-String).Trim()
+
+      echo "Current contents:"
+      ls "$NumpyDir\distutils"
+
       rm -r -Force "$NumpyDir\distutils"
       $tmpdir = New-TemporaryFile | %{ rm $_; mkdir $_ }
 
@@ -123,18 +135,28 @@ install:
       git clone -q --depth=1 -b $env:NUMPY_BRANCH $env:NUMPY_HEAD $tmpdir
       mv $tmpdir\numpy\distutils $NumpyDir
 
+      echo "New contents"
+      ls "$NumpyDir\distutils"
+
 build_script:
   - ps: |
       $PYTHON_ARCH = $env:PYTHON_ARCH
-      If ($PYTHON_ARCH -eq 32) {
+      If ($PYTHON_ARCH -eq "32") {
+          echo "32-bit architecture"
           $MINGW = $env:MINGW_32
       } Else {
+          echo "64-bit architecture"
           $MINGW = $env:MINGW_64
       }
       $env:Path += ";$MINGW"
       $env:NPY_NUM_BUILD_JOBS = "4"
-      mkdir dist
-      python -m pip wheel -v -v -v --wheel-dir=dist .
+
+  # Build the binary dist whl file
+  - python setup.py bdist_wheel
+  - ps: |
+      # Old style build:
+      # mkdir dist
+      # python -m pip wheel -v -v -v --wheel-dir=dist .
 
       # For each wheel that pip has placed in the "dist" directory
       # check if it's the skoot wheel and upload to the "artifacts" tab
@@ -150,10 +172,19 @@ build_script:
             echo $_.FullName
             appveyor PushArtifact $_.FullName
           }
-          python -m pip install $_.FullName
+          pip install $_.FullName
       }
 
-after_build:
+test_script:
+  # TODO: Help wanted to get this to work...
+  - cd ..
+  - mkdir tmp_for_test
+  - cd tm_for_test
+  - pytest --pyargs skoot
+  - cd ..
+  # - "ECHO SKIPPING TESTS UNTIL APPVEYOR STOPS SUCKING"
+
+after_test:
   # Remove old or huge cache files to hopefully not exceed the 1GB cache limit.
   #
   # If the cache limit is reached, the cache will not be updated (of not even
@@ -164,20 +195,11 @@ after_build:
   - C:\cygwin\bin\find "%LOCALAPPDATA%\pip" -type f -mtime +360 -delete
   - C:\cygwin\bin\find "%LOCALAPPDATA%\pip" -type f -size +10M -delete
   - C:\cygwin\bin\find "%LOCALAPPDATA%\pip" -empty -delete
-
   # Show size of cache
   - C:\cygwin\bin\du -hs "%LOCALAPPDATA%\pip\Cache"
 
   # Debug
   - ls %PYTHON%\lib\site-packages\skoot\decomposition
-
-test_script:
-  # TODO: Help wanted to get this to work...
-  # - python appveyor_runtests.py -n -m full
-  - "ECHO SKIPPING TESTS UNTIL APPVEYOR STOPS SUCKING"
-
-after_test:
-  - set PATH=%BK_PATH%
 
 deploy_script:
   - echo "Starting artifact deployment"
