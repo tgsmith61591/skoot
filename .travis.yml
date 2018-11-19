@@ -43,9 +43,9 @@ matrix:
       services:
       - docker
       env: DISTRIB="conda" PYTHON_VERSION="3.6.1" INSTALL_MKL="true"
-        SCIPY_VERSION="0.19.0" CYTHON_VERSION="0.25.2"
-        COVERAGE=true SCIKIT_LEARN_VERSION="0.20" DEPLOY=true CACHEC=true
-        PANDAS_VERSION="0.19" TEST_DOCSTRINGS="true"
+           SCIPY_VERSION="0.19.0" CYTHON_VERSION="0.25.2"
+           COVERAGE=true SCIKIT_LEARN_VERSION="0.20" DEPLOY=true CACHEC=true
+           PANDAS_VERSION="0.19" TEST_DOCSTRINGS="true"
 
     # This environment tests Python 3.5 support on MAC OS X
     - os: osx
@@ -55,13 +55,12 @@ matrix:
            COVERAGE=true SCIKIT_LEARN_VERSION="0.18" DEPLOY=true CACHEC=false
            PANDAS_VERSION="0.19"
 
-    # This environment tests Python 3.6 support on MAC OS X
+    # This environment tests Python 3.6 support on MAC OS X, and uses the
+    # bleeding edge version of each requirement
     - os: osx
       language: generic
-      env: DISTRIB="conda" PYTHON_VERSION="3.6"
-        SCIPY_VERSION="0.19.0" CYTHON_VERSION="0.25.2"
-        COVERAGE=true SCIKIT_LEARN_VERSION="0.19" DEPLOY=true CACHEC=false
-        PANDAS_VERSION="0.19"
+      env: DISTRIB="conda" PYTHON_VERSION="3.6" COVERAGE=true DEPLOY=true
+           CACHEC=false BLEEDING_EDGE=true
 
 install: source build_tools/travis/install.sh
 before_script: bash build_tools/travis/before_script.sh
@@ -80,7 +79,7 @@ after_success:
 deploy:
   provider: script
   skip_cleanup: true
-  script: python -m twine upload --skip-existing dist/*.whl
+  script: python -m twine upload --skip-existing dist/skoot*
   on:
     tags: true # Upload on tagged releases
     condition: "$DEPLOY = true"

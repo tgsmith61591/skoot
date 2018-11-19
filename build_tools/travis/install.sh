@@ -43,11 +43,16 @@ if [[ "$DISTRIB" == "conda" ]]; then
     export PATH=$MINICONDA_PATH/bin:$PATH
     conda update --yes conda
 
-    TO_INSTALL="python=$PYTHON_VERSION pip pytest pytest-cov \
-                numpy scipy=$SCIPY_VERSION \
-                scikit-learn=$SCIKIT_LEARN_VERSION \
-                cython=$CYTHON_VERSION pandas=$PANDAS_VERSION"
+    TO_INSTALL="python=$PYTHON_VERSION pip pytest pytest-cov numpy"
+    if [[ "$BLEEDING_EDGE" == "true" ]]; then
+        TO_INSTALL="$TO_INSTALL scipy scikit-learn cython pandas"
+    else
+        TO_INSTALL="$TO_INSTALL scipy=$SCIPY_VERSION \
+                    scikit-learn=$SCIKIT_LEARN_VERSION \
+                    cython=$CYTHON_VERSION pandas=$PANDAS_VERSION"
+    fi
 
+    # Some tests use MKL
     if [[ "$INSTALL_MKL" == "true" ]]; then
         TO_INSTALL="$TO_INSTALL mkl"
     else
@@ -62,7 +67,7 @@ if [[ "$DISTRIB" == "conda" ]]; then
 
 # We haven't setup other distribution options yet
 else
-    echo "You've done screwed up your .travis.yml"
+    echo "Only conda is supported at the moment"
     exit 10
 fi
 
