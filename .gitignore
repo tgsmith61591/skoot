@@ -30,7 +30,6 @@ cythonize.dat
 
 # fortran build wrappers
 skoot/decomposition/_dqrsl-f2pywrappers.f
-skoot/decomposition/_dqrslmodule.c
 
 # Coverage
 .coverage

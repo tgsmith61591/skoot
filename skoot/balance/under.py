@@ -4,7 +4,7 @@
 #
 # The under-sampling balancer
 
-from __future__ import division, absolute_import, division
+from __future__ import division, absolute_import
 
 from sklearn.utils.validation import check_random_state
 import numpy as np

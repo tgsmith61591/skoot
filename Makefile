@@ -44,6 +44,6 @@ test-lint: test-requirements
 
 test-unit: test-requirements
 	$(PYTHON) -m pytest -v --durations=20 --cov-config .coveragerc --cov skoot
-	rm -rf .coverage.*
 
 test: develop test-unit test-lint
+	rm -rf .coverage.*
