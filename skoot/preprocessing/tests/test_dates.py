@@ -56,5 +56,5 @@ def test_date_trans():
 
 def test_date_transformer_persistable():
     assert_persistable(DateTransformer(cols=["b", "c", "d"],
-                                date_format=["%m/%d/%Y", None, None]),
+                                       date_format=["%m/%d/%Y", None, None]),
                        "location.pkl", df)

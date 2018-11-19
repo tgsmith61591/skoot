@@ -3,7 +3,7 @@
 from __future__ import absolute_import
 
 from skoot.exploration.multivariate import summarize
-from skoot.datasets import load_iris_df
+from skoot.datasets import load_iris_df, load_adult_df
 
 import numpy as np
 from numpy.testing import assert_array_almost_equal, assert_array_equal
@@ -18,27 +18,42 @@ iris = load_iris_df(include_tgt=True, names=float_fields,
 iris["cls"] = ["A" if x == 0 else "B" if x == 1 else "C"
                for x in iris["species"]]
 
+adult_fields = ['age', 'fnlwgt', 'education-num', 'capital-gain',
+                'capital-loss', 'hours-per-week']
+adult = load_adult_df(include_tgt=True)
+
 
 def test_summarize_all_continuous():
-    cont = iris[float_fields]
+    # This is a bit strange since the whole purpose of the summarize func
+    # is to discern between floats and ints. However, in version 0.20+ of
+    # sklearn, the iris dataset was changed, so we don't want to assert on
+    # the attributes of the Iris dataset anymore. The only static dataset
+    # is the one native to skoot, which is the adult dataset.
+    cont = adult[adult_fields].astype(float)
     summary = summarize(cont)
+
     # show we get the stats we expect
     expected = [
-        [5.843333, 3.054000, 3.758667, 1.198667],    # mean
-        [5.800000, 3.000000, 4.350000, 1.300000],    # median
-        [7.900000, 4.400000, 6.900000, 2.500000],    # max
-        [4.300000, 2.000000, 1.000000, 0.100000],    # min
-        [0.685694, 0.188004, 3.113179, 0.582414],    # variance
-        [0.311753, 0.330703, -0.271712, -0.103944],  # skewness
-        [-0.57357, 0.241443, -1.395359, -1.335246],  # kurtosis
-        [nan, nan, nan, nan],                        # least freq
-        [nan, nan, nan, nan],                        # most freq
-        [nan, nan, nan, nan],                        # class balance
-        [nan, nan, nan, nan],                        # n_levels
-        [nan, nan, nan, nan],                        # arity
-        [0.000000, 0.000000, 0.000000, 0.000000]     # n_missing
+        [3.85816468e+01, 1.89778367e+05, 1.00806793e+01,
+         1.07764884e+03, 8.73038297e+01, 4.04374559e+01],  # mean
+        [3.70000e+01, 1.78356e+05, 1.00000e+01,
+         0.00000e+00, 0.00000e+00, 4.00000e+01],           # median
+        [90., 1484705., 16., 99999., 4356., 99.],          # max
+        [17., 12285., 1., 0., 0., 1.],                     # min
+        [1.86061400e+02, 1.11407978e+10, 6.61888991e+00,
+         5.45425392e+07, 1.62376938e+05, 1.52458995e+02],  # variance
+        [5.58717629e-01, 1.44691344e+00, -3.11661510e-01,
+         1.19532970e+01, 4.59441746e+00, 2.27632050e-01],  # skewness
+        [-1.66286214e-01, 6.21767181e+00, 6.23164080e-01,
+         1.54775484e+02, 2.03734886e+01, 2.91605467e+00],  # kurtosis
+        [nan, nan, nan, nan, nan, nan],                    # least freq
+        [nan, nan, nan, nan, nan, nan],                    # most freq
+        [nan, nan, nan, nan, nan, nan],                    # class balance
+        [nan, nan, nan, nan, nan, nan],                    # n_levels
+        [nan, nan, nan, nan, nan, nan],                    # arity
+        [0., 0., 0., 0., 0., 0.]     # n_missing
     ]
-    assert_array_almost_equal(summary.values, expected, decimal=4)
+    assert np.allclose(summary.values, expected, equal_nan=True)
 
 
 def test_summarize_all_categorical():

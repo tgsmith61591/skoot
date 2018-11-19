@@ -30,6 +30,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25,
                                                     random_state=42)
 cv = KFold(n_splits=2, shuffle=True, random_state=42)
 
+
 # this function will be made into an anonymous transformer
 def subtract_k(X, k):
     return X - float(k)
@@ -64,30 +65,30 @@ def test_pipeline_complex():
 def test_complex_grid_search():
     # build a pipeline
     pipe = Pipeline([
-        ('dropper',        FeatureFilter()),  # won't drop any
-        ('collinearity',   MultiCorrFilter(threshold=0.85)),
-        ('imputer',        SelectiveImputer()),  # pass through since all full
-        ('scaler',         SelectiveMaxAbsScaler()),
-        ('boxcox',         BoxCoxTransformer(suppress_warnings=True)),
-        ('nzv',            NearZeroVarianceFilter()),
-        ('pca',            SelectivePCA(n_components=0.9)),
-        ('custom',         make_transformer(subtract_k, k=1)),
-        ('model',          RandomForestClassifier(n_jobs=1))
+        ('dropper', FeatureFilter()),  # won't drop any
+        ('collinearity', MultiCorrFilter(threshold=0.85)),
+        ('imputer', SelectiveImputer()),  # pass through since all full
+        ('scaler', SelectiveMaxAbsScaler()),
+        ('boxcox', BoxCoxTransformer(suppress_warnings=True)),
+        ('nzv', NearZeroVarianceFilter()),
+        ('pca', SelectivePCA(n_components=0.9)),
+        ('custom', make_transformer(subtract_k, k=1)),
+        ('model', RandomForestClassifier(n_jobs=1))
     ])
 
     # let's define a set of hyper-parameters over which to search
     hp = {
-        'collinearity__threshold':    uniform(loc=.8, scale=.15),
-        'collinearity__method':       ['pearson', 'kendall', 'spearman'],
-        'pca__n_components':          uniform(loc=.75, scale=.2),
-        'pca__whiten':                [True, False],
-        'custom__k':                  [1, 2, 3],
-        'custom__func':               [subtract_k, add_k],
-        'model__n_estimators':        randint(5, 10),
-        'model__max_depth':           randint(2, 5),
-        'model__min_samples_leaf':    randint(1, 5),
-        'model__max_features':        uniform(loc=.5, scale=.5),
-        'model__max_leaf_nodes':      randint(10, 15)
+        'collinearity__threshold': uniform(loc=.8, scale=.15),
+        'collinearity__method': ['pearson', 'kendall', 'spearman'],
+        'pca__n_components': uniform(loc=.75, scale=.2),
+        'pca__whiten': [True, False],
+        'custom__k': [1, 2, 3],
+        'custom__func': [subtract_k, add_k],
+        'model__n_estimators': randint(5, 10),
+        'model__max_depth': randint(2, 5),
+        'model__min_samples_leaf': randint(1, 5),
+        'model__max_features': uniform(loc=.5, scale=.5),
+        'model__max_leaf_nodes': randint(10, 15)
     }
 
     # define the gridsearch

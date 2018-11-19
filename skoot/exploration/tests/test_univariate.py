@@ -19,4 +19,3 @@ def test_skewness():
 def test_kurtosis():
     kurt = kurtosis(x)
     assert_array_almost_equal(kurt, -0.5735679, decimal=6)
-

@@ -21,18 +21,18 @@ _cols_doc = "    " + \
     """cols : array-like, shape=(n_features,), optional (default=None)
         The names of the columns on which to apply the transformation.
         If no column names are provided, the transformer will be fit
-        on the entire frame. Note that the transformation will also 
-        only apply to the specified columns, and any other 
-        non-specified columns will still be present after 
+        on the entire frame. Note that the transformation will also
+        only apply to the specified columns, and any other
+        non-specified columns will still be present after
         the transformation.
         """
 
 _as_df_doc = "    " + \
     """as_df : bool, optional (default=True)
         Whether to return a Pandas ``DataFrame`` in the ``transform``
-        method. If False, will return a Numpy ``ndarray`` instead. 
+        method. If False, will return a Numpy ``ndarray`` instead.
         Since most skoot transformers depend on explicitly-named
-        ``DataFrame`` features, the ``as_df`` parameter is True by 
+        ``DataFrame`` features, the ``as_df`` parameter is True by
         default.
         """
 
@@ -46,9 +46,9 @@ _trans_col_name_doc = "    " + \
         """
 
 _wrapper_msg = """
-    This class wraps scikit-learn's {classname}. When a 
-    pd.DataFrame is passed to the ``fit`` method, the transformation is 
-    applied to the selected columns, which are subsequently dropped from the 
+    This class wraps scikit-learn's {classname}. When a
+    pd.DataFrame is passed to the ``fit`` method, the transformation is
+    applied to the selected columns, which are subsequently dropped from the
     frame. All remaining columns are left alone.
     """
 

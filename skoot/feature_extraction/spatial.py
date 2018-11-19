@@ -85,9 +85,9 @@ def _validate_spatial_cols(X, cols):
 
 def _haversine(pair_1, pair_2, lat1, lon1, lat2, lon2, units):
     return (pair_1, pair_2), \
-           haversine_distance(lat1=lat1, lon1=lon1,
-                              lat2=lat2, lon2=lon2,
-                              units=units)
+        haversine_distance(lat1=lat1, lon1=lon1,
+                           lat2=lat2, lon2=lon2,
+                           units=units)
 
 
 class HaversineFeatures(BaseCompoundFeatureDeriver):

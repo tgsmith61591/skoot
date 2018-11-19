@@ -3,6 +3,7 @@
 [![Windows build status](https://ci.appveyor.com/api/projects/status/7h91wcoaqwa3sc29?svg=true)](https://ci.appveyor.com/project/tgsmith61591/skoot)
 ![Supported versions](https://img.shields.io/badge/python-2.7-blue.svg)
 ![Supported versions](https://img.shields.io/badge/python-3.5-blue.svg)
+[![CircleCI](https://circleci.com/gh/tgsmith61591/skoot.svg?style=svg)](https://circleci.com/gh/tgsmith61591/skoot)
 
 # skoot
 

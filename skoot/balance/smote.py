@@ -24,7 +24,7 @@ __all__ = [
 
 def _perturb(consider_vector, nearest, random_state):
     return (consider_vector - nearest) * \
-           random_state.rand(nearest.shape[0], 1) + consider_vector
+        random_state.rand(nearest.shape[0], 1) + consider_vector
 
 
 def _interpolate(consider_vector, nearest, _):

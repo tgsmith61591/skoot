@@ -36,7 +36,7 @@ class PytestTester(object):
             pytest_args += list(extra_argv)
 
         if verbose and int(verbose) > 1:
-            pytest_args += ["-" + "v"*(int(verbose)-1)]
+            pytest_args += ["-" + "v" * (int(verbose) - 1)]
 
         if coverage:
             pytest_args += ["--cov=" + module_path]
@@ -76,7 +76,7 @@ def check_free_memory(free_mb):
                         "SKOOT_AVAILABLE_MEM variable to free memory "
                         "in MB to run the test.")
         msg = '{0} MB memory required, but {1} MB available'.format(
-            free_mb, mem_free/1e6)
+            free_mb, mem_free / 1e6)
 
     if mem_free < free_mb * 1e6:
         pytest.skip(msg)
