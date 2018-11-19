@@ -23,6 +23,7 @@ skoot/__config__.py
 *.so*
 *.pyd
 cythonize.dat
+*.c
 
 # Test artifacts
 .pytest_cache/
