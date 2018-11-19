@@ -179,7 +179,7 @@ test_script:
   # TODO: Help wanted to get this to work...
   - cd ..
   - mkdir tmp_for_test
-  - cd tm_for_test
+  - cd tmp_for_test
   - pytest --pyargs skoot
   - cd ..
   # - "ECHO SKIPPING TESTS UNTIL APPVEYOR STOPS SUCKING"
