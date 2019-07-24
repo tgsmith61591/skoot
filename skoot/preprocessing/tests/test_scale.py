@@ -2,8 +2,6 @@
 #
 # Author: Taylor Smith <taylor.smith@alkaline-ml.com>
 
-from __future__ import absolute_import
-
 from sklearn.preprocessing import RobustScaler
 
 from skoot.datasets import load_iris_df

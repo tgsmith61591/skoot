@@ -2,8 +2,6 @@
 #
 # Author: Taylor Smith <taylor.smith@alkaline-ml.com>
 
-from __future__ import print_function, absolute_import, division
-
 from numpy.testing import assert_array_almost_equal
 
 from skoot.datasets import load_iris_df

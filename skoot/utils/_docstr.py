@@ -5,8 +5,6 @@
 # Utilities for wrapping scikit-learn classes, inheriting their documentation
 # and amending it to fit the skoot interface.
 
-from __future__ import absolute_import
-
 from .iterables import ensure_iterable, is_iterable
 
 from abc import ABCMeta

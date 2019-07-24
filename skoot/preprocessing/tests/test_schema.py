@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import absolute_import
-
 from skoot.datasets import load_iris_df
 from skoot.preprocessing.schema import SchemaNormalizer
 from skoot.utils.testing import assert_persistable

@@ -4,8 +4,6 @@
 #
 # Test the over-sampling balancer
 
-from __future__ import division, absolute_import, division
-
 from sklearn.datasets import load_iris
 from skoot.balance import over_sample_balance
 

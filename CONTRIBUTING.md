@@ -56,10 +56,6 @@ We recommended (and prefer that) that your contribution complies with the
 following rules before you submit a pull request. Failure to adhere to the
 rules may hinder the speed with which your contribution is merged:
 
--  Skoot uses the [gitflow branching model](http://nvie.com/posts/a-successful-git-branching-model/).
-   That means all of your feature branches should be merged back to the `develop`
-   branch, and *not* `master`!
-
 -  Write detailed docstrings for all of public your functions. The preferred
    format for docstrings is the [numpy standard](https://github.com/numpy/numpy/blob/master/doc/HOWTO_DOCUMENT.rst.txt#docstring-standard).
    Also include usage examples where appropriate.

@@ -2,8 +2,6 @@
 #
 # Author: Taylor Smith <taylor.smith@alkaline-ml.com>
 
-from __future__ import print_function, division, absolute_import
-
 import os
 
 from skoot._build_utils import maybe_cythonize_extensions

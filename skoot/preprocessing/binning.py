@@ -4,10 +4,8 @@
 #
 # Bin your continuous features.
 
-from __future__ import absolute_import
-
-from sklearn.externals import six
-from sklearn.externals.joblib import Parallel, delayed
+import six
+from joblib import Parallel, delayed
 from sklearn.utils.validation import check_is_fitted
 
 import numpy as np

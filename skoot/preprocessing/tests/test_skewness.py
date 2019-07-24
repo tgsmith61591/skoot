@@ -2,8 +2,6 @@
 #
 # Author: Taylor Smith <taylor.smith@alkaline-ml.com>
 
-from __future__ import absolute_import, division
-
 from sklearn.utils.validation import check_random_state
 from numpy.testing import assert_array_almost_equal
 import numpy as np

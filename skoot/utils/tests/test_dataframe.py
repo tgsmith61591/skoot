@@ -2,8 +2,6 @@
 #
 # Author: Taylor Smith <taylor.smith@alkaline-ml.com>
 
-from __future__ import absolute_import
-
 from skoot.datasets import load_iris_df
 from skoot.utils.testing import assert_raises
 from skoot.utils.dataframe import (get_numeric_columns, safe_vstack,

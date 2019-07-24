@@ -2,9 +2,7 @@
 #
 # Author: Taylor Smith <taylor.smith@alkaline-ml.com>
 
-from __future__ import absolute_import
-
-from sklearn.externals import six
+import six
 import types
 
 from .compat import xrange

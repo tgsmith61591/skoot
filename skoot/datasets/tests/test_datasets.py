@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import absolute_import
-
 import pandas as pd
 from skoot.datasets import (load_boston_df, load_iris_df,
                             load_breast_cancer_df, load_adult_df)

@@ -2,10 +2,8 @@
 #
 # Author: Taylor Smith <taylor.smith@alkaline-ml.com>
 
-from __future__ import absolute_import
-
 from sklearn.utils.validation import check_is_fitted
-from sklearn.externals import six
+import six
 
 from ..base import BasePDTransformer
 from ..utils.validation import check_dataframe, validate_test_set_columns

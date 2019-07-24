@@ -4,16 +4,14 @@
 #
 # Classes and functions for rectifying skewness in transformers.
 
-from __future__ import print_function, absolute_import, division
-
 import numpy as np
 from abc import ABCMeta, abstractmethod
 
 from scipy import optimize
 from scipy.stats import boxcox
 
-from sklearn.externals import six
-from sklearn.externals.joblib import Parallel, delayed
+import six
+from joblib import Parallel, delayed
 from sklearn.utils.validation import check_is_fitted
 
 from ..base import BasePDTransformer

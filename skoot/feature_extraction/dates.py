@@ -2,8 +2,6 @@
 #
 # Feature engineering for dates
 
-from __future__ import absolute_import
-
 from .base import BaseCompoundFeatureDeriver
 from ..base import BasePDTransformer
 from ..utils.validation import check_dataframe, validate_test_set_columns

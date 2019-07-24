@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import absolute_import
-
-from sklearn.externals.joblib import Parallel, delayed
+from joblib import Parallel, delayed
 from sklearn.utils.validation import check_is_fitted
 import numpy as np
 

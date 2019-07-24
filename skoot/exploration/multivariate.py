@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import absolute_import
-
 from ..utils.validation import check_dataframe
 from ..utils.dataframe import get_continuous_columns
 from .univariate import fisher_pearson_skewness, kurtosis

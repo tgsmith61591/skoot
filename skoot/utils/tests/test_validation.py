@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import absolute_import
-
 from skoot.utils.testing import assert_raises
 from skoot.utils.validation import (check_dataframe,
                                     validate_test_set_columns,

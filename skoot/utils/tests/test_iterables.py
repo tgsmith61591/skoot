@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import absolute_import
-
-from sklearn.externals.six import u
+from six import u
 from skoot.utils.iterables import (chunk, is_iterable, flatten_all,
                                    ensure_iterable)
 

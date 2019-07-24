@@ -2,10 +2,8 @@
 #
 # Author: Taylor Smith <taylor.smith@alkaline-ml.com>
 
-from __future__ import absolute_import
-
 from sklearn.base import clone
-from sklearn.externals import joblib
+import joblib
 from numpy.testing import assert_array_almost_equal
 
 import pandas as pd

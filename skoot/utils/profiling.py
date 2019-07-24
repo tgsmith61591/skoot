@@ -4,8 +4,6 @@
 #
 # Author: Taylor Smith <taylor.smith@alkaline-ml.com>
 
-from __future__ import absolute_import
-
 from sklearn.pipeline import Pipeline
 
 __all__ = [
