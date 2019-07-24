@@ -23,6 +23,13 @@ deploy-filters: &deploy-filters
 #
 # ############################################
 commands:
+  install-gfortran:
+    description: "Skoot needs Fortran"
+    steps:
+      - run: |
+          apt-get update
+          apt-get install -yq gfortran
+
   make-unit-test:
     description: "Build and run unit tests using the Makefile"
     steps:
@@ -57,6 +64,7 @@ jobs:
       - image: python:3.5
     working_directory: ~/skoot
     steps:
+    - install-gfortran
     - make-unit-test
 
   cpython36-linux:
@@ -64,6 +72,7 @@ jobs:
       - image: python:3.6
     working_directory: ~/skoot
     steps:
+    - install-gfortran
     - make-unit-test
 
   cpython37-linux:
@@ -71,6 +80,7 @@ jobs:
       - image: python:3.7
     working_directory: ~/skoot
     steps:
+    - install-gfortran
     - make-unit-test
 
   # For testing lint
@@ -125,6 +135,7 @@ jobs:
     working_directory: ~/skoot
     steps:
       - checkout
+      - install-gfortran
       - build-whl-file:
           pythonversion: "3.7"
       - deploy-to-pypi
@@ -141,6 +152,7 @@ jobs:
     working_directory: ~/skoot
     steps:
     - checkout
+    - install-gfortran
     - run: make doc-requirements
     - run: make install
     - run: ./build_tools/circle/build_push_doc.sh
