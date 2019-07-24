@@ -1,0 +1,340 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Anonymous transformers in skoot &mdash; skoot 0.20.0.dev0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'0.20.0.dev0',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/style.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="SMOTE class balancer" href="balance/ex_smote.html" />
+    <link rel="prev" title="Getting acquainted with skoot" href="ex_getting_acquainted.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> skoot
+          
+
+          
+            
+            <img src="../_static/skoot.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.20.0.dev0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../modules/classes.html">API Reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Examples</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#id1">General examples</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ex_getting_acquainted.html">Getting acquainted with skoot</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Anonymous transformers in skoot</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#class-balancing-examples">Class balancing examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#datasets-examples">Datasets examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#exploratory-data-analysis-examples">Exploratory data analysis examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#feature-extraction-examples">Feature extraction examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#model-validation-examples">Model validation examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#preprocessing-examples">Preprocessing examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#utilities-examples">Utilities examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide.html">User Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">skoot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Examples</a> &raquo;</li>
+        
+      <li>Anonymous transformers in skoot</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/auto_examples/ex_anonymous_transformer.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="anonymous-transformers-in-skoot">
+<span id="sphx-glr-auto-examples-ex-anonymous-transformer-py"></span><h1>Anonymous transformers in skoot<a class="headerlink" href="#anonymous-transformers-in-skoot" title="Permalink to this headline">¶</a></h1>
+<p>Sometimes you have a pre-processing stage that finds itself awkwardly
+positioned in the middle of your pipeline and you’re left with one of
+two options:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>Write a full transformer class</li>
+<li>Break your pipeline up into pieces</li>
+</ol>
+</div></blockquote>
+<p>Obviously, the preferable action is the first, however many times your
+function doesn’t actually fit any training set parameters, so the transformer
+feels like overkill.</p>
+<p>This tutorial will introduce you to making anonymous, lightweight transformers
+on the fly that will fit into your modeling pipeline seamlessly.</p>
+<br/><p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Absolute</span> <span class="n">scaled</span> <span class="n">values</span><span class="p">:</span>
+     <span class="n">StandardScaler1</span>  <span class="o">...</span>  <span class="n">StandardScaler4</span>
+<span class="mi">73</span>          <span class="mf">0.354517</span>  <span class="o">...</span>         <span class="mf">0.022248</span>
+<span class="mi">18</span>          <span class="mf">0.133071</span>  <span class="o">...</span>         <span class="mf">1.179118</span>
+<span class="mi">118</span>         <span class="mf">2.304867</span>  <span class="o">...</span>         <span class="mf">1.490583</span>
+<span class="mi">78</span>          <span class="mf">0.232620</span>  <span class="o">...</span>         <span class="mf">0.422703</span>
+<span class="mi">76</span>          <span class="mf">1.207795</span>  <span class="o">...</span>         <span class="mf">0.289218</span>
+<span class="mi">31</span>          <span class="mf">0.498762</span>  <span class="o">...</span>         <span class="mf">1.045633</span>
+<span class="mi">64</span>          <span class="mf">0.254968</span>  <span class="o">...</span>         <span class="mf">0.155733</span>
+<span class="mi">141</span>         <span class="mf">1.329692</span>  <span class="o">...</span>         <span class="mf">1.490583</span>
+<span class="mi">68</span>          <span class="mf">0.476414</span>  <span class="o">...</span>         <span class="mf">0.422703</span>
+<span class="mi">82</span>          <span class="mf">0.011174</span>  <span class="o">...</span>         <span class="mf">0.022248</span>
+<span class="mi">110</span>         <span class="mf">0.842104</span>  <span class="o">...</span>         <span class="mf">1.090128</span>
+<span class="mi">12</span>          <span class="mf">1.230143</span>  <span class="o">...</span>         <span class="mf">1.446088</span>
+<span class="mi">36</span>          <span class="mf">0.376865</span>  <span class="o">...</span>         <span class="mf">1.312603</span>
+<span class="mi">9</span>           <span class="mf">1.108246</span>  <span class="o">...</span>         <span class="mf">1.446088</span>
+<span class="mi">19</span>          <span class="mf">0.864452</span>  <span class="o">...</span>         <span class="mf">1.179118</span>
+<span class="mi">56</span>          <span class="mf">0.598311</span>  <span class="o">...</span>         <span class="mf">0.556188</span>
+<span class="mi">104</span>         <span class="mf">0.842104</span>  <span class="o">...</span>         <span class="mf">1.357098</span>
+<span class="mi">69</span>          <span class="mf">0.254968</span>  <span class="o">...</span>         <span class="mf">0.111238</span>
+<span class="mi">55</span>          <span class="mf">0.133071</span>  <span class="o">...</span>         <span class="mf">0.155733</span>
+<span class="mi">132</span>         <span class="mf">0.720208</span>  <span class="o">...</span>         <span class="mf">1.357098</span>
+<span class="mi">29</span>          <span class="mf">1.352040</span>  <span class="o">...</span>         <span class="mf">1.312603</span>
+<span class="mi">127</span>         <span class="mf">0.354517</span>  <span class="o">...</span>         <span class="mf">0.823158</span>
+<span class="mi">26</span>          <span class="mf">0.986349</span>  <span class="o">...</span>         <span class="mf">1.045633</span>
+<span class="mi">128</span>         <span class="mf">0.720208</span>  <span class="o">...</span>         <span class="mf">1.223613</span>
+<span class="mi">131</span>         <span class="mf">2.548661</span>  <span class="o">...</span>         <span class="mf">1.090128</span>
+<span class="mi">145</span>         <span class="mf">1.085898</span>  <span class="o">...</span>         <span class="mf">1.490583</span>
+<span class="mi">108</span>         <span class="mf">1.085898</span>  <span class="o">...</span>         <span class="mf">0.823158</span>
+<span class="mi">143</span>         <span class="mf">1.207795</span>  <span class="o">...</span>         <span class="mf">1.490583</span>
+<span class="mi">45</span>          <span class="mf">1.230143</span>  <span class="o">...</span>         <span class="mf">1.179118</span>
+<span class="mi">30</span>          <span class="mf">1.230143</span>  <span class="o">...</span>         <span class="mf">1.312603</span>
+
+<span class="p">[</span><span class="mi">30</span> <span class="n">rows</span> <span class="n">x</span> <span class="mi">4</span> <span class="n">columns</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">print</span><span class="p">(</span><span class="vm">__doc__</span><span class="p">)</span>
+
+<span class="c1"># Author: Taylor Smith &lt;taylor.smith@alkaline-ml.com&gt;</span>
+
+<span class="c1"># #############################################################################</span>
+<span class="c1"># Introduce an interesting scenario</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <span class="n">Pipeline</span>
+<span class="kn">from</span> <span class="nn">skoot.preprocessing</span> <span class="kn">import</span> <a href="../modules/generated/skoot.preprocessing.SelectiveStandardScaler.html#skoot.preprocessing.SelectiveStandardScaler" title="View documentation for skoot.preprocessing.SelectiveStandardScaler"><span class="n">SelectiveStandardScaler</span></a>
+<span class="kn">from</span> <span class="nn">skoot.base</span> <span class="kn">import</span> <a href="../modules/generated/skoot.base.make_transformer.html#skoot.base.make_transformer" title="View documentation for skoot.base.make_transformer"><span class="n">make_transformer</span></a>
+<span class="kn">from</span> <span class="nn">skoot.datasets</span> <span class="kn">import</span> <a href="../modules/generated/skoot.datasets.load_iris_df.html#skoot.datasets.load_iris_df" title="View documentation for skoot.datasets.load_iris_df"><span class="n">load_iris_df</span></a>
+
+<span class="n">X</span> <span class="o">=</span> <a href="../modules/generated/skoot.datasets.load_iris_df.html#skoot.datasets.load_iris_df" title="View documentation for skoot.datasets.load_iris_df"><span class="n">load_iris_df</span></a><span class="p">(</span><span class="n">tgt_name</span><span class="o">=</span><span class="s2">&quot;target&quot;</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;target&#39;</span><span class="p">)</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+                                                    <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+
+<span class="c1"># Let&#39;s say we want to scale our features with the StandardScaler, but</span>
+<span class="c1"># for whatever reason we only want the ABSOLUTE value of the scaled values.</span>
+<span class="c1"># We *could* create a transformer or split our pipeline, but either case is</span>
+<span class="c1"># klunky and could interrupt our CV process in a grid search.</span>
+<span class="c1">#</span>
+<span class="c1"># So we&#39;ll instead define a simple commutative function that will be wrapped</span>
+<span class="c1"># in an &quot;anonymous&quot; transformer</span>
+<span class="k">def</span> <span class="nf">make_abs</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">X</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span>
+
+
+<span class="n">pipe</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([</span>
+    <span class="p">(</span><span class="s2">&quot;scale&quot;</span><span class="p">,</span> <a href="../modules/generated/skoot.preprocessing.SelectiveStandardScaler.html#skoot.preprocessing.SelectiveStandardScaler" title="View documentation for skoot.preprocessing.SelectiveStandardScaler"><span class="n">SelectiveStandardScaler</span></a><span class="p">()),</span>
+    <span class="p">(</span><span class="s2">&quot;abs&quot;</span><span class="p">,</span> <a href="../modules/generated/skoot.base.make_transformer.html#skoot.base.make_transformer" title="View documentation for skoot.base.make_transformer"><span class="n">make_transformer</span></a><span class="p">(</span><span class="n">make_abs</span><span class="p">))</span>
+<span class="p">])</span>
+
+<span class="n">pipe</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Absolute scaled values: &quot;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">pipe</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">))</span>
+</pre></div>
+</div>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  0.018 seconds)</p>
+<div class="sphx-glr-footer docutils container">
+<div class="sphx-glr-download docutils container">
+<a class="reference download internal" href="../_downloads/ex_anonymous_transformer.py" download=""><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">ex_anonymous_transformer.py</span></code></a></div>
+<div class="sphx-glr-download docutils container">
+<a class="reference download internal" href="../_downloads/ex_anonymous_transformer.ipynb" download=""><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">ex_anonymous_transformer.ipynb</span></code></a></div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.readthedocs.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="balance/ex_smote.html" class="btn btn-neutral float-right" title="SMOTE class balancer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ex_getting_acquainted.html" class="btn btn-neutral float-left" title="Getting acquainted with skoot" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Taylor G Smith
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

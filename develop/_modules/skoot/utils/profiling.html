@@ -1,0 +1,285 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>skoot.utils.profiling &mdash; skoot 0.20.0.dev0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'0.20.0.dev0',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/style.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../../about.html" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> skoot
+          
+
+          
+            
+            <img src="../../../_static/skoot.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.20.0.dev0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto_examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide.html">User Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">skoot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>skoot.utils.profiling</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for skoot.utils.profiling</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#</span>
+<span class="c1"># Profiling utilities</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Taylor Smith &lt;taylor.smith@alkaline-ml.com&gt;</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="k">import</span> <span class="n">Pipeline</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;profile_estimator&#39;</span>
+<span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_profile_times</span><span class="p">(</span><span class="n">est</span><span class="p">):</span>
+    <span class="c1"># Get the profile times from an estimator, if they exist</span>
+    <span class="k">return</span> <span class="nb">tuple</span><span class="p">((</span><span class="n">nm</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">est</span><span class="p">,</span> <span class="n">nm</span><span class="p">))</span>
+                 <span class="k">for</span> <span class="n">nm</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">est</span><span class="p">)</span> <span class="k">if</span> <span class="n">nm</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;_time_&quot;</span><span class="p">)</span>
+                 <span class="p">)</span>
+
+
+<div class="viewcode-block" id="profile_estimator"><a class="viewcode-back" href="../../../modules/generated/skoot.utils.profile_estimator.html#skoot.utils.profile_estimator">[docs]</a><span class="k">def</span> <span class="nf">profile_estimator</span><span class="p">(</span><span class="n">estimator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Profile the timed functions of an estimator.</span>
+
+<span class="sd">    Get a list of runtimes for estimators that have used the</span>
+<span class="sd">    ``timed_instance_method`` decorator. This is useful for diagnosing</span>
+<span class="sd">    bottlenecks in a pipeline.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    estimator : BaseEstimator</span>
+<span class="sd">        The estimator to profile.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    method_times : list or tuple</span>
+<span class="sd">        The list of method times.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from skoot.datasets import load_iris_df</span>
+<span class="sd">    &gt;&gt;&gt; from skoot.preprocessing import SelectiveStandardScaler</span>
+<span class="sd">    &gt;&gt;&gt; iris = load_iris_df(include_tgt=False)</span>
+<span class="sd">    &gt;&gt;&gt; scl = SelectiveStandardScaler().fit(iris)</span>
+<span class="sd">    &gt;&gt;&gt; profile_estimator(scl)  # doctest: +SKIP</span>
+<span class="sd">    ((&#39;fit_time_&#39;, 0.001055002212524414),)</span>
+
+<span class="sd">    Profiling also works on pipelines:</span>
+<span class="sd">    &gt;&gt;&gt; from sklearn.pipeline import Pipeline</span>
+<span class="sd">    &gt;&gt;&gt; from skoot.preprocessing.skewness import YeoJohnsonTransformer</span>
+<span class="sd">    &gt;&gt;&gt; from skoot.feature_selection import MultiCorrFilter</span>
+<span class="sd">    &gt;&gt;&gt; pipe = Pipeline([(&#39;scl&#39;, SelectiveStandardScaler()),</span>
+<span class="sd">    ...                  (&#39;yj&#39;, YeoJohnsonTransformer()),</span>
+<span class="sd">    ...                  (&#39;mcf&#39;, MultiCorrFilter())</span>
+<span class="sd">    ... ]).fit(iris)</span>
+<span class="sd">    &gt;&gt;&gt; profile_estimator(pipe)  # doctest: +SKIP</span>
+<span class="sd">    [(&#39;scl&#39;, ((&#39;fit_time_&#39;, 0.0016548633575439453),)),</span>
+<span class="sd">     (&#39;yj&#39;, ((&#39;fit_time_&#39;, 0.0282437801361084),))]</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This will only work if the attribute names provided for profiling</span>
+<span class="sd">    end with &quot;_time_&quot;. All skoot estimators, for instance, save the attribute</span>
+<span class="sd">    for the ``fit`` method as &quot;fit_time_&quot;, but a custom transformer that uses</span>
+<span class="sd">    a different suffix may not be captured in the profiling process.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">estimator</span><span class="p">,</span> <span class="n">Pipeline</span><span class="p">):</span>
+        <span class="n">method_times</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">step_name</span><span class="p">,</span> <span class="n">step_cls</span> <span class="ow">in</span> <span class="n">estimator</span><span class="o">.</span><span class="n">steps</span><span class="p">:</span>
+            <span class="n">times</span> <span class="o">=</span> <span class="n">profile_estimator</span><span class="p">(</span><span class="n">step_cls</span><span class="p">)</span>
+            <span class="c1"># Only append if it was profiled</span>
+            <span class="k">if</span> <span class="n">times</span><span class="p">:</span>
+                <span class="n">method_times</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">step_name</span><span class="p">,</span> <span class="n">times</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">method_times</span>
+
+    <span class="c1"># otherwise if it&#39;s not a pipeline, just return the profile times</span>
+    <span class="k">return</span> <span class="n">_profile_times</span><span class="p">(</span><span class="n">estimator</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Taylor G Smith
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

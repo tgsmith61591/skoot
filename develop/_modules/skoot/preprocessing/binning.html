@@ -1,0 +1,582 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>skoot.preprocessing.binning &mdash; skoot 0.20.0.dev0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'0.20.0.dev0',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/style.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../../about.html" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> skoot
+          
+
+          
+            
+            <img src="../../../_static/skoot.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.20.0.dev0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto_examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide.html">User Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">skoot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>skoot.preprocessing.binning</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for skoot.preprocessing.binning</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Taylor G Smith &lt;taylor.smith@alkaline-ml.com&gt;</span>
+<span class="c1">#</span>
+<span class="c1"># Bin your continuous features.</span>
+
+<span class="kn">import</span> <span class="nn">six</span>
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="k">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="k">import</span> <span class="n">check_is_fitted</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">..base</span> <span class="k">import</span> <span class="n">BasePDTransformer</span>
+<span class="kn">from</span> <span class="nn">..utils.iterables</span> <span class="k">import</span> <span class="n">chunk</span>
+<span class="kn">from</span> <span class="nn">..utils.dataframe</span> <span class="k">import</span> <span class="n">dataframe_or_array</span>
+<span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="k">import</span> <span class="p">(</span><span class="n">check_dataframe</span><span class="p">,</span> <span class="n">validate_test_set_columns</span><span class="p">,</span>
+                                <span class="n">type_or_iterable_to_col_mapping</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">..utils.metaestimators</span> <span class="k">import</span> <span class="n">timed_instance_method</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;BinningTransformer&#39;</span>
+<span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_validate_n_bins</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+    <span class="c1"># get unique values</span>
+    <span class="n">unique</span><span class="p">,</span> <span class="n">cts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">unique</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Fewer unique values than bins!&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">unique</span><span class="p">,</span> <span class="n">cts</span>
+
+
+<span class="k">def</span> <span class="nf">_uniform</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+    <span class="c1"># get unique and cut it at the uniform points</span>
+    <span class="n">unique</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_validate_n_bins</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">chunks</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">chunk</span><span class="p">(</span><span class="n">unique</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+
+    <span class="c1"># So now our chunks may resemble:</span>
+    <span class="c1"># &gt;&gt;&gt; list(chunk(np.arange(10), 4))</span>
+    <span class="c1"># [array([0, 1, 2]), array([3, 4, 5]), array([6, 7]), array([8, 9])]</span>
+    <span class="c1"># Transform them to bins</span>
+    <span class="k">return</span> <span class="n">_Bins</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_percentile</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+    <span class="c1"># bin by quartiles, quantiles, deciles, etc. This is really</span>
+    <span class="c1"># easy to delegate to pandas...</span>
+    <span class="n">bins</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">qcut</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">q</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> <span class="n">retbins</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># we can use the returned bins to create our own intervals</span>
+    <span class="k">return</span> <span class="n">_Bins</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">bins</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">bins</span><span class="p">[</span><span class="mi">1</span><span class="p">:])))</span>
+
+
+<span class="n">_STRATEGIES</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;uniform&quot;</span><span class="p">:</span> <span class="n">_uniform</span><span class="p">,</span>
+               <span class="s2">&quot;percentile&quot;</span><span class="p">:</span> <span class="n">_percentile</span><span class="p">}</span>
+
+
+<span class="k">class</span> <span class="nc">_Bins</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Binning class that keeps track of upper and lower bounds of bins.</span>
+<span class="sd">    The algorithm for assigning bins to a test vector is as follows:</span>
+
+<span class="sd">        1. Initialize all bins as the highest bin</span>
+<span class="sd">        2. For each lower bound in bin levels, determine which values in ``x``</span>
+<span class="sd">           are &gt;= to the bound. Invert the mask and decrement those bins (in</span>
+<span class="sd">           other words, decrement the indices where the value is &lt; the lower</span>
+<span class="sd">           bound for the bin in question).</span>
+<span class="sd">        3. Continue until there is no mask to invert (lowest bin).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chunks</span><span class="p">):</span>
+        <span class="c1"># chunks is a list of bin arrays</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span>
+
+        <span class="c1"># create the repr for each bin and create the mins/maxes arrays</span>
+        <span class="n">upper_bounds</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">lower_bounds</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">reprs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">this_chunk</span><span class="p">,</span> <span class="n">next_chunk</span><span class="p">)</span> <span class="ow">in</span> \
+                <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">chunks</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">chunks</span><span class="p">[</span><span class="mi">1</span><span class="p">:])):</span>
+
+            <span class="c1"># If it&#39;s the first one, it&#39;s just less than</span>
+            <span class="c1"># the next chunk&#39;s min.</span>
+            <span class="n">upper_bound</span> <span class="o">=</span> <span class="n">next_chunk</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">lower_bound</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+                <span class="n">rep</span> <span class="o">=</span> <span class="s2">&quot;(-Inf, </span><span class="si">%.2f</span><span class="s2">]&quot;</span> <span class="o">%</span> <span class="n">upper_bound</span>
+
+            <span class="c1"># Otherwise we know it&#39;s a middle one (not the last since we</span>
+            <span class="c1"># lagged with the zip function and handle that at the end)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">lower_bound</span> <span class="o">=</span> <span class="n">this_chunk</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">rep</span> <span class="o">=</span> <span class="s2">&quot;(</span><span class="si">%.2f</span><span class="s2">, </span><span class="si">%.2f</span><span class="s2">]&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">)</span>
+
+            <span class="n">upper_bounds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">upper_bound</span><span class="p">)</span>
+            <span class="n">lower_bounds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lower_bound</span><span class="p">)</span>
+            <span class="n">reprs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rep</span><span class="p">)</span>
+
+        <span class="c1"># since we missed the last chunk due to the lag, get the last one</span>
+        <span class="n">lower_bounds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">upper_bounds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+        <span class="n">reprs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;(</span><span class="si">%.2f</span><span class="s2">, Inf]&quot;</span> <span class="o">%</span> <span class="n">lower_bounds</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="c1"># set the attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">upper_bounds</span> <span class="o">=</span> <span class="n">upper_bounds</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lower_bounds</span> <span class="o">=</span> <span class="n">lower_bounds</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reprs</span> <span class="o">=</span> <span class="n">reprs</span>
+
+    <span class="k">def</span> <span class="nf">assign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">as_str</span><span class="p">):</span>
+        <span class="c1"># given some vector of values, assign the appropriate bins. We can</span>
+        <span class="c1"># do this in one pass, really. Just pass over one of the bounds arrays</span>
+        <span class="c1"># and keep track of the level at which the elements in V are no longer</span>
+        <span class="c1"># within the boundaries</span>
+
+        <span class="c1"># Initialize by setting all to the highest bin</span>
+        <span class="n">bins</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+        <span class="c1"># now progress backwards</span>
+        <span class="k">for</span> <span class="n">boundary</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower_bounds</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+
+            <span class="c1"># figure out which are &gt;= to the lower boundary. They should NOT</span>
+            <span class="c1"># be changed. The ones that are FALSE, however, should be</span>
+            <span class="c1"># decremented by 1. On the first pass, anything that actually</span>
+            <span class="c1"># belongs in the top bin will not be adjusted, but everything</span>
+            <span class="c1"># else will drop by one. Next, everything that is still below the</span>
+            <span class="c1"># lower boundary will decrement again, etc., until the lowest bin</span>
+            <span class="c1"># where the lower_bound is -np.inf. Since everything is &gt;= that,</span>
+            <span class="c1"># there will be no anti mask and nothing will change</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">v</span> <span class="o">&gt;=</span> <span class="n">boundary</span>
+            <span class="n">anti_mask</span> <span class="o">=</span> <span class="o">~</span><span class="n">mask</span>  <span class="c1"># type: np.ndarray</span>
+
+            <span class="k">if</span> <span class="n">anti_mask</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">bins</span><span class="p">[</span><span class="n">anti_mask</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
+
+        <span class="c1"># now we have bin indices, get the reprs to return...</span>
+        <span class="k">if</span> <span class="n">as_str</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">reprs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">bins</span><span class="p">])</span>
+        <span class="c1"># otherwise user just wants the bin level</span>
+        <span class="k">return</span> <span class="n">bins</span>
+
+
+<span class="c1"># Executed in parallel:</span>
+<span class="k">def</span> <span class="nf">_make_bin</span><span class="p">(</span><span class="n">binner</span><span class="p">,</span> <span class="n">vec</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+    <span class="c1"># Parallelize the bin operation over columns</span>
+    <span class="k">return</span> <span class="n">c</span><span class="p">,</span> <span class="n">binner</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+
+
+<span class="c1"># Executed in parallel:</span>
+<span class="k">def</span> <span class="nf">_assign_bin</span><span class="p">(</span><span class="n">binner</span><span class="p">,</span> <span class="n">vec</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">return_label</span><span class="p">):</span>
+    <span class="c1"># Parallelize bin assignment</span>
+    <span class="k">return</span> <span class="n">c</span><span class="p">,</span> <span class="n">binner</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="n">return_label</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="BinningTransformer"><a class="viewcode-back" href="../../../modules/generated/skoot.preprocessing.BinningTransformer.html#skoot.preprocessing.BinningTransformer">[docs]</a><span class="k">class</span> <span class="nc">BinningTransformer</span><span class="p">(</span><span class="n">BasePDTransformer</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Bin continuous variables.</span>
+
+<span class="sd">    The BinningTransformer will create buckets for continuous variables,</span>
+<span class="sd">    effectively transforming continuous features into categorical features.</span>
+
+<span class="sd">    Pros of binning:</span>
+
+<span class="sd">      * Particularly useful in the case of very skewed data where an</span>
+<span class="sd">        algorithm may make assumptions on the underlying distribution of the</span>
+<span class="sd">        variables</span>
+<span class="sd">      * Quick and easy way to take curvature into account</span>
+
+<span class="sd">    There are absolutely some negatives to binning:</span>
+<span class="sd">    </span>
+<span class="sd">      * You can tend to throw away information from continuous variables</span>
+<span class="sd">      * You might end up fitting &quot;wiggles&quot; rather than a linear</span>
+<span class="sd">        relationship itself</span>
+<span class="sd">      * You use up a lot of degrees of freedom</span>
+
+<span class="sd">    For a more exhaustive list of detrimental effects of binning, take a look</span>
+<span class="sd">    at [1].</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cols : array-like, shape=(n_features,), optional (default=None)</span>
+<span class="sd">        The names of the columns on which to apply the transformation.</span>
+<span class="sd">        Optional. If None, will be applied to all features (which could</span>
+<span class="sd">        prove to be expensive)</span>
+
+<span class="sd">    as_df : bool, optional (default=True)</span>
+<span class="sd">        Whether to return a Pandas ``DataFrame`` in the ``transform``</span>
+<span class="sd">        method. If False, will return a Numpy ``ndarray`` instead.</span>
+<span class="sd">        Since most skoot transformers depend on explicitly-named</span>
+<span class="sd">        ``DataFrame`` features, the ``as_df`` parameter is True by default.</span>
+
+<span class="sd">    n_bins : int or iterable, optional (default=10)</span>
+<span class="sd">        The number of bins into which to separate each specified feature.</span>
+<span class="sd">        Default is 20, but can also be an iterable or dict of the same length</span>
+<span class="sd">        as ``cols``, where positional integers indicate a different bin size</span>
+<span class="sd">        for that feature.</span>
+
+<span class="sd">    strategy : str or unicode, optional (default=&quot;uniform&quot;)</span>
+<span class="sd">        The strategy for binning. Default is &quot;uniform&quot;, which uniformly</span>
+<span class="sd">        segments a feature. Alternatives include &quot;percentile&quot; which uses</span>
+<span class="sd">        ``n_bins`` to compute quantiles (for ``n_bins=5``), quartiles</span>
+<span class="sd">        (for ``n_bins=4``), etc. Note that for percentile binning, the</span>
+<span class="sd">        outer bin boundaries (low boundary of lowest bin and high</span>
+<span class="sd">        boundary of the highest bin) will be set to -inf and inf,</span>
+<span class="sd">        respectively, to behave similar to other binning strategies.</span>
+
+<span class="sd">    return_bin_label : bool, optional (default=True)</span>
+<span class="sd">        Whether to return the string representation of the bin (i.e., &quot;&lt;25.2&quot;)</span>
+<span class="sd">        rather than the bin level, an integer.</span>
+
+<span class="sd">    overwrite : bool, optional (default=True)</span>
+<span class="sd">        Whether to overwrite the original feature with the binned feature.</span>
+<span class="sd">        Default is True so that the output names match the input names. If</span>
+<span class="sd">        False, the output columns will be appended to the right side of</span>
+<span class="sd">        the frame with &quot;_binned&quot; appended.</span>
+
+<span class="sd">    n_jobs : int, 1 by default</span>
+<span class="sd">       The number of jobs to use for the encoding. This works by</span>
+<span class="sd">       fitting each incremental LabelEncoder in parallel.</span>
+
+<span class="sd">       If -1 all CPUs are used. If 1 is given, no parallel computing code</span>
+<span class="sd">       is used at all, which is useful for debugging. For n_jobs below -1,</span>
+<span class="sd">       (n_cpus + 1 + n_jobs) are used. Thus for n_jobs = -2, all CPUs but</span>
+<span class="sd">       one are used.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    If a feature has fewer than ``n_bins`` unique values, it will raise a</span>
+<span class="sd">    ValueError in the fit procedure.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Bin two features in iris:</span>
+
+<span class="sd">    &gt;&gt;&gt; from skoot.datasets import load_iris_df</span>
+<span class="sd">    &gt;&gt;&gt; iris = load_iris_df(include_tgt=False, names=[&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;])</span>
+<span class="sd">    &gt;&gt;&gt; binner = BinningTransformer(cols=[&quot;a&quot;, &quot;b&quot;], strategy=&quot;uniform&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; trans = binner.fit_transform(iris)</span>
+<span class="sd">    &gt;&gt;&gt; trans.head()</span>
+<span class="sd">                  a             b    c    d</span>
+<span class="sd">    0  (5.10, 5.50]  (3.40, 3.60]  1.4  0.2</span>
+<span class="sd">    1  (4.70, 5.10]  (3.00, 3.20]  1.4  0.2</span>
+<span class="sd">    2  (4.70, 5.10]  (3.20, 3.40]  1.3  0.2</span>
+<span class="sd">    3  (-Inf, 4.70]  (3.00, 3.20]  1.5  0.2</span>
+<span class="sd">    4  (4.70, 5.10]  (3.60, 3.80]  1.4  0.2</span>
+<span class="sd">    &gt;&gt;&gt; trans.dtypes</span>
+<span class="sd">    a     object</span>
+<span class="sd">    b     object</span>
+<span class="sd">    c    float64</span>
+<span class="sd">    d    float64</span>
+<span class="sd">    dtype: object</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    bins_ : dict</span>
+<span class="sd">        A dictionary mapping the column names to the corresponding bins,</span>
+<span class="sd">        which are internal _Bin objects that store data on upper and lower</span>
+<span class="sd">        bounds.</span>
+
+<span class="sd">    fit_cols_ : list</span>
+<span class="sd">        The list of column names on which the transformer was fit. This</span>
+<span class="sd">        is used to validate the presence of the features in the test set</span>
+<span class="sd">        during the ``transform`` stage.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] &quot;Problems Caused by Categorizing Continuous Variables&quot;</span>
+<span class="sd">           http://biostat.mc.vanderbilt.edu/wiki/Main/CatContinuous</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="BinningTransformer.__init__"><a class="viewcode-back" href="../../../modules/generated/skoot.preprocessing.BinningTransformer.html#skoot.preprocessing.BinningTransformer.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">strategy</span><span class="o">=</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span>
+                 <span class="n">return_bin_label</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">BinningTransformer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">cols</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="n">as_df</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span> <span class="o">=</span> <span class="n">n_bins</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">strategy</span> <span class="o">=</span> <span class="n">strategy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">return_bin_label</span> <span class="o">=</span> <span class="n">return_bin_label</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">overwrite</span> <span class="o">=</span> <span class="n">overwrite</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span> <span class="o">=</span> <span class="n">n_jobs</span></div>
+
+<div class="viewcode-block" id="BinningTransformer.fit"><a class="viewcode-back" href="../../../modules/generated/skoot.preprocessing.BinningTransformer.html#skoot.preprocessing.BinningTransformer.fit">[docs]</a>    <span class="nd">@timed_instance_method</span><span class="p">(</span><span class="n">attribute_name</span><span class="o">=</span><span class="s2">&quot;fit_time_&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fit the transformer.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : pd.DataFrame, shape=(n_samples, n_features)</span>
+<span class="sd">            The Pandas frame to fit. The frame will only</span>
+<span class="sd">            be fit on the prescribed ``cols`` (see ``__init__``) or</span>
+<span class="sd">            all of them if ``cols`` is None.</span>
+
+<span class="sd">        y : array-like or None, shape=(n_samples,), optional (default=None)</span>
+<span class="sd">            Pass-through for ``sklearn.pipeline.Pipeline``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># validate the input, and get a copy of it</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">cols</span> <span class="o">=</span> <span class="n">check_dataframe</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">,</span>
+                                  <span class="n">assert_all_finite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># validate n_bins...</span>
+        <span class="n">n_bins</span> <span class="o">=</span> <span class="n">type_or_iterable_to_col_mapping</span><span class="p">(</span><span class="n">cols</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span> <span class="n">param</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">,</span>
+                                                 <span class="n">param_name</span><span class="o">=</span><span class="s2">&quot;n_bins&quot;</span><span class="p">,</span>
+                                                 <span class="n">permitted_scalar_types</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+
+        <span class="c1"># now that we have a dictionary, we can assess the actual integer</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">n_bins</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="n">v</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Each n_bin value must be an integer &gt; 1&quot;</span><span class="p">)</span>
+
+        <span class="c1"># get and validate the strategy</span>
+        <span class="n">strategy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">strategy</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">binner</span> <span class="o">=</span> <span class="n">_STRATEGIES</span><span class="p">[</span><span class="n">strategy</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;strategy must be one of </span><span class="si">%r</span><span class="s2">, but got </span><span class="si">%r</span><span class="s2">&quot;</span>
+                             <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">_STRATEGIES</span><span class="o">.</span><span class="n">keys</span><span class="p">())),</span> <span class="n">strategy</span><span class="p">))</span>
+
+        <span class="c1"># compute the bins for each feature</span>
+        <span class="n">bins</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">)(</span>
+            <span class="n">delayed</span><span class="p">(</span><span class="n">_make_bin</span><span class="p">)(</span><span class="n">binner</span><span class="p">,</span> <span class="n">vec</span><span class="o">=</span><span class="n">X</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">n_bins</span><span class="p">)))</span>
+
+        <span class="c1"># set the instance attribute</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bins_</span> <span class="o">=</span> <span class="n">bins</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit_cols_</span> <span class="o">=</span> <span class="n">cols</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="BinningTransformer.transform"><a class="viewcode-back" href="../../../modules/generated/skoot.preprocessing.BinningTransformer.html#skoot.preprocessing.BinningTransformer.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Apply the transformation to a dataframe.</span>
+
+<span class="sd">        This method will bin the continuous values in the test frame with the</span>
+<span class="sd">        bins designated in the ``fit`` stage.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : pd.DataFrame, shape=(n_samples, n_features)</span>
+<span class="sd">            The Pandas frame to transform. The operation will</span>
+<span class="sd">            be applied to a copy of the input data, and the result</span>
+<span class="sd">            will be returned.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        X : pd.DataFrame or np.ndarray, shape=(n_samples, n_features)</span>
+<span class="sd">            The operation is applied to a copy of ``X``,</span>
+<span class="sd">            and the result set is returned.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;bins_&#39;</span><span class="p">)</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">check_dataframe</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">)</span>  <span class="c1"># X is a copy now</span>
+
+        <span class="c1"># validate that fit cols in test set</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_cols_</span>
+        <span class="n">validate_test_set_columns</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
+        <span class="c1"># the bins</span>
+        <span class="n">bins</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bins_</span>
+
+        <span class="c1"># now apply the binning. Rather that use iteritems, iterate the cols</span>
+        <span class="c1"># themselves so we get the order prescribed by the user</span>
+        <span class="n">bin_assignments</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">)(</span>
+            <span class="n">delayed</span><span class="p">(</span><span class="n">_assign_bin</span><span class="p">)(</span>
+                <span class="n">bins</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">vec</span><span class="o">=</span><span class="n">X</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">col</span><span class="p">,</span>
+                <span class="n">return_label</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">return_bin_label</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">))</span>
+
+        <span class="c1"># Simple pass of O(N) to assign to dataframes. Lightweight, no</span>
+        <span class="c1"># actual computations here. That all happened in parallel</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">:</span>
+            <span class="n">binned</span> <span class="o">=</span> <span class="n">bin_assignments</span><span class="p">[</span><span class="n">c</span><span class="p">]</span>
+            <span class="c1"># if we overwrite, it&#39;s easy</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">overwrite</span><span class="p">:</span>
+                <span class="n">X</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">binned</span>
+            <span class="c1"># otherwise create a new feature</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">X</span><span class="p">[</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_binned&quot;</span> <span class="o">%</span> <span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">binned</span>
+
+        <span class="k">return</span> <span class="n">dataframe_or_array</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_df</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Taylor G Smith
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

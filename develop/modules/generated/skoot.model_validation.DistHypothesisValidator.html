@@ -1,0 +1,491 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>skoot.model_validation.DistHypothesisValidator &mdash; skoot 0.20.0.dev0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../',
+              VERSION:'0.20.0.dev0',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/style.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="skoot.preprocessing.BinningTransformer" href="skoot.preprocessing.BinningTransformer.html" />
+    <link rel="prev" title="skoot.model_validation.CustomValidator" href="skoot.model_validation.CustomValidator.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> skoot
+          
+
+          
+            
+            <img src="../../_static/skoot.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.20.0.dev0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../classes.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.base"><code class="docutils literal notranslate"><span class="pre">skoot.base</span></code>: Base metaclasses and utility functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot"><code class="docutils literal notranslate"><span class="pre">skoot.decorators</span></code>: Decorator utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.balance"><code class="docutils literal notranslate"><span class="pre">skoot.balance</span></code>: Class imbalance remedies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.datasets"><code class="docutils literal notranslate"><span class="pre">skoot.datasets</span></code>: Dataset loaders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.decomposition"><code class="docutils literal notranslate"><span class="pre">skoot.decomposition</span></code>: Various matrix decompositions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.exploration"><code class="docutils literal notranslate"><span class="pre">skoot.exploration</span></code>: Exploratory data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.feature_extraction"><code class="docutils literal notranslate"><span class="pre">skoot.feature_extraction</span></code>: Feature extraction methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.feature_selection"><code class="docutils literal notranslate"><span class="pre">skoot.feature_selection</span></code>: Feature selection methods</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../classes.html#module-skoot.model_validation"><code class="docutils literal notranslate"><span class="pre">skoot.model_validation</span></code>: Model validation &amp; monitoring</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../classes.html#model-validators-monitoring-classes">Model validators &amp; monitoring classes</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="skoot.model_validation.CustomValidator.html"><code class="docutils literal notranslate"><span class="pre">skoot.model_validation</span></code>.CustomValidator</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">skoot.model_validation</span></code>.DistHypothesisValidator</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.preprocessing"><code class="docutils literal notranslate"><span class="pre">skoot.preprocessing</span></code>: Pre-processing transformers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.utils"><code class="docutils literal notranslate"><span class="pre">skoot.utils</span></code>: Common utility functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide.html">User Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">skoot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../classes.html">API Reference</a> &raquo;</li>
+        
+      <li><code class="docutils literal notranslate"><span class="pre">skoot.model_validation</span></code>.DistHypothesisValidator</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/modules/generated/skoot.model_validation.DistHypothesisValidator.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="skoot-model-validation-disthypothesisvalidator">
+<h1><a class="reference internal" href="../classes.html#module-skoot.model_validation" title="skoot.model_validation"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skoot.model_validation</span></code></a>.DistHypothesisValidator<a class="headerlink" href="#skoot-model-validation-disthypothesisvalidator" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="skoot.model_validation.DistHypothesisValidator">
+<em class="property">class </em><code class="descclassname">skoot.model_validation.</code><code class="descname">DistHypothesisValidator</code><span class="sig-paren">(</span><em>cols=None</em>, <em>as_df=True</em>, <em>alpha=0.05</em>, <em>action='warn'</em>, <em>categorical_strategy='ratio'</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/7ade853/skoot/model_validation/_validator.py#L205"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/model_validation/_validator.html#DistHypothesisValidator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.model_validation.DistHypothesisValidator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate test distributions using various hypothesis tests.</p>
+<p>The distribution validator learns statistics from the training set and then
+validates that the test set features match their expected distributions.
+This can be useful for model validation tasks where model monitoring needs
+to take place.</p>
+<p>For continuous (float) features, a two-tailed T-test will be applied to
+the test data to ensure it matches the distribution of the training data.
+For categorical (int, object) features, we compare the frequencies of
+different categorical levels within a tolerance of <code class="docutils literal notranslate"><span class="pre">alpha</span></code>.</p>
+<p><strong>Note</strong>: this class is NaN-safe, meaning if it is used early in your
+pipeline when you still have NaN values in your features, it will still
+function!</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>cols</strong> : array-like, shape=(n_features,)</p>
+<blockquote>
+<div><p>The names of the columns on which to apply the transformation.
+Unlike other BasePDTransformer instances, if <code class="docutils literal notranslate"><span class="pre">cols</span></code> is None, it will
+only fit the numerical columns, since statistics such as standard
+deviation cannot be computed on categorical features. For column
+types that are integers or objects, the ratio of frequency for each
+class level will be compared to the expected ratio within a tolerance
+of <code class="docutils literal notranslate"><span class="pre">alpha</span></code>.</p>
+</div></blockquote>
+<p><strong>as_df</strong> : bool, optional (default=True)</p>
+<blockquote>
+<div><p>Whether to return a Pandas <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> in the <code class="docutils literal notranslate"><span class="pre">transform</span></code>
+method. If False, will return a Numpy <code class="docutils literal notranslate"><span class="pre">ndarray</span></code> instead.
+Since most skoot transformers depend on explicitly-named
+<code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> features, the <code class="docutils literal notranslate"><span class="pre">as_df</span></code> parameter is True by default.</p>
+</div></blockquote>
+<p><strong>alpha</strong> : float, optional (default=0.05)</p>
+<blockquote>
+<div><p>The <span class="math notranslate">\(\alpha\)</span> value for the T-test or level ratio comparison.
+If the resulting p-value is LESS than <code class="docutils literal notranslate"><span class="pre">alpha</span></code>, it means that
+we would reject the null hypothesis, and that the variable likely
+follows a different distribution from the training set.</p>
+</div></blockquote>
+<p><strong>action</strong> : str or unicode, optional (default=”warn”)</p>
+<blockquote>
+<div><p>The default action for handling validation mismatches. Options include
+“warn”, “raise” or “ignore”. If <code class="docutils literal notranslate"><span class="pre">action</span></code> is “raise”, will raise a
+ValueError if mismatched.</p>
+</div></blockquote>
+<p><strong>categorical_strategy</strong> : str, unicode or None, optional (default=”ratio”)</p>
+<blockquote class="last">
+<div><p>How to validate categorical features. Default is “ratio”, which will
+compare the ratio of each level’s frequency to the overall count of
+samples in the feature within an absolute tolerance of <code class="docutils literal notranslate"><span class="pre">alpha</span></code>.
+If None, will not perform validation on categorical features.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="7%" />
+<col width="93%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>statistics_</strong></td>
+<td>(list, shape=(n_features,)) A list of tuples over the training features. For continuous features::  (mean, standard_dev, n_obs)  For categorical features:  (present_levels, present_counts, n_obs)</td>
+</tr>
+<tr class="row-even"><td><strong>fit_cols_</strong></td>
+<td>(list) The list of column names on which the transformer was fit. This is used to validate the presence of the features in the test set during the <code class="docutils literal notranslate"><span class="pre">transform</span></code> stage.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>This class is NaN-safe, meaning if it is used early in your pipeline
+when you still have NaN values in your features, it will still function.
+This is a double-edge sword, since computing the <code class="docutils literal notranslate"><span class="pre">np.nanmean</span></code> on a
+feature of mostly-NaN values will not be very meaningful.</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#skoot.model_validation.DistHypothesisValidator.fit" title="skoot.model_validation.DistHypothesisValidator.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(X[,&nbsp;y])</td>
+<td>Fit the transformer.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#skoot.model_validation.DistHypothesisValidator.fit_transform" title="skoot.model_validation.DistHypothesisValidator.fit_transform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_transform</span></code></a>(X[,&nbsp;y])</td>
+<td>Fit to data, then transform it.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#skoot.model_validation.DistHypothesisValidator.get_params" title="skoot.model_validation.DistHypothesisValidator.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code></a>([deep])</td>
+<td>Get parameters for this estimator.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#skoot.model_validation.DistHypothesisValidator.set_params" title="skoot.model_validation.DistHypothesisValidator.set_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_params</span></code></a>(**params)</td>
+<td>Set the parameters of this estimator.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#skoot.model_validation.DistHypothesisValidator.transform" title="skoot.model_validation.DistHypothesisValidator.transform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">transform</span></code></a>(X)</td>
+<td>Validate the features in the test dataframe.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="skoot.model_validation.DistHypothesisValidator.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>cols=None</em>, <em>as_df=True</em>, <em>alpha=0.05</em>, <em>action='warn'</em>, <em>categorical_strategy='ratio'</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/7ade853/skoot/model_validation/_validator.py#L279"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/model_validation/_validator.html#DistHypothesisValidator.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.model_validation.DistHypothesisValidator.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="skoot.model_validation.DistHypothesisValidator.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/7ade853/skoot/utils/metaestimators.py#L287"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/model_validation/_validator.html#DistHypothesisValidator.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.model_validation.DistHypothesisValidator.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit the transformer.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>X</strong> : pd.DataFrame, shape=(n_samples, n_features)</p>
+<blockquote>
+<div><p>The Pandas frame to fit. The frame will only
+be fit on the prescribed <code class="docutils literal notranslate"><span class="pre">cols</span></code> (see <code class="docutils literal notranslate"><span class="pre">__init__</span></code>) or
+all if <code class="docutils literal notranslate"><span class="pre">cols</span></code> is None.</p>
+</div></blockquote>
+<p><strong>y</strong> : array-like or None, shape=(n_samples,), optional (default=None)</p>
+<blockquote class="last">
+<div><p>Pass-through for <code class="docutils literal notranslate"><span class="pre">sklearn.pipeline.Pipeline</span></code>.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="skoot.model_validation.DistHypothesisValidator.fit_transform">
+<code class="descname">fit_transform</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em>, <em>**fit_params</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/7ade853/skoot/../../sklearn/base.py#L529"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.model_validation.DistHypothesisValidator.fit_transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit to data, then transform it.</p>
+<p>Fits transformer to X and y with optional parameters fit_params
+and returns a transformed version of X.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>X</strong> : numpy array of shape [n_samples, n_features]</p>
+<blockquote>
+<div><p>Training set.</p>
+</div></blockquote>
+<p><strong>y</strong> : numpy array of shape [n_samples]</p>
+<blockquote>
+<div><p>Target values.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X_new</strong> : numpy array of shape [n_samples, n_features_new]</p>
+<blockquote class="last">
+<div><p>Transformed array.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="skoot.model_validation.DistHypothesisValidator.get_params">
+<code class="descname">get_params</code><span class="sig-paren">(</span><em>deep=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/7ade853/skoot/../../sklearn/base.py#L177"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.model_validation.DistHypothesisValidator.get_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get parameters for this estimator.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>deep</strong> : boolean, optional</p>
+<blockquote>
+<div><p>If True, will return the parameters for this estimator and
+contained subobjects that are estimators.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>params</strong> : mapping of string to any</p>
+<blockquote class="last">
+<div><p>Parameter names mapped to their values.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="skoot.model_validation.DistHypothesisValidator.set_params">
+<code class="descname">set_params</code><span class="sig-paren">(</span><em>**params</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/7ade853/skoot/../../sklearn/base.py#L200"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.model_validation.DistHypothesisValidator.set_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the parameters of this estimator.</p>
+<p>The method works on simple estimators as well as on nested objects
+(such as pipelines). The latter have parameters of the form
+<code class="docutils literal notranslate"><span class="pre">&lt;component&gt;__&lt;parameter&gt;</span></code> so that it’s possible to update each
+component of a nested object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">self</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="skoot.model_validation.DistHypothesisValidator.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/7ade853/skoot/model_validation/_validator.py#L70"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.model_validation.DistHypothesisValidator.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate the features in the test dataframe.</p>
+<p>This method will apply the validation test over each prescribed
+feature, and raise or warn appropriately.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>X</strong> : pd.DataFrame, shape=(n_samples, n_features)</p>
+<blockquote>
+<div><p>The Pandas frame to validate. The operation will
+be applied to a copy of the input data, and the result
+will be returned.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X</strong> : pd.DataFrame or np.ndarray, shape=(n_samples, n_features)</p>
+<blockquote class="last">
+<div><p>The operation is applied to a copy of <code class="docutils literal notranslate"><span class="pre">X</span></code>,
+and the result set is returned.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<div class="section" id="examples-using-skoot-model-validation-disthypothesisvalidator">
+<h2>Examples using <code class="docutils literal notranslate"><span class="pre">skoot.model_validation.DistHypothesisValidator</span></code><a class="headerlink" href="#examples-using-skoot-model-validation-disthypothesisvalidator" title="Permalink to this headline">¶</a></h2>
+<div class="sphx-glr-thumbcontainer" tooltip="Demonstrates how to use hypothesis testing for model monitoring and validation."><div class="figure" id="id1">
+<img alt="../../_images/sphx_glr_ex_hypothesis_validation_thumb.png" src="../../_images/sphx_glr_ex_hypothesis_validation_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="../../auto_examples/model_validation/ex_hypothesis_validation.html#sphx-glr-auto-examples-model-validation-ex-hypothesis-validation-py"><span class="std std-ref">Hypothesis testing for model monitoring</span></a></span></p>
+</div>
+</div><div class="clearer"></div></div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="skoot.preprocessing.BinningTransformer.html" class="btn btn-neutral float-right" title="skoot.preprocessing.BinningTransformer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="skoot.model_validation.CustomValidator.html" class="btn btn-neutral float-left" title="skoot.model_validation.CustomValidator" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Taylor G Smith
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

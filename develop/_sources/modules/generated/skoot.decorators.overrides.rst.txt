@@ -1,0 +1,12 @@
+:mod:`skoot.decorators`.overrides
+==============================================
+
+.. currentmodule:: skoot.decorators
+
+.. autofunction:: overrides
+
+.. include:: skoot.decorators.overrides.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

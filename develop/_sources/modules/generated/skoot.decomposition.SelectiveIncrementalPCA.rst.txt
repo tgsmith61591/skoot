@@ -1,0 +1,16 @@
+:mod:`skoot.decomposition`.SelectiveIncrementalPCA
+=========================================================
+
+.. currentmodule:: skoot.decomposition
+
+.. autoclass:: SelectiveIncrementalPCA
+
+   
+   .. automethod:: __init__
+   
+
+.. include:: skoot.decomposition.SelectiveIncrementalPCA.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

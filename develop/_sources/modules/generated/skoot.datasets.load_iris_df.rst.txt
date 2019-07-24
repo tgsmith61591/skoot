@@ -1,0 +1,12 @@
+:mod:`skoot.datasets`.load_iris_df
+===============================================
+
+.. currentmodule:: skoot.datasets
+
+.. autofunction:: load_iris_df
+
+.. include:: skoot.datasets.load_iris_df.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

@@ -1,0 +1,16 @@
+:mod:`skoot.preprocessing`.BinningTransformer
+====================================================
+
+.. currentmodule:: skoot.preprocessing
+
+.. autoclass:: BinningTransformer
+
+   
+   .. automethod:: __init__
+   
+
+.. include:: skoot.preprocessing.BinningTransformer.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

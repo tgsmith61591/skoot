@@ -1,0 +1,580 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>skoot.model_validation._validator &mdash; skoot 0.20.0.dev0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'0.20.0.dev0',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/style.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../../about.html" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> skoot
+          
+
+          
+            
+            <img src="../../../_static/skoot.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.20.0.dev0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto_examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide.html">User Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">skoot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>skoot.model_validation._validator</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for skoot.model_validation._validator</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Taylor Smith &lt;taylor.smith@alkaline-ml.com&gt;</span>
+<span class="c1">#</span>
+<span class="c1"># Validator classes for model monitoring. These classes can be stacked after</span>
+<span class="c1"># transformers in a pipeline in order to ensure the test data distributions</span>
+<span class="c1"># resemble those of the training data and can provide early warnings for</span>
+<span class="c1"># covariate shift.</span>
+
+<span class="kn">from</span> <span class="nn">..base</span> <span class="k">import</span> <span class="n">BasePDTransformer</span>
+<span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="k">import</span> <span class="n">check_dataframe</span><span class="p">,</span> <span class="n">type_or_iterable_to_col_mapping</span>
+<span class="kn">from</span> <span class="nn">..utils.dataframe</span> <span class="k">import</span> <span class="n">get_continuous_columns</span><span class="p">,</span> <span class="n">dataframe_or_array</span>
+<span class="kn">from</span> <span class="nn">..utils.metaestimators</span> <span class="k">import</span> <span class="n">timed_instance_method</span>
+<span class="kn">from</span> <span class="nn">..exceptions</span> <span class="k">import</span> <span class="n">ValidationWarning</span>
+
+<span class="kn">import</span> <span class="nn">six</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="k">import</span> <span class="n">check_is_fitted</span>
+
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="k">import</span> <span class="n">ttest_ind_from_stats</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">collections</span>
+
+<span class="kn">from</span> <span class="nn">abc</span> <span class="k">import</span> <span class="n">abstractmethod</span><span class="p">,</span> <span class="n">ABCMeta</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;CustomValidator&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DistHypothesisValidator&quot;</span>
+<span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_passthrough</span><span class="p">(</span><span class="n">_</span><span class="p">):</span>
+    <span class="c1"># Default for when user does not set a function in the custom validator</span>
+    <span class="c1"># (design choice: should we FORCE a value there?)</span>
+    <span class="k">return</span> <span class="kc">True</span>
+
+
+<span class="k">def</span> <span class="nf">_compute_stats</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">continuous</span><span class="p">):</span>
+    <span class="c1"># determine if this needs a T-test or freq test</span>
+    <span class="k">if</span> <span class="n">continuous</span><span class="p">:</span>
+        <span class="c1"># Compute the t-test stats</span>
+        <span class="n">mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+        <span class="n">std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanstd</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">std</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># otherwise it&#39;s categorical or integer (probably ordinal)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">unique_levels</span><span class="p">,</span> <span class="n">counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">unique_levels</span><span class="p">,</span> <span class="n">counts</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+
+<span class="k">class</span> <span class="nc">_BaseValidator</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">with_metaclass</span><span class="p">(</span><span class="n">ABCMeta</span><span class="p">,</span> <span class="n">BasePDTransformer</span><span class="p">)):</span>
+    <span class="sd">&quot;&quot;&quot;Base validator class.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">as_df</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">_BaseValidator</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">cols</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="n">as_df</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">action</span> <span class="o">=</span> <span class="n">action</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">_is_as_expected</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">feature_name</span><span class="p">,</span> <span class="n">feature</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Validate the test feature.</span>
+
+<span class="sd">        Abstract method to compute the validation statistic. Should</span>
+<span class="sd">        return a boolean indicating whether the feature adheres to the</span>
+<span class="sd">        expectation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Validate the features in the test dataframe.</span>
+
+<span class="sd">        This method will apply the validation test over each prescribed</span>
+<span class="sd">        feature, and raise or warn appropriately.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : pd.DataFrame, shape=(n_samples, n_features)</span>
+<span class="sd">            The Pandas frame to validate. The operation will</span>
+<span class="sd">            be applied to a copy of the input data, and the result</span>
+<span class="sd">            will be returned.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        X : pd.DataFrame or np.ndarray, shape=(n_samples, n_features)</span>
+<span class="sd">            The operation is applied to a copy of ``X``,</span>
+<span class="sd">            and the result set is returned.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;fit_cols_&quot;</span><span class="p">)</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">check_dataframe</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">)</span>  <span class="c1"># X is a copy now</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_cols_</span>  <span class="c1"># assigned in the &quot;fit&quot; method</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cols</span><span class="p">):</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>  <span class="c1"># get the feature</span>
+
+            <span class="c1"># determine whether it&#39;s valid</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_as_expected</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Feature </span><span class="si">%s</span><span class="s2"> does not match expectation as set by </span><span class="si">%s</span><span class="s2">&quot;</span> \
+                      <span class="o">%</span> <span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+
+                <span class="c1"># if it&#39;s error or warn, we alert the user otherwise we do not.</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;raise&quot;</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;warn&quot;</span><span class="p">:</span>
+                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">ValidationWarning</span><span class="p">)</span>
+
+        <span class="c1"># just return X if we get here</span>
+        <span class="k">return</span> <span class="n">dataframe_or_array</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_df</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="CustomValidator"><a class="viewcode-back" href="../../../modules/generated/skoot.model_validation.CustomValidator.html#skoot.model_validation.CustomValidator">[docs]</a><span class="k">class</span> <span class="nc">CustomValidator</span><span class="p">(</span><span class="n">_BaseValidator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Validate test features given custom functions.</span>
+
+<span class="sd">    Apply test set validator behavior over custom functions. This can be</span>
+<span class="sd">    especially useful in cases where a feature should never exhibit values</span>
+<span class="sd">    within a certain range (i.e., sensor data).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cols : array-like, shape=(n_features,)</span>
+<span class="sd">        The names of the columns on which to apply the transformation.</span>
+<span class="sd">        If ``cols`` is None, will apply to the entire dataframe.</span>
+
+<span class="sd">    as_df : bool, optional (default=True)</span>
+<span class="sd">        Whether to return a Pandas ``DataFrame`` in the ``transform``</span>
+<span class="sd">        method. If False, will return a Numpy ``ndarray`` instead.</span>
+<span class="sd">        Since most skoot transformers depend on explicitly-named</span>
+<span class="sd">        ``DataFrame`` features, the ``as_df`` parameter is True by default.</span>
+
+<span class="sd">    func : callable or iterable, optional (default=None)</span>
+<span class="sd">        The function used to validate the feature. Can be as complex or as</span>
+<span class="sd">        simple as needed, but must adhere to the following criteria:</span>
+
+<span class="sd">          * The signature must accept a single vector</span>
+<span class="sd">          * The output must be a boolean</span>
+
+<span class="sd">        Note also that providing a lambda expression as a function can prove</span>
+<span class="sd">        to be problematic when it comes time to serialize your class, as</span>
+<span class="sd">        lambda expressions cannot be serialized via pickle. It&#39;s best to</span>
+<span class="sd">        provide a ``def``-style function or closure.</span>
+
+<span class="sd">    action : str or unicode, optional (default=&quot;warn&quot;)</span>
+<span class="sd">        The default action for handling validation mismatches. Options include</span>
+<span class="sd">        &quot;warn&quot;, &quot;raise&quot; or &quot;ignore&quot;. If ``action`` is &quot;raise&quot;, will raise a</span>
+<span class="sd">        ValueError if mismatched.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    func_dict_ : dict</span>
+<span class="sd">        A dictionary mapping the column names to their respective</span>
+<span class="sd">        validation function.</span>
+
+<span class="sd">    fit_cols_ : list</span>
+<span class="sd">        The list of column names on which the transformer was fit. This</span>
+<span class="sd">        is used to validate the presence of the features in the test set</span>
+<span class="sd">        during the ``transform`` stage.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="CustomValidator.__init__"><a class="viewcode-back" href="../../../modules/generated/skoot.model_validation.CustomValidator.html#skoot.model_validation.CustomValidator.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;warn&quot;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">CustomValidator</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">cols</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="n">as_df</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">action</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">func</span> <span class="o">=</span> <span class="n">func</span></div>
+
+<div class="viewcode-block" id="CustomValidator.fit"><a class="viewcode-back" href="../../../modules/generated/skoot.model_validation.CustomValidator.html#skoot.model_validation.CustomValidator.fit">[docs]</a>    <span class="nd">@timed_instance_method</span><span class="p">(</span><span class="n">attribute_name</span><span class="o">=</span><span class="s2">&quot;fit_time_&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fit the transformer.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : pd.DataFrame, shape=(n_samples, n_features)</span>
+<span class="sd">            The Pandas frame to fit. The frame will only</span>
+<span class="sd">            be fit on the prescribed ``cols`` (see ``__init__``) or</span>
+<span class="sd">            all if ``cols`` is None.</span>
+
+<span class="sd">        y : array-like or None, shape=(n_samples,), optional (default=None)</span>
+<span class="sd">            Pass-through for ``sklearn.pipeline.Pipeline``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">cols</span> <span class="o">=</span> <span class="n">check_dataframe</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">,</span> <span class="n">assert_all_finite</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># validate the func(tions):</span>
+        <span class="n">func</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span>
+
+        <span class="c1"># if it&#39;s None, make it an identity function of sorts</span>
+        <span class="k">if</span> <span class="n">func</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">func</span> <span class="o">=</span> <span class="n">_passthrough</span>
+
+        <span class="n">f</span> <span class="o">=</span> <span class="n">type_or_iterable_to_col_mapping</span><span class="p">(</span>
+            <span class="n">cols</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span> <span class="n">param</span><span class="o">=</span><span class="n">func</span><span class="p">,</span> <span class="n">param_name</span><span class="o">=</span><span class="s2">&quot;func&quot;</span><span class="p">,</span>
+            <span class="n">permitted_scalar_types</span><span class="o">=</span><span class="n">collections</span><span class="o">.</span><span class="n">Callable</span><span class="p">)</span>  <span class="c1"># type: dict</span>
+
+        <span class="c1"># save the function mapping as the fit param</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">func_dict_</span> <span class="o">=</span> <span class="n">f</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit_cols_</span> <span class="o">=</span> <span class="n">cols</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    <span class="k">def</span> <span class="nf">_is_as_expected</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">feature_name</span><span class="p">,</span> <span class="n">feature</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Validate the test feature.</span>
+
+<span class="sd">        Apply the user-defined custom validation function to the test feature.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_dict_</span><span class="p">[</span><span class="n">feature_name</span><span class="p">](</span><span class="n">feature</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DistHypothesisValidator"><a class="viewcode-back" href="../../../modules/generated/skoot.model_validation.DistHypothesisValidator.html#skoot.model_validation.DistHypothesisValidator">[docs]</a><span class="k">class</span> <span class="nc">DistHypothesisValidator</span><span class="p">(</span><span class="n">_BaseValidator</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Validate test distributions using various hypothesis tests.</span>
+
+<span class="sd">    The distribution validator learns statistics from the training set and then</span>
+<span class="sd">    validates that the test set features match their expected distributions.</span>
+<span class="sd">    This can be useful for model validation tasks where model monitoring needs</span>
+<span class="sd">    to take place.</span>
+
+<span class="sd">    For continuous (float) features, a two-tailed T-test will be applied to</span>
+<span class="sd">    the test data to ensure it matches the distribution of the training data.</span>
+<span class="sd">    For categorical (int, object) features, we compare the frequencies of</span>
+<span class="sd">    different categorical levels within a tolerance of ``alpha``.</span>
+
+<span class="sd">    **Note**: this class is NaN-safe, meaning if it is used early in your</span>
+<span class="sd">    pipeline when you still have NaN values in your features, it will still</span>
+<span class="sd">    function!</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cols : array-like, shape=(n_features,)</span>
+<span class="sd">        The names of the columns on which to apply the transformation.</span>
+<span class="sd">        Unlike other BasePDTransformer instances, if ``cols`` is None, it will</span>
+<span class="sd">        only fit the numerical columns, since statistics such as standard</span>
+<span class="sd">        deviation cannot be computed on categorical features. For column</span>
+<span class="sd">        types that are integers or objects, the ratio of frequency for each</span>
+<span class="sd">        class level will be compared to the expected ratio within a tolerance</span>
+<span class="sd">        of ``alpha``.</span>
+
+<span class="sd">    as_df : bool, optional (default=True)</span>
+<span class="sd">        Whether to return a Pandas ``DataFrame`` in the ``transform``</span>
+<span class="sd">        method. If False, will return a Numpy ``ndarray`` instead.</span>
+<span class="sd">        Since most skoot transformers depend on explicitly-named</span>
+<span class="sd">        ``DataFrame`` features, the ``as_df`` parameter is True by default.</span>
+
+<span class="sd">    alpha : float, optional (default=0.05)</span>
+<span class="sd">        The :math:`\alpha` value for the T-test or level ratio comparison.</span>
+<span class="sd">        If the resulting p-value is LESS than ``alpha``, it means that</span>
+<span class="sd">        we would reject the null hypothesis, and that the variable likely</span>
+<span class="sd">        follows a different distribution from the training set.</span>
+
+<span class="sd">    action : str or unicode, optional (default=&quot;warn&quot;)</span>
+<span class="sd">        The default action for handling validation mismatches. Options include</span>
+<span class="sd">        &quot;warn&quot;, &quot;raise&quot; or &quot;ignore&quot;. If ``action`` is &quot;raise&quot;, will raise a</span>
+<span class="sd">        ValueError if mismatched.</span>
+
+<span class="sd">    categorical_strategy : str, unicode or None, optional (default=&quot;ratio&quot;)</span>
+<span class="sd">        How to validate categorical features. Default is &quot;ratio&quot;, which will</span>
+<span class="sd">        compare the ratio of each level&#39;s frequency to the overall count of</span>
+<span class="sd">        samples in the feature within an absolute tolerance of ``alpha``.</span>
+<span class="sd">        If None, will not perform validation on categorical features.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This class is NaN-safe, meaning if it is used early in your pipeline</span>
+<span class="sd">    when you still have NaN values in your features, it will still function.</span>
+<span class="sd">    This is a double-edge sword, since computing the ``np.nanmean`` on a</span>
+<span class="sd">    feature of mostly-NaN values will not be very meaningful.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    statistics_ : list, shape=(n_features,)</span>
+<span class="sd">        A list of tuples over the training features. For continuous features::</span>
+
+<span class="sd">            (mean, standard_dev, n_obs)</span>
+
+<span class="sd">        For categorical features:</span>
+
+<span class="sd">            (present_levels, present_counts, n_obs)</span>
+
+<span class="sd">    fit_cols_ : list</span>
+<span class="sd">        The list of column names on which the transformer was fit. This</span>
+<span class="sd">        is used to validate the presence of the features in the test set</span>
+<span class="sd">        during the ``transform`` stage.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="DistHypothesisValidator.__init__"><a class="viewcode-back" href="../../../modules/generated/skoot.model_validation.DistHypothesisValidator.html#skoot.model_validation.DistHypothesisValidator.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;warn&quot;</span><span class="p">,</span>
+                 <span class="n">categorical_strategy</span><span class="o">=</span><span class="s2">&quot;ratio&quot;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DistHypothesisValidator</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">cols</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="n">as_df</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">action</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">categorical_strategy</span> <span class="o">=</span> <span class="n">categorical_strategy</span></div>
+
+<div class="viewcode-block" id="DistHypothesisValidator.fit"><a class="viewcode-back" href="../../../modules/generated/skoot.model_validation.DistHypothesisValidator.html#skoot.model_validation.DistHypothesisValidator.fit">[docs]</a>    <span class="nd">@timed_instance_method</span><span class="p">(</span><span class="n">attribute_name</span><span class="o">=</span><span class="s2">&quot;fit_time_&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fit the transformer.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : pd.DataFrame, shape=(n_samples, n_features)</span>
+<span class="sd">            The Pandas frame to fit. The frame will only</span>
+<span class="sd">            be fit on the prescribed ``cols`` (see ``__init__``) or</span>
+<span class="sd">            all if ``cols`` is None.</span>
+
+<span class="sd">        y : array-like or None, shape=(n_samples,), optional (default=None)</span>
+<span class="sd">            Pass-through for ``sklearn.pipeline.Pipeline``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">cols</span> <span class="o">=</span> <span class="n">check_dataframe</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">,</span> <span class="n">assert_all_finite</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># if self.cols is None, the user might have tried to apply this to</span>
+        <span class="c1"># every column and some may contain categorical features. So we need</span>
+        <span class="c1"># to control for that...</span>
+        <span class="n">float_cols</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">get_continuous_columns</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+
+        <span class="c1"># fit the test statistics over each column</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">statistics_</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">_compute_stats</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">continuous</span><span class="o">=</span><span class="n">col</span> <span class="ow">in</span> <span class="n">float_cols</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cols</span>
+        <span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit_cols_</span> <span class="o">=</span> <span class="n">cols</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">continuous_</span> <span class="o">=</span> <span class="n">float_cols</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    <span class="k">def</span> <span class="nf">_is_as_expected</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">feature_name</span><span class="p">,</span> <span class="n">feature</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Validate the test feature.</span>
+
+<span class="sd">        Compute the test statistic and, for continuous covariates,</span>
+<span class="sd">        return whether the P-value is GREATER THAN OR EQUAL TO the specified</span>
+<span class="sd">        alpha value (less than indicates that we would reject the null,</span>
+<span class="sd">        so &gt;= means it&#39;s likely from the same distribution).</span>
+
+<span class="sd">        For categorical features, compare the frequencies of each level within</span>
+<span class="sd">        ``alpha`` tolerance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># if it&#39;s a continuous feature, we use the T-test</span>
+        <span class="k">if</span> <span class="n">feature_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">continuous_</span><span class="p">:</span>
+            <span class="n">mean1</span><span class="p">,</span> <span class="n">std1</span><span class="p">,</span> <span class="n">nobs1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">statistics_</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+            <span class="n">mean2</span><span class="p">,</span> <span class="n">std2</span><span class="p">,</span> <span class="n">nobs2</span> <span class="o">=</span> <span class="n">_compute_stats</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">continuous</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">pval</span> <span class="o">=</span> <span class="n">ttest_ind_from_stats</span><span class="p">(</span>
+                <span class="n">mean1</span><span class="o">=</span><span class="n">mean1</span><span class="p">,</span> <span class="n">std1</span><span class="o">=</span><span class="n">std1</span><span class="p">,</span> <span class="n">nobs1</span><span class="o">=</span><span class="n">nobs1</span><span class="p">,</span>
+                <span class="n">mean2</span><span class="o">=</span><span class="n">mean2</span><span class="p">,</span> <span class="n">std2</span><span class="o">=</span><span class="n">std2</span><span class="p">,</span> <span class="n">nobs2</span><span class="o">=</span><span class="n">nobs2</span><span class="p">,</span>
+                <span class="n">equal_var</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># we expect them to be the same</span>
+
+            <span class="k">return</span> <span class="n">pval</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span>
+
+        <span class="c1"># otherwise, we are dealing with categorical features</span>
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="c1"># if we want to use the ratio strategy, do so here:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">categorical_strategy</span> <span class="o">==</span> <span class="s2">&quot;ratio&quot;</span><span class="p">:</span>
+                <span class="n">exp_levels</span><span class="p">,</span> <span class="n">exp_counts</span><span class="p">,</span> <span class="n">n_obs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">statistics_</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+                <span class="n">prst_levels</span><span class="p">,</span> <span class="n">prst_counts</span><span class="p">,</span> <span class="n">n_test</span> <span class="o">=</span> \
+                    <span class="n">_compute_stats</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">continuous</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+                <span class="c1"># Get the expected ratios &amp; present ratios</span>
+                <span class="n">exp_ratios</span> <span class="o">=</span> <span class="n">exp_counts</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">n_obs</span><span class="p">)</span>
+                <span class="n">prst_ratios</span> <span class="o">=</span> <span class="n">prst_counts</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">n_test</span><span class="p">)</span>
+                <span class="n">abs_diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">exp_ratios</span> <span class="o">-</span> <span class="n">prst_ratios</span><span class="p">)</span>
+
+                <span class="c1"># if there are any levels in the test set that are NOT in the</span>
+                <span class="c1"># training set, we have to handle the action. Don&#39;t fail since</span>
+                <span class="c1"># this may be before a user has encoded all levels, so we can</span>
+                <span class="c1"># just let the transform method handle the action.</span>
+                <span class="n">new_lvls</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">in1d</span><span class="p">(</span><span class="n">prst_levels</span><span class="p">,</span>
+                                    <span class="n">exp_levels</span><span class="p">)</span>  <span class="c1"># type: np.ndarray</span>
+                <span class="n">valid</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">new_lvls</span><span class="o">.</span><span class="n">any</span><span class="p">()</span>  <span class="c1"># dont want new lvls, new = invalid</span>
+                <span class="n">abs_mask</span> <span class="o">=</span> <span class="n">abs_diff</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span>  <span class="c1"># type: np.ndarray</span>
+
+                <span class="k">return</span> <span class="n">valid</span> <span class="ow">and</span> <span class="n">abs_mask</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+            <span class="c1"># if we add more strategies, here&#39;s where they&#39;ll go...</span>
+            <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<span class="c1"># in case nose has an issue here (since &quot;test&quot; is used all over)...</span>
+<span class="n">DistHypothesisValidator</span><span class="o">.</span><span class="n">__test__</span> <span class="o">=</span> <span class="kc">False</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Taylor G Smith
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

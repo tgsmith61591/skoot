@@ -1,0 +1,305 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>skoot.utils.type_or_iterable_to_col_mapping &mdash; skoot 0.20.0.dev0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../',
+              VERSION:'0.20.0.dev0',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/style.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="skoot.utils.validate_multiple_cols" href="skoot.utils.validate_multiple_cols.html" />
+    <link rel="prev" title="skoot.utils.check_dataframe" href="skoot.utils.check_dataframe.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> skoot
+          
+
+          
+            
+            <img src="../../_static/skoot.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.20.0.dev0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../classes.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.base"><code class="docutils literal notranslate"><span class="pre">skoot.base</span></code>: Base metaclasses and utility functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot"><code class="docutils literal notranslate"><span class="pre">skoot.decorators</span></code>: Decorator utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.balance"><code class="docutils literal notranslate"><span class="pre">skoot.balance</span></code>: Class imbalance remedies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.datasets"><code class="docutils literal notranslate"><span class="pre">skoot.datasets</span></code>: Dataset loaders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.decomposition"><code class="docutils literal notranslate"><span class="pre">skoot.decomposition</span></code>: Various matrix decompositions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.exploration"><code class="docutils literal notranslate"><span class="pre">skoot.exploration</span></code>: Exploratory data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.feature_extraction"><code class="docutils literal notranslate"><span class="pre">skoot.feature_extraction</span></code>: Feature extraction methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.feature_selection"><code class="docutils literal notranslate"><span class="pre">skoot.feature_selection</span></code>: Feature selection methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.model_validation"><code class="docutils literal notranslate"><span class="pre">skoot.model_validation</span></code>: Model validation &amp; monitoring</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.preprocessing"><code class="docutils literal notranslate"><span class="pre">skoot.preprocessing</span></code>: Pre-processing transformers</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../classes.html#module-skoot.utils"><code class="docutils literal notranslate"><span class="pre">skoot.utils</span></code>: Common utility functions</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../classes.html#dataframe-utilities">DataFrame utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../classes.html#iterable-utilities">Iterable utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../classes.html#metaestimator-classes-decorators">Metaestimator classes/decorators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../classes.html#profiling-utilities">Profiling utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../classes.html#series-utilities">Series utilities</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../classes.html#validation-utilities">Validation utilities</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="skoot.utils.check_dataframe.html"><code class="docutils literal notranslate"><span class="pre">skoot.utils</span></code>.check_dataframe</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">skoot.utils</span></code>.type_or_iterable_to_col_mapping</a></li>
+<li class="toctree-l4"><a class="reference internal" href="skoot.utils.validate_multiple_cols.html"><code class="docutils literal notranslate"><span class="pre">skoot.utils</span></code>.validate_multiple_cols</a></li>
+<li class="toctree-l4"><a class="reference internal" href="skoot.utils.validate_multiple_rows.html"><code class="docutils literal notranslate"><span class="pre">skoot.utils</span></code>.validate_multiple_rows</a></li>
+<li class="toctree-l4"><a class="reference internal" href="skoot.utils.validate_test_set_columns.html"><code class="docutils literal notranslate"><span class="pre">skoot.utils</span></code>.validate_test_set_columns</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide.html">User Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">skoot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../classes.html">API Reference</a> &raquo;</li>
+        
+      <li><code class="docutils literal notranslate"><span class="pre">skoot.utils</span></code>.type_or_iterable_to_col_mapping</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/modules/generated/skoot.utils.type_or_iterable_to_col_mapping.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="skoot-utils-type-or-iterable-to-col-mapping">
+<h1><a class="reference internal" href="../classes.html#module-skoot.utils" title="skoot.utils"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skoot.utils</span></code></a>.type_or_iterable_to_col_mapping<a class="headerlink" href="#skoot-utils-type-or-iterable-to-col-mapping" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="skoot.utils.type_or_iterable_to_col_mapping">
+<code class="descclassname">skoot.utils.</code><code class="descname">type_or_iterable_to_col_mapping</code><span class="sig-paren">(</span><em>cols</em>, <em>param</em>, <em>param_name</em>, <em>permitted_scalar_types</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/7ade853/skoot/utils/validation.py#L178"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/utils/validation.html#type_or_iterable_to_col_mapping"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.utils.type_or_iterable_to_col_mapping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Map a parameter to various columns in a dict.</p>
+<p>Many estimators accept either scalar values or iterables as parameters to
+allow for different values across different features. This function creates
+a dictionary mapping column names to parameter values and validates scalars
+within a tuple of permitted scalar types.</p>
+<p>Note: this is primarily intended to be an internal method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>cols</strong> : list</p>
+<blockquote>
+<div><p>The list of columns against which to map some function or parameters.</p>
+</div></blockquote>
+<p><strong>param</strong> : int, float, str, iterable or object</p>
+<blockquote>
+<div><p>The parameter value.</p>
+</div></blockquote>
+<p><strong>param_name</strong> : str or unicode</p>
+<blockquote>
+<div><p>The name of the parameter</p>
+</div></blockquote>
+<p><strong>permitted_scalar_types</strong> : type or iterable</p>
+<blockquote>
+<div><p>The permitted types.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>param</strong> : dict</p>
+<blockquote class="last">
+<div><p>The param dictionary.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ticm</span> <span class="o">=</span> <span class="n">type_or_iterable_to_col_mapping</span>  <span class="c1"># too many characters...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">ticm</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">&quot;n_components&quot;</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="o">==</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">ticm</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="s2">&quot;strategy&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="o">==</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="s1">&#39;uniform&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                                                  <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="s1">&#39;uniform&#39;</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">ticm</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="s2">&quot;q&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="o">==</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">ticm</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">},</span> <span class="s2">&quot;q&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="o">==</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<div class="clearer"></div></div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="skoot.utils.validate_multiple_cols.html" class="btn btn-neutral float-right" title="skoot.utils.validate_multiple_cols" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="skoot.utils.check_dataframe.html" class="btn btn-neutral float-left" title="skoot.utils.check_dataframe" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Taylor G Smith
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

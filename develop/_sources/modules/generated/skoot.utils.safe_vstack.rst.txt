@@ -1,0 +1,12 @@
+:mod:`skoot.utils`.safe_vstack
+===========================================
+
+.. currentmodule:: skoot.utils
+
+.. autofunction:: safe_vstack
+
+.. include:: skoot.utils.safe_vstack.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

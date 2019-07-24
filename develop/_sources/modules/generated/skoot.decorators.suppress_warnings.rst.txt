@@ -1,0 +1,12 @@
+:mod:`skoot.decorators`.suppress_warnings
+======================================================
+
+.. currentmodule:: skoot.decorators
+
+.. autofunction:: suppress_warnings
+
+.. include:: skoot.decorators.suppress_warnings.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

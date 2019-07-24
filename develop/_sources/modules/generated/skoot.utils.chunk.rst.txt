@@ -1,0 +1,12 @@
+:mod:`skoot.utils`.chunk
+=====================================
+
+.. currentmodule:: skoot.utils
+
+.. autofunction:: chunk
+
+.. include:: skoot.utils.chunk.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

@@ -1,0 +1,12 @@
+:mod:`skoot.utils`.validate_multiple_cols
+======================================================
+
+.. currentmodule:: skoot.utils
+
+.. autofunction:: validate_multiple_cols
+
+.. include:: skoot.utils.validate_multiple_cols.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

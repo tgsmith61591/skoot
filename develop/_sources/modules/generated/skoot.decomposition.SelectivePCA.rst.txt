@@ -1,0 +1,16 @@
+:mod:`skoot.decomposition`.SelectivePCA
+==============================================
+
+.. currentmodule:: skoot.decomposition
+
+.. autoclass:: SelectivePCA
+
+   
+   .. automethod:: __init__
+   
+
+.. include:: skoot.decomposition.SelectivePCA.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

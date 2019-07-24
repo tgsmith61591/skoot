@@ -1,0 +1,711 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>skoot.feature_selection.select &mdash; skoot 0.20.0.dev0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'0.20.0.dev0',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/style.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../../about.html" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> skoot
+          
+
+          
+            
+            <img src="../../../_static/skoot.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.20.0.dev0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto_examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide.html">User Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">skoot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>skoot.feature_selection.select</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for skoot.feature_selection.select</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Taylor Smith &lt;taylor.smith@alkaline-ml.com&gt;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">.base</span> <span class="k">import</span> <span class="n">BaseFeatureSelector</span>
+<span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="k">import</span> <span class="n">check_dataframe</span><span class="p">,</span> <span class="n">validate_multiple_cols</span>
+<span class="kn">from</span> <span class="nn">..utils.metaestimators</span> <span class="k">import</span> <span class="n">timed_instance_method</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;FeatureFilter&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;MultiCorrFilter&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;NearZeroVarianceFilter&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;SparseFeatureFilter&#39;</span>
+<span class="p">]</span>
+
+
+<span class="c1"># TODO: add functionality for a dummy column indicating present value?</span>
+<div class="viewcode-block" id="SparseFeatureFilter"><a class="viewcode-back" href="../../../modules/generated/skoot.feature_selection.SparseFeatureFilter.html#skoot.feature_selection.SparseFeatureFilter">[docs]</a><span class="k">class</span> <span class="nc">SparseFeatureFilter</span><span class="p">(</span><span class="n">BaseFeatureSelector</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Drop overly sparse features.</span>
+
+<span class="sd">    Retains features that are less sparse (NaN) than the provided</span>
+<span class="sd">    threshold. Useful in situations where matrices are too sparse to</span>
+<span class="sd">    impute reliably.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cols : array-like, shape=(n_features,), optional (default=None)</span>
+<span class="sd">        The names of the columns on which to apply the transformation.</span>
+<span class="sd">        If no column names are provided, the transformer will be ``fit``</span>
+<span class="sd">        on the entire frame. Note that the transformation will also only</span>
+<span class="sd">        apply to the specified columns, and any other non-specified</span>
+<span class="sd">        columns will still be present after transformation.</span>
+
+<span class="sd">    threshold : float, optional (default=0.5)</span>
+<span class="sd">        The threshold of sparsity above which features will be</span>
+<span class="sd">        deemed &quot;too sparse&quot; and will be dropped.</span>
+
+<span class="sd">    as_df : bool, optional (default=True)</span>
+<span class="sd">        Whether to return a Pandas ``DataFrame`` in the ``transform``</span>
+<span class="sd">        method. If False, will return a Numpy ``ndarray`` instead.</span>
+<span class="sd">        Since most skutil transformers depend on explicitly-named</span>
+<span class="sd">        ``DataFrame`` features, the ``as_df`` parameter is True by default.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; nan = np.nan</span>
+<span class="sd">    &gt;&gt;&gt; X = np.array([</span>
+<span class="sd">    ...     [1.0, 2.0, nan],</span>
+<span class="sd">    ...     [2.0, 3.0, nan],</span>
+<span class="sd">    ...     [3.0, nan, 1.0],</span>
+<span class="sd">    ...     [4.0, 5.0, nan]</span>
+<span class="sd">    ... ])</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; X = pd.DataFrame.from_records(data=X, columns=[&#39;a&#39;,&#39;b&#39;,&#39;c&#39;])</span>
+<span class="sd">    &gt;&gt;&gt; dropper = SparseFeatureFilter(threshold=0.5)</span>
+<span class="sd">    &gt;&gt;&gt; X_transform = dropper.fit_transform(X)</span>
+<span class="sd">    &gt;&gt;&gt; assert X_transform.shape[1] == 2 # drop out last column</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sparsity_ : array-like, shape=(n_features,)</span>
+<span class="sd">        The array of sparsity values</span>
+<span class="sd">    </span>
+<span class="sd">    drop_ : array-like, shape=(n_features,)</span>
+<span class="sd">        Assigned after calling ``fit``. These are the features that</span>
+<span class="sd">        are designated as &quot;bad&quot; and will be dropped in the ``transform``</span>
+<span class="sd">        method.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Sometimes the presence of a value in an overly sparse column can be highly</span>
+<span class="sd">    informative. If you&#39;re using the sparse filter, consider creating a new</span>
+<span class="sd">    (dummy) feature indicating whether there was a value present.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="SparseFeatureFilter.__init__"><a class="viewcode-back" href="../../../modules/generated/skoot.feature_selection.SparseFeatureFilter.html#skoot.feature_selection.SparseFeatureFilter.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">SparseFeatureFilter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">cols</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="n">as_df</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span> <span class="o">=</span> <span class="n">threshold</span></div>
+
+<div class="viewcode-block" id="SparseFeatureFilter.fit"><a class="viewcode-back" href="../../../modules/generated/skoot.feature_selection.SparseFeatureFilter.html#skoot.feature_selection.SparseFeatureFilter.fit">[docs]</a>    <span class="nd">@timed_instance_method</span><span class="p">(</span><span class="n">attribute_name</span><span class="o">=</span><span class="s2">&quot;fit_time_&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fit the transformer.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : pd.DataFrame, shape=(n_samples, n_features)</span>
+<span class="sd">            The Pandas frame to fit. The frame will only</span>
+<span class="sd">            be fit on the prescribed ``cols`` (see ``__init__``) or</span>
+<span class="sd">            all of them if ``cols`` is None. Furthermore, ``X`` will</span>
+<span class="sd">            not be altered in the process of the fit.</span>
+
+<span class="sd">        y : array-like or None, shape=(n_samples,), optional (default=None)</span>
+<span class="sd">            Pass-through for ``sklearn.pipeline.Pipeline``. Even</span>
+<span class="sd">            if explicitly set, will not change behavior of ``fit``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">cols</span> <span class="o">=</span> <span class="n">check_dataframe</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">)</span>
+        <span class="n">thresh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span>
+
+        <span class="c1"># validate the threshold</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">thresh</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="mf">0.0</span> <span class="o">&lt;=</span> <span class="n">thresh</span> <span class="o">&lt;</span> <span class="mf">1.0</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;thresh must be a float between &#39;</span>
+                             <span class="s1">&#39;0 (inclusive) and 1. Got </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">thresh</span><span class="p">))</span>
+
+        <span class="c1"># assess sparsity</span>
+        <span class="n">subset</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sparsity_</span> <span class="o">=</span> <span class="n">subset</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">values</span>  <span class="c1"># type: np.ndarray</span>
+
+        <span class="n">mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sparsity_</span> <span class="o">&gt;</span> <span class="n">thresh</span>  <span class="c1"># numpy boolean array</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drop_</span> <span class="o">=</span> <span class="n">subset</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span></div></div>
+
+
+<div class="viewcode-block" id="FeatureFilter"><a class="viewcode-back" href="../../../modules/generated/skoot.feature_selection.FeatureFilter.html#skoot.feature_selection.FeatureFilter">[docs]</a><span class="k">class</span> <span class="nc">FeatureFilter</span><span class="p">(</span><span class="n">BaseFeatureSelector</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A simple feature-dropping transformer class.</span>
+
+<span class="sd">    A very simple class to be used at the beginning or any stage of a</span>
+<span class="sd">    Pipeline that will drop the given features from the remainder of the pipe.</span>
+<span class="sd">    This is useful if a transformer or encoder creates variables that you&#39;re</span>
+<span class="sd">    disinterested in and would like to exclude from your modeling process.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cols : array-like, shape=(n_features,), optional (default=None)</span>
+<span class="sd">        The features to drop. Note that ``FeatureFilter`` behaves slightly</span>
+<span class="sd">        differently from all other ``BaseFeatureSelector`` classes in the sense</span>
+<span class="sd">        that it will drop all of the features prescribed in this parameter.</span>
+<span class="sd">        However, if ``cols`` is None, it will not drop any (which is counter</span>
+<span class="sd">        to other classes, which will operate on all columns in the absence</span>
+<span class="sd">        of an explicit ``cols`` parameter).</span>
+
+<span class="sd">    as_df : bool, optional (default=True)</span>
+<span class="sd">        Whether to return a Pandas ``DataFrame`` in the ``transform``</span>
+<span class="sd">        method. If False, will return a Numpy ``ndarray`` instead.</span>
+<span class="sd">        Since most skoot transformers depend on explicitly-named</span>
+<span class="sd">        ``DataFrame`` features, the ``as_df`` parameter is True by default.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    An example using the FeatureFilter:</span>
+
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; X = pd.DataFrame.from_records(data=np.random.rand(3,3),</span>
+<span class="sd">    ...                               columns=[&#39;a&#39;,&#39;b&#39;,&#39;c&#39;])</span>
+<span class="sd">    &gt;&gt;&gt; dropper = FeatureFilter(cols=[&#39;a&#39;,&#39;b&#39;])</span>
+<span class="sd">    &gt;&gt;&gt; X_transform = dropper.fit_transform(X)</span>
+<span class="sd">    &gt;&gt;&gt; assert X_transform.shape[1] == 1 # drop out first two columns</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    drop_ : array-like, shape=(n_features,)</span>
+<span class="sd">        Assigned after calling ``fit``. These are the features that</span>
+<span class="sd">        are designated as &quot;bad&quot; and will be dropped in the ``transform``</span>
+<span class="sd">        method.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="FeatureFilter.__init__"><a class="viewcode-back" href="../../../modules/generated/skoot.feature_selection.FeatureFilter.html#skoot.feature_selection.FeatureFilter.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="c1"># just a pass-through for super constructor</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">FeatureFilter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">cols</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="n">as_df</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FeatureFilter.fit"><a class="viewcode-back" href="../../../modules/generated/skoot.feature_selection.FeatureFilter.html#skoot.feature_selection.FeatureFilter.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># check on state of X and cols</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">cols</span> <span class="o">=</span> <span class="n">check_dataframe</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">)</span>
+
+        <span class="c1"># if the provided self.cols was None, we drop nothing. otherwise</span>
+        <span class="c1"># we drop the specified columns</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drop_</span> <span class="o">=</span> <span class="p">[]</span> <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cols</span> <span class="k">else</span> <span class="n">cols</span>
+        <span class="k">return</span> <span class="bp">self</span></div></div>
+
+
+<div class="viewcode-block" id="MultiCorrFilter"><a class="viewcode-back" href="../../../modules/generated/skoot.feature_selection.MultiCorrFilter.html#skoot.feature_selection.MultiCorrFilter">[docs]</a><span class="k">class</span> <span class="nc">MultiCorrFilter</span><span class="p">(</span><span class="n">BaseFeatureSelector</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Remove highly correlated features.</span>
+
+<span class="sd">    Multi-collinear data (features which are not independent from one another)</span>
+<span class="sd">    can pose problems in coefficient stability for parametric models, or</span>
+<span class="sd">    feature importance scores for non-parametric models.</span>
+
+<span class="sd">    This class filters out features with a correlation greater than the</span>
+<span class="sd">    provided threshold. When a pair of correlated features is identified, the</span>
+<span class="sd">    mean absolute correlation (MAC) of each feature is considered, and the</span>
+<span class="sd">    feature with the highest MAC is discarded.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cols : array-like, shape=(n_features,), optional (default=None)</span>
+<span class="sd">        The names of the columns on which to apply the transformation.</span>
+<span class="sd">        If no column names are provided, the transformer will be ``fit``</span>
+<span class="sd">        on the entire frame. Note that the transformation will also only</span>
+<span class="sd">        apply to the specified columns, and any other non-specified</span>
+<span class="sd">        columns will still be present after transformation.</span>
+
+<span class="sd">    threshold : float, optional (default=0.85)</span>
+<span class="sd">        The threshold above which to filter correlated features</span>
+
+<span class="sd">    method : str, optional (default=&#39;pearson&#39;)</span>
+<span class="sd">        The method used to compute the correlation,</span>
+<span class="sd">        one of (&#39;pearson&#39;, &#39;kendall&#39;, &#39;spearman&#39;).</span>
+
+<span class="sd">    as_df : bool, optional (default=True)</span>
+<span class="sd">        Whether to return a Pandas ``DataFrame`` in the ``transform``</span>
+<span class="sd">        method. If False, will return a Numpy ``ndarray`` instead.</span>
+<span class="sd">        Since most skoot transformers depend on explicitly-named</span>
+<span class="sd">        ``DataFrame`` features, the ``as_df`` parameter is True by default.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    The following demonstrates a simple multi-correlation filter</span>
+<span class="sd">    applied to the iris dataset.</span>
+
+<span class="sd">    &gt;&gt;&gt; from skoot.datasets import load_iris_df</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; X = load_iris_df(include_tgt=False)</span>
+<span class="sd">    &gt;&gt;&gt; mcf = MultiCorrFilter(threshold=0.85)</span>
+<span class="sd">    &gt;&gt;&gt; mcf.fit_transform(X).head()</span>
+<span class="sd">       sepal length (cm)  sepal width (cm)  petal width (cm)</span>
+<span class="sd">    0                5.1               3.5               0.2</span>
+<span class="sd">    1                4.9               3.0               0.2</span>
+<span class="sd">    2                4.7               3.2               0.2</span>
+<span class="sd">    3                4.6               3.1               0.2</span>
+<span class="sd">    4                5.0               3.6               0.2</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    drop_ : array-like, shape=(n_features,)</span>
+<span class="sd">        Assigned after calling ``fit``. These are the features that</span>
+<span class="sd">        are designated as &quot;bad&quot; and will be dropped in the ``transform``</span>
+<span class="sd">        method.</span>
+
+<span class="sd">    mean_abs_correlations_ : list, float</span>
+<span class="sd">        The corresponding mean absolute correlations of each ``drop_`` name</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="MultiCorrFilter.__init__"><a class="viewcode-back" href="../../../modules/generated/skoot.feature_selection.MultiCorrFilter.html#skoot.feature_selection.MultiCorrFilter.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.85</span><span class="p">,</span>
+                 <span class="n">method</span><span class="o">=</span><span class="s1">&#39;pearson&#39;</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">MultiCorrFilter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">cols</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="n">as_df</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span> <span class="o">=</span> <span class="n">threshold</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">=</span> <span class="n">method</span></div>
+
+<div class="viewcode-block" id="MultiCorrFilter.fit"><a class="viewcode-back" href="../../../modules/generated/skoot.feature_selection.MultiCorrFilter.html#skoot.feature_selection.MultiCorrFilter.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fit the multi-collinearity filter.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : pd.DataFrame, shape=(n_samples, n_features)</span>
+<span class="sd">            The Pandas frame to fit. The frame will only</span>
+<span class="sd">            be fit on the prescribed ``cols`` (see ``__init__``) or</span>
+<span class="sd">            all of them if ``cols`` is None. Furthermore, ``X`` will</span>
+<span class="sd">            not be altered in the process of the fit.</span>
+
+<span class="sd">        y : array-like or None, shape=(n_samples,), optional (default=None)</span>
+<span class="sd">            Pass-through for ``sklearn.pipeline.Pipeline``. Even</span>
+<span class="sd">            if explicitly set, will not change behavior of ``fit``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># check on state of X and cols. Also need all columns to be finite!</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">cols</span> <span class="o">=</span> <span class="n">check_dataframe</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">,</span> <span class="n">assert_all_finite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># we need to make sure there&#39;s more than 1 column!</span>
+        <span class="n">validate_multiple_cols</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">cols</span><span class="p">)</span>
+
+        <span class="c1"># Generate correlation matrix</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">method</span><span class="p">)</span>
+
+        <span class="c1"># get drops list</span>
+        <span class="c1"># TODO: write a _find_correlations_exact for smaller matrices</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drop_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_abs_correlations_</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">_find_correlations_fast</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_find_correlations_fast</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">threshold</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Filter highly correlated features.</span>
+
+<span class="sd">        This function identifies the correlations between features that</span>
+<span class="sd">        are greater than the provided threshold, and identifies which</span>
+<span class="sd">        to drop on the basis of mean absolute correlation. This function is</span>
+<span class="sd">        based on Caret&#39;s ``findCorrelation_fast`` method [1], which is very</span>
+<span class="sd">        efficient for large matrices.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        c : pd.DataFrame</span>
+<span class="sd">            The pre-computed correlation matrix.</span>
+
+<span class="sd">        threshold : float</span>
+<span class="sd">            The threshold above which to filter features which</span>
+<span class="sd">            are multi-collinear in nature.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        drop_names : list, shape=(n_features,)</span>
+<span class="sd">            The feature names that should be dropped</span>
+
+<span class="sd">        average_corr : array-like, shape=(n_features,)</span>
+<span class="sd">            The mean absolute correlations between</span>
+<span class="sd">            the features.</span>
+
+<span class="sd">        References</span>
+<span class="sd">        ----------</span>
+<span class="sd">        .. [1] Caret findCorrelations.R (findCorrelation_fast)</span>
+<span class="sd">               https://bit.ly/2E1AMcJ</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># get the average absolute column correlations</span>
+        <span class="n">c_abs</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span>  <span class="c1"># type: pd.DataFrame</span>
+        <span class="n">average_corr</span> <span class="o">=</span> <span class="n">c_abs</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>  <span class="c1"># type: np.ndarray</span>
+
+        <span class="c1"># get the sort order</span>
+        <span class="n">average_corr_order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">average_corr</span><span class="p">)</span>
+
+        <span class="c1"># set the lower tri to NaN so we don&#39;t consider anymore</span>
+        <span class="c1"># first, get the lower tri indices and then zip them</span>
+        <span class="n">lower_tri</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tril_indices</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">lower_tri</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+        <span class="c1"># get those above cutoff (re-compute abs on amended array)</span>
+        <span class="n">c_abs</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span>  <span class="c1"># type: pd.DataFrame</span>
+        <span class="n">combs_above_thresh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">c_abs</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">)</span>
+        <span class="n">rows_to_check</span><span class="p">,</span> <span class="n">cols_to_check</span> <span class="o">=</span> <span class="n">combs_above_thresh</span>
+
+        <span class="n">cols_to_discard</span> <span class="o">=</span> <span class="p">(</span><span class="n">average_corr_order</span><span class="p">[</span><span class="n">cols_to_check</span><span class="p">]</span> <span class="o">&gt;</span>
+                           <span class="n">average_corr_order</span><span class="p">[</span><span class="n">rows_to_check</span><span class="p">])</span>
+        <span class="n">rows_to_discard</span> <span class="o">=</span> <span class="o">~</span><span class="n">cols_to_discard</span>
+
+        <span class="c1"># append each set of discard rows/cols, get the distinct</span>
+        <span class="n">drop_cols</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">cols_to_check</span><span class="p">[</span><span class="n">cols_to_discard</span><span class="p">],</span>
+                            <span class="n">rows_to_check</span><span class="p">[</span><span class="n">rows_to_discard</span><span class="p">]]))</span>
+
+        <span class="c1"># the names to drop</span>
+        <span class="n">drop_names</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">drop_cols</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">drop_names</span><span class="p">,</span> <span class="n">average_corr</span></div>
+
+
+<div class="viewcode-block" id="NearZeroVarianceFilter"><a class="viewcode-back" href="../../../modules/generated/skoot.feature_selection.NearZeroVarianceFilter.html#skoot.feature_selection.NearZeroVarianceFilter">[docs]</a><span class="k">class</span> <span class="nc">NearZeroVarianceFilter</span><span class="p">(</span><span class="n">BaseFeatureSelector</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Identify near zero variance predictors.</span>
+
+<span class="sd">    Diagnose and remove any features that have one unique value</span>
+<span class="sd">    (i.e., are zero variance predictors) or that are have both of the</span>
+<span class="sd">    following characteristics: they have very few unique values relative</span>
+<span class="sd">    to the number of samples and the ratio of the frequency of the most</span>
+<span class="sd">    common value to the frequency of the second most common value is large.</span>
+
+<span class="sd">    A note of caution: if you attempt to run this over large, continuous data,</span>
+<span class="sd">    it might take a long time. Since for each column in ``cols`` it will</span>
+<span class="sd">    compute ``value_counts``, applying to continuous data could be a bad idea.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cols : array-like, shape=(n_features,), optional (default=None)</span>
+<span class="sd">        The names of the columns on which to apply the transformation.</span>
+<span class="sd">        If no column names are provided, the transformer will be ``fit``</span>
+<span class="sd">        on the entire frame. Note that the transformation will also only</span>
+<span class="sd">        apply to the specified columns, and any other non-specified</span>
+<span class="sd">        columns will still be present after transformation.</span>
+
+<span class="sd">    freq_cut : float, optional (default=95/5)</span>
+<span class="sd">        The cutoff for the ratio of the most common value to the second most</span>
+<span class="sd">        common value. That is, if the frequency of the most common value is</span>
+<span class="sd">        &gt;= ``freq_cut`` times the frequency of the second most, the feature</span>
+<span class="sd">        will be dropped.</span>
+
+<span class="sd">    as_df : bool, optional (default=True)</span>
+<span class="sd">        Whether to return a Pandas ``DataFrame`` in the ``transform``</span>
+<span class="sd">        method. If False, will return a Numpy ``ndarray`` instead.</span>
+<span class="sd">        Since most skutil transformers depend on explicitly-named</span>
+<span class="sd">        ``DataFrame`` features, the ``as_df`` parameter is True by default.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    An example of the near zero variance filter on a completely</span>
+<span class="sd">    constant column:</span>
+
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; X = pd.DataFrame.from_records(</span>
+<span class="sd">    ...     data=np.array([[1,2,3], [4,5,3], [6,7,3], [8,9,3]]),</span>
+<span class="sd">    ...     columns=[&#39;a&#39;,&#39;b&#39;,&#39;c&#39;])</span>
+<span class="sd">    &gt;&gt;&gt; flt = NearZeroVarianceFilter(freq_cut=25)</span>
+<span class="sd">    &gt;&gt;&gt; flt.fit_transform(X)</span>
+<span class="sd">       a  b</span>
+<span class="sd">    0  1  2</span>
+<span class="sd">    1  4  5</span>
+<span class="sd">    2  6  7</span>
+<span class="sd">    3  8  9</span>
+
+<span class="sd">    An example on a column with two unique values represented at 2:1. Also</span>
+<span class="sd">    shows how we can extract the fitted ratios and drop names:</span>
+
+<span class="sd">    &gt;&gt;&gt; X = pd.DataFrame.from_records(</span>
+<span class="sd">    ...     data=np.array([[1,2,3], [4,5,3], [6,7,5]]),</span>
+<span class="sd">    ...     columns=[&#39;a&#39;,&#39;b&#39;,&#39;c&#39;])</span>
+<span class="sd">    &gt;&gt;&gt; nzv = NearZeroVarianceFilter(freq_cut=2.)</span>
+<span class="sd">    &gt;&gt;&gt; nzv.fit_transform(X)</span>
+<span class="sd">       a  b</span>
+<span class="sd">    0  1  2</span>
+<span class="sd">    1  4  5</span>
+<span class="sd">    2  6  7</span>
+<span class="sd">    &gt;&gt;&gt; nzv.ratios_</span>
+<span class="sd">    array([ 1.,  1.,  2.])</span>
+<span class="sd">    &gt;&gt;&gt; nzv.drop_</span>
+<span class="sd">    [&#39;c&#39;]</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    drop_ : array-like, shape=(n_features,)</span>
+<span class="sd">        Assigned after calling ``fit``. These are the features that</span>
+<span class="sd">        are designated as &quot;bad&quot; and will be dropped in the ``transform``</span>
+<span class="sd">        method.</span>
+
+<span class="sd">    ratios_ : array-like, shape=(n_features,)</span>
+<span class="sd">        The ratios of the counts of the most populous classes to the second</span>
+<span class="sd">        most populated classes for each column in ``cols``.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] Kuhn, M. &amp; Johnson, K. &quot;Applied Predictive</span>
+<span class="sd">           Modeling&quot; (2013). New York, NY: Springer.</span>
+
+<span class="sd">    .. [2] Caret (R package) nearZeroVariance R code</span>
+<span class="sd">           https://bit.ly/2J0ozbM</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="NearZeroVarianceFilter.__init__"><a class="viewcode-back" href="../../../modules/generated/skoot.feature_selection.NearZeroVarianceFilter.html#skoot.feature_selection.NearZeroVarianceFilter.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">freq_cut</span><span class="o">=</span><span class="mf">95.</span> <span class="o">/</span> <span class="mf">5.</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">NearZeroVarianceFilter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">cols</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="n">as_df</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">freq_cut</span> <span class="o">=</span> <span class="n">freq_cut</span></div>
+
+<div class="viewcode-block" id="NearZeroVarianceFilter.fit"><a class="viewcode-back" href="../../../modules/generated/skoot.feature_selection.NearZeroVarianceFilter.html#skoot.feature_selection.NearZeroVarianceFilter.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fit the near-zero variance filter.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : pd.DataFrame, shape=(n_samples, n_features)</span>
+<span class="sd">            The Pandas frame to fit. The frame will only</span>
+<span class="sd">            be fit on the prescribed ``cols`` (see ``__init__``) or</span>
+<span class="sd">            all of them if ``cols`` is None. Furthermore, ``X`` will</span>
+<span class="sd">            not be altered in the process of the fit.</span>
+
+<span class="sd">        y : array-like or None, shape=(n_samples,), optional (default=None)</span>
+<span class="sd">            Pass-through for ``sklearn.pipeline.Pipeline``. Even</span>
+<span class="sd">            if explicitly set, will not change behavior of ``fit``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># check on state of X and cols</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">cols</span> <span class="o">=</span> <span class="n">check_dataframe</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">)</span>
+
+        <span class="c1"># get the freq cut and validate it is an appropriate value...</span>
+        <span class="n">freq_cut</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">freq_cut</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">freq_cut</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">))</span> <span class="ow">and</span> <span class="mf">1.</span> <span class="o">&lt;</span> <span class="n">freq_cut</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;freq_cut must be a float &gt; 1.0&quot;</span><span class="p">)</span>
+
+        <span class="c1"># make sure it&#39;s cast to a float if not already</span>
+        <span class="n">freq_cut</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">freq_cut</span><span class="p">)</span>
+
+        <span class="c1"># get a mask of which should be dropped</span>
+        <span class="n">subset</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span>
+        <span class="n">ratios</span> <span class="o">=</span> <span class="n">subset</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_filter_freq_cut</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drop_</span> <span class="o">=</span> <span class="n">subset</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">ratios</span> <span class="o">&gt;=</span> <span class="n">freq_cut</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ratios_</span> <span class="o">=</span> <span class="n">ratios</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_filter_freq_cut</span><span class="p">(</span><span class="n">series</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Filter above a frequency cut.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        series : pd.Series</span>
+<span class="sd">            One series in the specified column list.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ratio : float</span>
+<span class="sd">            The ratio of the count of the most populated class to the second</span>
+<span class="sd">            most populated class. If there is only one class, will return</span>
+<span class="sd">            infinity.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vc</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+        <span class="n">n_levels</span> <span class="o">=</span> <span class="n">vc</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># base case 1: vc len is 1 (single value, no variance at all)</span>
+        <span class="k">if</span> <span class="n">n_levels</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+
+        <span class="c1"># get the first two levels and counts</span>
+        <span class="n">first_two</span> <span class="o">=</span> <span class="n">vc</span><span class="o">.</span><span class="n">values</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">first_two</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">first_two</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Taylor G Smith
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

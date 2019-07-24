@@ -1,0 +1,16 @@
+:mod:`skoot.preprocessing`.YeoJohnsonTransformer
+=======================================================
+
+.. currentmodule:: skoot.preprocessing
+
+.. autoclass:: YeoJohnsonTransformer
+
+   
+   .. automethod:: __init__
+   
+
+.. include:: skoot.preprocessing.YeoJohnsonTransformer.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

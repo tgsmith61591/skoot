@@ -1,0 +1,16 @@
+:mod:`skoot.decomposition`.SelectiveNMF
+==============================================
+
+.. currentmodule:: skoot.decomposition
+
+.. autoclass:: SelectiveNMF
+
+   
+   .. automethod:: __init__
+   
+
+.. include:: skoot.decomposition.SelectiveNMF.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

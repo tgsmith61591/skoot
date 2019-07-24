@@ -1,0 +1,329 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Getting acquainted with skoot &mdash; skoot 0.20.0.dev0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'0.20.0.dev0',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/style.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Anonymous transformers in skoot" href="ex_anonymous_transformer.html" />
+    <link rel="prev" title="Examples" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> skoot
+          
+
+          
+            
+            <img src="../_static/skoot.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.20.0.dev0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../modules/classes.html">API Reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Examples</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#id1">General examples</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Getting acquainted with skoot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ex_anonymous_transformer.html">Anonymous transformers in skoot</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#class-balancing-examples">Class balancing examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#datasets-examples">Datasets examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#exploratory-data-analysis-examples">Exploratory data analysis examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#feature-extraction-examples">Feature extraction examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#model-validation-examples">Model validation examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#preprocessing-examples">Preprocessing examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#utilities-examples">Utilities examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide.html">User Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">skoot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Examples</a> &raquo;</li>
+        
+      <li>Getting acquainted with skoot</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/auto_examples/ex_getting_acquainted.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="getting-acquainted-with-skoot">
+<span id="sphx-glr-auto-examples-ex-getting-acquainted-py"></span><h1>Getting acquainted with skoot<a class="headerlink" href="#getting-acquainted-with-skoot" title="Permalink to this headline">¶</a></h1>
+<p>This example walks through the package layout and where various
+transformers/classes can be located, as well as displays some nuances
+between scikit-learn and skoot.</p>
+<br/><p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-default notranslate"><div class="highlight"><pre><span></span>[&#39;QRDecomposition&#39;, &#39;SelectiveIncrementalPCA&#39;, &#39;SelectiveKernelPCA&#39;, &#39;SelectiveNMF&#39;, &#39;SelectivePCA&#39;, &#39;SelectiveTruncatedSVD&#39;, &#39;__all__&#39;, &#39;__builtins__&#39;, &#39;__cached__&#39;, &#39;__doc__&#39;, &#39;__file__&#39;, &#39;__loader__&#39;, &#39;__name__&#39;, &#39;__package__&#39;, &#39;__path__&#39;, &#39;__spec__&#39;, &#39;_dqrsl&#39;, &#39;_dqrutl&#39;, &#39;decompose&#39;]
+
+   sepal length (cm)  ...  Species
+0                5.1  ...        0
+1                4.9  ...        0
+2                4.7  ...        0
+3                4.6  ...        0
+4                5.0  ...        0
+
+[5 rows x 5 columns]
+
+The base class for all Pandas frame transformers.
+
+    Provides the base class for all skoot transformers that require
+    Pandas dataframes as input.
+
+    Parameters
+    ----------
+        cols : array-like, shape=(n_features,), optional (default=None)
+        The names of the columns on which to apply the transformation.
+        If no column names are provided, the transformer will be fit
+        on the entire frame. Note that the transformation will also
+        only apply to the specified columns, and any other
+        non-specified columns will still be present after
+        the transformation.
+
+
+        as_df : bool, optional (default=True)
+        Whether to return a Pandas ``DataFrame`` in the ``transform``
+        method. If False, will return a Numpy ``ndarray`` instead.
+        Since most skoot transformers depend on explicitly-named
+        ``DataFrame`` features, the ``as_df`` parameter is True by
+        default.
+
+
+    Examples
+    --------
+    The following is an example of how to subclass a BasePDTransformer:
+
+        &gt;&gt;&gt; from skoot.base import BasePDTransformer
+        &gt;&gt;&gt; class A(BasePDTransformer):
+        ...     def __init__(self, cols=None, as_df=None):
+        ...             super(A, self).__init__(cols, as_df)
+        ...
+        &gt;&gt;&gt; A()
+        A(as_df=None, cols=None)
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">print</span><span class="p">(</span><span class="vm">__doc__</span><span class="p">)</span>
+
+<span class="c1"># Author: Taylor Smith &lt;taylor.smith@alkaline-ml.com&gt;</span>
+
+<span class="c1"># #############################################################################</span>
+<span class="c1"># Skoot is laid out much like scikit-learn. That is, many of the same modules</span>
+<span class="c1"># exist in skoot that are present in scikit. For example:</span>
+<span class="kn">from</span> <span class="nn">skoot</span> <span class="kn">import</span> <a href="../modules/classes.html#module-skoot.decomposition" title="View documentation for skoot.decomposition"><span class="n">decomposition</span></a>
+<span class="k">print</span><span class="p">(</span><span class="nb">dir</span><span class="p">(</span><a href="../modules/classes.html#module-skoot.decomposition" title="View documentation for skoot.decomposition"><span class="n">decomposition</span></a><span class="p">))</span>  <span class="c1"># many are similar to sklearn classes</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+<span class="c1"># #############################################################################</span>
+<span class="c1"># Skoot also has a dataset interface, like sklearn. Except it returns</span>
+<span class="c1"># dataframes rather than numpy arrays:</span>
+<span class="kn">from</span> <span class="nn">skoot.datasets</span> <span class="kn">import</span> <a href="../modules/generated/skoot.datasets.load_iris_df.html#skoot.datasets.load_iris_df" title="View documentation for skoot.datasets.load_iris_df"><span class="n">load_iris_df</span></a>
+<span class="n">df</span> <span class="o">=</span> <a href="../modules/generated/skoot.datasets.load_iris_df.html#skoot.datasets.load_iris_df" title="View documentation for skoot.datasets.load_iris_df"><span class="n">load_iris_df</span></a><span class="p">(</span><span class="n">include_tgt</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">tgt_name</span><span class="o">=</span><span class="s1">&#39;Species&#39;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+<span class="c1"># #############################################################################</span>
+<span class="c1"># All skoot transformers are based on the BasePDTransformer:</span>
+<span class="kn">from</span> <span class="nn">skoot.base</span> <span class="kn">import</span> <span class="n">BasePDTransformer</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">BasePDTransformer</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  0.028 seconds)</p>
+<div class="sphx-glr-footer docutils container">
+<div class="sphx-glr-download docutils container">
+<a class="reference download internal" href="../_downloads/ex_getting_acquainted.py" download=""><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">ex_getting_acquainted.py</span></code></a></div>
+<div class="sphx-glr-download docutils container">
+<a class="reference download internal" href="../_downloads/ex_getting_acquainted.ipynb" download=""><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">ex_getting_acquainted.ipynb</span></code></a></div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.readthedocs.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ex_anonymous_transformer.html" class="btn btn-neutral float-right" title="Anonymous transformers in skoot" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Taylor G Smith
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

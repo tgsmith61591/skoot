@@ -1,0 +1,12 @@
+:mod:`skoot.utils`.flatten_all
+===========================================
+
+.. currentmodule:: skoot.utils
+
+.. autofunction:: flatten_all
+
+.. include:: skoot.utils.flatten_all.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

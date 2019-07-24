@@ -1,0 +1,444 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>skoot.decomposition.decompose &mdash; skoot 0.20.0.dev0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'0.20.0.dev0',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/style.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../../about.html" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> skoot
+          
+
+          
+            
+            <img src="../../../_static/skoot.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.20.0.dev0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto_examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide.html">User Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">skoot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>skoot.decomposition.decompose</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for skoot.decomposition.decompose</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Taylor Smith &lt;taylor.smith@alkaline-ml.com&gt;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">absolute_import</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numpy.linalg</span> <span class="k">import</span> <span class="n">matrix_rank</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="k">import</span> <span class="n">check_array</span>
+<span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="k">import</span> <span class="p">(</span><span class="n">PCA</span><span class="p">,</span> <span class="n">TruncatedSVD</span><span class="p">,</span> <span class="n">KernelPCA</span><span class="p">,</span> <span class="n">NMF</span><span class="p">,</span>
+                                   <span class="n">IncrementalPCA</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">..base</span> <span class="k">import</span> <span class="n">_SelectiveTransformerWrapper</span>
+
+<span class="c1"># namespace import to avoid explicitly protected imports in global namespace</span>
+<span class="kn">from</span> <span class="nn">..utils</span> <span class="k">import</span> <span class="n">_docstr</span> <span class="k">as</span> <span class="n">dsutils</span>
+
+<span class="c1"># local submodule funcs that use Fortran subroutines</span>
+<span class="kn">from</span> <span class="nn">._dqrutl</span> <span class="k">import</span> <span class="p">(</span><span class="n">qr_decomposition</span><span class="p">,</span> <span class="n">_call_dqrcf</span><span class="p">,</span>
+                      <span class="n">_validate_matrix_size</span><span class="p">,</span> <span class="n">_qr_R</span><span class="p">)</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;SelectiveIncrementalPCA&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;SelectiveKernelPCA&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;SelectiveNMF&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;SelectivePCA&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;SelectiveTruncatedSVD&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;QRDecomposition&#39;</span>
+<span class="p">]</span>
+
+
+<span class="c1"># Selective decomposition classes</span>
+<div class="viewcode-block" id="SelectiveIncrementalPCA"><a class="viewcode-back" href="../../../modules/generated/skoot.decomposition.SelectiveIncrementalPCA.html#skoot.decomposition.SelectiveIncrementalPCA">[docs]</a><span class="nd">@dsutils</span><span class="o">.</span><span class="n">wraps_estimator</span><span class="p">(</span><span class="n">IncrementalPCA</span><span class="p">,</span>
+                         <span class="n">add_sections</span><span class="o">=</span><span class="p">[(</span>
+                             <span class="s1">&#39;See also&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;SelectiveKernelPCA&#39;</span><span class="p">,</span>
+                                          <span class="s1">&#39;SelectiveNMF&#39;</span><span class="p">,</span>
+                                          <span class="s1">&#39;SelectivePCA&#39;</span><span class="p">,</span>
+                                          <span class="s1">&#39;SelectiveTruncatedSVD&#39;</span><span class="p">],</span> <span class="kc">True</span><span class="p">)])</span>
+<span class="k">class</span> <span class="nc">SelectiveIncrementalPCA</span><span class="p">(</span><span class="n">_SelectiveTransformerWrapper</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="SelectiveKernelPCA"><a class="viewcode-back" href="../../../modules/generated/skoot.decomposition.SelectiveKernelPCA.html#skoot.decomposition.SelectiveKernelPCA">[docs]</a><span class="nd">@dsutils</span><span class="o">.</span><span class="n">wraps_estimator</span><span class="p">(</span><span class="n">KernelPCA</span><span class="p">,</span>
+                         <span class="n">add_sections</span><span class="o">=</span><span class="p">[(</span>
+                             <span class="s1">&#39;See also&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;SelectiveIncrementalPCA&#39;</span><span class="p">,</span>
+                                          <span class="s1">&#39;SelectiveNMF&#39;</span><span class="p">,</span>
+                                          <span class="s1">&#39;SelectivePCA&#39;</span><span class="p">,</span>
+                                          <span class="s1">&#39;SelectiveTruncatedSVD&#39;</span><span class="p">],</span> <span class="kc">True</span><span class="p">)])</span>
+<span class="k">class</span> <span class="nc">SelectiveKernelPCA</span><span class="p">(</span><span class="n">_SelectiveTransformerWrapper</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="SelectiveNMF"><a class="viewcode-back" href="../../../modules/generated/skoot.decomposition.SelectiveNMF.html#skoot.decomposition.SelectiveNMF">[docs]</a><span class="nd">@dsutils</span><span class="o">.</span><span class="n">wraps_estimator</span><span class="p">(</span><span class="n">NMF</span><span class="p">,</span>
+                         <span class="n">add_sections</span><span class="o">=</span><span class="p">[(</span>
+                             <span class="s1">&#39;See also&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;SelectiveIncrementalPCA&#39;</span><span class="p">,</span>
+                                          <span class="s1">&#39;SelectiveKernalPCA&#39;</span><span class="p">,</span>
+                                          <span class="s1">&#39;SelectivePCA&#39;</span><span class="p">,</span>
+                                          <span class="s1">&#39;SelectiveTruncatedSVD&#39;</span><span class="p">],</span> <span class="kc">True</span><span class="p">)])</span>
+<span class="k">class</span> <span class="nc">SelectiveNMF</span><span class="p">(</span><span class="n">_SelectiveTransformerWrapper</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="SelectivePCA"><a class="viewcode-back" href="../../../modules/generated/skoot.decomposition.SelectivePCA.html#skoot.decomposition.SelectivePCA">[docs]</a><span class="nd">@dsutils</span><span class="o">.</span><span class="n">wraps_estimator</span><span class="p">(</span><span class="n">PCA</span><span class="p">,</span>
+                         <span class="n">add_sections</span><span class="o">=</span><span class="p">[(</span>
+                             <span class="s1">&#39;See also&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;SelectiveIncrementalPCA&#39;</span><span class="p">,</span>
+                                          <span class="s1">&#39;SelectiveKernalPCA&#39;</span><span class="p">,</span>
+                                          <span class="s1">&#39;SelectiveNMF&#39;</span><span class="p">,</span>
+                                          <span class="s1">&#39;SelectiveTruncatedSVD&#39;</span><span class="p">],</span> <span class="kc">True</span><span class="p">)])</span>
+<span class="k">class</span> <span class="nc">SelectivePCA</span><span class="p">(</span><span class="n">_SelectiveTransformerWrapper</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="SelectiveTruncatedSVD"><a class="viewcode-back" href="../../../modules/generated/skoot.decomposition.SelectiveTruncatedSVD.html#skoot.decomposition.SelectiveTruncatedSVD">[docs]</a><span class="nd">@dsutils</span><span class="o">.</span><span class="n">wraps_estimator</span><span class="p">(</span><span class="n">TruncatedSVD</span><span class="p">,</span>
+                         <span class="n">add_sections</span><span class="o">=</span><span class="p">[(</span>
+                             <span class="s1">&#39;See also&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;SelectiveIncrementalPCA&#39;</span><span class="p">,</span>
+                                          <span class="s1">&#39;SelectiveKernalPCA&#39;</span><span class="p">,</span>
+                                          <span class="s1">&#39;SelectiveNMF&#39;</span><span class="p">,</span>
+                                          <span class="s1">&#39;SelectivePCA&#39;</span><span class="p">],</span> <span class="kc">True</span><span class="p">)])</span>
+<span class="k">class</span> <span class="nc">SelectiveTruncatedSVD</span><span class="p">(</span><span class="n">_SelectiveTransformerWrapper</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="QRDecomposition"><a class="viewcode-back" href="../../../modules/generated/skoot.decomposition.QRDecomposition.html#skoot.decomposition.QRDecomposition">[docs]</a><span class="k">class</span> <span class="nc">QRDecomposition</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Perform the QR decomposition on a matrix.</span>
+
+<span class="sd">    Performs the QR decomposition using LINPACK, BLAS and LAPACK</span>
+<span class="sd">    Fortran subroutines, and provides an interface for other useful</span>
+<span class="sd">    QR utility methods.</span>
+
+<span class="sd">    Unlike most other classes in skoot, the QRDecomposition does not</span>
+<span class="sd">    conform to the sklearn interface, and is fit immediately upon</span>
+<span class="sd">    instantiation.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X : array-like, shape (n_samples, n_features)</span>
+<span class="sd">        The matrix to decompose. Unlike many other classes in skoot,</span>
+<span class="sd">        this one does not require a Pandas frame, and can be applied</span>
+<span class="sd">        directly to numpy arrays.</span>
+
+<span class="sd">    pivot : bool, optional (default=True)</span>
+<span class="sd">        Whether to perform pivoting. Default is True.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    The following example applies the QRDecomposition to the diabetes dataset:</span>
+
+<span class="sd">    &gt;&gt;&gt; from sklearn.datasets import make_classification</span>
+<span class="sd">    &gt;&gt;&gt; X, y = make_classification(n_samples=1000, n_features=20,</span>
+<span class="sd">    ...                            n_informative=12, random_state=1)</span>
+<span class="sd">    &gt;&gt;&gt; qr = QRDecomposition(X)</span>
+<span class="sd">    &gt;&gt;&gt; qr.qr[:3]</span>
+<span class="sd">    array([[ 6.62984626e+01, -2.09133094e+00, -1.09276829e+00,</span>
+<span class="sd">             5.58014214e+00, -8.32668709e+00, -1.97547759e+01,</span>
+<span class="sd">            -6.85313166e+00, -6.42853241e+00,  5.94403138e+00,</span>
+<span class="sd">            -2.15967470e+01, -2.35917991e-01, -5.20261414e+00,</span>
+<span class="sd">             2.57589906e+00,  1.16805385e+01, -3.04018942e-01,</span>
+<span class="sd">             7.90088801e-01,  3.02117704e-01, -1.09919010e+01,</span>
+<span class="sd">             4.41783544e-01,  4.46781544e+00],</span>
+<span class="sd">           [ 6.18367459e-02, -7.72568215e+01, -1.55131934e+00,</span>
+<span class="sd">            -1.16888104e+01, -5.94188765e+00, -4.20310720e+01,</span>
+<span class="sd">            -6.79982237e+00, -1.16643515e+00,  1.23441742e+01,</span>
+<span class="sd">             5.68140358e+01,  1.48759893e+00, -3.07980793e+00,</span>
+<span class="sd">            -1.30638396e-01, -1.40662087e+00,  4.72221164e-03,</span>
+<span class="sd">            -2.67913340e-01,  1.08518423e+00,  6.48536112e+00,</span>
+<span class="sd">            -3.61589065e+00, -8.54657339e+00],</span>
+<span class="sd">           [-1.46203358e-03, -2.82718061e-03, -3.13247668e+01,</span>
+<span class="sd">            -4.42956256e-03, -2.27949848e+00, -2.37512023e+00,</span>
+<span class="sd">            -1.50550170e+00,  2.39909438e+00, -5.01917157e+00,</span>
+<span class="sd">            -5.84909738e+00,  5.47610545e-01, -9.82967076e-01,</span>
+<span class="sd">             8.36013852e-01, -3.06521652e+00, -6.12860254e-01,</span>
+<span class="sd">            -3.57806556e-01, -1.64002608e-01,  9.76526585e-01,</span>
+<span class="sd">             5.15293669e-01,  1.78207627e+00]])</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    qr : array-like, shape (n_samples, n_features)</span>
+<span class="sd">        The decomposed matrix</span>
+
+<span class="sd">    qraux : array-like, shape (n_features,)</span>
+<span class="sd">        Contains further information required to recover</span>
+<span class="sd">        the orthogonal part of the decomposition.</span>
+
+<span class="sd">    pivot : array-like, shape (n_features,)</span>
+<span class="sd">        The pivots, if pivot was set to 1, else None</span>
+
+<span class="sd">    rank : int</span>
+<span class="sd">        The rank of the input matrix</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="QRDecomposition.__init__"><a class="viewcode-back" href="../../../modules/generated/skoot.decomposition.QRDecomposition.html#skoot.decomposition.QRDecomposition.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">pivot</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">job_</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">pivot</span> <span class="k">else</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_decompose</span><span class="p">(</span><span class="n">X</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_decompose</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Decomposes the matrix&quot;&quot;&quot;</span>
+        <span class="c1"># perform the decomposition</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">qr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rank</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">qraux</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pivot</span> <span class="o">=</span> \
+            <span class="n">qr_decomposition</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">job_</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_coef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="n">qr</span><span class="p">,</span> <span class="n">qraux</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">qr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">qraux</span>
+        <span class="n">n</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">qr</span><span class="o">.</span><span class="n">shape</span>
+
+        <span class="c1"># sanity check</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">qr</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">),</span> \
+            <span class="s1">&#39;internal error: QR should be a np.ndarray but got </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">qr</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">qraux</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">),</span> \
+            <span class="s1">&#39;internal error: qraux should be a np.ndarray but got </span><span class="si">%s</span><span class="s1">&#39;</span> \
+            <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">qraux</span><span class="p">)</span>
+
+        <span class="c1"># validate input array</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">check_array</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;numeric&#39;</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>  <span class="c1"># type: np.ndarray</span>
+        <span class="n">nx</span><span class="p">,</span> <span class="n">ny</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+
+        <span class="k">if</span> <span class="n">nx</span> <span class="o">!=</span> <span class="n">n</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;qr and X must have same number of rows&#39;</span><span class="p">)</span>
+
+        <span class="c1"># check on size</span>
+        <span class="n">_validate_matrix_size</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+
+        <span class="c1"># get the rank of the decomposition</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rank</span>
+
+        <span class="c1"># get ix vector</span>
+        <span class="c1"># if p &gt; n:</span>
+        <span class="c1">#   ix = np.ones(n + (p - n)) * np.nan</span>
+        <span class="c1">#   ix[:n] = np.arange(n) # i.e., array([0,1,2,nan,nan,nan])</span>
+        <span class="c1"># else:</span>
+        <span class="c1">#   ix = np.arange(n)</span>
+
+        <span class="c1"># set up the structures to alter</span>
+        <span class="n">coef</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">k</span><span class="p">,</span> <span class="n">ny</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">double</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">),</span>  <span class="c1"># noqa: F841</span>
+                   <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">))</span>
+
+        <span class="c1"># call the fortran module IN PLACE</span>
+        <span class="n">_call_dqrcf</span><span class="p">(</span><span class="n">qr</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">qraux</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">coef</span><span class="p">)</span>
+
+        <span class="c1"># post-processing</span>
+        <span class="c1"># if k &lt; p:</span>
+        <span class="c1">#   cf = np.ones((p,ny)) * np.nan</span>
+        <span class="c1">#   cf[self.pivot[np.arange(k)], :] = coef</span>
+        <span class="k">return</span> <span class="n">coef</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">p</span> <span class="k">else</span> <span class="n">coef</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pivot</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">k</span><span class="p">)],</span> <span class="p">:]</span>
+
+<div class="viewcode-block" id="QRDecomposition.get_rank"><a class="viewcode-back" href="../../../modules/generated/skoot.decomposition.QRDecomposition.html#skoot.decomposition.QRDecomposition.get_rank">[docs]</a>    <span class="k">def</span> <span class="nf">get_rank</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the rank of the decomposition.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self.rank : int</span>
+<span class="sd">            The rank of the decomposition</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rank</span></div>
+
+<div class="viewcode-block" id="QRDecomposition.get_R"><a class="viewcode-back" href="../../../modules/generated/skoot.decomposition.QRDecomposition.html#skoot.decomposition.QRDecomposition.get_R">[docs]</a>    <span class="k">def</span> <span class="nf">get_R</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the R matrix from the decomposition.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        r : np.ndarray</span>
+<span class="sd">            The R portion of the decomposed matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">_qr_R</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qr</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">r</span></div>
+
+<div class="viewcode-block" id="QRDecomposition.get_R_rank"><a class="viewcode-back" href="../../../modules/generated/skoot.decomposition.QRDecomposition.html#skoot.decomposition.QRDecomposition.get_R_rank">[docs]</a>    <span class="k">def</span> <span class="nf">get_R_rank</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the rank of the R matrix.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        rank : int</span>
+<span class="sd">            The rank of the R matrix</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">matrix_rank</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_R</span><span class="p">())</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Taylor G Smith
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

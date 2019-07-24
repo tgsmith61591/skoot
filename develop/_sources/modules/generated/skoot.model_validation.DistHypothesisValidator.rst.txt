@@ -1,0 +1,16 @@
+:mod:`skoot.model_validation`.DistHypothesisValidator
+============================================================
+
+.. currentmodule:: skoot.model_validation
+
+.. autoclass:: DistHypothesisValidator
+
+   
+   .. automethod:: __init__
+   
+
+.. include:: skoot.model_validation.DistHypothesisValidator.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

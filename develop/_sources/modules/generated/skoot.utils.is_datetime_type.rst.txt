@@ -1,0 +1,12 @@
+:mod:`skoot.utils`.is_datetime_type
+================================================
+
+.. currentmodule:: skoot.utils
+
+.. autofunction:: is_datetime_type
+
+.. include:: skoot.utils.is_datetime_type.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

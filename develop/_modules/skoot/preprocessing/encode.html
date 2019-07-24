@@ -1,0 +1,485 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>skoot.preprocessing.encode &mdash; skoot 0.20.0.dev0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'0.20.0.dev0',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/style.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../../about.html" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> skoot
+          
+
+          
+            
+            <img src="../../../_static/skoot.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.20.0.dev0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto_examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide.html">User Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">skoot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>skoot.preprocessing.encode</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for skoot.preprocessing.encode</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Taylor Smith &lt;taylor.smith@alkaline-ml.com&gt;</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="k">import</span> <span class="n">LabelEncoder</span><span class="p">,</span> <span class="n">OneHotEncoder</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="k">import</span> <span class="n">check_is_fitted</span>
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="k">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">..base</span> <span class="k">import</span> <span class="n">BasePDTransformer</span>
+<span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="k">import</span> <span class="n">check_dataframe</span><span class="p">,</span> <span class="n">validate_test_set_columns</span>
+<span class="kn">from</span> <span class="nn">..utils.dataframe</span> <span class="k">import</span> <span class="n">dataframe_or_array</span><span class="p">,</span> <span class="n">get_continuous_columns</span>
+<span class="kn">from</span> <span class="nn">..utils.metaestimators</span> <span class="k">import</span> <span class="n">timed_instance_method</span>
+
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;DummyEncoder&#39;</span>
+<span class="p">]</span>
+
+
+<span class="c1"># Computed in parallel</span>
+<span class="k">def</span> <span class="nf">_le_transform</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">vec</span><span class="p">,</span> <span class="n">le</span><span class="p">,</span> <span class="n">handle</span><span class="p">,</span> <span class="n">sep</span><span class="p">):</span>
+    <span class="c1"># if &quot;ignore&quot; and there are unknown labels in the array,</span>
+    <span class="c1"># we need to handle it...</span>
+    <span class="n">missing_mask</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">in1d</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="n">le</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span>  <span class="c1"># type: np.ndarray</span>
+    <span class="n">any_missing</span> <span class="o">=</span> <span class="n">missing_mask</span><span class="o">.</span><span class="n">any</span><span class="p">()</span>
+    <span class="n">ignore</span> <span class="o">=</span> <span class="n">handle</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="s2">&quot;warn&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">ignore</span> <span class="ow">and</span> <span class="n">any_missing</span><span class="p">:</span>
+        <span class="c1"># if we want to warn, do so now</span>
+        <span class="k">if</span> <span class="n">handle</span> <span class="o">==</span> <span class="s2">&quot;warn&quot;</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Previously unseen level(s) found in data! </span><span class="si">%r</span><span class="s2">&quot;</span>
+                          <span class="o">%</span> <span class="nb">set</span><span class="p">(</span><span class="n">vec</span><span class="p">[</span><span class="n">missing_mask</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()))</span>
+
+        <span class="c1"># initialize vec_trans as zeros</span>
+        <span class="n">vec_trans</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">vec</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+        <span class="c1"># where the labels are present, transform</span>
+        <span class="n">vec_trans</span><span class="p">[</span><span class="o">~</span><span class="n">missing_mask</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="n">le</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">vec</span><span class="p">[</span><span class="o">~</span><span class="n">missing_mask</span><span class="p">])</span>
+
+        <span class="c1"># XXX: Where the labels are NOT present, set them to n_classes + 1.</span>
+        <span class="c1"># (is there a better dummy class for this? We know, for instance,</span>
+        <span class="c1"># the labels are constrained to be positive, so we could theoretically</span>
+        <span class="c1"># use -1, however we also know the OHE does not discriminate, and any</span>
+        <span class="c1"># unknown levels are treated similarly, so it shouldn&#39;t matter, right?</span>
+        <span class="c1"># In a sense, we&#39;re setting k+1 to be a class indicating &quot;other&quot;)</span>
+        <span class="n">vec_trans</span><span class="p">[</span><span class="n">missing_mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">le</span><span class="o">.</span><span class="n">classes_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># Otherwise take our chances that they&#39;re all there</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">vec_trans</span> <span class="o">=</span> <span class="n">le</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span>  <span class="c1"># Union[str, int] -&gt; int</span>
+
+    <span class="c1"># Get the column names (levels) so we can transform in the</span>
+    <span class="c1"># same order of the output cols. Note that we do not need to consider</span>
+    <span class="c1"># new levels here, since the OHE will ignore them in its transformation</span>
+    <span class="c1"># step</span>
+    <span class="n">le_clz</span> <span class="o">=</span> <span class="n">le</span><span class="o">.</span><span class="n">classes_</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">classes</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">%s%s%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">sep</span><span class="p">,</span> <span class="n">clz</span><span class="p">)</span> <span class="k">for</span> <span class="n">clz</span> <span class="ow">in</span> <span class="n">le_clz</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">col</span><span class="p">,</span> <span class="n">vec_trans</span><span class="p">,</span> <span class="n">classes</span>
+
+
+<span class="c1"># Computed in parallel</span>
+<span class="k">def</span> <span class="nf">_fit_transform_one_encoder</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">vec</span><span class="p">):</span>
+    <span class="c1"># Fit/transform a label encoder. This is run in parallel</span>
+    <span class="c1"># using the joblib library</span>
+    <span class="n">le</span> <span class="o">=</span> <span class="n">LabelEncoder</span><span class="p">()</span>
+    <span class="n">trans</span> <span class="o">=</span> <span class="n">le</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">col</span><span class="p">,</span> <span class="n">le</span><span class="p">,</span> <span class="n">trans</span>
+
+
+<div class="viewcode-block" id="DummyEncoder"><a class="viewcode-back" href="../../../modules/generated/skoot.preprocessing.DummyEncoder.html#skoot.preprocessing.DummyEncoder">[docs]</a><span class="k">class</span> <span class="nc">DummyEncoder</span><span class="p">(</span><span class="n">BasePDTransformer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Dummy encode categorical data.</span>
+
+<span class="sd">    A custom one-hot encoding class that is capable of handling previously</span>
+<span class="sd">    unseen levels and automatically dropping one level from each categorical</span>
+<span class="sd">    feature in order to avoid the dummy variable trap.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cols : array-like, shape=(n_features,), optional (default=None)</span>
+<span class="sd">        The names of the columns on which to apply the transformation.</span>
+<span class="sd">        Unlike other BasePDTransformer instances, this should not be left</span>
+<span class="sd">        as the default None, since dummying the entire frame could prove</span>
+<span class="sd">        very expensive.</span>
+
+<span class="sd">    as_df : bool, optional (default=True)</span>
+<span class="sd">        Whether to return a Pandas ``DataFrame`` in the ``transform``</span>
+<span class="sd">        method. If False, will return a Numpy ``ndarray`` instead.</span>
+<span class="sd">        Since most skoot transformers depend on explicitly-named</span>
+<span class="sd">        ``DataFrame`` features, the ``as_df`` parameter is True by default.</span>
+
+<span class="sd">    sep : str or unicode, optional (default=&#39;_&#39;)</span>
+<span class="sd">        The string separator between the categorical feature name</span>
+<span class="sd">        and the level name.</span>
+
+<span class="sd">    drop_one_level : bool, optional (default=True)</span>
+<span class="sd">        Whether to drop one level for each categorical variable.</span>
+<span class="sd">        This helps avoid the dummy variable trap.</span>
+
+<span class="sd">    handle_unknown : str or unicode, optional (default=&#39;ignore&#39;)</span>
+<span class="sd">        How to handle the unknown levels. &quot;ignore&quot; will not raise an error</span>
+<span class="sd">        for unknown test set levels, but &quot;error&quot; will. &quot;warn&quot; will produce</span>
+<span class="sd">        a warning.</span>
+
+<span class="sd">    n_jobs : int, 1 by default</span>
+<span class="sd">       The number of jobs to use for the encoding. This works by</span>
+<span class="sd">       fitting each incremental LabelEncoder in parallel.</span>
+
+<span class="sd">       If -1 all CPUs are used. If 1 is given, no parallel computing code</span>
+<span class="sd">       is used at all, which is useful for debugging. For n_jobs below -1,</span>
+<span class="sd">       (n_cpus + 1 + n_jobs) are used. Thus for n_jobs = -2, all CPUs but</span>
+<span class="sd">       one are used.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ohe_ : OneHotEncoder</span>
+<span class="sd">        The one hot encoder</span>
+
+<span class="sd">    le_ : dict[str: LabelEncoder]</span>
+<span class="sd">        A dictionary mapping column names to their respective LabelEncoder</span>
+<span class="sd">        instances.</span>
+
+<span class="sd">    fit_cols_ : list</span>
+<span class="sd">        The list of column names on which the transformer was fit. This</span>
+<span class="sd">        is used to validate the presence of the features in the test set</span>
+<span class="sd">        during the ``transform`` stage.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="DummyEncoder.__init__"><a class="viewcode-back" href="../../../modules/generated/skoot.preprocessing.DummyEncoder.html#skoot.preprocessing.DummyEncoder.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="n">drop_one_level</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">handle_unknown</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">DummyEncoder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">cols</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="n">as_df</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sep</span> <span class="o">=</span> <span class="n">sep</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drop_one_level</span> <span class="o">=</span> <span class="n">drop_one_level</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">handle_unknown</span> <span class="o">=</span> <span class="n">handle_unknown</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span> <span class="o">=</span> <span class="n">n_jobs</span></div>
+
+<div class="viewcode-block" id="DummyEncoder.fit"><a class="viewcode-back" href="../../../modules/generated/skoot.preprocessing.DummyEncoder.html#skoot.preprocessing.DummyEncoder.fit">[docs]</a>    <span class="nd">@timed_instance_method</span><span class="p">(</span><span class="n">attribute_name</span><span class="o">=</span><span class="s2">&quot;fit_time_&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fit the dummy encoder.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : pd.DataFrame, shape=(n_samples, n_features)</span>
+<span class="sd">            The Pandas frame to fit. The frame will only</span>
+<span class="sd">            be fit on the prescribed ``cols`` (see ``__init__``) or</span>
+<span class="sd">            all of them if ``cols`` is None.</span>
+
+<span class="sd">        y : array-like or None, shape=(n_samples,), optional (default=None)</span>
+<span class="sd">            Pass-through for ``sklearn.pipeline.Pipeline``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># validate the input, and get a copy of it</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">cols</span> <span class="o">=</span> <span class="n">check_dataframe</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">,</span>
+                                  <span class="n">assert_all_finite</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># Warn if the columns were passed as default and any of the dtypes</span>
+        <span class="c1"># in the frame are numeric</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cols</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> \
+                <span class="nb">len</span><span class="p">(</span><span class="n">get_continuous_columns</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Continuous features detected in DummyEncoder. &quot;</span>
+                          <span class="s2">&quot;This can increase runtime and dimensionality &quot;</span>
+                          <span class="s2">&quot;drastically. This warning only appears when &quot;</span>
+                          <span class="s2">&quot;`cols` is left as the default None, and there are &quot;</span>
+                          <span class="s2">&quot;continuous features present.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># for each column, fit a label encoder, get the transformation</span>
+        <span class="n">encoded</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">)(</span>
+            <span class="n">delayed</span><span class="p">(</span><span class="n">_fit_transform_one_encoder</span><span class="p">)(</span><span class="n">col</span><span class="p">,</span> <span class="n">X</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">))</span>
+
+        <span class="c1"># Quickly run over the encoded, set the columns in the dataframe</span>
+        <span class="c1"># pre-OHE fit and then create a dict of the encoders. This is a</span>
+        <span class="c1"># cheap pass of N over the columns, where we simply assign columns</span>
+        <span class="c1"># or values in a dict to the pre-computed values</span>
+        <span class="n">lab_encoders</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">col</span><span class="p">,</span> <span class="n">le</span><span class="p">,</span> <span class="n">trans</span> <span class="ow">in</span> <span class="n">encoded</span><span class="p">:</span>
+            <span class="n">X</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">trans</span>
+            <span class="n">lab_encoders</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">le</span>
+
+        <span class="c1"># Fit a single OHE on the transformed columns. Note that the sklearn</span>
+        <span class="c1"># OHE class does not discriminate in &quot;warn&quot; or &quot;ignore&quot;, so we just</span>
+        <span class="c1"># pass &quot;ignore&quot; since we already warned above.</span>
+        <span class="n">handle</span> <span class="o">=</span> <span class="s2">&quot;ignore&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_unknown</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;warn&quot;</span><span class="p">,</span> <span class="s2">&quot;ignore&quot;</span><span class="p">)</span> \
+            <span class="k">else</span> <span class="s2">&quot;error&quot;</span>
+        <span class="n">ohe</span> <span class="o">=</span> <span class="n">OneHotEncoder</span><span class="p">(</span>
+            <span class="n">sparse</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># TODO: Is there a way to sparsify with Pandas?</span>
+            <span class="n">handle_unknown</span><span class="o">=</span><span class="n">handle</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">cols</span><span class="p">])</span>
+
+        <span class="c1"># assign fit params</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ohe_</span> <span class="o">=</span> <span class="n">ohe</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">le_</span> <span class="o">=</span> <span class="n">lab_encoders</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit_cols_</span> <span class="o">=</span> <span class="n">cols</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="DummyEncoder.transform"><a class="viewcode-back" href="../../../modules/generated/skoot.preprocessing.DummyEncoder.html#skoot.preprocessing.DummyEncoder.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Apply the encoding to a dataframe.</span>
+
+<span class="sd">        This method will encode the features in the test frame with the</span>
+<span class="sd">        levels discovered in the ``fit`` computation.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : pd.DataFrame, shape=(n_samples, n_features)</span>
+<span class="sd">            The Pandas frame to transform. The operation will</span>
+<span class="sd">            be applied to a copy of the input data, and the result</span>
+<span class="sd">            will be returned.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        X : pd.DataFrame or np.ndarray, shape=(n_samples, n_features)</span>
+<span class="sd">            The operation is applied to a copy of ``X``,</span>
+<span class="sd">            and the result set is returned.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;ohe_&#39;</span><span class="p">)</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">check_dataframe</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">)</span>
+
+        <span class="c1"># validate that fit cols in test set</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_cols_</span>
+        <span class="n">validate_test_set_columns</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
+        <span class="c1"># fit params that we need</span>
+        <span class="n">ohe</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ohe_</span>
+        <span class="n">lenc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">le_</span>
+        <span class="n">sep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sep</span>
+        <span class="n">drop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">drop_one_level</span>
+
+        <span class="c1"># Do transformations in parallel</span>
+        <span class="n">transformations</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">)(</span>
+            <span class="n">delayed</span><span class="p">(</span><span class="n">_le_transform</span><span class="p">)(</span>
+                <span class="n">col</span><span class="o">=</span><span class="n">col</span><span class="p">,</span> <span class="n">vec</span><span class="o">=</span><span class="n">X</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">le</span><span class="o">=</span><span class="n">lenc</span><span class="p">[</span><span class="n">col</span><span class="p">],</span>
+                <span class="n">handle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">handle_unknown</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="n">sep</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">))</span>
+
+        <span class="c1"># This is another pass of O(N), but it&#39;s not performing any incremental</span>
+        <span class="c1"># transformations of any sort. It just traverses the list of affected</span>
+        <span class="c1"># columns, extending the column order list and tracking the columns to</span>
+        <span class="c1"># drop. All of the heavy lifting for the transformations was handled</span>
+        <span class="c1"># in parallel above.</span>
+        <span class="n">col_order</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">drops</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">col</span><span class="p">,</span> <span class="n">vec_trans</span><span class="p">,</span> <span class="n">classes</span> <span class="ow">in</span> <span class="n">transformations</span><span class="p">:</span>
+            <span class="n">X</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">vec_trans</span>
+            <span class="n">col_order</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">classes</span><span class="p">)</span>
+
+            <span class="c1"># if we want to drop one, just drop the last</span>
+            <span class="k">if</span> <span class="n">drop</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">classes</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">drops</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">classes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="c1"># now we can get the transformed OHE</span>
+        <span class="n">ohe_trans</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">ohe</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">cols</span><span class="p">]),</span>
+                                              <span class="n">columns</span><span class="o">=</span><span class="n">col_order</span><span class="p">)</span>
+
+        <span class="c1"># set the index to be equal to X&#39;s for a smooth concat</span>
+        <span class="n">ohe_trans</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">index</span>
+
+        <span class="c1"># if we&#39;re dropping one level, do so now</span>
+        <span class="k">if</span> <span class="n">drops</span><span class="p">:</span>
+            <span class="n">ohe_trans</span> <span class="o">=</span> <span class="n">ohe_trans</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">drops</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># drop the original columns from X</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># We might have dropped ALL columns from X. And if that&#39;s the case, we</span>
+        <span class="c1"># can just return the encoded columns</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">dataframe_or_array</span><span class="p">(</span><span class="n">ohe_trans</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_df</span><span class="p">)</span>
+
+        <span class="c1"># otherwise concat the new columns</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">X</span><span class="p">,</span> <span class="n">ohe_trans</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># type: pd.DataFrame</span>
+        <span class="k">return</span> <span class="n">dataframe_or_array</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_df</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Taylor G Smith
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

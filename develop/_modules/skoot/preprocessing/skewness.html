@@ -1,0 +1,704 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>skoot.preprocessing.skewness &mdash; skoot 0.20.0.dev0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'0.20.0.dev0',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/style.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../../about.html" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> skoot
+          
+
+          
+            
+            <img src="../../../_static/skoot.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.20.0.dev0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto_examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide.html">User Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">skoot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>skoot.preprocessing.skewness</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for skoot.preprocessing.skewness</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Taylor Smith &lt;taylor.smith@alkaline-ml.com&gt;</span>
+<span class="c1">#</span>
+<span class="c1"># Classes and functions for rectifying skewness in transformers.</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="k">import</span> <span class="n">ABCMeta</span><span class="p">,</span> <span class="n">abstractmethod</span>
+
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="k">import</span> <span class="n">optimize</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="k">import</span> <span class="n">boxcox</span>
+
+<span class="kn">import</span> <span class="nn">six</span>
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="k">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="k">import</span> <span class="n">check_is_fitted</span>
+
+<span class="kn">from</span> <span class="nn">..base</span> <span class="k">import</span> <span class="n">BasePDTransformer</span>
+<span class="kn">from</span> <span class="nn">..decorators</span> <span class="k">import</span> <span class="n">suppress_warnings</span> <span class="k">as</span> <span class="n">suppress</span>
+<span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="k">import</span> <span class="p">(</span><span class="n">check_dataframe</span><span class="p">,</span> <span class="n">validate_multiple_rows</span><span class="p">,</span>
+                                <span class="n">validate_test_set_columns</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">..utils.dataframe</span> <span class="k">import</span> <span class="n">dataframe_or_array</span>
+<span class="kn">from</span> <span class="nn">..utils.metaestimators</span> <span class="k">import</span> <span class="n">timed_instance_method</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;BoxCoxTransformer&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;YeoJohnsonTransformer&#39;</span>
+<span class="p">]</span>
+
+<span class="n">ZERO</span> <span class="o">=</span> <span class="mf">1E-16</span>
+
+
+<span class="k">def</span> <span class="nf">_bc_est_lam</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">min_value</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">suppress_warnings</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Estimate the lambda param for box-cox transformations.</span>
+
+<span class="sd">    Estimate lambda for a single y, given a range of lambdas</span>
+<span class="sd">    through which to search. No validation performed.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    y : np.ndarray, shape (n_samples,)</span>
+<span class="sd">       The vector from which lambda is being estimated</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># ensure is array, floor at min_value</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="p">),</span> <span class="n">min_value</span><span class="p">)</span>
+
+    <span class="c1"># Use scipy&#39;s log-likelihood estimator (suppress the inner optimization</span>
+    <span class="c1"># routine otherwise it gets pretty annoyingly verbose)</span>
+    <span class="nd">@suppress</span>
+    <span class="k">def</span> <span class="nf">_boxcox_inner</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">boxcox</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">lmbda</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="c1"># if we want to suppress, decorate now</span>
+    <span class="k">if</span> <span class="n">suppress_warnings</span><span class="p">:</span>
+        <span class="n">_boxcox_inner</span> <span class="o">=</span> <span class="n">suppress</span><span class="p">(</span><span class="n">_boxcox_inner</span><span class="p">)</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">_boxcox_inner</span><span class="p">()</span>
+
+    <span class="c1"># Return lambda corresponding to maximum P</span>
+    <span class="k">return</span> <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_yj_est_lam</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">brack</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">):</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span>
+
+    <span class="c1"># Use MLE to compute the optimal YJ parameter</span>
+    <span class="k">def</span> <span class="nf">_mle_opt</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">brck</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">_eval_mle</span><span class="p">(</span><span class="n">lmb</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+            <span class="c1"># Function to minimize</span>
+            <span class="k">return</span> <span class="o">-</span><span class="n">_yj_llf</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">lmb</span><span class="p">)</span>
+
+        <span class="c1"># Suppress the invalid scalar warnings we might get in the</span>
+        <span class="c1"># optimization routine.</span>
+        <span class="nd">@suppress</span>
+        <span class="k">def</span> <span class="nf">brent_optimize</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">optimize</span><span class="o">.</span><span class="n">brent</span><span class="p">(</span><span class="n">_eval_mle</span><span class="p">,</span> <span class="n">brack</span><span class="o">=</span><span class="n">brck</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">i</span><span class="p">,))</span>
+
+        <span class="c1"># suppressed version:</span>
+        <span class="k">return</span> <span class="n">brent_optimize</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">_mle_opt</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">brack</span><span class="p">)</span>  <span class="c1"># _mle(x, brack)</span>
+
+
+<span class="k">def</span> <span class="nf">_yj_llf</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">lmb</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;YJ-transform a vector.</span>
+
+<span class="sd">    Transform a y vector given a single lambda value,</span>
+<span class="sd">    and compute the log-likelihood function. No validation</span>
+<span class="sd">    is applied to the input.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : array-like</span>
+<span class="sd">       The vector to transform</span>
+
+<span class="sd">    lmb : scalar</span>
+<span class="sd">       The lambda value</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># make into a numpy array, if not already one</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># transform the vector</span>
+    <span class="n">y_trans</span> <span class="o">=</span> <span class="n">_yj_transform_y</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">lmb</span><span class="p">)</span>
+
+    <span class="c1"># We can&#39;t take the canonical log of data, as there could be</span>
+    <span class="c1"># zeros or negatives. Thus, we need to shift both distributions</span>
+    <span class="c1"># up by some arbitrary factor just for the LLF computation</span>
+    <span class="n">min_d</span><span class="p">,</span> <span class="n">min_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">y_trans</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">min_d</span> <span class="o">&lt;</span> <span class="n">ZERO</span><span class="p">:</span>
+        <span class="n">shift</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">min_d</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">data</span> <span class="o">+=</span> <span class="n">shift</span>
+
+    <span class="c1"># Same goes for Y</span>
+    <span class="k">if</span> <span class="n">min_y</span> <span class="o">&lt;</span> <span class="n">ZERO</span><span class="p">:</span>
+        <span class="n">shift</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">min_y</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">y_trans</span> <span class="o">+=</span> <span class="n">shift</span>
+
+    <span class="c1"># Compute mean on potentially shifted data</span>
+    <span class="n">y_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y_trans</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">y_trans</span> <span class="o">-</span> <span class="n">y_mean</span><span class="p">)</span> <span class="o">**</span> <span class="mf">2.</span> <span class="o">/</span> <span class="n">n</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># If var is 0.0, we&#39;ll get a warning. Means all the</span>
+    <span class="c1"># values were nearly identical in y, so we will return</span>
+    <span class="c1"># NaN so we don&#39;t optimize for this value of lam</span>
+    <span class="k">if</span> <span class="mi">0</span> <span class="o">==</span> <span class="n">var</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+    <span class="n">llf</span> <span class="o">=</span> <span class="p">(</span><span class="n">lmb</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">llf</span> <span class="o">-=</span> <span class="n">n</span> <span class="o">/</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">llf</span>
+
+
+<span class="k">def</span> <span class="nf">_yj_transform_y</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">lam</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">):</span>
+    <span class="c1"># should already be a vec, but just gotta be sure</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span>
+
+    <span class="c1"># need some different masks...</span>
+    <span class="n">gte_zero_mask</span> <span class="o">=</span> <span class="n">y</span> <span class="o">&gt;=</span> <span class="mi">0</span>
+    <span class="n">lt_zero_mask</span> <span class="o">=</span> <span class="o">~</span><span class="n">gte_zero_mask</span>  <span class="c1"># negative number</span>
+
+    <span class="c1"># lambda &quot;masks&quot; (just scalar booleans...)</span>
+    <span class="n">lam_gt_zero</span> <span class="o">=</span> <span class="n">lam</span> <span class="o">&gt;</span> <span class="n">ZERO</span>
+    <span class="n">lam_eq_zero</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">lam_gt_zero</span>  <span class="c1"># because bound in (0, 2)</span>
+    <span class="n">lam_eq_two</span> <span class="o">=</span> <span class="n">lam</span> <span class="o">==</span> <span class="mf">2.</span>  <span class="c1"># max, because bound in (0, 2)</span>
+    <span class="n">lam_not_two</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">lam_eq_two</span>
+
+    <span class="c1"># Case 1: x &gt;= 0 and lambda is not 0</span>
+    <span class="n">c1_mask</span> <span class="o">=</span> <span class="n">gte_zero_mask</span> <span class="o">&amp;</span> <span class="n">lam_gt_zero</span>
+    <span class="n">y</span><span class="p">[</span><span class="n">c1_mask</span><span class="p">]</span> <span class="o">=</span> <span class="p">(((</span><span class="n">y</span><span class="p">[</span><span class="n">c1_mask</span><span class="p">]</span> <span class="o">+</span> <span class="mf">1.</span><span class="p">)</span> <span class="o">**</span> <span class="n">lam</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="n">lam</span>
+
+    <span class="c1"># Case 2: x &gt;= 0 and lambda IS 0</span>
+    <span class="n">c2_mask</span> <span class="o">=</span> <span class="n">gte_zero_mask</span> <span class="o">&amp;</span> <span class="n">lam_eq_zero</span>
+    <span class="n">y</span><span class="p">[</span><span class="n">c2_mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">c2_mask</span><span class="p">]</span> <span class="o">+</span> <span class="mf">1.</span><span class="p">)</span>
+
+    <span class="c1"># Case 3: x &lt; 0 and lambda is not two</span>
+    <span class="n">c3_mask</span> <span class="o">=</span> <span class="n">lt_zero_mask</span> <span class="o">&amp;</span> <span class="n">lam_not_two</span>
+    <span class="n">two_min_lam</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.</span> <span class="o">-</span> <span class="n">lam</span><span class="p">)</span>
+    <span class="n">y</span><span class="p">[</span><span class="n">c3_mask</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="p">(((</span><span class="o">-</span><span class="n">y</span><span class="p">[</span><span class="n">c3_mask</span><span class="p">]</span> <span class="o">+</span> <span class="mf">1.</span><span class="p">)</span> <span class="o">**</span> <span class="n">two_min_lam</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="n">two_min_lam</span>
+
+    <span class="c1"># Case 4: x &lt; 0 and lam == 2.</span>
+    <span class="n">c4_mask</span> <span class="o">=</span> <span class="n">lt_zero_mask</span> <span class="o">&amp;</span> <span class="n">lam_eq_two</span>
+    <span class="n">y</span><span class="p">[</span><span class="n">c4_mask</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="o">-</span><span class="n">y</span><span class="p">[</span><span class="n">c4_mask</span><span class="p">]</span> <span class="o">+</span> <span class="mf">1.</span><span class="p">)</span>
+
+    <span class="c1"># Old method of mapping over single elements (super slow)</span>
+    <span class="c1"># def _yj_trans_single_x(x):</span>
+    <span class="c1">#     if x &gt;= 0:</span>
+    <span class="c1">#         # Case 1: x &gt;= 0 and lambda is not 0</span>
+    <span class="c1">#         if not _eqls(lam, ZERO):</span>
+    <span class="c1">#             return (np.power(x + 1, lam) - 1.0) / lam</span>
+    <span class="c1">#</span>
+    <span class="c1">#         # Case 2: x &gt;= 0 and lambda is zero</span>
+    <span class="c1">#         return log(x + 1)</span>
+    <span class="c1">#     else:</span>
+    <span class="c1">#         # Case 3: x &lt; 0 and lambda is not two</span>
+    <span class="c1">#         if not lam == 2.0:</span>
+    <span class="c1">#             denom = 2.0 - lam</span>
+    <span class="c1">#             numer = np.power((-x + 1), (2.0 - lam)) - 1.0</span>
+    <span class="c1">#             return -numer / denom</span>
+    <span class="c1">#</span>
+    <span class="c1">#         # Case 4: x &lt; 0 and lambda is two</span>
+    <span class="c1">#         return -log(-x + 1)</span>
+    <span class="c1">#</span>
+    <span class="c1"># return np.array([_yj_trans_single_x(x) for x in y])</span>
+
+    <span class="k">return</span> <span class="n">y</span>
+
+
+<span class="k">class</span> <span class="nc">_BaseSkewnessTransformer</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">with_metaclass</span><span class="p">(</span><span class="n">ABCMeta</span><span class="p">,</span> <span class="n">BasePDTransformer</span><span class="p">)):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">,</span> <span class="n">as_df</span><span class="p">,</span> <span class="n">dtype</span><span class="p">):</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">_BaseSkewnessTransformer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">cols</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="n">as_df</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span> <span class="o">=</span> <span class="n">n_jobs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="n">dtype</span>
+
+    <span class="k">def</span> <span class="nf">_fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">estimation_function</span><span class="p">):</span>
+        <span class="c1"># check on state of X and cols (all cols need to be finite!)</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">cols</span> <span class="o">=</span> <span class="n">check_dataframe</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">,</span> <span class="n">assert_all_finite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># ensure enough rows</span>
+        <span class="n">validate_multiple_rows</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+
+        <span class="c1"># Now estimate the lambdas in parallel</span>
+        <span class="n">n_jobs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span>
+        <span class="n">dtype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimator_kwargs</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lambda_</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+            <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">)(</span>
+                <span class="n">delayed</span><span class="p">(</span><span class="n">estimation_function</span><span class="p">)(</span><span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">dtype</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">))</span>
+
+        <span class="c1"># set the fit cols</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit_cols_</span> <span class="o">=</span> <span class="n">cols</span>
+
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">_transform_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">lam</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;An abstract function for box-cox and YJ transformers.</span>
+<span class="sd">        This function should transform a vector given the pre-estimated</span>
+<span class="sd">        lambda value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_estimator_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the **kwargs for the estimator functions.</span>
+
+<span class="sd">        BoxCox and YeoJohnson estimators take different args for their</span>
+<span class="sd">        estimating functions, so this allows us to pass the kwargs to the</span>
+<span class="sd">        ``estimate`` func. Default is an empty dict but can be overridden</span>
+<span class="sd">        by subclasses that need it.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Apply the transformation to a dataframe.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : pd.DataFrame, shape=(n_samples, n_features)</span>
+<span class="sd">            The Pandas frame to transform. The operation will</span>
+<span class="sd">            be applied to a copy of the input data, and the result</span>
+<span class="sd">            will be returned.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        X : pd.DataFrame or np.ndarray, shape=(n_samples, n_features)</span>
+<span class="sd">            The operation is applied to a copy of ``X``,</span>
+<span class="sd">            and the result set is returned.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;lambda_&#39;</span><span class="p">)</span>
+
+        <span class="c1"># check on state of X and cols</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">check_dataframe</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">,</span> <span class="n">assert_all_finite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># validate the test columns</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_cols_</span>
+        <span class="n">validate_test_set_columns</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
+        <span class="c1"># we don&#39;t care how many samples are in the test set... just need</span>
+        <span class="c1"># &gt; 1 for the fit/estimation procedure, but not the test set.</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">n_features</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">lambdas_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lambda_</span>
+
+        <span class="c1"># do transformations</span>
+        <span class="k">for</span> <span class="n">nm</span><span class="p">,</span> <span class="n">lam</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">lambdas_</span><span class="p">):</span>
+            <span class="n">X</span><span class="p">[</span><span class="n">nm</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transform_vector</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">nm</span><span class="p">],</span> <span class="n">lam</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">dataframe_or_array</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_df</span><span class="p">)</span>
+
+
+<span class="c1"># A dumb hack bc we cannot pickle functions or instancemethods...</span>
+<span class="c1"># so these estimator wrappers simply call the appropriate estimator</span>
+<span class="c1"># function while allowing us to abstract out the fit/transform code.</span>
+<span class="k">class</span> <span class="nc">_BCEstimator</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_val</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_val</span> <span class="o">=</span> <span class="n">min_val</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">suppress_warnings</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">_bc_est_lam</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_val</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span>
+                           <span class="n">suppress_warnings</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">_YJEstimator</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">brack</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">brack</span> <span class="o">=</span> <span class="n">brack</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">_yj_est_lam</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">brack</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="BoxCoxTransformer"><a class="viewcode-back" href="../../../modules/generated/skoot.preprocessing.BoxCoxTransformer.html#skoot.preprocessing.BoxCoxTransformer">[docs]</a><span class="k">class</span> <span class="nc">BoxCoxTransformer</span><span class="p">(</span><span class="n">_BaseSkewnessTransformer</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Apply the Box-Cox transformation to select features in a dataframe.</span>
+
+<span class="sd">    Estimate a lambda parameter for each feature, and transform it to a</span>
+<span class="sd">    distribution more-closely resembling a Gaussian bell using the Box-Cox</span>
+<span class="sd">    transformation.</span>
+
+<span class="sd">    The Box-Cox transformation cannot handle zeros or negative values in</span>
+<span class="sd">    :math:`y`. Skoot attempts to deal with this scenario by imposing a ceiling</span>
+<span class="sd">    function of ``min_value`` for any values that are &lt;= 0. The transformation</span>
+<span class="sd">    is defined as:</span>
+
+<span class="sd">        :math:`y_{i} = \left\{\begin{matrix}</span>
+<span class="sd">        \frac{y_{i}^\lambda - 1}{\lambda} &amp; \textup{if } \lambda \neq 0, \\</span>
+<span class="sd">        ln(y_{i}) &amp; \textup{if } \lambda = 0</span>
+<span class="sd">        \end{matrix}\right.`</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cols : array-like, shape=(n_features,), optional (default=None)</span>
+<span class="sd">        The names of the columns on which to apply the transformation.</span>
+<span class="sd">        If no column names are provided, the transformer will be ``fit``</span>
+<span class="sd">        on the entire frame. Note that the transformation will also only</span>
+<span class="sd">        apply to the specified columns, and any other non-specified</span>
+<span class="sd">        columns will still be present after transformation. Note that since</span>
+<span class="sd">        this transformer can only operate on numeric columns, not explicitly</span>
+<span class="sd">        setting the ``cols`` parameter may result in errors for categorical</span>
+<span class="sd">        data.</span>
+
+<span class="sd">    n_jobs : int, 1 by default</span>
+<span class="sd">       The number of jobs to use for the computation. This works by</span>
+<span class="sd">       estimating each of the feature lambdas in parallel.</span>
+
+<span class="sd">       If -1 all CPUs are used. If 1 is given, no parallel computing code</span>
+<span class="sd">       is used at all, which is useful for debugging. For n_jobs below -1,</span>
+<span class="sd">       (n_cpus + 1 + n_jobs) are used. Thus for n_jobs = -2, all CPUs but</span>
+<span class="sd">       one are used.</span>
+
+<span class="sd">    as_df : bool, optional (default=True)</span>
+<span class="sd">        Whether to return a Pandas ``DataFrame`` in the ``transform``</span>
+<span class="sd">        method. If False, will return a Numpy ``ndarray`` instead.</span>
+<span class="sd">        Since most skutil transformers depend on explicitly-named</span>
+<span class="sd">        ``DataFrame`` features, the ``as_df`` parameter is True by default.</span>
+
+<span class="sd">    min_value : float, optional (default=1e-12)</span>
+<span class="sd">        The minimum value as a ceiling function for values in prescribed</span>
+<span class="sd">        features. Values below this amount will be set to ``min_value``.</span>
+
+<span class="sd">    dtype : type, optional (default=np.float32)</span>
+<span class="sd">        The type of float to which to cast the vector. Default is float32</span>
+<span class="sd">        to avoid overflows.</span>
+
+<span class="sd">    suppress_warnings : bool, optional (default=False)</span>
+<span class="sd">        Whether to suppress warnings in the scipy.stats.boxcox function.</span>
+<span class="sd">        Default is False.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    lambda_ : list</span>
+<span class="sd">       The lambda values corresponding to each feature</span>
+
+<span class="sd">    fit_cols_ : list</span>
+<span class="sd">        The list of column names on which the transformer was fit. This</span>
+<span class="sd">        is used to validate the presence of the features in the test set</span>
+<span class="sd">        during the ``transform`` stage.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="BoxCoxTransformer.__init__"><a class="viewcode-back" href="../../../modules/generated/skoot.preprocessing.BoxCoxTransformer.html#skoot.preprocessing.BoxCoxTransformer.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">min_value</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">,</span>
+                 <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">suppress_warnings</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">BoxCoxTransformer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">cols</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="n">as_df</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_value</span> <span class="o">=</span> <span class="n">min_value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">suppress_warnings</span> <span class="o">=</span> <span class="n">suppress_warnings</span></div>
+
+<div class="viewcode-block" id="BoxCoxTransformer.fit"><a class="viewcode-back" href="../../../modules/generated/skoot.preprocessing.BoxCoxTransformer.html#skoot.preprocessing.BoxCoxTransformer.fit">[docs]</a>    <span class="nd">@timed_instance_method</span><span class="p">(</span><span class="n">attribute_name</span><span class="o">=</span><span class="s2">&quot;fit_time_&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fit the transformer.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : pd.DataFrame, shape=(n_samples, n_features)</span>
+<span class="sd">            The Pandas frame to fit. The frame will only</span>
+<span class="sd">            be fit on the prescribed ``cols`` (see ``__init__``) or</span>
+<span class="sd">            all of them if ``cols`` is None.</span>
+
+<span class="sd">        y : array-like or None, shape=(n_samples,), optional (default=None)</span>
+<span class="sd">            Pass-through for ``sklearn.pipeline.Pipeline``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">min_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_value</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">estimation_function</span><span class="o">=</span><span class="n">_BCEstimator</span><span class="p">(</span><span class="n">min_value</span><span class="p">))</span></div>
+
+    <span class="k">def</span> <span class="nf">_transform_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vec</span><span class="p">,</span> <span class="n">lam</span><span class="p">):</span>
+        <span class="c1"># make a np array, make sure we&#39;ve floored</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_value</span><span class="p">)</span>
+
+        <span class="c1"># if lam is not &quot;zero&quot;, y gets the power treatment:</span>
+        <span class="k">if</span> <span class="n">lam</span> <span class="o">&gt;</span> <span class="n">ZERO</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">y</span> <span class="o">**</span> <span class="n">lam</span> <span class="o">-</span> <span class="mf">1.</span><span class="p">)</span> <span class="o">/</span> <span class="n">lam</span>
+
+        <span class="c1"># otherwise, it gets logged</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_estimator_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">suppress_warnings</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">suppress_warnings</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="YeoJohnsonTransformer"><a class="viewcode-back" href="../../../modules/generated/skoot.preprocessing.YeoJohnsonTransformer.html#skoot.preprocessing.YeoJohnsonTransformer">[docs]</a><span class="k">class</span> <span class="nc">YeoJohnsonTransformer</span><span class="p">(</span><span class="n">_BaseSkewnessTransformer</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Apply the Yeo-Johnson transformation to a dataset.</span>
+
+<span class="sd">    Estimate a lambda parameter for each feature, and transform</span>
+<span class="sd">    it to a distribution more-closely resembling a Gaussian bell</span>
+<span class="sd">    using the Yeo-Johnson transformation.</span>
+
+<span class="sd">    The Yeo-Johnson transformation, unlike the :class:`BoxCoxTransformer`,</span>
+<span class="sd">    allows for zero and negative values of :math:`y` and as defined as:</span>
+
+<span class="sd">        :math:`y_{i} = \left\{\begin{matrix}</span>
+<span class="sd">        ((y_{i} + 1)^\lambda - 1)/\lambda &amp; \textup{if } \lambda</span>
+<span class="sd">        \neq 0, y \geq  0 \\</span>
+<span class="sd">        log(y_{i} + 1) &amp; \textup{if } \lambda = 0, y \geq 0 \\</span>
+<span class="sd">        -[(-y_{i} + 1)^{(2 - \lambda)} - 1]/(2 - \lambda) &amp;</span>
+<span class="sd">        \textup{if } \lambda \neq 2, y &lt; 0 \\</span>
+<span class="sd">        -log(-y_{i} + 1) &amp;  \textup{if } \lambda = 2, y &lt; 0 \\</span>
+<span class="sd">        \end{matrix}\right.`</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cols : array-like, shape=(n_features,), optional (default=None)</span>
+<span class="sd">        The names of the columns on which to apply the transformation.</span>
+<span class="sd">        If no column names are provided, the transformer will be ``fit``</span>
+<span class="sd">        on the entire frame. Note that the transformation will also only</span>
+<span class="sd">        apply to the specified columns, and any other non-specified</span>
+<span class="sd">        columns will still be present after transformation. Note that since</span>
+<span class="sd">        this transformer can only operate on numeric columns, not explicitly</span>
+<span class="sd">        setting the ``cols`` parameter may result in errors for categorical</span>
+<span class="sd">        data.</span>
+
+<span class="sd">    n_jobs : int, 1 by default</span>
+<span class="sd">       The number of jobs to use for the computation. This works by</span>
+<span class="sd">       estimating each of the feature lambdas in parallel.</span>
+
+<span class="sd">       If -1 all CPUs are used. If 1 is given, no parallel computing code</span>
+<span class="sd">       is used at all, which is useful for debugging. For n_jobs below -1,</span>
+<span class="sd">       (n_cpus + 1 + n_jobs) are used. Thus for n_jobs = -2, all CPUs but</span>
+<span class="sd">       one are used.</span>
+
+<span class="sd">    as_df : bool, optional (default=True)</span>
+<span class="sd">        Whether to return a Pandas ``DataFrame`` in the ``transform``</span>
+<span class="sd">        method. If False, will return a Numpy ``ndarray`` instead.</span>
+<span class="sd">        Since most skutil transformers depend on explicitly-named</span>
+<span class="sd">        ``DataFrame`` features, the ``as_df`` parameter is True by default.</span>
+
+<span class="sd">    brack : tuple, optional (default=(-2, 2))</span>
+<span class="sd">        Either a triple (xa, xb, xc) where xa &lt; xb &lt; xc and func(xb) &lt;</span>
+<span class="sd">        func(xa), func(xc) or a pair (xa, xb) which are used as a</span>
+<span class="sd">        starting interval for a downhill bracket search. Providing the</span>
+<span class="sd">        pair (xa, xb) does not always mean the obtained solution will</span>
+<span class="sd">        satisfy xa &lt;= x &lt;= xb.</span>
+
+<span class="sd">    dtype : type, optional (default=np.float32)</span>
+<span class="sd">        The type of float to which to cast the vector. Default is float32</span>
+<span class="sd">        to avoid overflows.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    lambda_ : list</span>
+<span class="sd">       The lambda values corresponding to each feature</span>
+
+<span class="sd">    fit_cols_ : list</span>
+<span class="sd">        The list of column names on which the transformer was fit. This</span>
+<span class="sd">        is used to validate the presence of the features in the test set</span>
+<span class="sd">        during the ``transform`` stage.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="YeoJohnsonTransformer.__init__"><a class="viewcode-back" href="../../../modules/generated/skoot.preprocessing.YeoJohnsonTransformer.html#skoot.preprocessing.YeoJohnsonTransformer.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">brack</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+                 <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">):</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">YeoJohnsonTransformer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">cols</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="n">as_df</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">brack</span> <span class="o">=</span> <span class="n">brack</span></div>
+
+<div class="viewcode-block" id="YeoJohnsonTransformer.fit"><a class="viewcode-back" href="../../../modules/generated/skoot.preprocessing.YeoJohnsonTransformer.html#skoot.preprocessing.YeoJohnsonTransformer.fit">[docs]</a>    <span class="nd">@timed_instance_method</span><span class="p">(</span><span class="n">attribute_name</span><span class="o">=</span><span class="s2">&quot;fit_time_&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fit the transformer.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : pd.DataFrame, shape=(n_samples, n_features)</span>
+<span class="sd">            The Pandas frame to fit. The frame will only</span>
+<span class="sd">            be fit on the prescribed ``cols`` (see ``__init__``) or</span>
+<span class="sd">            all of them if ``cols`` is None.</span>
+
+<span class="sd">        y : array-like or None, shape=(n_samples,), optional (default=None)</span>
+<span class="sd">            Pass-through for ``sklearn.pipeline.Pipeline``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">brack</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">brack</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">estimation_function</span><span class="o">=</span><span class="n">_YJEstimator</span><span class="p">(</span><span class="n">brack</span><span class="p">))</span></div>
+
+    <span class="k">def</span> <span class="nf">_transform_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">lam</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">_yj_transform_y</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">lam</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Taylor G Smith
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

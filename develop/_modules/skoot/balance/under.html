@@ -1,0 +1,308 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>skoot.balance.under &mdash; skoot 0.20.0.dev0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'0.20.0.dev0',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/style.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../../about.html" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> skoot
+          
+
+          
+            
+            <img src="../../../_static/skoot.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.20.0.dev0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/classes.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto_examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide.html">User Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">skoot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>skoot.balance.under</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for skoot.balance.under</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Taylor Smith &lt;taylor.smith@alkaline-ml.com&gt;</span>
+<span class="c1">#</span>
+<span class="c1"># The under-sampling balancer</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="k">import</span> <span class="n">check_random_state</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">.base</span> <span class="k">import</span> <span class="n">_validate_X_y_ratio_classes</span><span class="p">,</span> <span class="n">_reorder</span>
+<span class="kn">from</span> <span class="nn">..utils.dataframe</span> <span class="k">import</span> <span class="n">safe_drop_samples</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;under_sample_balance&#39;</span>
+<span class="p">]</span>
+
+
+<div class="viewcode-block" id="under_sample_balance"><a class="viewcode-back" href="../../../modules/generated/skoot.balance.under_sample_balance.html#skoot.balance.under_sample_balance">[docs]</a><span class="k">def</span> <span class="nf">under_sample_balance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">balance_ratio</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                         <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Under sample the majority class to a specified ratio.</span>
+
+<span class="sd">    One strategy for balancing data is to under-sample the majority</span>
+<span class="sd">    class until it is represented at the prescribed ``balance_ratio``.</span>
+<span class="sd">    This can be effective in cases where the training set is already</span>
+<span class="sd">    quite large, and diminishing its size may not prove detrimental.</span>
+
+<span class="sd">    The under-sampling procedure behaves differently than the over-sampling</span>
+<span class="sd">    technique: its objective is only to under-sample the *majority* class,</span>
+<span class="sd">    and will down-sample it until the *second-most* represented class is</span>
+<span class="sd">    present at the prescribed ratio.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X : array-like, shape (n_samples, n_features)</span>
+<span class="sd">        The training array. Samples from this array that correspond to the</span>
+<span class="sd">        majority class will be omitted until the minority class is represented</span>
+<span class="sd">        at the ``balance_ratio``.</span>
+
+<span class="sd">    y : array-like, shape (n_samples,)</span>
+<span class="sd">        Training labels corresponding to the samples in ``X``.</span>
+
+<span class="sd">    balance_ratio : float, optional (default=0.2)</span>
+<span class="sd">        The minimum acceptable ratio of ``$MINORITY_CLASS : $MAJORITY_CLASS``</span>
+<span class="sd">        representation, where 0 &lt; ``ratio`` &lt;= 1</span>
+
+<span class="sd">    random_state : int, None or numpy RandomState, optional (default=None)</span>
+<span class="sd">        The seed to construct the random state to generate random selections.</span>
+
+<span class="sd">    shuffle : bool, optional (default=True)</span>
+<span class="sd">        Whether to shuffle the output.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    You should only use the under sampling method when you have lots of data</span>
+<span class="sd">    and can afford to lose some training samples. Moreover, using this in</span>
+<span class="sd">    conjunction with a high variance modeling method can pose a higher risk of</span>
+<span class="sd">    over-fitting, since they typically require more data.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from sklearn.datasets import make_classification</span>
+<span class="sd">    &gt;&gt;&gt; X, y = make_classification(n_samples=1000, random_state=42,</span>
+<span class="sd">    ...                            n_classes=2, weights=[0.99, 0.01])</span>
+<span class="sd">    &gt;&gt;&gt; X_bal, y_bal = under_sample_balance(X, y, balance_ratio=0.2,</span>
+<span class="sd">    ...                                     random_state=42)</span>
+<span class="sd">    &gt;&gt;&gt; ratio = round((y_bal == 1).sum() / float((y_bal == 0).sum()), 1)</span>
+<span class="sd">    &gt;&gt;&gt; assert ratio == 0.2, ratio</span>
+
+<span class="sd">    Note that the number of samples in the data is now lower than it</span>
+<span class="sd">    initially was:</span>
+
+<span class="sd">    &gt;&gt;&gt; assert X_bal.shape[0] &lt; 1000</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">random_state</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
+
+    <span class="c1"># validate before copying arrays around...</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">,</span> <span class="n">present_classes</span><span class="p">,</span> \
+        <span class="n">counts</span><span class="p">,</span> <span class="n">majority_label</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> \
+        <span class="n">_validate_X_y_ratio_classes</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">balance_ratio</span><span class="p">)</span>
+
+    <span class="c1"># get the second-most populous count, compute target</span>
+    <span class="n">sorted_counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">sorted_counts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">sorted_counts</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]:</span>  <span class="c1"># corner case</span>
+        <span class="k">return</span> <span class="n">_reorder</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">random_state</span><span class="p">,</span> <span class="n">shuffle</span><span class="p">)</span>
+
+    <span class="n">target_count</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">sorted_counts</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="n">balance_ratio</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># select which rows gotta go...</span>
+    <span class="n">idcs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span> <span class="o">==</span> <span class="n">majority_label</span><span class="p">)</span>  <span class="c1"># type: np.ndarray</span>
+    <span class="n">remove</span> <span class="o">=</span> <span class="n">random_state</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span>
+        <span class="n">idcs</span><span class="p">[</span><span class="n">mask</span><span class="p">])[:</span><span class="n">mask</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">-</span> <span class="n">target_count</span><span class="p">]</span>  <span class="c1"># sum is &gt; target count</span>
+
+    <span class="c1"># remove them</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">safe_drop_samples</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">remove</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">remove</span><span class="p">)</span>
+
+    <span class="c1"># reorder if needed</span>
+    <span class="k">return</span> <span class="n">_reorder</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">random_state</span><span class="p">,</span> <span class="n">shuffle</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Taylor G Smith
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

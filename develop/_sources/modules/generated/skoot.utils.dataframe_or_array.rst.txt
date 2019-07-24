@@ -1,0 +1,12 @@
+:mod:`skoot.utils`.dataframe_or_array
+==================================================
+
+.. currentmodule:: skoot.utils
+
+.. autofunction:: dataframe_or_array
+
+.. include:: skoot.utils.dataframe_or_array.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

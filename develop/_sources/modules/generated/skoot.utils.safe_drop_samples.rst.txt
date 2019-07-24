@@ -1,0 +1,12 @@
+:mod:`skoot.utils`.safe_drop_samples
+=================================================
+
+.. currentmodule:: skoot.utils
+
+.. autofunction:: safe_drop_samples
+
+.. include:: skoot.utils.safe_drop_samples.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

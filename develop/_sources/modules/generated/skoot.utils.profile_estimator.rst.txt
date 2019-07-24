@@ -1,0 +1,12 @@
+:mod:`skoot.utils`.profile_estimator
+=================================================
+
+.. currentmodule:: skoot.utils
+
+.. autofunction:: profile_estimator
+
+.. include:: skoot.utils.profile_estimator.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

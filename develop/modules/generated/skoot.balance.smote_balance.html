@@ -1,0 +1,421 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>skoot.balance.smote_balance &mdash; skoot 0.20.0.dev0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../',
+              VERSION:'0.20.0.dev0',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/style.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="skoot.balance.under_sample_balance" href="skoot.balance.under_sample_balance.html" />
+    <link rel="prev" title="skoot.balance.over_sample_balance" href="skoot.balance.over_sample_balance.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> skoot
+          
+
+          
+            
+            <img src="../../_static/skoot.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.20.0.dev0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../classes.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.base"><code class="docutils literal notranslate"><span class="pre">skoot.base</span></code>: Base metaclasses and utility functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot"><code class="docutils literal notranslate"><span class="pre">skoot.decorators</span></code>: Decorator utilities</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../classes.html#module-skoot.balance"><code class="docutils literal notranslate"><span class="pre">skoot.balance</span></code>: Class imbalance remedies</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../classes.html#balancing-functions">Balancing functions</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="skoot.balance.over_sample_balance.html"><code class="docutils literal notranslate"><span class="pre">skoot.balance</span></code>.over_sample_balance</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">skoot.balance</span></code>.smote_balance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="skoot.balance.under_sample_balance.html"><code class="docutils literal notranslate"><span class="pre">skoot.balance</span></code>.under_sample_balance</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.datasets"><code class="docutils literal notranslate"><span class="pre">skoot.datasets</span></code>: Dataset loaders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.decomposition"><code class="docutils literal notranslate"><span class="pre">skoot.decomposition</span></code>: Various matrix decompositions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.exploration"><code class="docutils literal notranslate"><span class="pre">skoot.exploration</span></code>: Exploratory data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.feature_extraction"><code class="docutils literal notranslate"><span class="pre">skoot.feature_extraction</span></code>: Feature extraction methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.feature_selection"><code class="docutils literal notranslate"><span class="pre">skoot.feature_selection</span></code>: Feature selection methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.model_validation"><code class="docutils literal notranslate"><span class="pre">skoot.model_validation</span></code>: Model validation &amp; monitoring</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.preprocessing"><code class="docutils literal notranslate"><span class="pre">skoot.preprocessing</span></code>: Pre-processing transformers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../classes.html#module-skoot.utils"><code class="docutils literal notranslate"><span class="pre">skoot.utils</span></code>: Common utility functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide.html">User Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">skoot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../classes.html">API Reference</a> &raquo;</li>
+        
+      <li><code class="docutils literal notranslate"><span class="pre">skoot.balance</span></code>.smote_balance</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/modules/generated/skoot.balance.smote_balance.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="skoot-balance-smote-balance">
+<h1><a class="reference internal" href="../classes.html#module-skoot.balance" title="skoot.balance"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skoot.balance</span></code></a>.smote_balance<a class="headerlink" href="#skoot-balance-smote-balance" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="skoot.balance.smote_balance">
+<code class="descclassname">skoot.balance.</code><code class="descname">smote_balance</code><span class="sig-paren">(</span><em>X</em>, <em>y</em>, <em>return_estimators=False</em>, <em>balance_ratio=0.2</em>, <em>strategy='perturb'</em>, <em>n_neighbors=5</em>, <em>algorithm='kd_tree'</em>, <em>leaf_size=30</em>, <em>p=2</em>, <em>metric='minkowski'</em>, <em>metric_params=None</em>, <em>n_jobs=1</em>, <em>random_state=None</em>, <em>shuffle=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/7ade853/skoot/balance/smote.py#L127"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/balance/smote.html#smote_balance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.balance.smote_balance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Balance a dataset using SMOTE.</p>
+<p>Synthetic Minority Oversampling TEchnique (SMOTE) is a class balancing
+strategy that samples the k-Nearest Neighbors from each minority class,
+perturbs them with a random value between 0 and 1, and adds the difference
+between the original observation and the perturbation to the original
+observation to generate a synthetic observation. This is repeated until
+the minority classes are represented at a prescribed ratio to the
+majority class.</p>
+<p>Alternative methods involve interpolating the distance between the
+original observation and the nearest neighbors using either the median
+or the mean. This strategy can be set using the <code class="docutils literal notranslate"><span class="pre">strategy</span></code> arg (one of
+‘perturb’ or ‘interpolate’).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>X</strong> : array-like, shape (n_samples, n_features)</p>
+<blockquote>
+<div><p>The training array. Samples from the minority class(es) in this array
+will be interpolated until they are represented at <code class="docutils literal notranslate"><span class="pre">balance_ratio</span></code>.</p>
+</div></blockquote>
+<p><strong>y</strong> : array-like, shape (n_samples,)</p>
+<blockquote>
+<div><p>Training labels corresponding to the samples in <code class="docutils literal notranslate"><span class="pre">X</span></code>.</p>
+</div></blockquote>
+<p><strong>return_estimators</strong> : bool, optional (default=False)</p>
+<blockquote>
+<div><p>Whether or not to return the dictionary of fit
+:class:<code class="docutils literal notranslate"><span class="pre">sklearn.neighbors.NearestNeighbors</span></code> instances. If True,
+the return value will be a tuple, with the first index being the
+balanced <code class="docutils literal notranslate"><span class="pre">X</span></code> matrix, the second index being the <code class="docutils literal notranslate"><span class="pre">y</span></code> values, and
+the third index being a dictionary of the fit estimators. If False,
+the return value is simply a tuple of the balanced <code class="docutils literal notranslate"><span class="pre">X</span></code> matrix and
+the corresponding labels.</p>
+</div></blockquote>
+<p><strong>balance_ratio</strong> : float, optional (default=0.2)</p>
+<blockquote>
+<div><p>The minimum acceptable ratio of <code class="docutils literal notranslate"><span class="pre">$MINORITY_CLASS</span> <span class="pre">:</span> <span class="pre">$MAJORITY_CLASS</span></code>
+representation, where 0 &lt; <code class="docutils literal notranslate"><span class="pre">ratio</span></code> &lt;= 1</p>
+</div></blockquote>
+<p><strong>strategy</strong> : str, optional (default=’perturb’)</p>
+<blockquote>
+<div><p>The strategy used to construct synthetic examples from existing
+examples. The original SMOTE paper suggests a strategy by which a
+random value between 0 and 1 scales the difference between the
+nearest neighbors, and the difference is then added to the original
+vector. This is the default strategy, ‘perturb’. Valid strategies
+include:</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="first docutils">
+<dt>‘perturb’ - a random value between 0 and 1 scales the difference</dt>
+<dd>between the nearest neighbors, and the difference is then added
+to the original vector.</dd>
+</dl>
+</li>
+<li>‘interpolate’ - the <code class="docutils literal notranslate"><span class="pre">interpolation_method</span></code> (‘mean’ or ‘median’)
+of the nearest neighbors constitutes the synthetic example.</li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+<p><strong>n_neighbors</strong> : int, optional (default=5)</p>
+<blockquote>
+<div><p>Number of neighbors to use by default for <code class="docutils literal notranslate"><span class="pre">kneighbors</span></code> queries.
+This parameter is passed to each respective <code class="docutils literal notranslate"><span class="pre">NearestNeighbors</span> <span class="pre">call.</span></code></p>
+</div></blockquote>
+<p><strong>algorithm</strong> : str or unicode, optional (default=’kd_tree’)</p>
+<blockquote>
+<div><p>Algorithm used to compute the nearest neighbors. One of
+{‘auto’, ‘ball_tree’, ‘kd_tree’, ‘brute’}:</p>
+<ul class="simple">
+<li>‘ball_tree’ will use <code class="docutils literal notranslate"><span class="pre">sklearn.neighbors.BallTree</span></code></li>
+<li>‘kd_tree’ will use <code class="docutils literal notranslate"><span class="pre">sklearn.neighbors.KDtree</span></code></li>
+<li>‘brute’ will use a brute-force search.</li>
+<li>‘auto’ will attempt to decide the most appropriate algorithm
+based on the values passed to <code class="docutils literal notranslate"><span class="pre">fit</span></code> method.</li>
+</ul>
+<p>Note: fitting on sparse input will override the setting of
+this parameter, using brute force. This parameter
+is passed to each respective <code class="docutils literal notranslate"><span class="pre">NearestNeighbors</span></code> call.</p>
+</div></blockquote>
+<p><strong>leaf_size</strong> : int, optional (default=30)</p>
+<blockquote>
+<div><p>Leaf size passed to <code class="docutils literal notranslate"><span class="pre">BallTree</span></code> or <code class="docutils literal notranslate"><span class="pre">KDTree</span></code>.  This can affect the
+speed of the construction and query, as well as the memory
+required to store the tree.  The optimal value depends on the
+nature of the problem.</p>
+</div></blockquote>
+<p><strong>p</strong> : integer, optional (default=2)</p>
+<blockquote>
+<div><p>Parameter for the Minkowski metric from
+<code class="docutils literal notranslate"><span class="pre">sklearn.metrics.pairwise.pairwise_distances</span></code>. When p = 1, this is
+equivalent to using manhattan_distance (l1), and euclidean_distance
+(l2) for p = 2. For arbitrary p, minkowski_distance (l_p) is used.</p>
+</div></blockquote>
+<p><strong>metric</strong> : string or callable, optional (default=’minkowski’)</p>
+<blockquote>
+<div><p>Metric to use for distance computation. Any metric from scikit-learn
+or <code class="docutils literal notranslate"><span class="pre">scipy.spatial.distance</span></code> can be used.</p>
+<p>If metric is a callable function, it is called on each
+pair of instances (rows) and the resulting value recorded. The callable
+should take two arrays as input and return one value indicating the
+distance between them. This works for Scipy’s metrics, but is less
+efficient than passing the metric name as a string.
+Distance matrices are not supported.</p>
+<p>Valid values for metric are:</p>
+<ul class="simple">
+<li>from scikit-learn: [‘cityblock’, ‘cosine’, ‘euclidean’,
+‘l1’, ‘l2’, ‘manhattan’]</li>
+<li>from <code class="docutils literal notranslate"><span class="pre">scipy.spatial.distance</span></code>: [‘braycurtis’,
+‘canberra’, ‘chebyshev’, ‘correlation’, ‘dice’, ‘hamming’,
+‘jaccard’, ‘kulsinski’, ‘mahalanobis’, ‘matching’, ‘minkowski’,
+‘rogerstanimoto’, ‘russellrao’, ‘seuclidean’, ‘sokalmichener’,
+‘sokalsneath’, ‘sqeuclidean’, ‘yule’]</li>
+</ul>
+<p>See the documentation for <code class="docutils literal notranslate"><span class="pre">scipy.spatial.distance</span></code> for details
+on these metrics.</p>
+</div></blockquote>
+<p><strong>metric_params</strong> : dict, optional (default = None)</p>
+<blockquote>
+<div><p>Additional keyword arguments for the metric function.</p>
+</div></blockquote>
+<p><strong>n_jobs</strong> : int, optional (default = 1)</p>
+<blockquote>
+<div><p>The number of parallel jobs to run for neighbors search.
+If <code class="docutils literal notranslate"><span class="pre">-1</span></code>, then the number of jobs is set to the number of CPU cores.
+Affects only <code class="docutils literal notranslate"><span class="pre">kneighbors</span></code> and <code class="docutils literal notranslate"><span class="pre">kneighbors_graph</span></code> methods.</p>
+</div></blockquote>
+<p><strong>shuffle</strong> : bool, optional (default=True)</p>
+<blockquote>
+<div><p>Whether to shuffle the output.</p>
+</div></blockquote>
+<p><strong>random_state</strong> : int or None, optional (default=None)</p>
+<blockquote class="last">
+<div><p>The seed to construct the random state to generate random selections.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">References</p>
+<table class="docutils citation" frame="void" id="r10" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[R10]</a></td><td>N. Chawla, K. Bowyer, L. Hall, W. Kegelmeyer,
+“SMOTE: Synthetic Minority Over-sampling Technique”
+<a class="reference external" href="https://www.jair.org/media/953/live-953-2037-jair.pdf">https://www.jair.org/media/953/live-953-2037-jair.pdf</a></td></tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="k">import</span> <span class="n">make_classification</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_classification</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+<span class="gp">... </span>                           <span class="n">n_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="p">[</span><span class="mf">0.99</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X_bal</span><span class="p">,</span> <span class="n">y_bal</span> <span class="o">=</span> <span class="n">smote_balance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">balance_ratio</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ratio</span> <span class="o">=</span> <span class="nb">round</span><span class="p">((</span><span class="n">y_bal</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="nb">float</span><span class="p">((</span><span class="n">y_bal</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">ratio</span> <span class="o">==</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">ratio</span>
+</pre></div>
+</div>
+<p>Note that the count of samples is now greater than it initially was:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">X_bal</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1000</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<div class="section" id="examples-using-skoot-balance-smote-balance">
+<h2>Examples using <code class="docutils literal notranslate"><span class="pre">skoot.balance.smote_balance</span></code><a class="headerlink" href="#examples-using-skoot-balance-smote-balance" title="Permalink to this headline">¶</a></h2>
+<div class="sphx-glr-thumbcontainer" tooltip="This example creates an imbalanced classification dataset, and applies the `Synthetic Minority ..."><div class="figure" id="id2">
+<img alt="../../_images/sphx_glr_ex_smote_thumb.png" src="../../_images/sphx_glr_ex_smote_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="../../auto_examples/balance/ex_smote.html#sphx-glr-auto-examples-balance-ex-smote-py"><span class="std std-ref">SMOTE class balancer</span></a></span></p>
+</div>
+</div><div class="clearer"></div></div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="skoot.balance.under_sample_balance.html" class="btn btn-neutral float-right" title="skoot.balance.under_sample_balance" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="skoot.balance.over_sample_balance.html" class="btn btn-neutral float-left" title="skoot.balance.over_sample_balance" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Taylor G Smith
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

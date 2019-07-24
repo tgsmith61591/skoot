@@ -1,0 +1,12 @@
+:mod:`skoot.utils`.get_datetime_columns
+====================================================
+
+.. currentmodule:: skoot.utils
+
+.. autofunction:: get_datetime_columns
+
+.. include:: skoot.utils.get_datetime_columns.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>
