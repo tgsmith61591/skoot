@@ -2,8 +2,6 @@
 #
 # Author: Taylor Smith <taylor.smith@alkaline-ml.com>
 
-from __future__ import print_function, division
-
 import numpy as np
 from numpy.testing import assert_array_almost_equal
 

@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import absolute_import
-
 from skoot.exploration.multivariate import summarize
 from skoot.datasets import load_iris_df, load_adult_df
 

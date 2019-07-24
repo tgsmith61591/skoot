@@ -2,12 +2,10 @@
 #
 # Author: Taylor Smith <taylor.smith@alkaline-ml.com>
 
-from __future__ import absolute_import, division, print_function
-
 from sklearn.utils.validation import check_is_fitted
 from sklearn.base import BaseEstimator, TransformerMixin
-from sklearn.externals import six
 
+import six
 from abc import ABCMeta
 import pandas as pd
 

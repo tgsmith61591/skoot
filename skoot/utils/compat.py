@@ -2,6 +2,7 @@
 #
 # Compatibility utilities
 
+# TODO: deprecate this since we always use python 3+ now
 # Python <3
 try:
     from types import NoneType

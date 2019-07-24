@@ -4,8 +4,6 @@
 #
 # Scaling predictors
 
-from __future__ import absolute_import
-
 from sklearn.preprocessing import StandardScaler, RobustScaler, \
     MaxAbsScaler, MinMaxScaler
 

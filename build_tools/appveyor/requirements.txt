@@ -1,4 +1,0 @@
-numpy>=1.11
-scipy>=0.17
-scikit-learn>=0.18
-pandas>=0.18

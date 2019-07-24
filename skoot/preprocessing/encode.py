@@ -2,11 +2,9 @@
 #
 # Author: Taylor Smith <taylor.smith@alkaline-ml.com>
 
-from __future__ import division, print_function, absolute_import
-
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 from sklearn.utils.validation import check_is_fitted
-from sklearn.externals.joblib import Parallel, delayed
+from joblib import Parallel, delayed
 
 import pandas as pd
 import numpy as np

@@ -2,9 +2,7 @@
 #
 # Coerce string fields to dates
 
-from __future__ import absolute_import
-
-from sklearn.externals import six
+import six
 from sklearn.utils.validation import check_is_fitted
 
 from ..base import BasePDTransformer

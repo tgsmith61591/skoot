@@ -4,8 +4,6 @@
 #
 # Test the under-sampling balancer
 
-from __future__ import division, absolute_import, division
-
 from sklearn.datasets import load_iris
 from skoot.balance import under_sample_balance
 from numpy.testing import assert_array_almost_equal

@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import absolute_import
-
 from skoot.exploration import fisher_pearson_skewness, kurtosis
 from skoot.datasets import load_iris_df
 

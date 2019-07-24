@@ -4,8 +4,6 @@
 #
 # Commons and bases for balancers
 
-from __future__ import absolute_import
-
 import numpy as np
 
 from sklearn.utils import column_or_1d, indexable, safe_indexing

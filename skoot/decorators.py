@@ -2,8 +2,6 @@
 #
 # Author: Taylor Smith <taylor.smith@alkaline-ml.com>
 
-from __future__ import absolute_import
-
 from functools import wraps
 import warnings
 

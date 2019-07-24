@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import absolute_import
-
 from skoot.preprocessing import DateTransformer
 from skoot.utils.testing import assert_raises, assert_persistable
 

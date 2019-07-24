@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import absolute_import
-
 import pandas as pd
 from numpy.testing import assert_almost_equal
 

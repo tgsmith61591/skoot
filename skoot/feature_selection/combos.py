@@ -2,9 +2,7 @@
 #
 # Author: Taylor Smith <taylor.smith@alkaline-ml.com>
 
-from __future__ import division, print_function
-
-from sklearn.externals import six
+import six
 import numpy as np
 
 from .base import BaseFeatureSelector

@@ -7,15 +7,13 @@
 # resemble those of the training data and can provide early warnings for
 # covariate shift.
 
-from __future__ import absolute_import
-
 from ..base import BasePDTransformer
 from ..utils.validation import check_dataframe, type_or_iterable_to_col_mapping
 from ..utils.dataframe import get_continuous_columns, dataframe_or_array
 from ..utils.metaestimators import timed_instance_method
 from ..exceptions import ValidationWarning
 
-from sklearn.externals import six
+import six
 from sklearn.utils.validation import check_is_fitted
 
 from scipy.stats import ttest_ind_from_stats

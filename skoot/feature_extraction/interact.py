@@ -4,8 +4,6 @@
 #
 # Interaction between variables.
 
-from __future__ import absolute_import
-
 from sklearn.utils.validation import check_is_fitted
 from itertools import combinations
 

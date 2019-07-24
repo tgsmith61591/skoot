@@ -4,8 +4,6 @@
 #
 # Test the SMOTE balancer
 
-from __future__ import division, absolute_import, division
-
 from numpy.testing import assert_array_almost_equal
 from sklearn.datasets import load_iris
 from skoot.balance import smote_balance
