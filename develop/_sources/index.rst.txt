@@ -12,8 +12,7 @@ Skoot: Accelerate your data science workflow
    <!-- Block section -->
    <script src="_static/js/jquery.min.js"></script>
 
-   <a href="https://travis-ci.org/tgsmith61591/skoot"><img alt="Travis status" src="https://travis-ci.org/tgsmith61591/skoot.svg?branch=master" /></a>
-   <a href="https://ci.appveyor.com/project/tgsmith61591/skoot"><img alt="Appveyor status" src="https://ci.appveyor.com/api/projects/status/7h91wcoaqwa3sc29?svg=true" /></a>
+   <a href="https://circleci.com/gh/tgsmith61591/skoot"><img alt="Build status" src="https://circleci.com/gh/tgsmith61591/skoot.svg?style=svg" /></a>
    <a href="https://codecov.io/gh/tgsmith61591/skoot"><img alt="Coverage" src="https://codecov.io/gh/tgsmith61591/skoot/branch/master/graph/badge.svg" /></a>
    <a href="https://github.com/tgsmith61591/skoot"><img id="nutrition" alt="gluten free" src="https://img.shields.io/badge/gluten_free-100%25-brightgreen.svg" /></a>
 

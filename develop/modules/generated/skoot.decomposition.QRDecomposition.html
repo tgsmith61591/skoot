@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>skoot.decomposition.QRDecomposition &mdash; skoot 0.20.0.dev0 documentation</title>
+  <title>skoot.decomposition.QRDecomposition &mdash; skoot 0.20.0 documentation</title>
   
 
   
@@ -23,7 +23,7 @@
       <script type="text/javascript">
           var DOCUMENTATION_OPTIONS = {
               URL_ROOT:'../../',
-              VERSION:'0.20.0.dev0',
+              VERSION:'0.20.0',
               LANGUAGE:'None',
               COLLAPSE_INDEX:false,
               FILE_SUFFIX:'.html',
@@ -76,7 +76,7 @@
             
             
               <div class="version">
-                0.20.0.dev0
+                0.20.0
               </div>
             
           
@@ -198,7 +198,7 @@
 <h1><a class="reference internal" href="../classes.html#module-skoot.decomposition" title="skoot.decomposition"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skoot.decomposition</span></code></a>.QRDecomposition<a class="headerlink" href="#skoot-decomposition-qrdecomposition" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="skoot.decomposition.QRDecomposition">
-<em class="property">class </em><code class="descclassname">skoot.decomposition.</code><code class="descname">QRDecomposition</code><span class="sig-paren">(</span><em>X</em>, <em>pivot=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/7ade853/skoot/decomposition/decompose.py#L84"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/decomposition/decompose.html#QRDecomposition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.decomposition.QRDecomposition" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">skoot.decomposition.</code><code class="descname">QRDecomposition</code><span class="sig-paren">(</span><em>X</em>, <em>pivot=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/36aee3b/skoot/decomposition/decompose.py#L84"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/decomposition/decompose.html#QRDecomposition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.decomposition.QRDecomposition" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform the QR decomposition on a matrix.</p>
 <p>Performs the QR decomposition using LINPACK, BLAS and LAPACK
 Fortran subroutines, and provides an interface for other useful
@@ -298,13 +298,13 @@ directly to numpy arrays.</p>
 </table>
 <dl class="method">
 <dt id="skoot.decomposition.QRDecomposition.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>X</em>, <em>pivot=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/7ade853/skoot/decomposition/decompose.py#L151"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/decomposition/decompose.html#QRDecomposition.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.decomposition.QRDecomposition.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>X</em>, <em>pivot=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/36aee3b/skoot/decomposition/decompose.py#L151"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/decomposition/decompose.html#QRDecomposition.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.decomposition.QRDecomposition.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="skoot.decomposition.QRDecomposition.get_R">
-<code class="descname">get_R</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/7ade853/skoot/decomposition/decompose.py#L216"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/decomposition/decompose.html#QRDecomposition.get_R"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.decomposition.QRDecomposition.get_R" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_R</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/36aee3b/skoot/decomposition/decompose.py#L216"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/decomposition/decompose.html#QRDecomposition.get_R"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.decomposition.QRDecomposition.get_R" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the R matrix from the decomposition.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -322,7 +322,7 @@ directly to numpy arrays.</p>
 
 <dl class="method">
 <dt id="skoot.decomposition.QRDecomposition.get_R_rank">
-<code class="descname">get_R_rank</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/7ade853/skoot/decomposition/decompose.py#L227"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/decomposition/decompose.html#QRDecomposition.get_R_rank"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.decomposition.QRDecomposition.get_R_rank" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_R_rank</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/36aee3b/skoot/decomposition/decompose.py#L227"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/decomposition/decompose.html#QRDecomposition.get_R_rank"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.decomposition.QRDecomposition.get_R_rank" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the rank of the R matrix.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -340,7 +340,7 @@ directly to numpy arrays.</p>
 
 <dl class="method">
 <dt id="skoot.decomposition.QRDecomposition.get_rank">
-<code class="descname">get_rank</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/7ade853/skoot/decomposition/decompose.py#L206"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/decomposition/decompose.html#QRDecomposition.get_rank"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.decomposition.QRDecomposition.get_rank" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_rank</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/36aee3b/skoot/decomposition/decompose.py#L206"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/decomposition/decompose.html#QRDecomposition.get_rank"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.decomposition.QRDecomposition.get_rank" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the rank of the decomposition.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
