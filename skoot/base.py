@@ -2,12 +2,10 @@
 #
 # Author: Taylor Smith <taylor.smith@alkaline-ml.com>
 
-from __future__ import absolute_import, division, print_function
-
 from sklearn.utils.validation import check_is_fitted
 from sklearn.base import BaseEstimator, TransformerMixin
-from sklearn.externals import six
 
+import six
 from abc import ABCMeta
 import pandas as pd
 
@@ -45,7 +43,7 @@ class BasePDTransformer(six.with_metaclass(ABCMeta, BaseEstimator,
     Examples
     --------
     The following is an example of how to subclass a BasePDTransformer:
-
+    
         >>> from skoot.base import BasePDTransformer
         >>> class A(BasePDTransformer):
         ...     def __init__(self, cols=None, as_df=None):
@@ -58,12 +56,10 @@ class BasePDTransformer(six.with_metaclass(ABCMeta, BaseEstimator,
     def __init__(self, cols=None, as_df=True):
         self.as_df = as_df
 
-        # This raises warnings in sklearn < 0.20, since we're technically
-        # amending parameters in the constructor. There's no good way to
-        # prevent this (it's only warned about in the "clone" function)
-        # but we need to deepcopy, otherwise we run the risk of a mutable
-        # structure being passed here
-        self.cols = copy.deepcopy(cols)  # do not let be mutable!
+        # NOTE: As of sklearn 0.20+, copying no longer works. Should we warn
+        # for mutable structs passed as cols??? TODO
+        # self.cols = copy.deepcopy(cols)  # do not let be mutable!
+        self.cols = cols
 
     @timed_instance_method(attribute_name="fit_time_")
     def fit(self, X, y=None):
@@ -219,7 +215,7 @@ class _SelectiveTransformerWrapper(six.with_metaclass(dsutils._WritableDoc,
         # so we can get constructor args for grid search
         # (this is a closure)
         return list(cls._p_names) + \
-               cls._cls._get_param_names()  # must have _cls!
+            cls._cls._get_param_names()  # must have _cls!
 
 
 class _AnonymousPDTransformer(BasePDTransformer):

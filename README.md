@@ -1,8 +1,8 @@
-[![Build status](https://travis-ci.org/tgsmith61591/skoot.svg?branch=master)](https://travis-ci.org/tgsmith61591/skoot)
 [![codecov](https://codecov.io/gh/tgsmith61591/skoot/branch/master/graph/badge.svg)](https://codecov.io/gh/tgsmith61591/skoot)
-[![Windows build status](https://ci.appveyor.com/api/projects/status/7h91wcoaqwa3sc29?svg=true)](https://ci.appveyor.com/project/tgsmith61591/skoot)
-![Supported versions](https://img.shields.io/badge/python-2.7-blue.svg)
 ![Supported versions](https://img.shields.io/badge/python-3.5-blue.svg)
+![Supported versions](https://img.shields.io/badge/python-3.6-blue.svg)
+![Supported versions](https://img.shields.io/badge/python-3.7-blue.svg)
+[![CircleCI](https://circleci.com/gh/tgsmith61591/skoot.svg?style=svg)](https://circleci.com/gh/tgsmith61591/skoot)
 
 # skoot
 

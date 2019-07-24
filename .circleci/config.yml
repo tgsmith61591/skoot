@@ -1,0 +1,199 @@
+version: 2.1
+
+# This will trigger on tags AND branches
+test-filters: &test-filters
+    tags:
+        only: /.*/
+    branches:
+        only: /.*/
+
+# This will ignore for ALL branches, and only trigger on tags
+deploy-filters: &deploy-filters
+    tags:
+        only: /.*/
+    branches:
+        ignore: /.*/
+
+# ############################################
+#
+# Set Circle CI Reusable Commands
+#
+# For more information, see the documentation:
+# https://circleci.com/docs/2.0/reusing-config
+#
+# ############################################
+commands:
+  install-gfortran:
+    description: "Skoot needs Fortran"
+    steps:
+      - run: |
+          apt-get update
+          apt-get install -yq gfortran
+
+  make-unit-test:
+    description: "Build and run unit tests using the Makefile"
+    steps:
+      - checkout
+      - run: make develop
+      - run: make test-unit
+      - run: codecov || echo "codecov upload failed"
+
+  # TODO: versioning
+  build-whl-file:
+    description: "Build a wheel file"
+    parameters:
+      pythonversion:
+        type: string
+    steps:
+      - run: ./build_tools/circle/build_wheel.sh << parameters.pythonversion >>
+
+  deploy-to-pypi:
+    description: "Deploy the contents of dist/ to PyPi"
+    steps:
+      - run: |
+          env > vars.env
+          docker run --rm -it \
+            -v `pwd`:/app \
+            -w /app \
+            python:3.7 \
+            source /app/vars.env && ./build_tools/circle/deploy.sh
+
+jobs:
+  cpython35-linux:
+    docker:
+      - image: python:3.5
+    working_directory: ~/skoot
+    steps:
+    - install-gfortran
+    - make-unit-test
+
+  cpython36-linux:
+    docker:
+      - image: python:3.6
+    working_directory: ~/skoot
+    steps:
+    - install-gfortran
+    - make-unit-test
+
+  cpython37-linux:
+    docker:
+      - image: python:3.7
+    working_directory: ~/skoot
+    steps:
+    - install-gfortran
+    - make-unit-test
+
+  # For testing lint
+  test-linting:
+    docker:
+      - image: python:3.6
+    working_directory: ~/skoot
+    steps:
+    - checkout
+    - run: make test-lint
+
+  # Simple job that passes when all other tests have passed
+  testing-passed:
+    docker:
+      - image: bash:latest
+    steps:
+      - run:
+          name: skoot Testing passed
+          command: echo "All tests passed"
+
+  # ############################################
+  #
+  # Deploy commands
+  #
+  # All deploy commands need Docker in some
+  # capacity, so should be run on machines
+  #
+  # ############################################
+  deploy-cpython35-whl:
+    machine:
+      image: circleci/classic:latest
+    working_directory: ~/skoot
+    steps:
+      - checkout
+      - build-whl-file:
+          pythonversion: "3.5"
+      - deploy-to-pypi
+
+  deploy-cpython36-whl:
+    machine:
+      image: circleci/classic:latest
+    working_directory: ~/skoot
+    steps:
+      - checkout
+      - build-whl-file:
+          pythonversion: "3.6"
+      - deploy-to-pypi
+
+  deploy-cpython37-whl:
+    machine:
+      image: circleci/classic:latest
+    working_directory: ~/skoot
+    steps:
+      - checkout
+      - install-gfortran
+      - build-whl-file:
+          pythonversion: "3.7"
+      - deploy-to-pypi
+
+  # For documentation deployment. You'll need the following environment vars
+  # in your Circle CI settings, otherwise this will not work.
+  #
+  # GH_NAME (your git username)
+  # GH_EMAIL (your git email)
+  # GH_TOKEN (the personal Git token with pushes enabled)
+  deploy-doc:
+    docker:
+    - image: python:3.6
+    working_directory: ~/skoot
+    steps:
+    - checkout
+    - install-gfortran
+    - run: make doc-requirements
+    - run: make install
+    - run: ./build_tools/circle/build_push_doc.sh
+
+workflows:
+  version: 2
+  skoot-pipeline:
+    jobs:
+      # All testing jobs
+      - cpython35-linux:
+          filters: *test-filters
+      - cpython36-linux:
+          filters: *test-filters
+      - cpython37-linux:
+          filters: *test-filters
+      - test-linting:
+          filters: *test-filters
+      - testing-passed:
+          requires:
+            - cpython35-linux
+            - cpython36-linux
+            - cpython37-linux
+            - test-linting
+          filters: *test-filters
+
+      # All deployment jobs
+      - deploy-doc:
+          requires:
+            - testing-passed
+
+      - deploy-cpython35-whl:
+          filters: *deploy-filters
+          requires:
+              - deploy-doc
+
+      - deploy-cpython36-whl:
+          filters: *deploy-filters
+          requires:
+              - deploy-doc
+
+      - deploy-cpython37-whl:
+          filters: *deploy-filters
+          requires:
+              - deploy-doc

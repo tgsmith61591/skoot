@@ -2,8 +2,6 @@
 #
 # Author: Taylor Smith <taylor.smith@alkaline-ml.com>
 
-from __future__ import absolute_import, division
-
 from sklearn.utils.validation import check_random_state
 from numpy.testing import assert_array_almost_equal
 import numpy as np
@@ -65,12 +63,10 @@ def test_bc_fit_transform():
     trans = bc.fit_transform(X)
 
     assert isinstance(trans, pd.DataFrame)
-    assert_array_almost_equal(bc.lambda_,
-                              np.array([
-                                  -0.14475082666963388,
-                                  0.26165380763371671
-                              ]),
-                              decimal=3)  # who knows how far they'll be off..
+    assert np.allclose(bc.lambda_,
+                       [-0.14475082666963388,
+                        0.26165380763371671],
+                       rtol=0.1)  # how far will they be off?...
 
 
 def test_yj_fit_transform():

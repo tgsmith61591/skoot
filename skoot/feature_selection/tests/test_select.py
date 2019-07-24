@@ -2,8 +2,6 @@
 #
 # Author: Taylor Smith <taylor.smith@alkaline-ml.com>
 
-from __future__ import print_function
-
 import numpy as np
 import pandas as pd
 
@@ -87,7 +85,7 @@ def test_mcf_iris_high_thresh():
 
 
 def test_mcf_iris_medium_thresh():
-    mcf = MultiCorrFilter(threshold=0.8)
+    mcf = MultiCorrFilter(threshold=0.8, method="pearson")
     trans = mcf.fit_transform(iris)
 
     # there should be 2 features left
@@ -97,9 +95,10 @@ def test_mcf_iris_medium_thresh():
     assert mcf.drop_ == ['c', 'd'], mcf.drop_
 
     # assert on the correlations
-    assert_array_almost_equal(
+    assert np.allclose(
         mcf.mean_abs_correlations_,
-        np.array([0.69976926,  0.47160736,  0.81375684,  0.78431371]))
+        np.array([0.69976926, 0.47160736, 0.81375684, 0.78431371]),
+        atol=1e-2)
 
 
 def test_mcf_non_finite():

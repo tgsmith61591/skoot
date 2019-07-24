@@ -4,8 +4,6 @@
 #
 # The over-sampling balancer
 
-from __future__ import division, absolute_import, division
-
 from sklearn.preprocessing import LabelEncoder
 from sklearn.utils.validation import check_random_state
 from sklearn.utils import safe_indexing

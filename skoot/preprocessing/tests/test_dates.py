@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import absolute_import
-
 from skoot.preprocessing import DateTransformer
 from skoot.utils.testing import assert_raises, assert_persistable
 
@@ -56,5 +54,5 @@ def test_date_trans():
 
 def test_date_transformer_persistable():
     assert_persistable(DateTransformer(cols=["b", "c", "d"],
-                                date_format=["%m/%d/%Y", None, None]),
+                                       date_format=["%m/%d/%Y", None, None]),
                        "location.pkl", df)

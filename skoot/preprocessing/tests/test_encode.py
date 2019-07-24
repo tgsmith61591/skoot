@@ -2,8 +2,6 @@
 #
 # Author: Taylor Smith <taylor.smith@alkaline-ml.com>
 
-from __future__ import absolute_import
-
 from skoot.preprocessing import DummyEncoder
 from skoot.preprocessing.encode import _le_transform
 from skoot.datasets import load_iris_df

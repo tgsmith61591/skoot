@@ -2,9 +2,7 @@
 #
 # Author: Taylor Smith <taylor.smith@alkaline-ml.com>
 
-from __future__ import division, print_function
-
-from sklearn.externals import six
+import six
 import numpy as np
 
 from .base import BaseFeatureSelector
@@ -34,14 +32,14 @@ class LinearCombinationFilter(BaseFeatureSelector):
         If no column names are provided, the transformer will be ``fit``
         on the entire frame. Note that the transformation will also only
         apply to the specified columns, and any other non-specified
-        columns will still be present after transformation. Note that 
-        since this transformer can only operate on numeric columns, not 
-        explicitly setting the ``cols`` parameter may result in errors 
+        columns will still be present after transformation. Note that
+        since this transformer can only operate on numeric columns, not
+        explicitly setting the ``cols`` parameter may result in errors
         for categorical data.
 
     as_df : bool, optional (default=True)
         Whether to return a Pandas ``DataFrame`` in the ``transform``
-        method. If False, will return a Numpy ``ndarray`` instead. 
+        method. If False, will return a Numpy ``ndarray`` instead.
         Since most skoot transformers depend on explicitly-named
         ``DataFrame`` features, the ``as_df`` parameter is True by default.
 
@@ -165,10 +163,10 @@ def _enum_lc(decomp):
             d = {}
             row_idcs = np.arange(b.shape[0])
             for i in range(Y.shape[1]):  # should only ever be 1, right?
-                nested = [ 
-                            pivot[rank+i],
-                            pivot[row_idcs[b[:, i] != 0]]
-                         ]
+                nested = [
+                    pivot[rank + i],
+                    pivot[row_idcs[b[:, i] != 0]]
+                ]
                 d[i] = list(flatten_all(nested))
 
             return d

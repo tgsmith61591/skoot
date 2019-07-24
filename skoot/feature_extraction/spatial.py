@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import absolute_import
-
-from sklearn.externals.joblib import Parallel, delayed
+from joblib import Parallel, delayed
 from sklearn.utils.validation import check_is_fitted
 import numpy as np
 
@@ -85,9 +83,9 @@ def _validate_spatial_cols(X, cols):
 
 def _haversine(pair_1, pair_2, lat1, lon1, lat2, lon2, units):
     return (pair_1, pair_2), \
-           haversine_distance(lat1=lat1, lon1=lon1,
-                              lat2=lat2, lon2=lon2,
-                              units=units)
+        haversine_distance(lat1=lat1, lon1=lon1,
+                           lat2=lat2, lon2=lon2,
+                           units=units)
 
 
 class HaversineFeatures(BaseCompoundFeatureDeriver):

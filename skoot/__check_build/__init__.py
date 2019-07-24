@@ -40,6 +40,7 @@ to build the package before using it: run `python setup.py install` or
 `make` from the top-level directory.
 %s""" % (e, local_dir, ''.join(dir_content).strip(), msg))
 
+
 try:
     # needs to be an absolute import
     from skoot.__check_build._check_build import check_build

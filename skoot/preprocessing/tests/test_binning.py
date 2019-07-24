@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import absolute_import
-
 from skoot.preprocessing import BinningTransformer
 from skoot.datasets import load_iris_df
 from skoot.utils.testing import (assert_raises, assert_transformer_asdf,

@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import absolute_import
-
 from skoot.exploration import fisher_pearson_skewness, kurtosis
 from skoot.datasets import load_iris_df
 
@@ -19,4 +17,3 @@ def test_skewness():
 def test_kurtosis():
     kurt = kurtosis(x)
     assert_array_almost_equal(kurt, -0.5735679, decimal=6)
-

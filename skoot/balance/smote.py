@@ -4,8 +4,6 @@
 #
 # The SMOTE balancer
 
-from __future__ import division, absolute_import, division
-
 import numpy as np
 import pandas as pd
 
@@ -24,7 +22,7 @@ __all__ = [
 
 def _perturb(consider_vector, nearest, random_state):
     return (consider_vector - nearest) * \
-           random_state.rand(nearest.shape[0], 1) + consider_vector
+        random_state.rand(nearest.shape[0], 1) + consider_vector
 
 
 def _interpolate(consider_vector, nearest, _):
@@ -130,8 +128,7 @@ def smote_balance(X, y, return_estimators=False, balance_ratio=0.2,
                   strategy='perturb', n_neighbors=5, algorithm='kd_tree',
                   leaf_size=30, p=2, metric='minkowski', metric_params=None,
                   n_jobs=1, random_state=None, shuffle=True):
-    """Balance a dataset using SMOTE to synthetically create new
-    minority class samples.
+    """Balance a dataset using SMOTE.
 
     Synthetic Minority Oversampling TEchnique (SMOTE) is a class balancing
     strategy that samples the k-Nearest Neighbors from each minority class,

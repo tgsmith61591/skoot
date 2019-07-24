@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import absolute_import
-
 from skoot.feature_extraction import DateFactorizer, TimeDeltaFeatures
 from skoot.utils.testing import (assert_raises, assert_transformer_asdf,
                                  assert_persistable)
