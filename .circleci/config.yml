@@ -23,12 +23,21 @@ deploy-filters: &deploy-filters
 #
 # ############################################
 commands:
+  # For docker:
   install-gfortran:
     description: "Skoot needs Fortran"
     steps:
       - run: |
           apt-get update
           apt-get install -yq gfortran
+
+  # For 'machine':
+  sudo-install-gfortran:
+    description: "Skoot needs Fortran"
+    steps:
+      - run: |
+          sudo apt-get update
+          sudo apt-get install -yq gfortran || echo "Already installed"
 
   make-unit-test:
     description: "Build and run unit tests using the Makefile"
@@ -115,7 +124,7 @@ jobs:
     working_directory: ~/skoot
     steps:
       - checkout
-      - install-gfortran
+      - sudo-install-gfortran
       - build-whl-file:
           pythonversion: "3.5"
       - deploy-to-pypi
@@ -126,7 +135,7 @@ jobs:
     working_directory: ~/skoot
     steps:
       - checkout
-      - install-gfortran
+      - sudo-install-gfortran
       - build-whl-file:
           pythonversion: "3.6"
       - deploy-to-pypi
@@ -137,7 +146,7 @@ jobs:
     working_directory: ~/skoot
     steps:
       - checkout
-      - install-gfortran
+      - sudo-install-gfortran
       - build-whl-file:
           pythonversion: "3.7"
       - deploy-to-pypi
