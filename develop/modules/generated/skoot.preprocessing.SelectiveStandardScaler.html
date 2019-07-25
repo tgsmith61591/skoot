@@ -201,7 +201,7 @@
 <h1><a class="reference internal" href="../classes.html#module-skoot.preprocessing" title="skoot.preprocessing"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skoot.preprocessing</span></code></a>.SelectiveStandardScaler<a class="headerlink" href="#skoot-preprocessing-selectivestandardscaler" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="skoot.preprocessing.SelectiveStandardScaler">
-<em class="property">class </em><code class="descclassname">skoot.preprocessing.</code><code class="descname">SelectiveStandardScaler</code><span class="sig-paren">(</span><em>cols=None</em>, <em>as_df=True</em>, <em>trans_col_name=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/1622fe4/skoot/preprocessing/scale.py#L25"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/scale.html#SelectiveStandardScaler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.SelectiveStandardScaler" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">skoot.preprocessing.</code><code class="descname">SelectiveStandardScaler</code><span class="sig-paren">(</span><em>cols=None</em>, <em>as_df=True</em>, <em>trans_col_name=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/44471dd/skoot/preprocessing/scale.py#L25"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/scale.html#SelectiveStandardScaler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.SelectiveStandardScaler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Standardize features by removing the mean and scaling to unit variance (applied to selected columns).</p>
 <p>The standard score of a sample <cite>x</cite> is calculated as:</p>
 <blockquote>
@@ -357,13 +357,13 @@ unit standard deviation).</p>
 </table>
 <dl class="method">
 <dt id="skoot.preprocessing.SelectiveStandardScaler.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>cols=None</em>, <em>as_df=True</em>, <em>trans_col_name=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/1622fe4/skoot/base.py#L95"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.SelectiveStandardScaler.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>cols=None</em>, <em>as_df=True</em>, <em>trans_col_name=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/44471dd/skoot/base.py#L95"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.SelectiveStandardScaler.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="skoot.preprocessing.SelectiveStandardScaler.fit">
-<code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em>, <em>**fit_kwargs</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/1622fe4/skoot/utils/metaestimators.py#L125"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.SelectiveStandardScaler.fit" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em>, <em>**fit_kwargs</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/44471dd/skoot/utils/metaestimators.py#L125"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.SelectiveStandardScaler.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit the wrapped transformer.</p>
 <p>This method will fit the wrapped sklearn transformer on the
 selected columns, leaving other columns alone.</p>
@@ -391,7 +391,7 @@ if explicitly set, will not change behavior of <code class="docutils literal not
 
 <dl class="method">
 <dt id="skoot.preprocessing.SelectiveStandardScaler.fit_transform">
-<code class="descname">fit_transform</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em>, <em>**fit_params</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/1622fe4/skoot/../../sklearn/base.py#L529"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.SelectiveStandardScaler.fit_transform" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fit_transform</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em>, <em>**fit_params</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/44471dd/skoot/../../sklearn/base.py#L529"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.SelectiveStandardScaler.fit_transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit to data, then transform it.</p>
 <p>Fits transformer to X and y with optional parameters fit_params
 and returns a transformed version of X.</p>
@@ -421,7 +421,7 @@ and returns a transformed version of X.</p>
 
 <dl class="method">
 <dt id="skoot.preprocessing.SelectiveStandardScaler.get_params">
-<code class="descname">get_params</code><span class="sig-paren">(</span><em>deep=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/1622fe4/skoot/../../sklearn/base.py#L177"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.SelectiveStandardScaler.get_params" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_params</code><span class="sig-paren">(</span><em>deep=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/44471dd/skoot/../../sklearn/base.py#L177"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.SelectiveStandardScaler.get_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get parameters for this estimator.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -446,7 +446,7 @@ contained subobjects that are estimators.</p>
 
 <dl class="method">
 <dt id="skoot.preprocessing.SelectiveStandardScaler.set_params">
-<code class="descname">set_params</code><span class="sig-paren">(</span><em>**params</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/1622fe4/skoot/../../sklearn/base.py#L200"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.SelectiveStandardScaler.set_params" title="Permalink to this definition">¶</a></dt>
+<code class="descname">set_params</code><span class="sig-paren">(</span><em>**params</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/44471dd/skoot/../../sklearn/base.py#L200"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.SelectiveStandardScaler.set_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the parameters of this estimator.</p>
 <p>The method works on simple estimators as well as on nested objects
 (such as pipelines). The latter have parameters of the form
@@ -464,7 +464,7 @@ component of a nested object.</p>
 
 <dl class="method">
 <dt id="skoot.preprocessing.SelectiveStandardScaler.transform">
-<code class="descname">transform</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/1622fe4/skoot/base.py#L155"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.SelectiveStandardScaler.transform" title="Permalink to this definition">¶</a></dt>
+<code class="descname">transform</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/44471dd/skoot/base.py#L155"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.SelectiveStandardScaler.transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transform a test dataframe.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

@@ -198,7 +198,7 @@
 <h1><a class="reference internal" href="../classes.html#module-skoot.preprocessing" title="skoot.preprocessing"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skoot.preprocessing</span></code></a>.DateTransformer<a class="headerlink" href="#skoot-preprocessing-datetransformer" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="skoot.preprocessing.DateTransformer">
-<em class="property">class </em><code class="descclassname">skoot.preprocessing.</code><code class="descname">DateTransformer</code><span class="sig-paren">(</span><em>cols=None</em>, <em>date_format=None</em>, <em>allowed_types=('object'</em>, <em>'datetime64[ns]')</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/1622fe4/skoot/preprocessing/dates.py#L53"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/dates.html#DateTransformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.DateTransformer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">skoot.preprocessing.</code><code class="descname">DateTransformer</code><span class="sig-paren">(</span><em>cols=None</em>, <em>date_format=None</em>, <em>allowed_types=('object'</em>, <em>'datetime64[ns]')</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/44471dd/skoot/preprocessing/dates.py#L53"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/dates.html#DateTransformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.DateTransformer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cast features to datetime.</p>
 <p>Convert multiple features with potentially differing formats to datetime
 with specified formats or by inferring the formats. Note that unlike most
@@ -299,13 +299,13 @@ be cast to datetime.</p>
 </table>
 <dl class="method">
 <dt id="skoot.preprocessing.DateTransformer.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>cols=None</em>, <em>date_format=None</em>, <em>allowed_types=('object'</em>, <em>'datetime64[ns]')</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/1622fe4/skoot/preprocessing/dates.py#L125"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/dates.html#DateTransformer.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.DateTransformer.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>cols=None</em>, <em>date_format=None</em>, <em>allowed_types=('object'</em>, <em>'datetime64[ns]')</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/44471dd/skoot/preprocessing/dates.py#L125"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/dates.html#DateTransformer.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.DateTransformer.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="skoot.preprocessing.DateTransformer.fit">
-<code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/1622fe4/skoot/preprocessing/dates.py#L134"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/dates.html#DateTransformer.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.DateTransformer.fit" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/44471dd/skoot/preprocessing/dates.py#L134"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/dates.html#DateTransformer.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.DateTransformer.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit the date transformer.</p>
 <p>This is a tricky class because the “fit” isn’t super necessary…
 But we use it as a validation stage to ensure the defined cols
@@ -333,7 +333,7 @@ all of them if <code class="docutils literal notranslate"><span class="pre">cols
 
 <dl class="method">
 <dt id="skoot.preprocessing.DateTransformer.fit_transform">
-<code class="descname">fit_transform</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/1622fe4/skoot/utils/metaestimators.py#L155"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/dates.html#DateTransformer.fit_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.DateTransformer.fit_transform" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fit_transform</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/44471dd/skoot/utils/metaestimators.py#L155"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/dates.html#DateTransformer.fit_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.DateTransformer.fit_transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit the estimator and apply the date transformation
 to a dataframe.</p>
 <p>This is a tricky class because the “fit” isn’t super necessary…
@@ -369,7 +369,7 @@ and the result set is returned.</p>
 
 <dl class="method">
 <dt id="skoot.preprocessing.DateTransformer.get_params">
-<code class="descname">get_params</code><span class="sig-paren">(</span><em>deep=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/1622fe4/skoot/../../sklearn/base.py#L177"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.DateTransformer.get_params" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_params</code><span class="sig-paren">(</span><em>deep=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/44471dd/skoot/../../sklearn/base.py#L177"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.DateTransformer.get_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get parameters for this estimator.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -394,7 +394,7 @@ contained subobjects that are estimators.</p>
 
 <dl class="method">
 <dt id="skoot.preprocessing.DateTransformer.set_params">
-<code class="descname">set_params</code><span class="sig-paren">(</span><em>**params</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/1622fe4/skoot/../../sklearn/base.py#L200"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.DateTransformer.set_params" title="Permalink to this definition">¶</a></dt>
+<code class="descname">set_params</code><span class="sig-paren">(</span><em>**params</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/44471dd/skoot/../../sklearn/base.py#L200"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.DateTransformer.set_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the parameters of this estimator.</p>
 <p>The method works on simple estimators as well as on nested objects
 (such as pipelines). The latter have parameters of the form
@@ -412,7 +412,7 @@ component of a nested object.</p>
 
 <dl class="method">
 <dt id="skoot.preprocessing.DateTransformer.transform">
-<code class="descname">transform</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/1622fe4/skoot/preprocessing/dates.py#L196"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/dates.html#DateTransformer.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.DateTransformer.transform" title="Permalink to this definition">¶</a></dt>
+<code class="descname">transform</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/44471dd/skoot/preprocessing/dates.py#L196"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/preprocessing/dates.html#DateTransformer.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.preprocessing.DateTransformer.transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply the date transformation to a dataframe.</p>
 <p>This method will cast string features to datetimes as specified by
 the <code class="docutils literal notranslate"><span class="pre">date_format</span></code> arg.</p>
