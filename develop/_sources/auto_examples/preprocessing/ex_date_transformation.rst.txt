@@ -97,7 +97,7 @@ fields into datetime type fields.
     print(DateTransformer(cols=['a', 'b', 'c'],
                           allowed_types=allowed).fit_transform(df))
 
-**Total running time of the script:** ( 0 minutes  0.034 seconds)
+**Total running time of the script:** ( 0 minutes  0.035 seconds)
 
 
 

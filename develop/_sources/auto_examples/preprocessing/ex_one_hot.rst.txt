@@ -90,7 +90,7 @@ take a look at the
     nc_mask = trans.columns.str.contains("native-country")
     assert trans[trans.columns[nc_mask]].sum().sum() == 0
 
-**Total running time of the script:** ( 0 minutes  1.570 seconds)
+**Total running time of the script:** ( 0 minutes  1.820 seconds)
 
 
 

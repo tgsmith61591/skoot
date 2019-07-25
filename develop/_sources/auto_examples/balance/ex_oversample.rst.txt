@@ -84,7 +84,7 @@ oversamples the minority class to balance the class ratios.
 
     print(X_balance_df.head())
 
-**Total running time of the script:** ( 0 minutes  0.030 seconds)
+**Total running time of the script:** ( 0 minutes  0.045 seconds)
 
 
 

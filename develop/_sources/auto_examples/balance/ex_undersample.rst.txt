@@ -86,7 +86,7 @@ you may later suffer from a high variance problem.
 
     print(X_balance_df.head())
 
-**Total running time of the script:** ( 0 minutes  0.055 seconds)
+**Total running time of the script:** ( 0 minutes  0.082 seconds)
 
 
 

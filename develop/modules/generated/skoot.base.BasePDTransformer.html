@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>skoot.base.BasePDTransformer &mdash; skoot 0.20.0 documentation</title>
+  <title>skoot.base.BasePDTransformer &mdash; skoot 0.21.0.dev0 documentation</title>
   
 
   
@@ -23,7 +23,7 @@
       <script type="text/javascript">
           var DOCUMENTATION_OPTIONS = {
               URL_ROOT:'../../',
-              VERSION:'0.20.0',
+              VERSION:'0.21.0.dev0',
               LANGUAGE:'None',
               COLLAPSE_INDEX:false,
               FILE_SUFFIX:'.html',
@@ -76,7 +76,7 @@
             
             
               <div class="version">
-                0.20.0
+                0.21.0.dev0
               </div>
             
           
@@ -194,7 +194,7 @@
 <h1><a class="reference internal" href="../classes.html#module-skoot.base" title="skoot.base"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skoot.base</span></code></a>.BasePDTransformer<a class="headerlink" href="#skoot-base-basepdtransformer" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="skoot.base.BasePDTransformer">
-<em class="property">class </em><code class="descclassname">skoot.base.</code><code class="descname">BasePDTransformer</code><span class="sig-paren">(</span><em>cols=None</em>, <em>as_df=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/a41b519/skoot/base.py#L30"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/base.html#BasePDTransformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.base.BasePDTransformer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">skoot.base.</code><code class="descname">BasePDTransformer</code><span class="sig-paren">(</span><em>cols=None</em>, <em>as_df=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/322813e/skoot/base.py#L30"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/base.html#BasePDTransformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.base.BasePDTransformer" title="Permalink to this definition">¶</a></dt>
 <dd><p>The base class for all Pandas frame transformers.</p>
 <p>Provides the base class for all skoot transformers that require
 Pandas dataframes as input.</p>
@@ -255,13 +255,13 @@ default.</p>
 </table>
 <dl class="method">
 <dt id="skoot.base.BasePDTransformer.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>cols=None</em>, <em>as_df=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/a41b519/skoot/base.py#L56"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/base.html#BasePDTransformer.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.base.BasePDTransformer.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>cols=None</em>, <em>as_df=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/322813e/skoot/base.py#L56"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/base.html#BasePDTransformer.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.base.BasePDTransformer.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="skoot.base.BasePDTransformer.fit">
-<code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/a41b519/skoot/utils/metaestimators.py#L64"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/base.html#BasePDTransformer.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.base.BasePDTransformer.fit" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/322813e/skoot/utils/metaestimators.py#L64"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/base.html#BasePDTransformer.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.base.BasePDTransformer.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit the transformer.</p>
 <p>Default behavior is not to fit any parameters and return self.
 This is useful for transformers which do not require
@@ -286,7 +286,7 @@ parameterization, but need to fit into a pipeline.</p>
 
 <dl class="method">
 <dt id="skoot.base.BasePDTransformer.fit_transform">
-<code class="descname">fit_transform</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em>, <em>**fit_params</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/a41b519/skoot/../../sklearn/base.py#L529"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.base.BasePDTransformer.fit_transform" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fit_transform</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em>, <em>**fit_params</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/322813e/skoot/../../sklearn/base.py#L529"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.base.BasePDTransformer.fit_transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit to data, then transform it.</p>
 <p>Fits transformer to X and y with optional parameters fit_params
 and returns a transformed version of X.</p>
@@ -316,7 +316,7 @@ and returns a transformed version of X.</p>
 
 <dl class="method">
 <dt id="skoot.base.BasePDTransformer.get_params">
-<code class="descname">get_params</code><span class="sig-paren">(</span><em>deep=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/a41b519/skoot/../../sklearn/base.py#L177"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.base.BasePDTransformer.get_params" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_params</code><span class="sig-paren">(</span><em>deep=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/322813e/skoot/../../sklearn/base.py#L177"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.base.BasePDTransformer.get_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get parameters for this estimator.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -341,7 +341,7 @@ contained subobjects that are estimators.</p>
 
 <dl class="method">
 <dt id="skoot.base.BasePDTransformer.set_params">
-<code class="descname">set_params</code><span class="sig-paren">(</span><em>**params</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/a41b519/skoot/../../sklearn/base.py#L200"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.base.BasePDTransformer.set_params" title="Permalink to this definition">¶</a></dt>
+<code class="descname">set_params</code><span class="sig-paren">(</span><em>**params</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/322813e/skoot/../../sklearn/base.py#L200"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.base.BasePDTransformer.set_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the parameters of this estimator.</p>
 <p>The method works on simple estimators as well as on nested objects
 (such as pipelines). The latter have parameters of the form
