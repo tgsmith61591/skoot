@@ -1,0 +1,16 @@
+:mod:`skoot.feature_selection`.BaseFeatureSelector
+=========================================================
+
+.. currentmodule:: skoot.feature_selection
+
+.. autoclass:: BaseFeatureSelector
+
+   
+   .. automethod:: __init__
+   
+
+.. include:: skoot.feature_selection.BaseFeatureSelector.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

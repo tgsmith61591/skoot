@@ -1,0 +1,12 @@
+:mod:`skoot.base`.make_transformer
+===============================================
+
+.. currentmodule:: skoot.base
+
+.. autofunction:: make_transformer
+
+.. include:: skoot.base.make_transformer.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

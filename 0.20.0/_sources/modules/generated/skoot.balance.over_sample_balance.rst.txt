@@ -1,0 +1,12 @@
+:mod:`skoot.balance`.over_sample_balance
+=====================================================
+
+.. currentmodule:: skoot.balance
+
+.. autofunction:: over_sample_balance
+
+.. include:: skoot.balance.over_sample_balance.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

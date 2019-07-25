@@ -1,0 +1,16 @@
+:mod:`skoot.preprocessing`.DummyEncoder
+==============================================
+
+.. currentmodule:: skoot.preprocessing
+
+.. autoclass:: DummyEncoder
+
+   
+   .. automethod:: __init__
+   
+
+.. include:: skoot.preprocessing.DummyEncoder.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

@@ -1,0 +1,12 @@
+:mod:`skoot.exploration`.summarize
+===============================================
+
+.. currentmodule:: skoot.exploration
+
+.. autofunction:: summarize
+
+.. include:: skoot.exploration.summarize.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

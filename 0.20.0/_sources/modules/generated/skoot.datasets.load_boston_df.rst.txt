@@ -1,0 +1,12 @@
+:mod:`skoot.datasets`.load_boston_df
+=================================================
+
+.. currentmodule:: skoot.datasets
+
+.. autofunction:: load_boston_df
+
+.. include:: skoot.datasets.load_boston_df.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

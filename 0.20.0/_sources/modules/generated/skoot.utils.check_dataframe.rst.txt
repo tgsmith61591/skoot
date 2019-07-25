@@ -1,0 +1,12 @@
+:mod:`skoot.utils`.check_dataframe
+===============================================
+
+.. currentmodule:: skoot.utils
+
+.. autofunction:: check_dataframe
+
+.. include:: skoot.utils.check_dataframe.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

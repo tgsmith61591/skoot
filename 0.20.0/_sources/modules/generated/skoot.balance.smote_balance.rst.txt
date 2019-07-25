@@ -1,0 +1,12 @@
+:mod:`skoot.balance`.smote_balance
+===============================================
+
+.. currentmodule:: skoot.balance
+
+.. autofunction:: smote_balance
+
+.. include:: skoot.balance.smote_balance.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

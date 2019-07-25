@@ -1,0 +1,16 @@
+:mod:`skoot.preprocessing`.SelectiveMinMaxScaler
+=======================================================
+
+.. currentmodule:: skoot.preprocessing
+
+.. autoclass:: SelectiveMinMaxScaler
+
+   
+   .. automethod:: __init__
+   
+
+.. include:: skoot.preprocessing.SelectiveMinMaxScaler.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

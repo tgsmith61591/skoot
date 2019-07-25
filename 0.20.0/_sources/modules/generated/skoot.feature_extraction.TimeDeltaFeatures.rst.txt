@@ -1,0 +1,16 @@
+:mod:`skoot.feature_extraction`.TimeDeltaFeatures
+========================================================
+
+.. currentmodule:: skoot.feature_extraction
+
+.. autoclass:: TimeDeltaFeatures
+
+   
+   .. automethod:: __init__
+   
+
+.. include:: skoot.feature_extraction.TimeDeltaFeatures.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

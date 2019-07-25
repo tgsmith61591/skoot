@@ -1,0 +1,12 @@
+:mod:`skoot.utils`.validate_multiple_rows
+======================================================
+
+.. currentmodule:: skoot.utils
+
+.. autofunction:: validate_multiple_rows
+
+.. include:: skoot.utils.validate_multiple_rows.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

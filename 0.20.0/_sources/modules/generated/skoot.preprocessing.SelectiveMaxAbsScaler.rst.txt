@@ -1,0 +1,16 @@
+:mod:`skoot.preprocessing`.SelectiveMaxAbsScaler
+=======================================================
+
+.. currentmodule:: skoot.preprocessing
+
+.. autoclass:: SelectiveMaxAbsScaler
+
+   
+   .. automethod:: __init__
+   
+
+.. include:: skoot.preprocessing.SelectiveMaxAbsScaler.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>
