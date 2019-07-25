@@ -11,8 +11,12 @@ if [[ ! -d skoot/__check_build ]]; then
     exit 3
 fi
 
-# get the running branch
-branch=$(git symbolic-ref --short HEAD)
+# get the running branch or tag
+if [[ ! -z ${CIRCLE_TAG} ]]; then
+    branch=""
+else
+    branch=$(git symbolic-ref --short HEAD)
+fi
 
 # cd into docs, make them
 # cd doc
@@ -51,7 +55,7 @@ function deploy() {
 
 # If we're on master, we'll deploy to /develop (bleeding edge). If from a tag,
 # we'll deploy to the version slug (e.g., /1.2.1)
-echo "Branch name: ${CIRCLE_BRANCH}"
+echo "Branch name: ${branch}"
 
 # Show the present files:
 ls -la
@@ -78,7 +82,7 @@ done
 
 # If it's master, we can simply rename the "html" directory as the
 # "develop" directory
-if [[ ${CIRCLE_BRANCH} == "master" ]]; then
+if [[ ${branch} == "master" ]]; then
 
   # Remove the existing 'dev' folder (if it's there. might not be the
   # first time we do this)
@@ -145,7 +149,7 @@ ls -la
 # Finally, deploy the branch, but if it's a pull request or tag, don't!!
 if [[ ! -z ${CIRCLE_PULL_REQUEST} ]]; then
   echo "Will not deploy doc on pull request (${CIRCLE_PULL_REQUEST})"
-elif [[ ${CIRCLE_BRANCH} == "master" || ! -z ${CIRCLE_TAG} ]]; then
+elif [[ ${branch} == "master" || ! -z ${CIRCLE_TAG} ]]; then
   echo "Deploying documentation"
   deploy
 else
