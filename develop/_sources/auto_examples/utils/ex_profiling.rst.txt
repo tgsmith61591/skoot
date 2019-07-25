@@ -28,7 +28,7 @@ function decorator.
 
  Out::
 
-    [('scaler', (('fit_time_', 0.001981019973754883),)), ('boxcox', (('fit_time_', 0.01405024528503418),)), ('pca', (('fit_time_', 0.0023136138916015625),)), ('svd', (('fit_time_', 0.004784822463989258),))]
+    [('scaler', (('fit_time_', 0.002088308334350586),)), ('boxcox', (('fit_time_', 0.013570785522460938),)), ('pca', (('fit_time_', 0.0018219947814941406),)), ('svd', (('fit_time_', 0.011367559432983398),))]
 
 
 
@@ -71,7 +71,7 @@ function decorator.
 
     # Profile it:
     print(profile_estimator(pipe))
-**Total running time of the script:** ( 0 minutes  0.067 seconds)
+**Total running time of the script:** ( 0 minutes  0.066 seconds)
 
 
 
