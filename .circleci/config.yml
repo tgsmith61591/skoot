@@ -183,6 +183,7 @@ workflows:
 
       # All deployment jobs
       - deploy-doc:
+          filters: *test-filters
           requires:
             - testing-passed
 
