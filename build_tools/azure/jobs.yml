@@ -38,7 +38,7 @@ jobs:
       architecture: '$(architecture)'
     displayName: 'Setting Python version and system architecture'
 
-  - bash: wget http://github.com/xianyi/OpenBLAS/archive/v0.3.6.tar.gz | tar xvz
+  - bash: curl http://github.com/xianyi/OpenBLAS/archive/v0.3.6.tar.gz
     displayName: 'Downloading openBLAS'
 
   - template: build_and_deploy.yml
