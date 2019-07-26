@@ -26,10 +26,10 @@ steps:
   displayName: 'Checking README compatibility'
 
   # Use this one for testing: python -m twine upload --repository-url https://test.pypi.org/legacy/ --skip-existing dist/skoot-*
-- script: python -m twine upload --skip-existing dist/skoot-*
-  displayName: 'Deploying to PyPI'
-  # Only deploy if this is a tagged commit
-  condition: contains(variables['Build.SourceBranch'], 'tags')
-  env:
-    TWINE_USERNAME: $(twineUsername)
-    TWINE_PASSWORD: $(twinePassword)
+#- script: python -m twine upload --skip-existing dist/skoot-*
+#  displayName: 'Deploying to PyPI'
+#  # Only deploy if this is a tagged commit
+#  condition: contains(variables['Build.SourceBranch'], 'tags')
+#  env:
+#    TWINE_USERNAME: $(twineUsername)
+#    TWINE_PASSWORD: $(twinePassword)
