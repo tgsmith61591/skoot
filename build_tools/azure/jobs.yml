@@ -38,6 +38,9 @@ jobs:
       architecture: '$(architecture)'
     displayName: 'Setting Python version and system architecture'
 
+  - script: choco upgrade cmake
+    displayName: 'Installing cmake'
+
   - template: build_and_deploy.yml
 
 #- job: macOS
