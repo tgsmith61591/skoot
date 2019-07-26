@@ -9,12 +9,10 @@ from skoot._build_utils import maybe_cythonize_extensions
 
 # DEFINE CONFIG
 def configuration(parent_package='', top_path=None):
+    # from skoot._build_utils.system_info import get_info, NotFoundError
+    # lapack_opt = get_info("lapack_opt")
+
     from numpy.distutils.misc_util import Configuration
-
-    libs = []
-    if os.name == 'posix':
-        libs.append('m')
-
     config = Configuration('skoot', parent_package, top_path)
 
     # build utilities

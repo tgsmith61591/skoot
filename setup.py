@@ -12,10 +12,7 @@ tie together as many common techniques and transformers in one location
 as possible, doing so with a familiar scikit-learn API feel.
 """
 
-from __future__ import print_function, absolute_import, division
-
 from distutils.command.clean import clean
-import warnings
 import shutil
 import os
 import sys
@@ -165,7 +162,18 @@ cmdclass = {'clean': CleanCommand}
 
 def configuration(parent_package='', top_path=None):
     # we know numpy is a valid import now
+    from skoot._build_utils.system_info import get_info, NotFoundError
     from numpy.distutils.misc_util import Configuration
+
+    lapack_opt = get_info('lapack_opt')
+
+    if not lapack_opt:
+        msg = 'No lapack/blas resources found.'
+        if sys.platform == "darwin":
+            msg = 'No lapack/blas resources found. ' \
+                  'Note: Accelerate is no longer supported.'
+        raise NotFoundError(msg)
+
     config = Configuration(None, parent_package, top_path)
     config.set_options(ignore_setup_xxx_py=True,
                        assume_default_configuration=True,
@@ -173,6 +181,8 @@ def configuration(parent_package='', top_path=None):
                        quiet=True)
 
     config.add_subpackage(DISTNAME)
+    config.add_data_files((DISTNAME, '*.txt'))
+
     return config
 
 
@@ -218,6 +228,9 @@ def do_setup():
                     setup_requires=REQUIREMENTS,
                     install_requires=REQUIREMENTS,
                     **extra_setuptools_args)
+
+    # Disable OSX Accelerate, it has too old LAPACK
+    os.environ['ACCELERATE'] = 'None'
 
     # if we are building for install, develop or bdist_wheel, we NEED
     # numpy and cython, since they are both used in building the .pyx

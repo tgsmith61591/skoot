@@ -54,7 +54,7 @@ coverage-dependencies:
 test-lint: test-requirements
 	$(PYTHON) -m flake8 skoot \
 		--filename='*.py' \
-		--exclude='skoot/__config__.py,skoot/_build_utils/system_info.py' \
+		--exclude='skoot/__config__.py,skoot/_build_utils/*.py' \
 		--ignore E803,F401,F403,W293,W504,W605
 
 test-unit: test-requirements coverage-dependencies

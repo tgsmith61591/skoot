@@ -6,6 +6,10 @@
 
 __version__ = '0.21.0.dev0'
 
+from numpy import show_config as show_numpy_config
+from numpy import __version__ as __numpy_version__
+
+
 try:
     # This variable is injected in the __builtins__ by the build
     # process. It is used to enable importing subpackages of skoot when
@@ -19,6 +23,14 @@ if __SKOOT_SETUP__:
     _sys.stdout.write('Partial import of skoot during the build process.\n')
     del _sys
 else:
+    try:
+        from skoot.__config__ import show as show_config
+    except ImportError:
+        msg = """Error importing skoot: you cannot import skoot while
+        being in skoot source directory; please exit the skoot source
+        tree first, and relaunch your python interpreter."""
+        raise ImportError(msg)
+
     # check that the build completed properly. This prints an informative
     # message in the case that any of the C code was not properly compiled.
     from . import __check_build

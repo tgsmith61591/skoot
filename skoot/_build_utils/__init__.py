@@ -4,10 +4,9 @@ Utilities useful during the build -- adapted from sklearn.
 # author: Andy Mueller, Gael Varoquaux
 # license: BSD
 
-from __future__ import division, print_function, absolute_import
-
 from numpy.distutils.system_info import get_info
 from distutils.version import LooseVersion
+from ._fortran import *
 
 import os
 
