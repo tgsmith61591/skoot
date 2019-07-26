@@ -16,10 +16,6 @@ steps:
 - script: pytest --showlocals --durations=20 --pyargs skoot
   displayName: 'Running unit tests'
 
-  # Build source archive here so we don't have to in Circle
-- script: python setup.py sdist
-  displayName: 'Building source archive'
-
 - bash: |
     if python -c "from twine.commands.check import check; check(['dist/*'])" | grep  "warning"; then
         echo "README will not render properly on PyPI"
