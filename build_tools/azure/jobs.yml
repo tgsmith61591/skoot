@@ -38,11 +38,8 @@ jobs:
       architecture: '$(architecture)'
     displayName: 'Setting Python version and system architecture'
 
-  - bash: curl http://github.com/xianyi/OpenBLAS/archive/v0.3.6.tar.gz
+  - powershell: Install-Package OpenBLAS
     displayName: 'Downloading openBLAS'
-
-  - bash: ls
-    displayName: 'check if openBLAS is there'
 
   - template: build_and_deploy.yml
 
