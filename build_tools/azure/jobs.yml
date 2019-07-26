@@ -63,7 +63,7 @@ jobs:
       versionSpec: '$(python.version)'
     displayName: 'Setting Python version'
 
-  - script: brew install gfortran
+  - script: brew cask install gfortran
     displayName: 'Installing Fortran'
 
   - template: build_and_deploy.yml
