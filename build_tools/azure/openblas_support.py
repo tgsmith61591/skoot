@@ -14,6 +14,7 @@ from tempfile import mkstemp, gettempdir
 import zipfile
 import tarfile
 
+
 OPENBLAS_V = '6a8b426'
 OPENBLAS_LONG = 'v0.3.5-274-g6a8b4269'
 BASE_LOC = ''
@@ -21,6 +22,8 @@ RACKSPACE = 'https://3f23b170c54c2533c070-1c8a9b3114517dc5fe17b7c3f8c63a43.ssl.c
 ARCHITECTURES = ['', 'windows', 'darwin', 'arm', 'x86', 'ppc64']
 
 IS_32BIT = sys.maxsize < 2**32
+
+
 def get_arch():
     if platform.system() == 'Windows':
         ret = 'windows'
@@ -39,6 +42,7 @@ def get_arch():
         ret = ''
     assert ret in ARCHITECTURES
     return ret
+
 
 def download_openblas(target, arch):
     filename = ''
@@ -86,6 +90,7 @@ def download_openblas(target, arch):
         return None
     return typ
 
+
 def setup_openblas(arch=get_arch()):
     '''
     Download and setup an openblas library for building. If successful,
@@ -112,6 +117,7 @@ def setup_openblas(arch=get_arch()):
             return 'expecting to download tar.gz, not %s' % str(typ)
         return unpack_targz(tmp)
 
+
 def unpack_windows_zip(fname):
     import sysconfig
     with zipfile.ZipFile(fname, 'r') as zf:
@@ -127,6 +133,7 @@ def unpack_windows_zip(fname):
             fid.write(zf.read(lib[0]))
     return target
 
+
 def unpack_targz(fname):
     target = os.path.join(gettempdir(), 'openblas')
     if not os.path.exists(target):
@@ -136,6 +143,7 @@ def unpack_targz(fname):
         # extract directory (no leading '../', '/')
         zf.extractall(target)
     return target
+
 
 def make_init(dirname):
     '''
@@ -176,6 +184,7 @@ def make_init(dirname):
                               stacklevel=1)
     """))
 
+
 def test_setup(arches):
     '''
     Make sure all the downloadable files exist and can be opened
@@ -192,6 +201,7 @@ def test_setup(arches):
             raise RuntimeError('Could not setup %s' % arch)
         print(target)
 
+
 def test_version(expected_version):
     """
     Assert that expected OpenBLAS version is
@@ -207,6 +217,7 @@ def test_version(expected_version):
     print('OpenBLAS get_config returned', str(res))
     check_str = b'OpenBLAS %s' % expected_version[0].encode()
     assert check_str in res
+
 
 if __name__ == '__main__':
     import argparse
