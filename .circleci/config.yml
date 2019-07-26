@@ -28,8 +28,9 @@ commands:
     description: "Skoot needs Fortran"
     steps:
       - run: |
-          apt-get update
-          apt-get install -yq gfortran
+          apt-get update && \
+            apt-get install -yq gfortran && \
+            apt-get install -yq libatlas-base-dev
 
   # For 'machine':
   sudo-install-gfortran:
@@ -38,6 +39,7 @@ commands:
       - run: |
           sudo apt-get update
           sudo apt-get install -yq gfortran || echo "Already installed"
+          sudo apt-get install -yq libatlas-base-dev
 
   make-unit-test:
     description: "Build and run unit tests using the Makefile"
