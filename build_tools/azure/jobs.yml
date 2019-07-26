@@ -38,9 +38,7 @@ jobs:
       architecture: '$(architecture)'
     displayName: 'Setting Python version and system architecture'
 
-  - bash: |
-      apt-get update
-      apt-get install -yq gfortran
+  - script: choco install mingw
     displayName: 'Installing Fortran'
 
   - template: build_and_deploy.yml
