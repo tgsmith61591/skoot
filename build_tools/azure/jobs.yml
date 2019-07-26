@@ -43,7 +43,7 @@ jobs:
       Write-Host "Python Version: $pyversion"
       $target = "C:\\hostedtoolcache\\windows\\Python\\$pyversion\\$(architecture)\\lib\\openblas.a"
       Write-Host "target path: $target"
-      $openblas = python tools/openblas_support.py
+      $openblas = python build_tools/azure/openblas_support.py
       cp $openblas $target
     displayName: 'Download/Install openBLAS'
 
