@@ -38,7 +38,7 @@ jobs:
       architecture: '$(architecture)'
     displayName: 'Setting Python version and system architecture'
 
-  - powershell: Install-Package -Name OpenBLAS -Version 0.2.14.1
+  - powershell: Find-Package -Name OpenBLAS -Source NuGet | Install-Package
     displayName: 'Downloading openBLAS'
 
   - template: build_and_deploy.yml
