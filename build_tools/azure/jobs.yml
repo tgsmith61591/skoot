@@ -38,9 +38,6 @@ jobs:
       architecture: '$(architecture)'
     displayName: 'Setting Python version and system architecture'
 
-  - script: choco install mingw
-    displayName: 'Installing Fortran'
-
   - template: build_and_deploy.yml
 
 #- job: macOS
