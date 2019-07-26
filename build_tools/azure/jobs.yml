@@ -38,9 +38,6 @@ jobs:
       architecture: '$(architecture)'
     displayName: 'Setting Python version and system architecture'
 
-  - script: pip install --force-reinstall scipy==1.3.0
-    displayName: 'Re-installing scipy'
-
   - template: build_and_deploy.yml
 
 - job: macOS
