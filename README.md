@@ -3,6 +3,7 @@
 ![Supported versions](https://img.shields.io/badge/python-3.6-blue.svg)
 ![Supported versions](https://img.shields.io/badge/python-3.7-blue.svg)
 [![CircleCI](https://circleci.com/gh/tgsmith61591/skoot.svg?style=svg)](https://circleci.com/gh/tgsmith61591/skoot)
+[![Build Status](https://dev.azure.com/tgsmith61591gh/skoot/_apis/build/status/tgsmith61591.skoot?branchName=master)](https://dev.azure.com/tgsmith61591gh/skoot/_build/latest?definitionId=1&branchName=master)
 
 # skoot
 
