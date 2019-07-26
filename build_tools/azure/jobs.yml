@@ -11,25 +11,25 @@ jobs:
         python.version: '3.5'
         architecture: 'x86'
 
-      Python35-x64:
-        python.version: '3.5'
-        architecture: 'x64'
+#      Python35-x64:
+#        python.version: '3.5'
+#        architecture: 'x64'
 
       Python36-x86:
         python.version: '3.6'
         architecture: 'x86'
 
-      Python36-x64:
-        python.version: '3.6'
-        architecture: 'x64'
+#      Python36-x64:
+#        python.version: '3.6'
+#        architecture: 'x64'
 
       Python37-x86:
         python.version: '3.7'
         architecture: 'x86'
 
-      Python37-x64:
-        python.version: '3.7'
-        architecture: 'x64'
+#      Python37-x64:
+#        python.version: '3.7'
+#        architecture: 'x64'
 
   steps:
   - task: UsePythonVersion@0
@@ -38,7 +38,12 @@ jobs:
       architecture: '$(architecture)'
     displayName: 'Setting Python version and system architecture'
 
-  - script: choco upgrade mingw
+  - bash: |
+      wget http://icl.cs.utk.edu/lapack-for-windows/libraries/VisualStudio/3.7.0/Dynamic-MINGW/Win32/libblas.dll
+      wget http://icl.cs.utk.edu/lapack-for-windows/libraries/VisualStudio/3.7.0/Dynamic-MINGW/Win32/liblapack.dll
+      wget http://icl.cs.utk.edu/lapack-for-windows/libraries/VisualStudio/3.7.0/Dynamic-MINGW/Win32/liblapacke.dll
+    displayName: 'Installing DLLs'
+
     displayName: 'Upgrading Fortran'
 
   - template: build_and_deploy.yml
