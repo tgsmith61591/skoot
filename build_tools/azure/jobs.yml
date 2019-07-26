@@ -38,6 +38,11 @@ jobs:
       architecture: '$(architecture)'
     displayName: 'Setting Python version and system architecture'
 
+  - script: |
+      pip uninstall scipy
+      pip install scipy>=1.3.0
+    displayName: 'Reinstalling SciPy'
+
   - template: build_and_deploy.yml
 
 - job: macOS
