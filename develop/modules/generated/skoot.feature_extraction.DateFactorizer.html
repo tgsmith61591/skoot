@@ -195,7 +195,7 @@
 <h1><a class="reference internal" href="../classes.html#module-skoot.feature_extraction" title="skoot.feature_extraction"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skoot.feature_extraction</span></code></a>.DateFactorizer<a class="headerlink" href="#skoot-feature-extraction-datefactorizer" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="skoot.feature_extraction.DateFactorizer">
-<em class="property">class </em><code class="descclassname">skoot.feature_extraction.</code><code class="descname">DateFactorizer</code><span class="sig-paren">(</span><em>cols=None</em>, <em>as_df=True</em>, <em>drop_original=True</em>, <em>sep='_'</em>, <em>features=('year'</em>, <em>'month'</em>, <em>'day'</em>, <em>'hour')</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/322813e/skoot/feature_extraction/dates.py#L61"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/feature_extraction/dates.html#DateFactorizer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.feature_extraction.DateFactorizer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">skoot.feature_extraction.</code><code class="descname">DateFactorizer</code><span class="sig-paren">(</span><em>cols=None</em>, <em>as_df=True</em>, <em>drop_original=True</em>, <em>sep='_'</em>, <em>features=('year'</em>, <em>'month'</em>, <em>'day'</em>, <em>'hour')</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/edbb30d/skoot/feature_extraction/dates.py#L61"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/feature_extraction/dates.html#DateFactorizer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.feature_extraction.DateFactorizer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract new features from datetime features.</p>
 <p>Automatically extract new features from datetime features. This class
 operates on datetime series objects and extracts features such as “year”,
@@ -297,13 +297,13 @@ and will raise an AttributeError if an invalid feature is passed.</p>
 </table>
 <dl class="method">
 <dt id="skoot.feature_extraction.DateFactorizer.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>cols=None</em>, <em>as_df=True</em>, <em>drop_original=True</em>, <em>sep='_'</em>, <em>features=('year'</em>, <em>'month'</em>, <em>'day'</em>, <em>'hour')</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/322813e/skoot/feature_extraction/dates.py#L121"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/feature_extraction/dates.html#DateFactorizer.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.feature_extraction.DateFactorizer.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>cols=None</em>, <em>as_df=True</em>, <em>drop_original=True</em>, <em>sep='_'</em>, <em>features=('year'</em>, <em>'month'</em>, <em>'day'</em>, <em>'hour')</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/edbb30d/skoot/feature_extraction/dates.py#L121"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/feature_extraction/dates.html#DateFactorizer.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.feature_extraction.DateFactorizer.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="skoot.feature_extraction.DateFactorizer.fit">
-<code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/322813e/skoot/feature_extraction/dates.py#L131"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/feature_extraction/dates.html#DateFactorizer.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.feature_extraction.DateFactorizer.fit" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/edbb30d/skoot/feature_extraction/dates.py#L131"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/feature_extraction/dates.html#DateFactorizer.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.feature_extraction.DateFactorizer.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit the date factorizer.</p>
 <p>This is a tricky class because the “fit” isn’t super necessary…
 But we use it as a validation stage to ensure the defined cols
@@ -331,7 +331,7 @@ all of them if <code class="docutils literal notranslate"><span class="pre">cols
 
 <dl class="method">
 <dt id="skoot.feature_extraction.DateFactorizer.fit_transform">
-<code class="descname">fit_transform</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/322813e/skoot/utils/metaestimators.py#L152"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/feature_extraction/dates.html#DateFactorizer.fit_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.feature_extraction.DateFactorizer.fit_transform" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fit_transform</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/edbb30d/skoot/utils/metaestimators.py#L152"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/feature_extraction/dates.html#DateFactorizer.fit_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.feature_extraction.DateFactorizer.fit_transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit the estimator and apply the date factorization to a dataframe.</p>
 <p>This is a tricky class because the “fit” isn’t super necessary…
 But we use it as a validation stage to ensure the defined cols
@@ -366,7 +366,7 @@ and the result set is returned.</p>
 
 <dl class="method">
 <dt id="skoot.feature_extraction.DateFactorizer.get_params">
-<code class="descname">get_params</code><span class="sig-paren">(</span><em>deep=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/322813e/skoot/../../sklearn/base.py#L177"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.feature_extraction.DateFactorizer.get_params" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_params</code><span class="sig-paren">(</span><em>deep=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/edbb30d/skoot/../../sklearn/base.py#L177"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.feature_extraction.DateFactorizer.get_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get parameters for this estimator.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -391,7 +391,7 @@ contained subobjects that are estimators.</p>
 
 <dl class="method">
 <dt id="skoot.feature_extraction.DateFactorizer.set_params">
-<code class="descname">set_params</code><span class="sig-paren">(</span><em>**params</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/322813e/skoot/../../sklearn/base.py#L200"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.feature_extraction.DateFactorizer.set_params" title="Permalink to this definition">¶</a></dt>
+<code class="descname">set_params</code><span class="sig-paren">(</span><em>**params</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/edbb30d/skoot/../../sklearn/base.py#L200"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.feature_extraction.DateFactorizer.set_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the parameters of this estimator.</p>
 <p>The method works on simple estimators as well as on nested objects
 (such as pipelines). The latter have parameters of the form
@@ -409,7 +409,7 @@ component of a nested object.</p>
 
 <dl class="method">
 <dt id="skoot.feature_extraction.DateFactorizer.transform">
-<code class="descname">transform</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/322813e/skoot/feature_extraction/dates.py#L191"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/feature_extraction/dates.html#DateFactorizer.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.feature_extraction.DateFactorizer.transform" title="Permalink to this definition">¶</a></dt>
+<code class="descname">transform</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/tgsmith61591/skoot/blob/edbb30d/skoot/feature_extraction/dates.py#L191"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skoot/feature_extraction/dates.html#DateFactorizer.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skoot.feature_extraction.DateFactorizer.transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply the date transformation to a dataframe.</p>
 <p>This method will extract features from datetime features as
 specified by the <code class="docutils literal notranslate"><span class="pre">features</span></code> arg.</p>

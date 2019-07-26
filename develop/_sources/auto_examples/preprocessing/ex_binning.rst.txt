@@ -71,7 +71,7 @@ Demonstrates how to bin continuous features in your dataset.
     plt.title("Iris feature 'a' + bin markers")
     plt.show()
 
-**Total running time of the script:** ( 0 minutes  0.030 seconds)
+**Total running time of the script:** ( 0 minutes  0.059 seconds)
 
 
 
