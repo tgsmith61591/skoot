@@ -10,6 +10,3 @@ pytest
 wheel
 twine>=1.13.0
 readme_renderer[md]
-mkl
-mkl-fft
-intel-openmp
