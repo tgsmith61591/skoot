@@ -45,6 +45,7 @@ jobs:
       Write-Host "target path: $target"
       $openblas = python build_tools/azure/openblas_support.py
       cp $openblas $target
+      ls "C:\\hostedtoolcache\\windows\\Python\\$pyversion\\$(architecture)\\lib
     displayName: 'Download/Install openBLAS'
 
   - template: build_and_deploy.yml
