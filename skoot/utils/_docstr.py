@@ -135,8 +135,9 @@ class _DocstrMap(object):
 
         # if we are to remove the trailing space, do so now
         if strip_trailing_space:
-            while not parts[-1].strip():  # truthy check on emptiness
-                parts.pop(-1)
+            if parts:
+                while not parts[-1].strip():  # truthy check on emptiness
+                    parts.pop(-1)
         parts += content
         self.map_[section] = parts  # should have been set in place...
 
