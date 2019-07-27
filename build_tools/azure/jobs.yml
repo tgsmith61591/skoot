@@ -49,9 +49,9 @@ jobs:
         $wc.Downloadfile("$(OPENBLAS)", "openblas.zip")
         $tmpdir = New-TemporaryFile | %{ rm $_; mkdir $_ }
         Expand-Archive "openblas.zip" $tmpdir
-        $pyversion = python -c "from __future__ import print_function; import sys; print(sys.version.split()[0])"
+        $pyversion = python -c "import sys; print(sys.version.split()[0])"
         Write-Host "Python Version: $pyversion"
-        $target = "C:\\hostedtoolcache\\windows\\Python\\$pyversion\\$(PYTHON_ARCH)\\lib\\openblas.a"
+        $target = "C:\\hostedtoolcache\\windows\\Python\\$pyversion\\$(architecture)\\lib\\openblas.a"
         Write-Host "target path: $target"
         cp $tmpdir\$(BITS)\lib\libopenblas_v0.3.5-274-g6a8b4269-gcc_7_1_0.a $target
     displayName: 'Download / Install OpenBLAS'
