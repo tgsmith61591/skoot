@@ -53,7 +53,7 @@ jobs:
   - powershell: Write-Host "##vso[task.prependpath]$env:CONDA\Scripts"
     displayName: 'Add conda to PATH'
 
-  - script: conda create -n buildenv python=$(python.version) --yes numpy>=1.16 pip
+  - script: conda create -n buildenv python=$(python.version)
     displayName: 'Creating conda environment'
 
   - script: |
