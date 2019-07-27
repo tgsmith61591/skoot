@@ -50,6 +50,9 @@ jobs:
       architecture: '$(architecture)'
     displayName: 'Setting Python version and system architecture'
 
+  - script: choco upgrade microsoft-r-open
+    displayName: 'Installing Intel MKL'
+
   - powershell: |
       $wc = New-Object net.webclient;
       $wc.Downloadfile("$(FFTW)", "fftw.zip")
