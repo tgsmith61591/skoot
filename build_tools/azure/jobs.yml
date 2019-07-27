@@ -89,7 +89,9 @@ jobs:
     displayName: 'Install 64-bit mingw for 64-bit builds'
     condition: eq(variables['BITS'], 64)
 
-  - powershell: ls C:\\hostedtoolcache\\windows\\Python\\$(python.version)\\$(architecture)\\DLLs
+  - powershell: |
+      $pyversion = python -c "import sys; print(sys.version.split()[0])"
+      ls C:\\hostedtoolcache\\windows\\Python\\$pyversion\\$(architecture)\\DLLs
     displayName: 'Checking for DLLs'
 
   - powershell: |
@@ -102,7 +104,8 @@ jobs:
           $env:LDFLAGS = "-m32"
           refreshenv
       }
-      $env:PATH = "C:\\hostedtoolcache\\windows\\Python\\$(python.version)\\$(architecture)\\lib;" + $env:PATH
+      $pyversion = python -c "import sys; print(sys.version.split()[0])"
+      $env:PATH = "C:\\hostedtoolcache\\windows\\Python\\$pyversion\\$(architecture)\\lib;" + $env:PATH
       $env:PATH = "C:\\ProgramData\\chocolatey\\lib\\mingw\\tools\\install\\mingw$(BITS)\\bin;" + $env:PATH
     displayName: 'Set PATH'
 
