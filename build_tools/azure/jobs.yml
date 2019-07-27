@@ -7,6 +7,8 @@ jobs:
   variables:
     OPENBLAS_32: https://3f23b170c54c2533c070-1c8a9b3114517dc5fe17b7c3f8c63a43.ssl.cf2.rackcdn.com/openblas-v0.3.5-274-g6a8b4269-win32-gcc_7_1_0.zip
     OPENBLAS_64: https://3f23b170c54c2533c070-1c8a9b3114517dc5fe17b7c3f8c63a43.ssl.cf2.rackcdn.com/openblas-v0.3.5-274-g6a8b4269-win_amd64-gcc_7_1_0.zip
+    FFTW_32: ftp://ftp.fftw.org/pub/fftw/fftw-3.3.5-dll32.zip
+    FFTW_64: ftp://ftp.fftw.org/pub/fftw/fftw-3.3.5-dll64.zip
 
   strategy:
     maxParallel: 6
@@ -23,12 +25,14 @@ jobs:
         python.version: '3.6'
         architecture: 'x86'
         OPENBLAS: $(OPENBLAS_32)
+        FFTW: $(FFTW_32)
         BITS: 32
 
       Python36-x64:
         python.version: '3.6'
         architecture: 'x64'
         OPENBLAS: $(OPENBLAS_64)
+        FFTW: $(FFTW_64)
         BITS: 64
 
 #      Python37-x86:
@@ -47,6 +51,18 @@ jobs:
     displayName: 'Setting Python version and system architecture'
 
   - powershell: |
+      $wc = New-Object net.webclient;
+      $wc.Downloadfile("$(FFTW)", "fftw.zip")
+      $tmpdir = New-TemporaryFile | %{ rm $_; mkdir $_ }
+      Expand-Archive "fftw.zip" $tmpdir
+      $pyversion = python -c "import sys; print(sys.version.split()[0])"
+      Write-Host "Python Version: $pyversion"
+      $target = "C:\\hostedtoolcache\\windows\\Python\\$pyversion\\$(architecture)\\lib"
+      Write-Host "target path: $target"
+      cp $tmpdir $target
+    displayName: 'Download / Install FFTW'
+
+  - powershell: |
         $wc = New-Object net.webclient;
         $wc.Downloadfile("$(OPENBLAS)", "openblas.zip")
         $tmpdir = New-TemporaryFile | %{ rm $_; mkdir $_ }
@@ -56,7 +72,6 @@ jobs:
         $target = "C:\\hostedtoolcache\\windows\\Python\\$pyversion\\$(architecture)\\lib\\openblas.a"
         Write-Host "target path: $target"
         cp $tmpdir\$(BITS)\lib\libopenblas_v0.3.5-274-g6a8b4269-gcc_7_1_0.a $target
-        refreshenv
     displayName: 'Download / Install OpenBLAS'
 
   - powershell: |
