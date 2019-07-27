@@ -3,8 +3,8 @@ steps:
   displayName: 'Updating pip'
 
 - script: |
-    conda install --file requirements.txt
-    conda install --file build_tools/azure/requirements.txt
+    pip install -r requirements.txt
+    pip install -r build_tools/azure/requirements.txt
   displayName: 'Installing requirements'
 
 - script: python setup.py bdist_wheel
