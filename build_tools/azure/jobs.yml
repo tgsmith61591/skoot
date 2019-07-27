@@ -58,6 +58,11 @@ jobs:
       call activate buildenv
       conda install --file requirements.txt
       conda install --file build_tools/azure/requirements.txt
+
+      python setup.py bdist_wheel
+      pip install --pre --no-index --find-links dist/ skoot
+
+      pytest --showlocals --durations=20 --pyargs skoot
     displayName: 'Creating conda environment'
 
   - template: build_and_deploy.yml

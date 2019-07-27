@@ -7,17 +7,6 @@ steps:
 #    pip install -r build_tools/azure/requirements.txt
 #  displayName: 'Installing requirements'
 
-- script: |
-    call activate buildenv
-    python setup.py bdist_wheel
-    pip install --pre --no-index --find-links dist/ skoot
-  displayName: 'Building & installing wheel'
-
-- script: |
-    call activate buildenv
-    pytest --showlocals --durations=20 --pyargs skoot
-  displayName: 'Running unit tests'
-
 - bash: |
     call activate buildenv
     if python -c "from twine.commands.check import check; check(['dist/*'])" | grep  "warning"; then
