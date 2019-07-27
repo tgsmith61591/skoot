@@ -44,7 +44,6 @@ jobs:
     inputs:
       versionSpec: '$(python.version)'
       architecture: '$(architecture)'
-      addToPath: true
     displayName: 'Setting Python version and system architecture'
 
   - powershell: |
