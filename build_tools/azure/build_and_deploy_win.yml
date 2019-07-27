@@ -9,7 +9,7 @@ steps:
       $target = "C:\\hostedtoolcache\\windows\\Python\\$pyversion\\$(architecture)\\lib\\openblas.a"
       Write-Host "target path: $target"
       cp $tmpdir\$(bits)\lib\libopenblas_v0.3.5-274-g6a8b4269-gcc_7_1_0.a $target
-      displayName: 'Download / Install OpenBLAS'
+    displayName: 'Download / Install OpenBLAS'
 
   - powershell: |
       # wheels appear to use mingw64 version 6.3.0, but 6.4.0
