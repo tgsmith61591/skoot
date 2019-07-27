@@ -4,44 +4,61 @@ jobs:
   pool:
     vmImage: 'vs2017-win2016'
 
+  variables:
+    OPENBLAS_32: https://3f23b170c54c2533c070-1c8a9b3114517dc5fe17b7c3f8c63a43.ssl.cf2.rackcdn.com/openblas-v0.3.5-274-g6a8b4269-win32-gcc_7_1_0.zip
+    OPENBLAS_64: https://3f23b170c54c2533c070-1c8a9b3114517dc5fe17b7c3f8c63a43.ssl.cf2.rackcdn.com/openblas-v0.3.5-274-g6a8b4269-win_amd64-gcc_7_1_0.zip
+
   strategy:
     maxParallel: 6
     matrix:
 #      Python35-x86:
 #        python.version: '3.5'
 #        architecture: 'x86'
+#        openblas: $(OPENBLAS_32)
+#        bits: 32
 
 #      Python35-x64:
 #        python.version: '3.5'
 #        architecture: 'x64'
+#        openblas: $(OPENBLAS_64)
+#        bits: 64
 
       Python36-x86:
         python.version: '3.6'
         architecture: 'x86'
+        openblas: $(OPENBLAS_32)
+        bits: 32
 
       Python36-x64:
         python.version: '3.6'
         architecture: 'x64'
+        openblas: $(OPENBLAS_64)
+        bits: 64
 
 #      Python37-x86:
 #        python.version: '3.7'
 #        architecture: 'x86'
+#        openblas: $(OPENBLAS_32)
+#        bits: 32
 
 #      Python37-x64:
 #        python.version: '3.7'
 #        architecture: 'x64'
+#        openblas: $(OPENBLAS_64)
+#        bits: 64
 
   steps:
   - task: UsePythonVersion@0
     inputs:
       versionSpec: '$(python.version)'
       architecture: '$(architecture)'
+      addToPath: true
     displayName: 'Setting Python version and system architecture'
 
-  - bash: curl http://github.com/xianyi/OpenBLAS/archive/v0.3.6.tar.gz
-    displayName: 'Downloading openBLAS'
+  - script: python -m pip install --upgrade pip setuptools wheel
+    displayName: 'Install tools'
 
-  - template: build_and_deploy.yml
+  - template: build_and_deploy_win.yml
 
 #- job: macOS
 #
@@ -69,4 +86,4 @@ jobs:
 #  - script: brew cask install gfortran
 #    displayName: 'Installing Fortran'
 #
-#  - template: build_and_deploy.yml
+#  - template: build_and_deploy_osx.yml
