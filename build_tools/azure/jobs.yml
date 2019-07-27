@@ -58,8 +58,9 @@ jobs:
       conda activate buildenv
       conda install --file requirements.txt
       conda install --file build_tools/azure/requirements.txt
+    displayName: 'Creating conda environment'
 
-#  - template: build_and_deploy.yml
+  - template: build_and_deploy.yml
 
 #- job: macOS
 #
