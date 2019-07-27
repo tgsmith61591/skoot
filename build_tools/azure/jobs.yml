@@ -56,19 +56,19 @@ jobs:
   - script: conda create -n buildenv python=$(python.version)
     displayName: 'Creating conda environment'
 
-  - script: |
+  - powershell: |
       activate buildenv
       pip install -r requirements.txt
       pip install -r build_tools/azure/requirements.txt
     displayName: 'Install requirements'
 
-  - script: |
+  - powershell: |
       activate buildenv
       python setup.py bdist_wheel
       pip install --pre --no-index --find-links dist/ skoot
     displayName: 'Build wheel & Install Skoot'
 
-  - script: |
+  - powershell: |
       activate buildenv
       pytest --showlocals --durations=20 --pyargs skoot
     displayName: 'Test Skoot'
