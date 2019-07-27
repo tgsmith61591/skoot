@@ -56,6 +56,7 @@ jobs:
         $target = "C:\\hostedtoolcache\\windows\\Python\\$pyversion\\$(architecture)\\lib\\openblas.a"
         Write-Host "target path: $target"
         cp $tmpdir\$(BITS)\lib\libopenblas_v0.3.5-274-g6a8b4269-gcc_7_1_0.a $target
+        refreshenv
     displayName: 'Download / Install OpenBLAS'
 
   - template: build_and_deploy.yml
