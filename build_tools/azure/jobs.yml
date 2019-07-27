@@ -14,11 +14,11 @@ jobs:
     maxParallel: 6
     matrix:
 #      Python35-x86:
-#        python.version: '3.5'
+#        pythonVersion: '3.5'
 #        architecture: 'x86'
 
 #      Python35-x64:
-#        python.version: '3.5'
+#        pythonVersion: '3.5'
 #        architecture: 'x64'
 
       Python36-x86:
@@ -29,24 +29,24 @@ jobs:
         BITS: 32
 
       Python36-x64:
-        python.version: '3.6'
+        pythonVersion: '3.6'
         architecture: 'x64'
         OPENBLAS: $(OPENBLAS_64)
         FFTW: $(FFTW_64)
         BITS: 64
 
 #      Python37-x86:
-#        python.version: '3.7'
+#        pythonVersion: '3.7'
 #        architecture: 'x86'
 
 #      Python37-x64:
-#        python.version: '3.7'
+#        pythonVersion: '3.7'
 #        architecture: 'x64'
 
   steps:
   - task: UsePythonVersion@0
     inputs:
-      versionSpec: '$(python.version)'
+      versionSpec: '$(pythonVersion)'
       architecture: '$(architecture)'
     displayName: 'Setting Python version and system architecture'
 
