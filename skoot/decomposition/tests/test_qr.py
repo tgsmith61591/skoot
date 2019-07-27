@@ -6,7 +6,7 @@ import numpy as np
 from numpy.testing import assert_array_almost_equal
 
 from sklearn.datasets import load_iris
-from skoot.decomposition import QRDecomposition
+from skoot.decomposition.qr import QRDecomposition
 from skoot.utils.testing import assert_raises
 
 X = load_iris().data

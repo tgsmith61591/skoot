@@ -6,7 +6,7 @@ import six
 import numpy as np
 
 from .base import BaseFeatureSelector
-from ..decomposition import QRDecomposition
+from ..decomposition.qr import QRDecomposition
 from ..utils.validation import check_dataframe, validate_multiple_cols
 from ..utils.iterables import flatten_all
 from ..utils.metaestimators import timed_instance_method

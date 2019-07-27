@@ -6,9 +6,9 @@ from numpy.testing import assert_array_almost_equal
 
 from skoot.datasets import load_iris_df
 from skoot.utils.testing import assert_transformer_asdf, assert_persistable
-from skoot.decomposition import (SelectivePCA, SelectiveTruncatedSVD,
-                                 SelectiveNMF, SelectiveKernelPCA,
-                                 SelectiveIncrementalPCA)
+from skoot.decomposition import \
+    SelectivePCA, SelectiveTruncatedSVD, SelectiveNMF, \
+    SelectiveKernelPCA, SelectiveIncrementalPCA
 
 # Def data for testing
 names = ['a', 'b', 'c', 'd']
