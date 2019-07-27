@@ -41,6 +41,8 @@ steps:
     ls dist -r | Foreach-Object {
         pip install $_.FullName
     }
+
+    python setup.py install
   displayName: 'Build Skoot'
 - powershell: |
     $env:PATH = "C:\\ProgramData\\chocolatey\\lib\\mingw\\tools\\install\\mingw$(bits)\\bin;" + $env:PATH
