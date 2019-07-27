@@ -58,8 +58,8 @@ jobs:
 
   - powershell: |
       activate buildenv
-      pip install -r requirements.txt
-      pip install -r build_tools/azure/requirements.txt
+      conda install --file requirements.txt
+      conda install --file build_tools/azure/requirements.txt
     displayName: 'Install requirements'
 
   - script: activate buildenv && python setup.py bdist_wheel && pip install --pre --no-index --find-links dist/ skoot
