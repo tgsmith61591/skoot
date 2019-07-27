@@ -89,6 +89,9 @@ jobs:
     displayName: 'Install 64-bit mingw for 64-bit builds'
     condition: eq(variables['BITS'], 64)
 
+  - powershell: ls C:\\hostedtoolcache\\windows\\Python\\$pyversion\\$(architecture)\\DLLs
+    displayName: 'Checking for DLLs'
+
   - powershell: |
       If ($(BITS) -eq 32) {
           # 32-bit build requires careful adjustments
