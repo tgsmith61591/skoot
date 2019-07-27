@@ -23,11 +23,13 @@ jobs:
         python.version: '3.6'
         architecture: 'x86'
         OPENBLAS: $(OPENBLAS_32)
+        BITS: 32
 
       Python36-x64:
         python.version: '3.6'
         architecture: 'x64'
         OPENBLAS: $(OPENBLAS_64)
+        BITS: 64
 
 #      Python37-x86:
 #        python.version: '3.7'
