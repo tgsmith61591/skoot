@@ -13,7 +13,10 @@ steps:
 - script: pip install --pre --no-index --find-links dist/ skoot
   displayName: 'Installing generated wheel'
 
-- script: pytest --showlocals --durations=20 --pyargs skoot
+- script: |
+    mkdir testdir && cd testdir
+    pytest --showlocals --durations=20 --pyargs skoot
+    cd ..
   displayName: 'Running unit tests'
 
 - bash: |
