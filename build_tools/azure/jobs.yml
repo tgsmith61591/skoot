@@ -62,10 +62,7 @@ jobs:
       pip install -r build_tools/azure/requirements.txt
     displayName: 'Install requirements'
 
-  - powershell: |
-      activate buildenv
-      python setup.py bdist_wheel
-      pip install --pre --no-index --find-links dist/ skoot
+  - script: activate buildenv && python setup.py bdist_wheel && pip install --pre --no-index --find-links dist/ skoot
     displayName: 'Build wheel & Install Skoot'
 
   - powershell: |
