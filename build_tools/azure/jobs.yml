@@ -10,26 +10,38 @@ jobs:
 #      Python35-x86:
 #        python.version: '3.5'
 #        architecture: 'x86'
+#        openblas: $(OPENBLAS_32)
+#        bits: 32
 
 #      Python35-x64:
 #        python.version: '3.5'
 #        architecture: 'x64'
+#        openblas: $(OPENBLAS_64)
+#        bits: 64
 
       Python36-x86:
         python.version: '3.6'
         architecture: 'x86'
+        openblas: $(OPENBLAS_32)
+        bits: 32
 
       Python36-x64:
         python.version: '3.6'
         architecture: 'x64'
+        openblas: $(OPENBLAS_64)
+        bits: 64
 
 #      Python37-x86:
 #        python.version: '3.7'
 #        architecture: 'x86'
+#        openblas: $(OPENBLAS_32)
+#        bits: 32
 
 #      Python37-x64:
 #        python.version: '3.7'
 #        architecture: 'x64'
+#        openblas: $(OPENBLAS_64)
+#        bits: 64
 
   steps:
   - task: UsePythonVersion@0
@@ -38,8 +50,29 @@ jobs:
       architecture: '$(architecture)'
     displayName: 'Setting Python version and system architecture'
 
-  - bash: curl http://github.com/xianyi/OpenBLAS/archive/v0.3.6.tar.gz
-    displayName: 'Downloading openBLAS'
+  - powershell: |
+      $wc = New-Object net.webclient;
+      $wc.Downloadfile("$(openblas)", "openblas.zip")
+      $tmpdir = New-TemporaryFile | %{ rm $_; mkdir $_ }
+      Expand-Archive "openblas.zip" $tmpdir
+      $pyversion = python -c "from __future__ import print_function; import sys; print(sys.version.split()[0])"
+      Write-Host "Python Version: $pyversion"
+      $target = "C:\\hostedtoolcache\\windows\\Python\\$pyversion\\$(architecture)\\lib\\openblas.a"
+      Write-Host "target path: $target"
+      cp $tmpdir\$(bits)\lib\libopenblas_v0.3.5-274-g6a8b4269-gcc_7_1_0.a $target
+    displayName: 'Download / Install OpenBLAS'
+
+  - powershell: |
+      # wheels appear to use mingw64 version 6.3.0, but 6.4.0
+      # is the closest match available from choco package manager
+      choco install -y mingw --forcex86 --force --version=6.4.0
+    displayName: 'Install 32-bit mingw for 32-bit builds'
+    condition: eq(variables['bits'], 32)
+
+  - powershell: |
+      choco install -y mingw --force --version=6.4.0
+    displayName: 'Install 64-bit mingw for 64-bit builds'
+    condition: eq(variables['bits'], 64)
 
   - template: build_and_deploy.yml
 
