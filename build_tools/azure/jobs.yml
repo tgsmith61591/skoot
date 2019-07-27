@@ -4,6 +4,10 @@ jobs:
   pool:
     vmImage: 'vs2017-win2016'
 
+  variables:
+    OPENBLAS_32: https://3f23b170c54c2533c070-1c8a9b3114517dc5fe17b7c3f8c63a43.ssl.cf2.rackcdn.com/openblas-v0.3.5-274-g6a8b4269-win32-gcc_7_1_0.zip
+    OPENBLAS_64: https://3f23b170c54c2533c070-1c8a9b3114517dc5fe17b7c3f8c63a43.ssl.cf2.rackcdn.com/openblas-v0.3.5-274-g6a8b4269-win_amd64-gcc_7_1_0.zip
+
   strategy:
     maxParallel: 6
     matrix:
@@ -18,10 +22,12 @@ jobs:
       Python36-x86:
         python.version: '3.6'
         architecture: 'x86'
+        OPENBLAS: $(OPENBLAS_32)
 
       Python36-x64:
         python.version: '3.6'
         architecture: 'x64'
+        OPENBLAS: $(OPENBLAS_64)
 
 #      Python37-x86:
 #        python.version: '3.7'
@@ -38,11 +44,17 @@ jobs:
       architecture: '$(architecture)'
     displayName: 'Setting Python version and system architecture'
 
-  - bash: |
-      git clone https://github.com/xianyi/OpenBLAS.git
-      cd OpenBLAS
-      make BINARY=64 HOSTCC=gcc CC=mingw FC=gfortran CFLAGS='-static-libgcc -static-libstdc++ -static -ggdb' FFLAGS='-static' && mv -f libopenblas.dll.a libopenblas.lib
-    displayName: 'Download/Install openBLAS'
+  - powershell: |
+        $wc = New-Object net.webclient;
+        $wc.Downloadfile("$(OPENBLAS)", "openblas.zip")
+        $tmpdir = New-TemporaryFile | %{ rm $_; mkdir $_ }
+        Expand-Archive "openblas.zip" $tmpdir
+        $pyversion = python -c "from __future__ import print_function; import sys; print(sys.version.split()[0])"
+        Write-Host "Python Version: $pyversion"
+        $target = "C:\\hostedtoolcache\\windows\\Python\\$pyversion\\$(PYTHON_ARCH)\\lib\\openblas.a"
+        Write-Host "target path: $target"
+        cp $tmpdir\$(BITS)\lib\libopenblas_v0.3.5-274-g6a8b4269-gcc_7_1_0.a $target
+    displayName: 'Download / Install OpenBLAS'
 
   - template: build_and_deploy.yml
 
