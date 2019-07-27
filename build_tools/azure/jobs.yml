@@ -55,7 +55,7 @@ jobs:
 
   - script: |
       conda create -n buildenv python=$(python.version) --yes
-      conda activate buildenv
+      source activate buildenv
       conda install --file requirements.txt
       conda install --file build_tools/azure/requirements.txt
     displayName: 'Creating conda environment'
