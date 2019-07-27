@@ -7,16 +7,19 @@ steps:
 #    pip install -r build_tools/azure/requirements.txt
 #  displayName: 'Installing requirements'
 
-- script: python setup.py bdist_wheel
-  displayName: 'Building wheel'
+- script: |
+    call activate buildenv
+    python setup.py bdist_wheel
+    pip install --pre --no-index --find-links dist/ skoot
+  displayName: 'Building & installing wheel'
 
-- script: pip install --pre --no-index --find-links dist/ skoot
-  displayName: 'Installing generated wheel'
-
-- script: pytest --showlocals --durations=20 --pyargs skoot
+- script: |
+    call activate buildenv
+    pytest --showlocals --durations=20 --pyargs skoot
   displayName: 'Running unit tests'
 
 - bash: |
+    call activate buildenv
     if python -c "from twine.commands.check import check; check(['dist/*'])" | grep  "warning"; then
         echo "README will not render properly on PyPI"
         exit 1
