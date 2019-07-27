@@ -53,10 +53,10 @@ jobs:
   - powershell: Write-Host "##vso[task.prependpath]$env:CONDA\Scripts"
     displayName: 'Add conda to PATH'
   - script: |
-      scripts\\install.cmd
+      build_tools\\azure\\scripts\\install.cmd
     displayName: 'Install'
   - script: |
-      scripts\\test_script.cmd
+      build_tools\\azure\\scripts\\test_script.cmd
     displayName: 'Test Library'
 
 #- job: macOS
