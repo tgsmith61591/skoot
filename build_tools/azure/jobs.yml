@@ -96,6 +96,7 @@ jobs:
           $env:LDFLAGS = "-m32"
           refreshenv
       }
+      $env:PATH = "C:\\hostedtoolcache\\windows\\Python\\$pyversion\\$(architecture)\\lib;" + $env:PATH
       $env:PATH = "C:\\ProgramData\\chocolatey\\lib\\mingw\\tools\\install\\mingw$(BITS)\\bin;" + $env:PATH
     displayName: 'Set PATH'
 
