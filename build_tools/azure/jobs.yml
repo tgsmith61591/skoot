@@ -14,40 +14,40 @@ jobs:
     maxParallel: 6
     matrix:
 #      Python35-x86:
-#        pythonVersion: '3.5'
-#        architecture: 'x86'
+#        PYTHON_VERSION: '3.5'
+#        ARCHITECTURE: 'x86'
 
 #      Python35-x64:
-#        pythonVersion: '3.5'
-#        architecture: 'x64'
+#        PYTHON_VERSION: '3.5'
+#        ARCHITECTURE: 'x64'
 
       Python36-x86:
-        python.version: '3.6'
-        architecture: 'x86'
+        PYTHON_VERSION: '3.6'
+        ARCHITECTURE: 'x86'
         OPENBLAS: $(OPENBLAS_32)
         FFTW: $(FFTW_32)
         BITS: 32
 
       Python36-x64:
-        pythonVersion: '3.6'
-        architecture: 'x64'
+        PYTHON_VERSION: '3.6'
+        ARCHITECTURE: 'x64'
         OPENBLAS: $(OPENBLAS_64)
         FFTW: $(FFTW_64)
         BITS: 64
 
 #      Python37-x86:
-#        pythonVersion: '3.7'
-#        architecture: 'x86'
+#        PYTHON_VERSION: '3.7'
+#        ARCHITECTURE: 'x86'
 
 #      Python37-x64:
-#        pythonVersion: '3.7'
-#        architecture: 'x64'
+#        PYTHON_VERSION: '3.7'
+#        ARCHITECTURE: 'x64'
 
   steps:
   - task: UsePythonVersion@0
     inputs:
-      versionSpec: '$(pythonVersion)'
-      architecture: '$(architecture)'
+      versionSpec: '$(PYTHON_VERSION)'
+      architecture: '$(ARCHITECTURE)'
     displayName: 'Setting Python version and system architecture'
 
   - powershell: Write-Host "##vso[task.prependpath]$env:CONDA\Scripts"
