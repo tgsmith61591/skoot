@@ -16,10 +16,14 @@ jobs:
 #      Python35-x86:
 #        PYTHON_VERSION: '3.5'
 #        ARCHITECTURE: 'x86'
+#        FFTW: $(FFTW_32)
+#        BITS: 32
 
 #      Python35-x64:
 #        PYTHON_VERSION: '3.5'
 #        ARCHITECTURE: 'x64'
+#        FFTW: $(FFTW_64)
+#        BITS: 64
 
       Python36-x86:
         PYTHON_VERSION: '3.6'
@@ -38,10 +42,14 @@ jobs:
 #      Python37-x86:
 #        PYTHON_VERSION: '3.7'
 #        ARCHITECTURE: 'x86'
+#        FFTW: $(FFTW_32)
+#        BITS: 32
 
 #      Python37-x64:
 #        PYTHON_VERSION: '3.7'
 #        ARCHITECTURE: 'x64'
+#        FFTW: $(FFTW_64)
+#        BITS: 64
 
   steps:
   - task: UsePythonVersion@0
@@ -68,18 +76,18 @@ jobs:
 #    maxParallel: 3
 #    matrix:
 #      Python35:
-#        python.version: '3.5'
+#        PYTHON_VERSION: '3.5'
 #
 #      Python36:
-#        python.version: '3.6'
+#        PYTHON_VERSION: '3.6'
 #
 #      Python37:
-#        python.version: '3.7'
+#        PYTHON_VERSION: '3.7'
 #
 #  steps:
 #  - task: UsePythonVersion@0
 #    inputs:
-#      versionSpec: '$(python.version)'
+#      versionSpec: '$(PYTHON_VERSION)'
 #    displayName: 'Setting Python version'
 #
 #  - script: brew cask install gfortran
