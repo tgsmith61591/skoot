@@ -52,25 +52,12 @@ jobs:
 
   - powershell: Write-Host "##vso[task.prependpath]$env:CONDA\Scripts"
     displayName: 'Add conda to PATH'
-
-  - script: conda create -n buildenv python=$(python.version)
-    displayName: 'Creating conda environment'
-
-  - powershell: |
-      activate buildenv
-      conda install --file requirements.txt
-      conda install --file build_tools/azure/requirements.txt
-    displayName: 'Install requirements'
-
-  - script: activate buildenv && python setup.py bdist_wheel && pip install --pre --no-index --find-links dist/ skoot
-    displayName: 'Build wheel & Install Skoot'
-
-  - powershell: |
-      activate buildenv
-      pytest --showlocals --durations=20 --pyargs skoot
-    displayName: 'Test Skoot'
-
-  - template: build_and_deploy.yml
+  - script: |
+      install.cmd
+    displayName: 'Install'
+  - script: |
+      test_script.cmd
+    displayName: 'Test Library'
 
 #- job: macOS
 #
