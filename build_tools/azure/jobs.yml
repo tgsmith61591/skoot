@@ -38,14 +38,10 @@ jobs:
       architecture: '$(architecture)'
     displayName: 'Setting Python version and system architecture'
 
-  - powershell: |
-      $pyversion = python -c "import sys; print(sys.version.split()[0])"
-      Write-Host "Python Version: $pyversion"
-      $target = "C:\\hostedtoolcache\\windows\\Python\\$pyversion\\$(architecture)\\lib\\openblas.a"
-      Write-Host "target path: $target"
-      $openblas = python build_tools/azure/openblas_support.py
-      cp $openblas $target
-      ls C:\\hostedtoolcache\\windows\\Python\\$pyversion\\$(architecture)\\lib
+  - bash: |
+      git clone https://github.com/xianyi/OpenBLAS.git
+      cd OpenBLAS
+      make BINARY=64 HOSTCC=gcc CC=mingw FC=gfortran CFLAGS='-static-libgcc -static-libstdc++ -static -ggdb' FFLAGS='-static' && mv -f libopenblas.dll.a libopenblas.lib
     displayName: 'Download/Install openBLAS'
 
   - template: build_and_deploy.yml
