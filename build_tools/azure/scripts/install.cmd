@@ -10,7 +10,7 @@ set PIP_INSTALL=pip install -q
 call deactivate
 @rem Clean up any left-over from a previous build
 conda remove --all -q -y -n testvenv
-conda create -n testvenv -q -y python=%PYTHON_VERSION% numpy scipy cython scikit-learn pytest wheel pillow joblib pandas
+conda create -n testvenv -q -y python=%PYTHON_VERSION% numpy scipy cython scikit-learn pytest wheel pillow joblib pandas blas
 
 call activate testvenv
 
