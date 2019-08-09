@@ -1,96 +1,96 @@
 jobs:
-- job: Windows
-
-  pool:
-    vmImage: 'windows-latest'
-
-  variables:
-    OPENBLAS_32: https://3f23b170c54c2533c070-1c8a9b3114517dc5fe17b7c3f8c63a43.ssl.cf2.rackcdn.com/openblas-v0.3.5-274-g6a8b4269-win32-gcc_7_1_0.zip
-    OPENBLAS_64: https://3f23b170c54c2533c070-1c8a9b3114517dc5fe17b7c3f8c63a43.ssl.cf2.rackcdn.com/openblas-v0.3.5-274-g6a8b4269-win_amd64-gcc_7_1_0.zip
-    FFTW_32: ftp://ftp.fftw.org/pub/fftw/fftw-3.3.5-dll32.zip
-    FFTW_64: ftp://ftp.fftw.org/pub/fftw/fftw-3.3.5-dll64.zip
-
-  strategy:
-    maxParallel: 6
-    matrix:
-#      Python35-x86:
-#        PYTHON_VERSION: '3.5'
-#        ARCHITECTURE: 'x86'
-#        FFTW: $(FFTW_32)
-#        BITS: 32
-
-#      Python35-x64:
-#        PYTHON_VERSION: '3.5'
-#        ARCHITECTURE: 'x64'
-#        FFTW: $(FFTW_64)
-#        BITS: 64
-
-      Python36-x86:
-        PYTHON_VERSION: '3.6'
-        ARCHITECTURE: 'x86'
-        OPENBLAS: $(OPENBLAS_32)
-        FFTW: $(FFTW_32)
-        BITS: 32
-
-      Python36-x64:
-        PYTHON_VERSION: '3.6'
-        ARCHITECTURE: 'x64'
-        OPENBLAS: $(OPENBLAS_64)
-        FFTW: $(FFTW_64)
-        BITS: 64
-
-#      Python37-x86:
-#        PYTHON_VERSION: '3.7'
-#        ARCHITECTURE: 'x86'
-#        FFTW: $(FFTW_32)
-#        BITS: 32
-
-#      Python37-x64:
-#        PYTHON_VERSION: '3.7'
-#        ARCHITECTURE: 'x64'
-#        FFTW: $(FFTW_64)
-#        BITS: 64
-
-  steps:
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: '$(PYTHON_VERSION)'
-      architecture: '$(ARCHITECTURE)'
-    displayName: 'Setting Python version and system architecture'
-
-  - powershell: Write-Host "##vso[task.prependpath]$env:CONDA\Scripts"
-    displayName: 'Add conda to PATH'
-  - script: |
-      build_tools\\azure\\scripts\\install.cmd
-    displayName: 'Install'
-  - script: |
-      build_tools\\azure\\scripts\\test_script.cmd
-    displayName: 'Test Library'
-
-#- job: macOS
+#- job: Windows
 #
 #  pool:
-#    vmImage: 'macOS-10.13'  # Also have the option of 10.14, if we want that
+#    vmImage: 'windows-latest'
+#
+#  variables:
+#    OPENBLAS_32: https://3f23b170c54c2533c070-1c8a9b3114517dc5fe17b7c3f8c63a43.ssl.cf2.rackcdn.com/openblas-v0.3.5-274-g6a8b4269-win32-gcc_7_1_0.zip
+#    OPENBLAS_64: https://3f23b170c54c2533c070-1c8a9b3114517dc5fe17b7c3f8c63a43.ssl.cf2.rackcdn.com/openblas-v0.3.5-274-g6a8b4269-win_amd64-gcc_7_1_0.zip
+#    FFTW_32: ftp://ftp.fftw.org/pub/fftw/fftw-3.3.5-dll32.zip
+#    FFTW_64: ftp://ftp.fftw.org/pub/fftw/fftw-3.3.5-dll64.zip
 #
 #  strategy:
-#    maxParallel: 3
+#    maxParallel: 6
 #    matrix:
-#      Python35:
-#        PYTHON_VERSION: '3.5'
+##      Python35-x86:
+##        PYTHON_VERSION: '3.5'
+##        ARCHITECTURE: 'x86'
+##        FFTW: $(FFTW_32)
+##        BITS: 32
 #
-#      Python36:
+##      Python35-x64:
+##        PYTHON_VERSION: '3.5'
+##        ARCHITECTURE: 'x64'
+##        FFTW: $(FFTW_64)
+##        BITS: 64
+#
+#      Python36-x86:
 #        PYTHON_VERSION: '3.6'
+#        ARCHITECTURE: 'x86'
+#        OPENBLAS: $(OPENBLAS_32)
+#        FFTW: $(FFTW_32)
+#        BITS: 32
 #
-#      Python37:
-#        PYTHON_VERSION: '3.7'
+#      Python36-x64:
+#        PYTHON_VERSION: '3.6'
+#        ARCHITECTURE: 'x64'
+#        OPENBLAS: $(OPENBLAS_64)
+#        FFTW: $(FFTW_64)
+#        BITS: 64
+#
+##      Python37-x86:
+##        PYTHON_VERSION: '3.7'
+##        ARCHITECTURE: 'x86'
+##        FFTW: $(FFTW_32)
+##        BITS: 32
+#
+##      Python37-x64:
+##        PYTHON_VERSION: '3.7'
+##        ARCHITECTURE: 'x64'
+##        FFTW: $(FFTW_64)
+##        BITS: 64
 #
 #  steps:
 #  - task: UsePythonVersion@0
 #    inputs:
 #      versionSpec: '$(PYTHON_VERSION)'
-#    displayName: 'Setting Python version'
+#      architecture: '$(ARCHITECTURE)'
+#    displayName: 'Setting Python version and system architecture'
 #
-#  - script: brew cask install gfortran
-#    displayName: 'Installing Fortran'
-#
-#  - template: build_and_deploy.yml
+#  - powershell: Write-Host "##vso[task.prependpath]$env:CONDA\Scripts"
+#    displayName: 'Add conda to PATH'
+#  - script: |
+#      build_tools\\azure\\scripts\\install.cmd
+#    displayName: 'Install'
+#  - script: |
+#      build_tools\\azure\\scripts\\test_script.cmd
+#    displayName: 'Test Library'
+
+- job: macOS
+
+  pool:
+    vmImage: 'macOS-10.13'  # Also have the option of 10.14, if we want that
+
+  strategy:
+    maxParallel: 3
+    matrix:
+      Python35:
+        PYTHON_VERSION: '3.5'
+
+      Python36:
+        PYTHON_VERSION: '3.6'
+
+      Python37:
+        PYTHON_VERSION: '3.7'
+
+  steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '$(PYTHON_VERSION)'
+    displayName: 'Setting Python version'
+
+  - script: brew cask install gfortran
+    displayName: 'Installing Fortran'
+
+  - template: build_and_deploy.yml
