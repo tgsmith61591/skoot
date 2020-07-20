@@ -5,7 +5,7 @@ jobs:
     vmImage: 'macOS-latest'
 
   strategy:
-    maxParallel: 3
+    maxParallel: 4
     matrix:
       Python35:
         python.version: '3.5'
