@@ -78,7 +78,7 @@ def test_interaction_corners():
                 for i, j in zip(X_trans.columns.tolist(),
                                 expected_names)])  # assert col names equal
 
-    assert_array_equal(X_trans.as_matrix(), np.array([
+    assert_array_equal(X_trans.to_numpy(), np.array([
         [0, 1, 0, 1, 0],
         [0, 0, 1, 1, 0],
         [0, 0, 0, 1, 0],

@@ -40,6 +40,10 @@ DISTNAME = 'skoot'
 PYPIDIST = DISTNAME
 DESCRIPTION = DOCLINES[0]
 
+# Get the long desc
+with open("README.md", "r") as fh:
+    LONG_DESCRIPTION = fh.read()
+
 MAINTAINER = 'Taylor G. Smith'
 MAINTAINER_GIT = 'tgsmith61591'
 MAINTAINER_EMAIL = 'taylor.smith@alkaline-ml.com'
@@ -188,6 +192,8 @@ def do_setup():
                     maintainer=MAINTAINER,
                     maintainer_email=MAINTAINER_EMAIL,
                     description=DESCRIPTION,
+                    long_description=LONG_DESCRIPTION,
+                    long_description_content_type='text/markdown',
                     license=LICENSE,
                     version=VERSION,
                     classifiers=[
@@ -196,6 +202,7 @@ def do_setup():
                         'Programming Language :: Python :: 3.5',
                         'Programming Language :: Python :: 3.6',
                         'Programming Language :: Python :: 3.7',
+                        'Programming Language :: Python :: 3.8',
                         'Topic :: Software Development',
                         'Topic :: Scientific/Engineering',
                         'Operating System :: POSIX',

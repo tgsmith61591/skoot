@@ -3,11 +3,8 @@ from __future__ import division, absolute_import, print_function
 import warnings
 
 import numpy as np
-import numpy.distutils.system_info
 
 from numpy.distutils.system_info import (system_info,
-                                         numpy_info,
-                                         NotFoundError,
                                          BlasNotFoundError,
                                          LapackNotFoundError,
                                          AtlasNotFoundError,
@@ -16,10 +13,9 @@ from numpy.distutils.system_info import (system_info,
                                          dict_append,
                                          get_info as old_get_info)
 
-from scipy._lib._version import NumpyVersion
+from scipy._lib._pep440 import parse
 
-
-if NumpyVersion(np.__version__) >= "1.15.0.dev":
+if parse(np.__version__) >= parse("1.15.0.dev"):
     # For new enough numpy.distutils, the ACCELERATE=None environment
     # variable in the top-level setup.py is enough, so no need to
     # customize BLAS detection.
@@ -34,6 +30,7 @@ else:
         if cls is None:
             return old_get_info(name, notfound_action)
         return cls().get_info(notfound_action)
+
 
     #
     # The following is copypaste from numpy.distutils.system_info, with
@@ -75,7 +72,7 @@ else:
             if atlas_info:
                 l = atlas_info.get('define_macros', [])
                 if ('ATLAS_WITH_LAPACK_ATLAS', None) in l \
-                       or ('ATLAS_WITHOUT_LAPACK', None) in l:
+                        or ('ATLAS_WITHOUT_LAPACK', None) in l:
                     need_lapack = 1
                 info = atlas_info
 
@@ -87,7 +84,7 @@ else:
 
             if need_lapack:
                 lapack_info = get_info('lapack')
-                #lapack_info = {} ## uncomment for testing
+                # lapack_info = {} ## uncomment for testing
                 if lapack_info:
                     dict_append(info, **lapack_info)
                 else:
@@ -112,6 +109,7 @@ else:
 
             self.set_info(**info)
             return
+
 
     class blas_opt_info(system_info):
 

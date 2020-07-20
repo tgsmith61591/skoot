@@ -16,7 +16,7 @@ import os
 import sys
 import skoot
 from pkg_resources import parse_version
-from sklearn.externals.six import u
+from six import u
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the

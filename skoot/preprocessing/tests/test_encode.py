@@ -72,7 +72,7 @@ def test_dummy_encoder_ignore():
 
     # get a test sample, make it different
     test_sample = iris.iloc[0].copy()
-    test_sample.set_value("species", 99)
+    test_sample.at["species"] = 99
 
     # show this does not break
     df = pd.DataFrame([test_sample])

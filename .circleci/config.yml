@@ -92,6 +92,14 @@ jobs:
     - install-gfortran
     - make-unit-test
 
+  cpython38-linux:
+    docker:
+      - image: python:3.8
+    working_directory: ~/skoot
+    steps:
+      - install-gfortran
+      - make-unit-test
+
   # For testing lint
   test-linting:
     docker:
@@ -151,6 +159,17 @@ jobs:
           pythonversion: "3.7"
       - deploy-to-pypi
 
+  deploy-cpython38-whl:
+    machine:
+      image: circleci/classic:latest
+    working_directory: ~/skoot
+    steps:
+      - checkout
+      - sudo-install-gfortran
+      - build-whl-file:
+          pythonversion: "3.8"
+      - deploy-to-pypi
+
   # For documentation deployment. You'll need the following environment vars
   # in your Circle CI settings, otherwise this will not work.
   #
@@ -178,6 +197,8 @@ workflows:
       - cpython36-linux:
           filters: *test-filters
       - cpython37-linux:
+          filters: *test-filters
+      - cpython38-linux:
           filters: *test-filters
       - test-linting:
           filters: *test-filters
@@ -210,3 +231,8 @@ workflows:
           filters: *deploy-filters
           requires:
               - deploy-doc
+
+      - deploy-cpython38-whl:
+          filters: *deploy-filters
+          requires:
+            - deploy-doc

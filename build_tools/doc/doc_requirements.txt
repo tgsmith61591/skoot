@@ -11,3 +11,4 @@ matplotlib==2.2.0rc1
 numpydoc==0.7.0
 Django==1.11
 image==1.5.19
+six
