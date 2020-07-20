@@ -2,9 +2,7 @@ steps:
 - script: python -m pip install --upgrade pip
   displayName: 'Updating pip'
 
-# Have to reinstall scipy on Azure, as the install is screwed up
 - script: |
-    pip uninstall scipy -y
     pip install -r requirements.txt
     pip install -r build_tools/azure/requirements.txt
   displayName: 'Installing requirements'
