@@ -46,7 +46,7 @@ print(encoder.transform(X_test).head())
 # #############################################################################
 # Show we can work with levels we've never seen before
 test_row = X_test.iloc[0]
-test_row.at("native-country", "Atlantis")
+test_row.at["native-country"] =  "Atlantis"
 trans = encoder.transform(pd.DataFrame([test_row]))
 print("\nApplied on a row with a new native-country:")
 print(trans)
