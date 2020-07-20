@@ -96,7 +96,7 @@ class LinearCombinationFilter(BaseFeatureSelector):
         drops = []
 
         # Generate sub matrix for qr decomposition
-        x = X[cols].as_matrix()
+        x = X[cols].to_numpy()
         cols = np.array(cols)  # so we can use boolean masking
 
         # do subroutines

@@ -24,7 +24,7 @@ def test_selective_pca():
 
     # the "other" names, and their corresponding matrix
     comp_column_names = names[1:]
-    compare_cols = original[comp_column_names].as_matrix()
+    compare_cols = original[comp_column_names].to_numpy()
 
     # now fit PCA on the first column only
     transformer = SelectivePCA(cols=cols, n_components=0.85,
@@ -32,7 +32,7 @@ def test_selective_pca():
     transformed = transformer.transform(original)
 
     # get the untouched columns to compare. These should be equal!!
-    untouched_cols = transformed[comp_column_names].as_matrix()
+    untouched_cols = transformed[comp_column_names].to_numpy()
     assert_array_almost_equal(compare_cols, untouched_cols)
 
     # make sure the component is present in the columns
@@ -60,13 +60,13 @@ def test_selective_tsvd():
     cols = names[:2]
 
     comp_column_names = names[2:]
-    compare_cols = original[comp_column_names].as_matrix()
+    compare_cols = original[comp_column_names].to_numpy()
 
     transformer = SelectiveTruncatedSVD(cols=cols, n_components=1,
                                         trans_col_name="Concept").fit(original)
     transformed = transformer.transform(original)
 
-    untouched_cols = transformed[comp_column_names].as_matrix()
+    untouched_cols = transformed[comp_column_names].to_numpy()
     assert_array_almost_equal(compare_cols, untouched_cols)
 
     assert 'Concept1' in transformed.columns
